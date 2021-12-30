@@ -25,5 +25,10 @@ namespace PairMatching.DataAccess.Repositories
                 await _dataAccess.LoadOneAsync<SpredsheetLastRange>(countersAndSpredsheetLastRange, 2);
             return lastRange;
         }
+
+        public Task SaveSpredsheetLastRange(SpredsheetLastRange spredsheetLastRange)
+        {
+            return _dataAccess.InsertOne(countersAndSpredsheetLastRange, spredsheetLastRange);
+        }
     }
 }

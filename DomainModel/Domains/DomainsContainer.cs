@@ -16,11 +16,11 @@ namespace PairMatching.DomainModel.Domains
     {
         readonly RepositoriesContainer _repositories;
 
-        public PairsDomain PairsDomain { get; set; }
+        public PairsDomain PairsDomain { get; init; }
+
+        public StudentsDomain StudentsDomain { get; init; }
 
         readonly SendEmail _emailSender;
-
-        public StudentsDomain StudentsDomain { get; set; }
 
         readonly IConfiguration _config;
 
@@ -63,7 +63,9 @@ namespace PairMatching.DomainModel.Domains
                 return;
             }
 
-            var l = parser.NewStudents;
+            await StudentsDomain.InsertManyStudents(parser.NewStudents);
+
+            await _repositories.ConfigRepositry.SaveSpredsheetLastRange(spredsheetLastRange);
         }
     }
 }

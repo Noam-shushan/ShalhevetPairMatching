@@ -1,4 +1,5 @@
 ﻿using PairMatching.DataAccess.Infrastructure;
+using PairMatching.DataAccess.JsonLocalImplementation;
 using PairMatching.Models;
 using System;
 using System.Collections.Generic;
@@ -11,42 +12,48 @@ namespace PairMatching.DataAccess.Repositories
 {
     public class PairRepositry : IModelRepository<Pair>
     {
-        IDataAccess _dal;
-        private const string pairsCollectionName = "Pairs";
+        readonly IDataAccess _dataAccess;
+
+        const string pairsCollectionName = "Pairs";
 
         public PairRepositry(IDataAccess dal)
         {
-            _dal = dal;
+            _dataAccess = dal;
         }
 
-        public Task<IEnumerable<Pair>> GetAllAsync()
+        public async Task<IEnumerable<Pair>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var pairs = await 
+                _dataAccess.LoadManyAsync<Pair>(pairsCollectionName);
+            return pairs;
         }
 
-        public Task<IEnumerable<Pair>> GetAllAsync(Expression<Func<Pair, bool>> predicate)
+        public async Task<IEnumerable<Pair>> GetAllAsync(Expression<Func<Pair, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var pairs = await
+                        _dataAccess.LoadManyAsync(pairsCollectionName, predicate);
+            return pairs;
         }
 
-        public Task<Pair> GetByIdAsync(int id)
+        public async Task<Pair> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var pair = await _dataAccess.LoadOneAsync<Pair>(pairsCollectionName, id);
+            return pair ?? throw new KeyNotFoundException($"Pair {id} not found");
         }
 
-        public Task Insert(Pair model)
+        public Task Insert(Pair pair)
         {
-            throw new NotImplementedException();
+            return _dataAccess.InsertOne(pairsCollectionName, pair);
         }
 
-        public Task Insert(IEnumerable<Pair> models)
+        public Task Insert(IEnumerable<Pair> pairs)
         {
-            throw new NotImplementedException();
+            return _dataAccess.InsertMany(pairsCollectionName, pairs);
         }
 
-        public Task Update(Pair model)
+        public Task Update(Pair pair)
         {
-            throw new NotImplementedException();
+            return _dataAccess.UpdateOne(pairsCollectionName, pair, pair.Id);
         }
 
         public Task Delete(int id)
@@ -54,9 +61,13 @@ namespace PairMatching.DataAccess.Repositories
             throw new NotImplementedException();
         }
 
-        public Task SaveStudentsToDrive()
+        public async Task SaveToDrive()
         {
-            throw new NotImplementedException();
+            var pairs =
+                 await _dataAccess.LoadManyAsync<Pair>(pairsCollectionName);
+
+            var js = new JsonDataAccess();
+            await js.InsertMany(pairsCollectionName, pairs);
         }
     }
 }

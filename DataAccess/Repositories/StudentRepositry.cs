@@ -12,18 +12,19 @@ namespace PairMatching.DataAccess.Repositories
 {
     public class StudentRepositry : IModelRepository<Student>
     {
-        IDataAccess _dal;
-        private const string studentsCollectionName = "Students";
+        readonly IDataAccess _dataAccess;
+
+        const string studentsCollectionName = "Students";
 
         public StudentRepositry(IDataAccess dal)
         {
-            _dal = dal;
+            _dataAccess = dal;
         }
 
-        public async Task SaveStudentsToDrive()
+        public async Task SaveToDrive()
         {
             var students =
-                await _dal.LoadManyAsync<Student>(studentsCollectionName);
+                await _dataAccess.LoadManyAsync<Student>(studentsCollectionName);
 
             var js = new JsonDataAccess();
             await js.InsertMany(studentsCollectionName, students);
@@ -32,35 +33,36 @@ namespace PairMatching.DataAccess.Repositories
         public async Task<IEnumerable<Student>> GetAllAsync()
         {
             var students = 
-                await _dal.LoadManyAsync<Student>(studentsCollectionName);
+                await _dataAccess.LoadManyAsync<Student>(studentsCollectionName);
             return students;
         }
 
         public async Task<IEnumerable<Student>> GetAllAsync(Expression<Func<Student, bool>> predicate)
         {
             var students =
-                    await _dal.LoadManyAsync(studentsCollectionName, predicate);
+                    await _dataAccess.LoadManyAsync(studentsCollectionName, predicate);
             return students;
         }
 
-        public Task<Student> GetByIdAsync(int id)
+        public async Task<Student> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var student = await _dataAccess.LoadOneAsync<Student>(studentsCollectionName, id);
+            return student ?? throw new KeyNotFoundException($"Student {id} not found");
         }
 
-        public Task Insert(Student model)
+        public Task Insert(Student student)
         {
-            throw new NotImplementedException();
+            return _dataAccess.InsertOne(studentsCollectionName, student);
         }
 
         public Task Insert(IEnumerable<Student> students)
         {
-            throw new NotImplementedException();
+            return _dataAccess.InsertMany(studentsCollectionName, students);
         }
 
         public Task Update(Student student)
         {
-            throw new NotImplementedException();
+            return _dataAccess.UpdateOne(studentsCollectionName, student, student.Id);
         }
 
         public Task Delete(int id)

@@ -196,7 +196,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
-          "MongoDB.Bson": "2.14.1"
+          "MongoDB.Bson": "2.14.1",
+          "Tools": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Models.dll": {}

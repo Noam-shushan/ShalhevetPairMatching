@@ -10,7 +10,7 @@ namespace PairMatching.Models
     public class Pair
     {
         [BsonId]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// flag that determine if the pair is deleted from the database 
@@ -27,13 +27,10 @@ namespace PairMatching.Models
         /// </summary>
         public int StudentFromWorldId { get; set; }
 
-        [BsonDateTimeOptions(DateOnly = true)]
         public DateTime DateOfCreate { get; set; }
 
-        [BsonDateTimeOptions(DateOnly = true)]
         public DateTime DateOfUpdate { get; set; }
 
-        [BsonDateTimeOptions(DateOnly = true)]
         public DateTime DateOfDelete { get; set; }
 
         public bool IsActive { get; set; } = false;

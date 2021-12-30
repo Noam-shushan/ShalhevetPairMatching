@@ -9,7 +9,7 @@ namespace PairMatching.DataAccess.Repositories
 {
     public interface IModelRepository<TModel> where TModel : class
     {
-        Task SaveStudentsToDrive();
+        Task SaveToDrive();
         /// <summary>
         /// Get all records of this model
         /// </summary>

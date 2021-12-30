@@ -1,6 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using static PairMatching.Tools.HelperFunction;
 
 namespace PairMatching.Models
 {
@@ -90,7 +92,7 @@ namespace PairMatching.Models
         /// <summary>
         /// the id of the students that match to this.
         /// </summary>
-        public List<int> MatchTo { get; set; } = new List<int>();
+        public List<int> MatchTo { get; set; } = new();
 
         /// <summary>
         /// Desired learning time and day
@@ -101,14 +103,34 @@ namespace PairMatching.Models
 
         public int PrefferdNumberOfMatchs { get; set; }
 
+        // TODO remove this
         public string InfoAbout { get; set; } = "";
 
         public MoreLanguages MoreLanguages { get; set; }
+
+        public bool IsInArchive { get; set; }
 
         public IEnumerable<string> Languages { get; set; }
 
         public List<Note> Notes { get; set; } = new();
 
-        public bool IsInArchive { get; set; }
+        [BsonIgnore]
+        public bool IsKnowMoreLanguages { get => Languages.Any(); }
+
+        [BsonIgnore]
+        public IEnumerable<Student> FirstSuggestStudents { get; set; }
+
+        [BsonIgnore]
+        public IEnumerable<Student> SecondeSuggestStudents { get; set; }
+
+        [BsonIgnore]
+        public int DiffFromIsrael { get => GetDifferenceUtc(UtcOffset).Hours; }
+
+        [BsonIgnore]
+        public bool IsOpenToMatch
+        {
+            get => !IsSimpleStudent && (MatchTo.Count < PrefferdNumberOfMatchs);
+        }
+
     }
 }

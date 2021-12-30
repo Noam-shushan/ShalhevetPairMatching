@@ -9,4 +9,8 @@
     <PackageReference Include="MongoDB.Bson" Version="2.14.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tools\Tools.csproj" />
+  </ItemGroup>
+
 </Project>

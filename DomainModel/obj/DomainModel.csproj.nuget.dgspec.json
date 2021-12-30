@@ -178,7 +178,11 @@
         "frameworks": {
           "net5.0": {
             "targetAlias": "net5.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Tools\\Tools.csproj": {
+                "projectPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Tools\\Tools.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
