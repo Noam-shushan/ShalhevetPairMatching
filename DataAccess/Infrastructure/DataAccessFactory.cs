@@ -10,7 +10,7 @@ namespace PairMatching.DataAccess.Infrastructure
         public static IDataAccess GetDalFactory(IConfiguration config)
         {      
             var connectionString = config.GetConnectionString("Remote");
-            var dalImp = config.GetSection("DataAccess")["Default"];
+            var dalImp = config.GetSection("DataAccess")["Test"];
             if(dalImp == "Mongo")
             {
                 return new MongoDataAccess(connectionString);

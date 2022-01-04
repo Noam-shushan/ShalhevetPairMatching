@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MimeKit;
 using MailKit.Net.Smtp;
-using MailKit;
 using System.IO;
 
 namespace PairMatching.DomainModel.Email
@@ -18,6 +17,8 @@ namespace PairMatching.DomainModel.Email
     {
         readonly MailSettings _mailSettings;
 
+        const int CHUNK_SIZE = 80;
+
         public SendEmail(MailSettings mailSettings)
         {
             _mailSettings = mailSettings;
@@ -26,7 +27,7 @@ namespace PairMatching.DomainModel.Email
         /// <summary>
         /// The destination address of the email
         /// </summary>
-        private string _to = "";
+        private List<string> _to = new();
 
         /// <summary>
         /// The email subject
@@ -43,9 +44,18 @@ namespace PairMatching.DomainModel.Email
         /// </summary>
         /// <param name="to">email address</param>
         /// <returns>this email sender</returns>
-        public SendEmail To(string to)
+        public SendEmail To(IEnumerable<string> to)
         {
-            _to = to;
+            _to = to.ToList();
+            var validAdrress = new List<string>();
+            foreach (var addr in _to)
+            {
+                if(EmailValidator.Validate(addr) == EmailAddressStatus.Valid)
+                {
+                    validAdrress.Add(addr.Trim());
+                }
+            }
+            _to = validAdrress;
             return this;
         }
 
@@ -78,51 +88,69 @@ namespace PairMatching.DomainModel.Email
         /// <returns></returns>
         public async Task SendOpenMailAsync(IEnumerable<string> fileAttachments = null)
         {
-            if (_to == string.Empty)
+            if (_to?.Count == 0)
             {
-                //throw new Exception("Missing destination address to send email");
-                return;
+                throw new Exception("Missing destination address to send email");
             }
 
-            await SendOpenEmailToOne(fileAttachments);
-        }
-
-        private async Task SendOpenEmailToOne(IEnumerable<string> fileAttachments)
-        {
             try
             {
-                using var client = new SmtpClient();
+                SmtpClient client = await GetSmtpClienet();
 
-                await client.ConnectAsync(_mailSettings.Host, _mailSettings.Port, _mailSettings.EnableSsl);
+                IEnumerable<MailboxAddress> listOfAddress = GetAddresses();
+                
+                var message = GetMailMessage(fileAttachments);
 
-                if (!string.IsNullOrEmpty(_mailSettings.Password))
+                while (listOfAddress.Any())
                 {
-                    await client.AuthenticateAsync(_mailSettings.From, _mailSettings.Password);
+                    message.To.Clear();
+                    var temp = listOfAddress.Take(CHUNK_SIZE);
+                    message.To.AddRange(temp);
+                    listOfAddress = listOfAddress.Skip(CHUNK_SIZE);
+                    await client.SendAsync(message);
                 }
-
-                using var message = new MimeMessage();
-
-                var from = new MailboxAddress(_mailSettings.UserName, _mailSettings.From);
-                message.From.Add(from);
-
-                MailboxAddress to = new MailboxAddress("User", _to);
-                message.To.Add(to);
-
-                var bodyBuilder = new BodyBuilder
-                {
-                    TextBody = _template.ToString(),
-                };
-                SetAttachments(bodyBuilder, fileAttachments);
-
-                message.Body = bodyBuilder.ToMessageBody();
-                message.Subject = _subject;
-
-                await client.SendAsync(message);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        private MimeMessage GetMailMessage(IEnumerable<string> fileAttachments)
+        {
+            var message = new MimeMessage();
+
+            var from = new MailboxAddress(_mailSettings.UserName, _mailSettings.From);
+            message.From.Add(from);
+
+            var bodyBuilder = new BodyBuilder
+            {
+                TextBody = _template.ToString(),
+            };
+            SetAttachments(bodyBuilder, fileAttachments);
+
+            message.Body = bodyBuilder.ToMessageBody();
+            message.Subject = _subject;
+            return message;
+        }
+
+
+        private IEnumerable<MailboxAddress> GetAddresses()
+        {
+            var listOfAddress = new List<MailboxAddress>();
+            foreach (var addr in _to)
+            {
+                try
+                {
+                    listOfAddress.Add(new MailboxAddress("User", addr));
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+
+            return listOfAddress;
         }
 
         private void SetAttachments(BodyBuilder bodyBuilder, IEnumerable<string> fileAttachments)
@@ -141,6 +169,82 @@ namespace PairMatching.DomainModel.Email
                     bodyBuilder.Attachments.Add(f);
                 }
             }
+        }
+
+        /// <summary>
+        /// Send email template
+        /// </summary>
+        /// <returns></returns>
+        public async Task SendAutoEmailAsync()
+        {
+            if (_to?.Count == 0)
+            {
+                throw new Exception("Missing destination address to send email");
+            }
+            try
+            {
+                SmtpClient client = await GetSmtpClienet();
+
+                using var message = new MimeMessage();
+
+                var from = new MailboxAddress(_mailSettings.UserName, _mailSettings.From);
+                message.From.Add(from);
+
+                IEnumerable<MailboxAddress> listOfAddress = GetAddresses();
+
+                message.To.AddRange(listOfAddress);
+
+                var bodyBuilder = new BodyBuilder
+                {
+                    HtmlBody = _template.ToString(),
+                };
+
+                message.Body = bodyBuilder.ToMessageBody();
+                message.Subject = _subject;
+
+                await client.SendAsync(message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        SmtpClient _smtpClient;
+        private async Task<SmtpClient> GetSmtpClienet()
+        {
+            if(_smtpClient != null)
+            {
+                return _smtpClient;
+            }
+            _smtpClient = new SmtpClient();
+
+            await _smtpClient.ConnectAsync(_mailSettings.Host, _mailSettings.Port, _mailSettings.EnableSsl);
+
+            if (!string.IsNullOrEmpty(_mailSettings.Password))
+            {
+                await _smtpClient.AuthenticateAsync(_mailSettings.From, _mailSettings.Password);
+            }
+
+            return _smtpClient;
+        }
+
+        /// <summary>
+        /// Send email template
+        /// </summary>
+        /// <returns></returns>
+        public async Task SendAutoEmailAsync<T>(T model, MailTemplate template)
+        {
+            string result = new CreateEmailTemplate()
+                .Compile(model, template.Template.ToString());
+
+
+            var temp = new StringBuilder()
+                .Append(result);
+
+            await Subject(template.Subject)
+                .Template(temp)
+                .SendAutoEmailAsync();
         }
     }
 }

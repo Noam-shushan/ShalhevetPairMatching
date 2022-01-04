@@ -1,8 +1,10 @@
 ﻿using PairMatching.DomainModel.Domains;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,8 +32,14 @@ namespace PairMatching.Gui
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            //var s = await _domains.StudentsDomain.GetAllStudents();
-            await _domains.Initialization();
+            var sw = new Stopwatch();
+            sw.Start();
+
+            await _domains.TestEmailToOne();
+            await _domains.TestEmailToMany();
+
+            sw.Stop();
+            MessageBox.Show(sw.Elapsed.ToString());
         }
     }
 }

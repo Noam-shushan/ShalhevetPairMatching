@@ -33,6 +33,34 @@ namespace PairMatching.DomainModel.Domains
             _emailSender = emailSender;
         }
 
+        public async Task TestEmailToOne()
+        {
+            var student = await _repositories
+                .StudentRepositry.GetByIdAsync(3);
+            
+            await _emailSender.To(new List<string>{ student.Email })
+                .SendAutoEmailAsync(student, Templates.SuccessfullyRegisteredHebrew);
+
+        }
+
+        public async Task TestEmailToMany()
+        {
+            var students = await _repositories
+                .StudentRepositry.GetAllAsync();
+
+            var emails = from s in students
+                         select s.Email;
+
+            await _emailSender.To(emails)
+                .Subject("Test many: subject")
+                .Template(new StringBuilder()
+                .Append("Test many: body"))
+                .SendOpenMailAsync(new List<string> 
+                { 
+                    @"C:\Users\Asuspcc\Desktop\מכון לב\מסמכים\appendix11702.pdf" 
+                });
+        }
+
         public async Task Initialization()
         {
             var spredsheetLastRange = 

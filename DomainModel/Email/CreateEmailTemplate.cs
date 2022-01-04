@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace PairMatching.DomainModel.Email
 {
-    internal class CreateEmailTemplate<TModle>
+    internal class CreateEmailTemplate
     {
-        private string GetPropValue(TModle obj, string name)
+        private string GetPropValue(object obj, string name)
         {
             foreach (string part in name.Split('.'))
             {
@@ -17,13 +17,13 @@ namespace PairMatching.DomainModel.Email
                 var info = type.GetProperty(part);
                 if (info == null) { return null; }
 
-                obj = (TModle)info.GetValue(obj, null);
+                obj = info.GetValue(obj, null);
             }
 
             return obj.ToString();
         }
 
-        public string Compile(TModle model, string template)
+        public string Compile(object model, string template)
         {
             var allPropToReplace = from s in template.Split(' ')
                                    where s.StartsWith("@Model")

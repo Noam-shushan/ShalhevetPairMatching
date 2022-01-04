@@ -10,7 +10,7 @@ namespace PairMatching.DomainModel.GoogleSheet
     /// <summary>
     /// Descriptor for the values in the spreadsheet of the students from around the world
     /// </summary>
-    internal class EnglishDiscriptor : IStudentDescriptor
+    public class EnglishDiscriptor : IStudentDescriptor
     {
         /// <summary>
         /// The spreadsheet id

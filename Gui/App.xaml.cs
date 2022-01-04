@@ -4,12 +4,7 @@ using PairMatching.DomainModel.Domains;
 using PairMatching.DomainModel.Email;
 using PairMatching.DomainModel.GoogleSheet;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace PairMatching.Gui
@@ -40,6 +35,12 @@ namespace PairMatching.Gui
             mainWindow.Show();
         }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            Current.Shutdown();
+            base.OnExit(e);
+        }
+
         private void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
@@ -51,6 +52,7 @@ namespace PairMatching.Gui
             services.AddTransient<SendEmail>();
 
             services.AddTransient<IStudentDescriptor, HebrewDescriptor>();
+            services.AddTransient<IStudentDescriptor, EnglishDiscriptor>();
 
             services.AddSingleton<DomainsContainer>();
             services.AddTransient<MainWindow>();

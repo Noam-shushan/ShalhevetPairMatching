@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v5.0": {
       "Models/1.0.0": {
         "dependencies": {
-          "MongoDB.Bson": "2.14.1"
+          "MongoDB.Bson": "2.14.1",
+          "Tools": "1.0.0"
         },
         "runtime": {
           "Models.dll": {}
@@ -25,7 +26,12 @@
           }
         }
       },
-      "System.Runtime.CompilerServices.Unsafe/5.0.0": {}
+      "System.Runtime.CompilerServices.Unsafe/5.0.0": {},
+      "Tools/1.0.0": {
+        "runtime": {
+          "Tools.dll": {}
+        }
+      }
     }
   },
   "libraries": {
@@ -47,6 +53,11 @@
       "sha512": "sha512-ZD9TMpsmYJLrxbbmdvhwt9YEgG5WntEnZ/d1eH8JBX9LBp+Ju8BSBhUGbZMNVHHomWo2KVImJhTDl2hIgw/6MA==",
       "path": "system.runtime.compilerservices.unsafe/5.0.0",
       "hashPath": "system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+    },
+    "Tools/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

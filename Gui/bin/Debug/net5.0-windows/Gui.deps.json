@@ -423,7 +423,8 @@
       },
       "Models/1.0.0": {
         "dependencies": {
-          "MongoDB.Bson": "2.14.1"
+          "MongoDB.Bson": "2.14.1",
+          "Tools": "1.0.0"
         },
         "runtime": {
           "Models.dll": {}
