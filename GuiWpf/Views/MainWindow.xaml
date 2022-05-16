@@ -7,11 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     Title="MainWindow"
-    Width="800"
-    Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FlowDirection="RightToLeft"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    WindowState="Maximized"
     mc:Ignorable="d">
     <Grid>
-
+        <local:ParticipiantsView />
     </Grid>
 </Window>

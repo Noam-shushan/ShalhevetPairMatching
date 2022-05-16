@@ -10,11 +10,11 @@ none
 false
 TRACE;RELEASE;NET;NET5_0;NETCOREAPP
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\App.xaml
-1-1644662438
+2-1118251706
 3124249034
-4400368546
+61673824308
 221-1060971115
-Views\MainWindow.xaml;
+Views\MainWindow.xaml;Views\ParticipiantsView.xaml;
 
 True
 

@@ -14,6 +14,7 @@ using PairMatching.Configuration;
 using System.IO;
 using Newtonsoft.Json;
 using PairMatching.DomainModel.Email;
+using PairMatching.DomainModel.Services;
 
 namespace GuiWpf
 {
@@ -27,6 +28,7 @@ namespace GuiWpf
         {
             containerRegistry.RegisterInstance(GetConfigurations());
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
+            containerRegistry.Register<IParticipantService, ParticipantService>();
             containerRegistry.RegisterScoped<SendEmail>();
         }
 

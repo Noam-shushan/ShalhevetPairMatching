@@ -69,3 +69,6 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\ref\GuiWpf.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\GuiWpf.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\GuiWpf.genruntimeconfig.cache
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\ParticipiantsView.g.cs
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\ParticipiantsView.baml

@@ -10,5 +10,7 @@ namespace PairMatching.DomainModel.Services
     public interface IParticipantService
     {
         Task<IEnumerable<Participant>> GetAllParticipants();
+
+        Task<IEnumerable<Student>> GetAllStudents();
     }
 }

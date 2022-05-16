@@ -69,4 +69,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MatchingCalculations\" />
+  </ItemGroup>
 </Project>
