@@ -18,5 +18,12 @@ namespace PairMatching.Tools
         {
             return offset - TimeZoneInfo.Local.BaseUtcOffset;
         }
+
+        public static dynamic GetCurrentId<T>(T record)
+        {
+            return record.GetType()
+                .GetProperty("Id")
+                .GetValue(record, null);
+        }
     }
 }

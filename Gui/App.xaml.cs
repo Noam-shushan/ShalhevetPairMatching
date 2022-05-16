@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using PairMatching.DomainModel.Domains;
 using PairMatching.DomainModel.Email;
 using PairMatching.DomainModel.GoogleSheet;
+using PairMatching.Gui.ViewModels;
+using PairMatching.Gui.Views;
+using PairMatching.Models;
 using System;
 using System.IO;
 using System.Windows;
@@ -14,7 +17,7 @@ namespace PairMatching.Gui
     /// </summary>
     public partial class App : Application
     {
-        public IServiceProvider ServiceProvider { get; private set; }
+        public static IServiceProvider ServiceProvider { get; private set; }
 
         public IConfiguration Configuration { get; private set; }
 
@@ -29,8 +32,9 @@ namespace PairMatching.Gui
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
-            ServiceProvider = serviceCollection.BuildServiceProvider();
+            ServiceProvider = serviceCollection.BuildServiceProvider(); 
 
+            //var viewModel = ServiceProvider.GetRequiredService<MainViewModel>();
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
@@ -51,10 +55,16 @@ namespace PairMatching.Gui
             services.AddTransient(x => mailSettings);
             services.AddTransient<SendEmail>();
 
-            services.AddTransient<IStudentDescriptor, HebrewDescriptor>();
-            services.AddTransient<IStudentDescriptor, EnglishDiscriptor>();
+            var configDataAccess = new ConfigDataAccess
+            {
+                ConnctionsStrings = Configuration.GetConnectionString("Remote"),
+                DataAccessType = Configuration.GetSection("DataAccess")["Default"]
+            };
+            services.AddSingleton(x => configDataAccess);
 
             services.AddSingleton<DomainsContainer>();
+            
+            services.AddTransient<MainViewModel>();
             services.AddTransient<MainWindow>();
         }
     }

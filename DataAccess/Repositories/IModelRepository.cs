@@ -14,13 +14,7 @@ namespace PairMatching.DataAccess.Repositories
         /// Get all records of this model
         /// </summary>
         /// <returns>All records of this model</returns>
-        Task<IEnumerable<TModel>> GetAllAsync();
-
-        /// <summary>
-        /// Get all records of this model
-        /// </summary>
-        /// <returns>All records of this model</returns>
-        Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>> predicate);
+        Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>> predicate = null);
 
         /// <summary>
         /// Get single record of this model

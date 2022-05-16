@@ -9,7 +9,14 @@
     Width="800"
     Height="450"
     mc:Ignorable="d">
-    <Grid >
-        <Button Content="Button" HorizontalAlignment="Left" Margin="281,217,0,0" VerticalAlignment="Top" Height="57" Width="77" Click="Button_Click"/>
+    <Grid>
+        <Button
+            Width="511"
+            Height="85"
+            Margin="107,59,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Click="Button_Click"
+            Content="Test emails" />
     </Grid>
 </Window>

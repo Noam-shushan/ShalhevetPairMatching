@@ -75,6 +75,30 @@
           "lib/net5.0/MailKit.dll": {}
         }
       },
+      "MaterialDesignColors/2.0.5-ci45": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/MaterialDesignColors.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/MaterialDesignColors.dll": {}
+        }
+      },
+      "MaterialDesignThemes/4.4.0-ci45": {
+        "type": "package",
+        "dependencies": {
+          "MaterialDesignColors": "[2.0.5-ci45, 3.0.0)"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {}
+        },
+        "build": {
+          "build/MaterialDesignThemes.targets": {}
+        }
+      },
       "Microsoft.Extensions.Configuration/6.0.0": {
         "type": "package",
         "dependencies": {
@@ -243,6 +267,9 @@
         "runtime": {
           "lib/net5.0/MimeKit.dll": {}
         }
+      },
+      "MongoDB.Analyzer/1.0.0": {
+        "type": "package"
       },
       "MongoDB.Bson/2.14.1": {
         "type": "package",
@@ -484,12 +511,22 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
+      "Configurations/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "compile": {
+          "bin/placeholder/Configurations.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Configurations.dll": {}
+        }
+      },
       "DataAccess/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "6.0.0",
           "Models": "1.0.0",
+          "MongoDB.Analyzer": "1.0.0",
           "MongoDB.Driver": "2.14.1",
           "Newtonsoft.Json": "13.0.1",
           "Tools": "1.0.0"
@@ -505,6 +542,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
+          "Configurations": "1.0.0",
           "DataAccess": "1.0.0",
           "Google.Apis.Sheets.v4": "1.55.0.2371",
           "MailKit": "3.0.0",
@@ -700,6 +738,61 @@
         "lib/netstandard2.1/MailKit.xml",
         "mailkit.3.0.0.nupkg.sha512",
         "mailkit.nuspec"
+      ]
+    },
+    "MaterialDesignColors/2.0.5-ci45": {
+      "sha512": "rf06jqjK4VZWopkqtsCmFSsllIC933vDqlz9ViT5qHQrFAip3rXykSpJUkAVmLsRomWuROnW1K33/8G9LMp9Qg==",
+      "type": "package",
+      "path": "materialdesigncolors/2.0.5-ci45",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "images/MaterialDesignColors.Icon.png",
+        "lib/net452/MaterialDesignColors.dll",
+        "lib/net452/MaterialDesignColors.pdb",
+        "lib/netcoreapp3.1/MaterialDesignColors.dll",
+        "lib/netcoreapp3.1/MaterialDesignColors.pdb",
+        "materialdesigncolors.2.0.5-ci45.nupkg.sha512",
+        "materialdesigncolors.nuspec"
+      ]
+    },
+    "MaterialDesignThemes/4.4.0-ci45": {
+      "sha512": "qMB60UcYLK3cooHvoJL3yR1Aqb3jLFMc+qqgJaN+cXLIH4CStKAYcv0Dz3YNliFj/wzxiRzBqF1NCQ7xecCNng==",
+      "type": "package",
+      "path": "materialdesignthemes/4.4.0-ci45",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/MaterialDesignThemes.targets",
+        "build/Resources/Roboto/Roboto-Black.ttf",
+        "build/Resources/Roboto/Roboto-BlackItalic.ttf",
+        "build/Resources/Roboto/Roboto-Bold.ttf",
+        "build/Resources/Roboto/Roboto-BoldItalic.ttf",
+        "build/Resources/Roboto/Roboto-Italic.ttf",
+        "build/Resources/Roboto/Roboto-Light.ttf",
+        "build/Resources/Roboto/Roboto-LightItalic.ttf",
+        "build/Resources/Roboto/Roboto-Medium.ttf",
+        "build/Resources/Roboto/Roboto-MediumItalic.ttf",
+        "build/Resources/Roboto/Roboto-Regular.ttf",
+        "build/Resources/Roboto/Roboto-Thin.ttf",
+        "build/Resources/Roboto/Roboto-ThinItalic.ttf",
+        "build/Resources/Roboto/RobotoCondensed-Bold.ttf",
+        "build/Resources/Roboto/RobotoCondensed-BoldItalic.ttf",
+        "build/Resources/Roboto/RobotoCondensed-Italic.ttf",
+        "build/Resources/Roboto/RobotoCondensed-Light.ttf",
+        "build/Resources/Roboto/RobotoCondensed-LightItalic.ttf",
+        "build/Resources/Roboto/RobotoCondensed-Regular.ttf",
+        "images/MaterialDesignThemes.Icon.png",
+        "lib/net452/MaterialDesignThemes.Wpf.dll",
+        "lib/net452/MaterialDesignThemes.Wpf.pdb",
+        "lib/net452/MaterialDesignThemes.Wpf.xml",
+        "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll",
+        "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.pdb",
+        "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.xml",
+        "materialdesignthemes.4.4.0-ci45.nupkg.sha512",
+        "materialdesignthemes.nuspec",
+        "tools/VisualStudioToolsManifest.xml"
       ]
     },
     "Microsoft.Extensions.Configuration/6.0.0": {
@@ -974,6 +1067,26 @@
         "lib/netstandard2.1/MimeKit.xml",
         "mimekit.3.0.0.nupkg.sha512",
         "mimekit.nuspec"
+      ]
+    },
+    "MongoDB.Analyzer/1.0.0": {
+      "sha512": "dS1ODgAu891Aiw+AWAZlSCHs/Q9M10vv+yqCSeQ6Di9UU/fykXHt0sgeMb1GwolCqgH5xHwfpzL8yUFavFKvvw==",
+      "type": "package",
+      "path": "mongodb.analyzer/1.0.0",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "analyzers/dotnet/cs/Analytics.dll",
+        "analyzers/dotnet/cs/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "analyzers/dotnet/cs/MongoDB.Analyzer.dll",
+        "analyzers/dotnet/cs/Newtonsoft.Json.dll",
+        "mongodb.analyzer.1.0.0.nupkg.sha512",
+        "mongodb.analyzer.nuspec",
+        "packageIcon.png",
+        "tools/install.ps1",
+        "tools/uninstall.ps1"
       ]
     },
     "MongoDB.Bson/2.14.1": {
@@ -1447,6 +1560,11 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Configurations/1.0.0": {
+      "type": "project",
+      "path": "../Configurations/Configurations.csproj",
+      "msbuildProject": "../Configurations/Configurations.csproj"
+    },
     "DataAccess/1.0.0": {
       "type": "project",
       "path": "../DataAccess/DataAccess.csproj",
@@ -1471,6 +1589,7 @@
   "projectFileDependencyGroups": {
     "net5.0-windows7.0": [
       "DomainModel >= 1.0.0",
+      "MaterialDesignThemes >= 4.4.0-ci45",
       "Microsoft.Extensions.Configuration >= 6.0.0",
       "Microsoft.Extensions.Configuration.Binder >= 6.0.0",
       "Microsoft.Extensions.Configuration.Json >= 6.0.0",
@@ -1528,6 +1647,10 @@
       "net5.0-windows7.0": {
         "targetAlias": "net5.0-windows",
         "dependencies": {
+          "MaterialDesignThemes": {
+            "target": "Package",
+            "version": "[4.4.0-ci45, )"
+          },
           "Microsoft.Extensions.Configuration": {
             "target": "Package",
             "version": "[6.0.0, )"
@@ -1563,7 +1686,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

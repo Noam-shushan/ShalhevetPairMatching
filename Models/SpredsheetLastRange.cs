@@ -18,7 +18,7 @@ namespace PairMatching.Models
         public bool Equals(SpredsheetLastRange other)
         {
             //Check whether the compared object is null.
-            if (ReferenceEquals(other, null))
+            if (other is null)
                 return false;
 
             //Check whether the compared object references the same data.

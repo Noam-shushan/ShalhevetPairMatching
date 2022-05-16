@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "07Sx5098IDVpnMUdNKdFXiTyKxpRUpatmGtE3hDfW/nam7yWWKC22ipymg0Yu1HsssL4VafVqp404GC8TZFHPg==",
+  "dgSpecHash": "W9Porp0ZJF8Jnd0c7b/dMUCir32n1ioYscE43VXaojAuePn2mnzYdsmMYC2Vegmuc+rD0pzBPooUswNMxUPZog==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\DataAccess\\DataAccess.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Asuspcc\\.nuget\\packages\\dnsclient\\1.4.0\\dnsclient.1.4.0.nupkg.sha512",
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\6.0.0\\microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.analyzer\\1.0.0\\mongodb.analyzer.1.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.bson\\2.14.1\\mongodb.bson.2.14.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.driver\\2.14.1\\mongodb.driver.2.14.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.driver.core\\2.14.1\\mongodb.driver.core.2.14.1.nupkg.sha512",
@@ -14,7 +13,7 @@
     "C:\\Users\\Asuspcc\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\sharpcompress\\0.30.1\\sharpcompress.0.30.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }

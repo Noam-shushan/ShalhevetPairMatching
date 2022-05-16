@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Y3qz/KUvoUBDXyuiVptg2iWdgrpBqP/lpspDPeJWiH5InTT6IDD9pWS1evM8shDpL+H/JhxkZ09y04ROKq3PZg==",
+  "dgSpecHash": "1uDFZyuZQywd13qaXruiP6CTEdb64kBlhv9uKtHDdBXpylO3dszsiPYeFhkJfUI7sPtFlISLHBhY8Zevb2CkZA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Gui\\Gui.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,8 @@
     "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.core\\1.55.0\\google.apis.core.1.55.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.sheets.v4\\1.55.0.2371\\google.apis.sheets.v4.1.55.0.2371.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mailkit\\3.0.0\\mailkit.3.0.0.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\materialdesigncolors\\2.0.5-ci45\\materialdesigncolors.2.0.5-ci45.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\materialdesignthemes\\4.4.0-ci45\\materialdesignthemes.4.4.0-ci45.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\microsoft.extensions.configuration\\6.0.0\\microsoft.extensions.configuration.6.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\6.0.0\\microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\microsoft.extensions.configuration.binder\\6.0.0\\microsoft.extensions.configuration.binder.6.0.0.nupkg.sha512",
@@ -22,6 +24,7 @@
     "C:\\Users\\Asuspcc\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\6.0.0\\microsoft.extensions.filesystemglobbing.6.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mimekit\\3.0.0\\mimekit.3.0.0.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.analyzer\\1.0.0\\mongodb.analyzer.1.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.bson\\2.14.1\\mongodb.bson.2.14.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.driver\\2.14.1\\mongodb.driver.2.14.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.driver.core\\2.14.1\\mongodb.driver.core.2.14.1.nupkg.sha512",

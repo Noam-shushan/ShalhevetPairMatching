@@ -10,7 +10,7 @@ namespace PairMatching.DataAccess.Repositories
 {
     public class ConfigRepositry
     {
-        IDataAccess _dataAccess;
+        readonly IDataAccess _dataAccess;
 
         readonly string countersAndSpredsheetLastRange = "CountersAndLastDataOfSpredsheet";
 

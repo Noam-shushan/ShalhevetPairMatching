@@ -38,8 +38,14 @@ namespace PairMatching.Models
         /// <summary>
         /// Preferred tracks of learning {TANYA, TALMUD, PARASHA ...}
         /// </summary>
-        public PrefferdTracks PreferredTrack { get; set; }
+        public PrefferdTracks PrefferdTracks { get; set; }
 
         public List<Note> Notes { get; set; } = new List<Note>();
+        
+        [BsonIgnore]
+        public Student StudentFromIsrael { get; set; }
+        
+        [BsonIgnore]
+        public Student StudentFromWorld { get; set; }
     }
 }

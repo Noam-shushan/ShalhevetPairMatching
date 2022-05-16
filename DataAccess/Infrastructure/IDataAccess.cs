@@ -12,9 +12,7 @@ namespace PairMatching.DataAccess.Infrastructure
     { 
         Task<T> LoadOneAsync<T>(string collectionName, int id);
 
-        Task<IEnumerable<T>> LoadManyAsync<T>(string collectionName, Expression<Func<T, bool>> predicate);
-
-        Task<IEnumerable<T>> LoadManyAsync<T>(string collectionName);
+        Task<IEnumerable<T>> LoadManyAsync<T>(string collectionName, Expression<Func<T, bool>> predicate = null);
 
         Task InsertMany<T>(string collectionName, IEnumerable<T> records);
 

@@ -10,5 +10,6 @@
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("appsettings.json")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pairmatching.json")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("shalhevet_logo.ico")]
 
 

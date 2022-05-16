@@ -56,13 +56,13 @@ namespace PairMatching.DomainModel.GoogleSheet
         /// <param name="spreadsheetId">The spreadsheet id</param>
         /// <param name="range">The spreadsheet range of rows and columns</param>
         /// <returns>Table of string values</returns>
-        public async Task<List<List<string>>> ReadEntries(string spreadsheetId, string range)
+        public List<List<string>> ReadEntries(string spreadsheetId, string range)
         {
             try
             {
                 var request = service.Spreadsheets.Values.Get(spreadsheetId, range);
 
-                var response = await request.ExecuteAsync();
+                var response = request.Execute();
 
                 var values = response.Values;
 
@@ -83,9 +83,9 @@ namespace PairMatching.DomainModel.GoogleSheet
         /// </summary>
         /// <param name="studentDescriptor">A student descriptor</param>
         /// <returns>Table of string values</returns>
-        public async Task<List<List<string>>> ReadEntries(IStudentDescriptor studentDescriptor)
+        public List<List<string>> ReadEntries(IStudentDescriptor studentDescriptor)
         {
-            return await ReadEntries(studentDescriptor.SpreadsheetId, studentDescriptor.Range);
+            return ReadEntries(studentDescriptor.SpreadsheetId, studentDescriptor.Range);
         }
 
         /// <summary>

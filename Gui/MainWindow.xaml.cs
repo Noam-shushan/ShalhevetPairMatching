@@ -23,7 +23,8 @@ namespace PairMatching.Gui
     /// </summary>
     public partial class MainWindow : Window
     {
-        DomainsContainer _domains;
+        readonly DomainsContainer _domains;
+        
         public MainWindow(DomainsContainer domains) 
         {
             InitializeComponent();
@@ -34,9 +35,10 @@ namespace PairMatching.Gui
         {
             var sw = new Stopwatch();
             sw.Start();
+            var s = await _domains.StudentsDomain.GetAllStudentsAsync();
+            //var p = _domains.PairsDomain.GetPairsAsync();
 
-            await _domains.TestEmailToOne();
-            await _domains.TestEmailToMany();
+            //await Task.WhenAll(s, p);
 
             sw.Stop();
             MessageBox.Show(sw.Elapsed.ToString());

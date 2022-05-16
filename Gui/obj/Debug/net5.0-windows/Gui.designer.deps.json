@@ -14,6 +14,56 @@
           }
         }
       },
+      "Google.Apis/1.55.0": {
+        "dependencies": {
+          "Google.Apis.Core": "1.55.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.dll": {
+            "assemblyVersion": "1.55.0.0",
+            "fileVersion": "1.55.0.0"
+          }
+        }
+      },
+      "Google.Apis.Auth/1.55.0": {
+        "dependencies": {
+          "Google.Apis": "1.55.0",
+          "Google.Apis.Core": "1.55.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {
+            "assemblyVersion": "1.55.0.0",
+            "fileVersion": "1.55.0.0"
+          },
+          "lib/netstandard2.0/Google.Apis.Auth.dll": {
+            "assemblyVersion": "1.55.0.0",
+            "fileVersion": "1.55.0.0"
+          }
+        }
+      },
+      "Google.Apis.Core/1.55.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {
+            "assemblyVersion": "1.55.0.0",
+            "fileVersion": "1.55.0.0"
+          }
+        }
+      },
+      "Google.Apis.Sheets.v4/1.55.0.2371": {
+        "dependencies": {
+          "Google.Apis": "1.55.0",
+          "Google.Apis.Auth": "1.55.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Sheets.v4.dll": {
+            "assemblyVersion": "1.55.0.2371",
+            "fileVersion": "1.55.0.2371"
+          }
+        }
+      },
       "MailKit/3.0.0": {
         "dependencies": {
           "MimeKit": "3.0.0"
@@ -22,6 +72,25 @@
           "lib/net5.0/MailKit.dll": {
             "assemblyVersion": "3.0.0.0",
             "fileVersion": "3.0.0.0"
+          }
+        }
+      },
+      "MaterialDesignColors/2.0.5-ci45": {
+        "runtime": {
+          "lib/netcoreapp3.1/MaterialDesignColors.dll": {
+            "assemblyVersion": "2.0.5.0",
+            "fileVersion": "2.0.5.0"
+          }
+        }
+      },
+      "MaterialDesignThemes/4.4.0-ci45": {
+        "dependencies": {
+          "MaterialDesignColors": "2.0.5-ci45"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {
+            "assemblyVersion": "4.4.0.0",
+            "fileVersion": "4.4.0.0"
           }
         }
       },
@@ -164,6 +233,7 @@
           }
         }
       },
+      "MongoDB.Analyzer/1.0.0": {},
       "MongoDB.Bson/2.14.1": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
@@ -378,12 +448,54 @@
       "path": "dnsclient/1.4.0",
       "hashPath": "dnsclient.1.4.0.nupkg.sha512"
     },
+    "Google.Apis/1.55.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-siw3M6VOFbkrTlOTo7F89BrdDFQw/XVks8qo4xDMXwGpwKpCt0KWENYs7N2RWFznJghlrmPuZ6Sx13vvYqrynA==",
+      "path": "google.apis/1.55.0",
+      "hashPath": "google.apis.1.55.0.nupkg.sha512"
+    },
+    "Google.Apis.Auth/1.55.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YPHAgzqsU3j/CiPjb2GSvZo2kHhVkFsdfrqA8X5CUWxlwfivcvSn3N5Hi995r4vpGRNmyXNiWZOXbFKps03bmg==",
+      "path": "google.apis.auth/1.55.0",
+      "hashPath": "google.apis.auth.1.55.0.nupkg.sha512"
+    },
+    "Google.Apis.Core/1.55.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QX6pmjRxZYgyGFqsa7tyxdjoEb6ssJ9lv6ub8AxhPd/BCMEglmqzW4GpsuKQZaRg9Qq9gp9HRzjCiLZ3RgmNgw==",
+      "path": "google.apis.core/1.55.0",
+      "hashPath": "google.apis.core.1.55.0.nupkg.sha512"
+    },
+    "Google.Apis.Sheets.v4/1.55.0.2371": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2CCsbvYYbww7WyN8Bmh51srGGQz4vEzQXHU3BxauvfpXdoHz5V1IqDQ9SqfsECG/bPicfSKVw+FYY5bEb+quYg==",
+      "path": "google.apis.sheets.v4/1.55.0.2371",
+      "hashPath": "google.apis.sheets.v4.1.55.0.2371.nupkg.sha512"
+    },
     "MailKit/3.0.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-/az267eMAng48hSeIliTZeCJM3YTuG1MtSDuZ2JpidMhG+PME0oEKBBxRx1fykpyOAAsw23UyUvHgHXoOlU7wA==",
       "path": "mailkit/3.0.0",
       "hashPath": "mailkit.3.0.0.nupkg.sha512"
+    },
+    "MaterialDesignColors/2.0.5-ci45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rf06jqjK4VZWopkqtsCmFSsllIC933vDqlz9ViT5qHQrFAip3rXykSpJUkAVmLsRomWuROnW1K33/8G9LMp9Qg==",
+      "path": "materialdesigncolors/2.0.5-ci45",
+      "hashPath": "materialdesigncolors.2.0.5-ci45.nupkg.sha512"
+    },
+    "MaterialDesignThemes/4.4.0-ci45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qMB60UcYLK3cooHvoJL3yR1Aqb3jLFMc+qqgJaN+cXLIH4CStKAYcv0Dz3YNliFj/wzxiRzBqF1NCQ7xecCNng==",
+      "path": "materialdesignthemes/4.4.0-ci45",
+      "hashPath": "materialdesignthemes.4.4.0-ci45.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration/6.0.0": {
       "type": "package",
@@ -468,6 +580,13 @@
       "sha512": "sha512-k7FxYFU/G45Cd/VEVIUBW45pahJ9DGU1KbQqeQhT1wfmPAFlfHm3HLf6/sioRvzAdSC9kco6XeZAq7Ghtob6Cw==",
       "path": "mimekit/3.0.0",
       "hashPath": "mimekit.3.0.0.nupkg.sha512"
+    },
+    "MongoDB.Analyzer/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dS1ODgAu891Aiw+AWAZlSCHs/Q9M10vv+yqCSeQ6Di9UU/fykXHt0sgeMb1GwolCqgH5xHwfpzL8yUFavFKvvw==",
+      "path": "mongodb.analyzer/1.0.0",
+      "hashPath": "mongodb.analyzer.1.0.0.nupkg.sha512"
     },
     "MongoDB.Bson/2.14.1": {
       "type": "package",

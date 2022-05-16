@@ -16,22 +16,22 @@
     <None Remove="Email\HtmlTemplates\YouGotPairHebrew.html" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.55.0.2371" />
-    <PackageReference Include="MailKit" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.57.0.2657" />
+    <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Configurations\Configurations.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
   <ItemGroup>
-	  <Resource Include="Email\HtmlTemplates\PairBrokeEnglish.html" >
+	  <Resource Include="Email\HtmlTemplates\PairBrokeEnglish.html">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
-	  <Resource Include="Email\HtmlTemplates\PairBrokeHebrew.html" >
+	  <Resource Include="Email\HtmlTemplates\PairBrokeHebrew.html">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
-	  <Resource Include="Email\HtmlTemplates\StatusQuizEnglish.html" >
+	  <Resource Include="Email\HtmlTemplates\StatusQuizEnglish.html">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
     <Resource Include="Email\HtmlTemplates\StatusQuizHebrew.html">
@@ -40,19 +40,19 @@
     <Resource Include="Email\HtmlTemplates\SuccessfullyRegisteredEnglish.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-	  <Resource Include="Email\HtmlTemplates\SuccessfullyRegisteredHebrew.html" >
+	  <Resource Include="Email\HtmlTemplates\SuccessfullyRegisteredHebrew.html">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
-	  <Resource Include="Email\HtmlTemplates\ToSecretaryNewPair.html" >
+	  <Resource Include="Email\HtmlTemplates\ToSecretaryNewPair.html">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
     <Resource Include="Email\HtmlTemplates\ToSecretaryPairBroke.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-	  <Resource Include="Email\HtmlTemplates\YouGotPairEnglish.html" >
+	  <Resource Include="Email\HtmlTemplates\YouGotPairEnglish.html">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
-    <Resource Include="Email\HtmlTemplates\YouGotPairHebrew.html" >
+    <Resource Include="Email\HtmlTemplates\YouGotPairHebrew.html">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Resource>
   </ItemGroup>
@@ -69,5 +69,4 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
 </Project>

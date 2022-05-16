@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using PairMatching.Models;
+﻿using PairMatching.Models;
 using PairMatching.Tools;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 
 namespace PairMatching.DomainModel.GoogleSheet
 {
@@ -15,60 +15,6 @@ namespace PairMatching.DomainModel.GoogleSheet
     {
         const int TIME_COLUMN_START = 2;
         const int TIME_COLUMN_END = 7;
-
-        /// <summary>
-        /// indexer of the values in the Hebrew spreadsheet
-        /// </summary>
-        readonly Dictionary<string, int> columnIndexerHebrewSheet = 
-            new()
-        {
-            {"Name", 1 },
-            {"PrefferdTracks", 7},
-            {"PrefferdGender", 8},
-            {"EnglishLevel", 9},
-            {"DesiredSkillLevel", 10},
-            {"LearningStyle", 11},
-            {"Gender", 12},
-            {"PhoneNumber", 13},
-            {"Email", 14},
-            {"Personal information", 15},
-            {"What are your hopes and expectations from this program", 16},
-            {"Personality trates", 17},
-            {"Who introduced you to this program", 18},
-            {"Additional information", 19},
-            {"PrefferdNumberOfMatchs", 20 },
-            {"MoreLanguages", 21 },
-            {"Languages", 22 }
-        };
-
-        /// <summary>
-        /// indexer of the values in the English spreadsheet
-        /// </summary>
-        readonly Dictionary<string, int> columnIndexerEnglishSheet =
-            new()
-            {
-                {"Name", 1 },
-                {"PrefferdTracks", 7},
-                {"PrefferdGender", 8},
-                {"DesiredEnglishLevel", 9},
-                {"SkillLevel", 10},
-                {"LearningStyle", 11},
-                {"Gender", 12},
-                {"Country", 13},
-                {"UtcOffset", 13},
-                {"PhoneNumber", 14},
-                {"Email", 15},
-                {"Country and City of residence", 16},
-                {"Personal information", 17},
-                {"Personality trates", 18},
-                {"Additional information", 19},
-                {"What are your hopes and expectations from this program", 20},
-                {"Anything else you would like to tell us", 21},
-                {"Who introduced you to this program", 22},
-                {"PrefferdNumberOfMatchs", 23 },
-                {"MoreLanguages", 24 },
-                {"Languages", 25 }
-            };
 
         // Reader for the spreadsheets
         private readonly GoogleSheetReader sheetReader;
@@ -103,28 +49,35 @@ namespace PairMatching.DomainModel.GoogleSheet
         public async Task<string> ReadAsync(IStudentDescriptor studentDescriptor)
         {
             string result = studentDescriptor.Range;
-            var rangeTemp = studentDescriptor.Range;
-            var rowNumStr = rangeTemp
-                .Substring(rangeTemp.IndexOf("A") + 1,
-                rangeTemp.IndexOf(":") - 1);
-            int rowNumber = int.Parse(rowNumStr);
-                var table = await sheetReader.ReadEntries(studentDescriptor);
+            
+            int rowNumber = GetRowCurrentNumber(studentDescriptor.Range);
+            
+            var table = await Task.Run(() => sheetReader.ReadEntries(studentDescriptor));
 
-                if (table == null)
-                    return result;
+            if (table == null)
+                return result;
 
-                // save the last range that read in the spreadsheet
-                result = $"A{table.Count + rowNumber}:Z";
+            // save the last range that read in the spreadsheet
+            result = $"A{table.Count + rowNumber}:Z";
 
-                if (studentDescriptor is HebrewDescriptor)
-                {
-                    CreateDataFromHebrewSheet(table, studentDescriptor);
-                }
-                else if (studentDescriptor is EnglishDiscriptor)
-                {
-                    CreateDataFromEnglishSheet(table, studentDescriptor);
-                }
+            if (studentDescriptor is HebrewDescriptor)
+            {
+                CreateDataFromHebrewSheet(table, studentDescriptor);
+            }
+            else if (studentDescriptor is EnglishDiscriptor)
+            {
+                CreateDataFromEnglishSheet(table, studentDescriptor);
+            }
             return result;
+        }
+
+        private static int GetRowCurrentNumber(string range)
+        {
+            var rowNumStr = range
+                .Substring(range.IndexOf("A") + 1,
+                range.IndexOf(":") - 1);
+            int rowNumber = int.Parse(rowNumStr);
+            return rowNumber;
         }
 
         private void CreateDataFromHebrewSheet(List<List<string>> table, IStudentDescriptor studentDescriptor)
@@ -302,5 +255,57 @@ namespace PairMatching.DomainModel.GoogleSheet
             };
             return result;
         }
+
+        /// <summary>
+        /// indexer of the values in the Hebrew spreadsheet
+        /// </summary>
+        readonly Dictionary<string, int> columnIndexerHebrewSheet = new()
+        {
+            { "Name", 1 },
+            { "PrefferdTracks", 7 },
+            { "PrefferdGender", 8 },
+            { "EnglishLevel", 9 },
+            { "DesiredSkillLevel", 10 },
+            { "LearningStyle", 11 },
+            { "Gender", 12 },
+            { "PhoneNumber", 13 },
+            { "Email", 14 },
+            { "Personal information", 15 },
+            { "What are your hopes and expectations from this program", 16 },
+            { "Personality trates", 17 },
+            { "Who introduced you to this program", 18 },
+            { "Additional information", 19 },
+            { "PrefferdNumberOfMatchs", 20 },
+            { "MoreLanguages", 21 },
+            { "Languages", 22 }
+        };
+
+        /// <summary>
+        /// indexer of the values in the English spreadsheet
+        /// </summary>
+        readonly Dictionary<string, int> columnIndexerEnglishSheet = new()
+        {
+            { "Name", 1 },
+            { "PrefferdTracks", 7 },
+            { "PrefferdGender", 8 },
+            { "DesiredEnglishLevel", 9 },
+            { "SkillLevel", 10 },
+            { "LearningStyle", 11 },
+            { "Gender", 12 },
+            { "Country", 13 },
+            { "UtcOffset", 13 },
+            { "PhoneNumber", 14 },
+            { "Email", 15 },
+            { "Country and City of residence", 16 },
+            { "Personal information", 17 },
+            { "Personality trates", 18 },
+            { "Additional information", 19 },
+            { "What are your hopes and expectations from this program", 20 },
+            { "Anything else you would like to tell us", 21 },
+            { "Who introduced you to this program", 22 },
+            { "PrefferdNumberOfMatchs", 23 },
+            { "MoreLanguages", 24 },
+            { "Languages", 25 }
+        };
     }
 }

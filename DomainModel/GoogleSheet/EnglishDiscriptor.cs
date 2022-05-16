@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using PairMatching.Models;
+﻿using PairMatching.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using PairMatching.Configuration;
 
 namespace PairMatching.DomainModel.GoogleSheet
 {
@@ -27,90 +27,70 @@ namespace PairMatching.DomainModel.GoogleSheet
         /// </summary>
         public string SheetName => "Shalhevet Regestration form תשפ\"א(תגובות)";
 
-        public EnglishDiscriptor(SpredsheetLastRange lastRange, IConfiguration config)
+        public EnglishDiscriptor(SpredsheetLastRange lastRange, MyConfiguration config)
         {
             Range = lastRange.EnglishSheets;
-            SpreadsheetId = config.GetSection("SpreadsheetsId")["English"];
+            SpreadsheetId = config.SpreadsheetsId["English"];
         }
 
         public EnglishLevels GetEnglishLevel(string value)
         {
-            switch (value.ToLower())
+            return value.ToLower() switch
             {
-                case "excellent (i don't know any hebrew whatsoever)":
-                    return EnglishLevels.GOOD;
-                case "doesn't have to be perfect. i know some Hebrew":
-                    return EnglishLevels.NOT_GOOD;
-                case "conversational level":
-                    return EnglishLevels.TALK_LEVEL;
-            }
-            return EnglishLevels.DONT_MATTER;
+                "excellent (i don't know any hebrew whatsoever)" => EnglishLevels.GOOD,
+                "doesn't have to be perfect. i know some Hebrew" => EnglishLevels.NOT_GOOD,
+                "conversational level" => EnglishLevels.TALK_LEVEL,
+                _ => EnglishLevels.DONT_MATTER,
+            };
         }
 
         public Genders GetGender(string value)
         {
-            switch (value.ToLower())
+            return value.ToLower() switch
             {
-                case "male":
-                    return Genders.MALE;
-                case "female":
-                    return Genders.FMALE;
-                case "prefer not to say":
-                    return Genders.DONT_MATTER;
-            }
-            return default;
+                "male" => Genders.MALE,
+                "female" => Genders.FMALE,
+                "prefer not to say" => Genders.DONT_MATTER,
+                _ => default,
+            };
         }
 
         public LearningStyles GetLearningStyle(string value)
         {
-            switch (value.ToLower())
+            return value.ToLower() switch
             {
-                case "deep and slow":
-                    return LearningStyles.DEEP_AND_SLOW;
-                case "progressed, flowing":
-                    return LearningStyles.PROGRESSED_FLOWING;
-                case "text centered":
-                    return LearningStyles.TEXTUALL_CENTERED;
-                case "philosofical, free talking, deriving from text into thought":
-                    return LearningStyles.FREE;
-            }
-            return LearningStyles.DONT_MATTER;
+                "deep and slow" => LearningStyles.DEEP_AND_SLOW,
+                "progressed, flowing" => LearningStyles.PROGRESSED_FLOWING,
+                "text centered" => LearningStyles.TEXTUALL_CENTERED,
+                "philosofical, free talking, deriving from text into thought" => LearningStyles.FREE,
+                _ => LearningStyles.DONT_MATTER,
+            };
         }
 
         public Genders GetPrefferdGender(string value)
         {
-            switch (value.ToLower())
+            return value.ToLower() switch
             {
-                case "only with men":
-                    return Genders.MALE;
-                case "only with women":
-                    return Genders.FMALE;
-                case "no prefrence":
-                    return Genders.DONT_MATTER;
-            }
-            return Genders.DONT_MATTER;
+                "only with men" => Genders.MALE,
+                "only with women" => Genders.FMALE,
+                "no prefrence" => Genders.DONT_MATTER,
+                _ => Genders.DONT_MATTER,
+            };
         }
 
         private PrefferdTracks SwitchPrefferdTracks(string value)
         {
-            switch (value.Replace(",", "").Trim().ToLower())
+            return value.Replace(",", "").Trim().ToLower() switch
             {
-                case "tanya":
-                    return PrefferdTracks.TANYA;
-                case "talmud":
-                    return PrefferdTracks.TALMUD;
-                case "parsha":
-                    return PrefferdTracks.PARASHA;
-                case "tefilah (prayer)":
-                    return PrefferdTracks.PRAYER;
-                case "pirkey avot (ethics of the fathers)":
-                    return PrefferdTracks.PIRKEY_AVOT;
-                case "no preference":
-                    return PrefferdTracks.DONT_MATTER;
-                case "independent learning subject":
-                    return PrefferdTracks.IndependentLearning;
-            }
-            return PrefferdTracks.DONT_MATTER;
+                "tanya" => PrefferdTracks.TANYA,
+                "talmud" => PrefferdTracks.TALMUD,
+                "parsha" => PrefferdTracks.PARASHA,
+                "tefilah (prayer)" => PrefferdTracks.PRAYER,
+                "pirkey avot (ethics of the fathers)" => PrefferdTracks.PIRKEY_AVOT,
+                "no preference" => PrefferdTracks.DONT_MATTER,
+                "independent learning subject" => PrefferdTracks.IndependentLearning,
+                _ => PrefferdTracks.DONT_MATTER,
+            };
         }
 
         public List<PrefferdTracks> GetPrefferdTracks(string value)
@@ -126,16 +106,13 @@ namespace PairMatching.DomainModel.GoogleSheet
 
         public SkillLevels GetSkillLevel(string value)
         {
-            switch (value.ToLower())
+            return value.ToLower() switch
             {
-                case "advanced":
-                    return SkillLevels.ADVANCED;
-                case "moderate":
-                    return SkillLevels.MODERATE;
-                case "begginer":
-                    return SkillLevels.BEGGINER;
-            }
-            return SkillLevels.DONT_MATTER;
+                "advanced" => SkillLevels.ADVANCED,
+                "moderate" => SkillLevels.MODERATE,
+                "begginer" => SkillLevels.BEGGINER,
+                _ => SkillLevels.DONT_MATTER,
+            };
         }
 
         public TimeSpan GetStudentOffset(string value)
@@ -177,21 +154,15 @@ namespace PairMatching.DomainModel.GoogleSheet
 
         public Days GetDay(int i)
         {
-            switch (i)
+            return i switch
             {
-                case 2:
-                    return Days.SUNDAY;
-                case 3:
-                    return Days.MONDAY;
-                case 4:
-                    return Days.TUESDAY;
-                case 5:
-                    return Days.WEDNESDAY;
-                case 6:
-                    return Days.THURSDAY;
-
-            }
-            return Days.DONT_MATTER;
+                2 => Days.SUNDAY,
+                3 => Days.MONDAY,
+                4 => Days.TUESDAY,
+                5 => Days.WEDNESDAY,
+                6 => Days.THURSDAY,
+                _ => Days.DONT_MATTER,
+            };
         }
 
         public string GetCountryName(string value)
@@ -208,16 +179,13 @@ namespace PairMatching.DomainModel.GoogleSheet
 
         public MoreLanguages GetMoreLanguages(string value)
         {
-            switch (value.ToLower())
+            return value.ToLower() switch
             {
-                case "yes":
-                    return MoreLanguages.YES;
-                case "no":
-                    return MoreLanguages.NO;
-                case "i don't know English but i can learn in other languages":
-                    return MoreLanguages.NOT_ENGLISH;
-            }
-            return MoreLanguages.NO;
+                "yes" => MoreLanguages.YES,
+                "no" => MoreLanguages.NO,
+                "i don't know English but i can learn in other languages" => MoreLanguages.NOT_ENGLISH,
+                _ => MoreLanguages.NO,
+            };
         }
 
         public int GetPrefferdNumberOfMatchs(string value)

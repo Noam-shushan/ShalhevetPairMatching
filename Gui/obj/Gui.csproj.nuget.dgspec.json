@@ -4,6 +4,60 @@
     "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Gui\\Gui.csproj": {}
   },
   "projects": {
+    "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\Configurations.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\Configurations.csproj",
+        "projectName": "Configurations",
+        "projectPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\Configurations.csproj",
+        "packagesPath": "C:\\Users\\Asuspcc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Asuspcc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\DataAccess\\DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -47,9 +101,9 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
-            "Microsoft.Extensions.Configuration.Abstractions": {
+            "MongoDB.Analyzer": {
               "target": "Package",
-              "version": "[6.0.0, )"
+              "version": "[1.0.0, )"
             },
             "MongoDB.Driver": {
               "target": "Package",
@@ -75,7 +129,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -103,6 +157,9 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
+              "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\Configurations.csproj": {
+                "projectPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\Configurations.csproj"
+              },
               "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\DataAccess\\DataAccess.csproj": {
                 "projectPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\DataAccess\\DataAccess.csproj"
               }
@@ -151,7 +208,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -201,6 +258,10 @@
         "net5.0-windows7.0": {
           "targetAlias": "net5.0-windows",
           "dependencies": {
+            "MaterialDesignThemes": {
+              "target": "Package",
+              "version": "[4.4.0-ci45, )"
+            },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
               "version": "[6.0.0, )"
@@ -236,7 +297,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -300,7 +361,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -354,7 +415,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }

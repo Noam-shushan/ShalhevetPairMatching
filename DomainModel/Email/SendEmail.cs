@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.IO;
+using PairMatching.Configuration;
 
 namespace PairMatching.DomainModel.Email
 {
@@ -17,11 +18,11 @@ namespace PairMatching.DomainModel.Email
     {
         readonly MailSettings _mailSettings;
 
-        const int CHUNK_SIZE = 80;
+        const int CHUNK_SIZE = 15;
 
-        public SendEmail(MailSettings mailSettings)
+        public SendEmail(MyConfiguration configurations)
         {
-            _mailSettings = mailSettings;
+            _mailSettings = configurations.MailSettings;
         }
 
         /// <summary>
@@ -37,18 +38,17 @@ namespace PairMatching.DomainModel.Email
         /// <summary>
         /// The template of the email body
         /// </summary>
-        private StringBuilder _template = new StringBuilder();
+        private string _body = "";
 
         /// <summary>
         /// Set the destination address of the email
         /// </summary>
         /// <param name="to">email address</param>
         /// <returns>this email sender</returns>
-        public SendEmail To(IEnumerable<string> to)
+        public SendEmail To(params string[] to)
         {
-            _to = to.ToList();
             var validAdrress = new List<string>();
-            foreach (var addr in _to)
+            foreach (var addr in to)
             {
                 if(EmailValidator.Validate(addr) == EmailAddressStatus.Valid)
                 {
@@ -75,9 +75,9 @@ namespace PairMatching.DomainModel.Email
         /// </summary>
         /// <param name="template">The email template body</param>
         /// <returns>This sender</returns>
-        public SendEmail Template(StringBuilder template)
+        public SendEmail Body(string body)
         {
-            _template = template;
+            _body = body;
             return this;
         }
 
@@ -95,7 +95,7 @@ namespace PairMatching.DomainModel.Email
 
             try
             {
-                SmtpClient client = await GetSmtpClienet();
+                using var client = await GetSmtpClienet();
 
                 IEnumerable<MailboxAddress> listOfAddress = GetAddresses();
                 
@@ -125,7 +125,7 @@ namespace PairMatching.DomainModel.Email
 
             var bodyBuilder = new BodyBuilder
             {
-                TextBody = _template.ToString(),
+                TextBody = _body,
             };
             SetAttachments(bodyBuilder, fileAttachments);
 
@@ -175,7 +175,7 @@ namespace PairMatching.DomainModel.Email
         /// Send email template
         /// </summary>
         /// <returns></returns>
-        public async Task SendAutoEmailAsync()
+        private async Task SendAutoEmailAsync()
         {
             if (_to?.Count == 0)
             {
@@ -183,7 +183,7 @@ namespace PairMatching.DomainModel.Email
             }
             try
             {
-                SmtpClient client = await GetSmtpClienet();
+                using var client = await GetSmtpClienet();
 
                 using var message = new MimeMessage();
 
@@ -196,7 +196,7 @@ namespace PairMatching.DomainModel.Email
 
                 var bodyBuilder = new BodyBuilder
                 {
-                    HtmlBody = _template.ToString(),
+                    HtmlBody = _body,
                 };
 
                 message.Body = bodyBuilder.ToMessageBody();
@@ -210,23 +210,18 @@ namespace PairMatching.DomainModel.Email
             }
         }
 
-        SmtpClient _smtpClient;
         private async Task<SmtpClient> GetSmtpClienet()
         {
-            if(_smtpClient != null)
-            {
-                return _smtpClient;
-            }
-            _smtpClient = new SmtpClient();
+            var smtpClient = new SmtpClient();
 
-            await _smtpClient.ConnectAsync(_mailSettings.Host, _mailSettings.Port, _mailSettings.EnableSsl);
+            await smtpClient.ConnectAsync(_mailSettings.Host, _mailSettings.Port, _mailSettings.EnableSsl);
 
             if (!string.IsNullOrEmpty(_mailSettings.Password))
             {
-                await _smtpClient.AuthenticateAsync(_mailSettings.From, _mailSettings.Password);
+                await smtpClient.AuthenticateAsync(_mailSettings.From, _mailSettings.Password);
             }
 
-            return _smtpClient;
+            return smtpClient;
         }
 
         /// <summary>
@@ -236,14 +231,10 @@ namespace PairMatching.DomainModel.Email
         public async Task SendAutoEmailAsync<T>(T model, MailTemplate template)
         {
             string result = new CreateEmailTemplate()
-                .Compile(model, template.Template.ToString());
-
-
-            var temp = new StringBuilder()
-                .Append(result);
+                .Compile(model, template.BodyTemplate);
 
             await Subject(template.Subject)
-                .Template(temp)
+                .Body(result)
                 .SendAutoEmailAsync();
         }
     }

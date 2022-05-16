@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using PairMatching.Configuration;
 using PairMatching.Models;
 using System;
 using System.Collections.Generic;
@@ -24,88 +24,69 @@ namespace PairMatching.DomainModel.GoogleSheet
         public string SheetName { get => "טופס רישום שלהבת תשפ\"א (תגובות)"; }
 
 
-        public HebrewDescriptor(SpredsheetLastRange lastRange, IConfiguration config)
+        public HebrewDescriptor(SpredsheetLastRange lastRange, MyConfiguration config)
         {
             Range = lastRange.HebrewSheets;
-            SpreadsheetId = config.GetSection("SpreadsheetsId")["Hebrew"];
+            SpreadsheetId = config.SpreadsheetsId["Hebrew"];
         }
 
         public EnglishLevels GetEnglishLevel(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "טובה":
-                    return EnglishLevels.GOOD;
-                case "לא כל כך טובה":
-                    return EnglishLevels.NOT_GOOD;
-                case "רמת שיחה":
-                    return EnglishLevels.TALK_LEVEL;
-            }
-            return EnglishLevels.DONT_MATTER;
+                "טובה" => EnglishLevels.GOOD,
+                "לא כל כך טובה" => EnglishLevels.NOT_GOOD,
+                "רמת שיחה" => EnglishLevels.TALK_LEVEL,
+                _ => EnglishLevels.DONT_MATTER,
+            };
         }
 
         public Genders GetGender(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "גבר":
-                    return Genders.MALE;
-                case "אישה":
-                    return Genders.FMALE;
-                case "לא משנה":
-                    return Genders.DONT_MATTER;
-            }
-            return Genders.DONT_MATTER;
+                "גבר" => Genders.MALE,
+                "אישה" => Genders.FMALE,
+                "לא משנה" => Genders.DONT_MATTER,
+                _ => Genders.DONT_MATTER,
+            };
         }
 
         public LearningStyles GetLearningStyle(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "לימוד איטי ומעמיק":
-                    return LearningStyles.DEEP_AND_SLOW;
-                case "לימוד מהיר, הספקי ומתקדם":
-                    return LearningStyles.PROGRESSED_FLOWING;
-                case "לימוד צמוד טקסט":
-                    return LearningStyles.TEXTUALL_CENTERED;
-                case "לימוד מעודד מחשבה מחוץ לטקסט, פילוסופי":
-                    return LearningStyles.FREE;
-            }
-            return LearningStyles.DONT_MATTER;
+                "לימוד איטי ומעמיק" => LearningStyles.DEEP_AND_SLOW,
+                "לימוד מהיר, הספקי ומתקדם" => LearningStyles.PROGRESSED_FLOWING,
+                "לימוד צמוד טקסט" => LearningStyles.TEXTUALL_CENTERED,
+                "לימוד מעודד מחשבה מחוץ לטקסט, פילוסופי" => LearningStyles.FREE,
+                _ => LearningStyles.DONT_MATTER,
+            };
         }
 
         public Genders GetPrefferdGender(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "אני מעוניין ללמוד רק עם גבר":
-                    return Genders.MALE;
-                case "אני מעוניינת ללמוד רק עם אישה":
-                    return Genders.FMALE;
-                case "אין לי העדפה":
-                    return Genders.DONT_MATTER;
-            }
-            return Genders.DONT_MATTER;
+                "אני מעוניין ללמוד רק עם גבר" => Genders.MALE,
+                "אני מעוניינת ללמוד רק עם אישה" => Genders.FMALE,
+                "אין לי העדפה" => Genders.DONT_MATTER,
+                _ => Genders.DONT_MATTER,
+            };
         }
 
         private PrefferdTracks SwitchPrefferdTracks(string value)
         {
-            switch (value.Replace(",", "").Trim())
+            return value.Replace(",", "").Trim() switch
             {
-                case "תניא":
-                    return PrefferdTracks.TANYA;
-                case "גמרא":
-                    return PrefferdTracks.TALMUD;
-                case "פרשת שבוע":
-                    return PrefferdTracks.PARASHA;
-                case "תפילה":
-                    return PrefferdTracks.PRAYER;
-                case "פרקי אבות":
-                    return PrefferdTracks.PIRKEY_AVOT;
-                case "אין לי העדפה":
-                    return PrefferdTracks.DONT_MATTER;
-            }
-            return PrefferdTracks.DONT_MATTER;
+                "תניא" => PrefferdTracks.TANYA,
+                "גמרא" => PrefferdTracks.TALMUD,
+                "פרשת שבוע" => PrefferdTracks.PARASHA,
+                "תפילה" => PrefferdTracks.PRAYER,
+                "פרקי אבות" => PrefferdTracks.PIRKEY_AVOT,
+                "אין לי העדפה" => PrefferdTracks.DONT_MATTER,
+                _ => PrefferdTracks.DONT_MATTER,
+            };
         }
 
         public List<PrefferdTracks> GetPrefferdTracks(string value)
@@ -122,18 +103,14 @@ namespace PairMatching.DomainModel.GoogleSheet
 
         public SkillLevels GetSkillLevel(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "טובה":
-                    return SkillLevels.ADVANCED;
-                case "רמת שיחה (בינונית)":
-                    return SkillLevels.MODERATE;
-                case "מתחיל":
-                    return SkillLevels.BEGGINER;
-                case "אין לי העדפה":
-                    return SkillLevels.DONT_MATTER;
-            }
-            return SkillLevels.DONT_MATTER;
+                "טובה" => SkillLevels.ADVANCED,
+                "רמת שיחה (בינונית)" => SkillLevels.MODERATE,
+                "מתחיל" => SkillLevels.BEGGINER,
+                "אין לי העדפה" => SkillLevels.DONT_MATTER,
+                _ => SkillLevels.DONT_MATTER,
+            };
         }
 
         public TimeSpan GetStudentOffset(string value)
@@ -172,21 +149,15 @@ namespace PairMatching.DomainModel.GoogleSheet
 
         public Days GetDay(int i)
         {
-            switch (i)
+            return i switch
             {
-                case 2:
-                    return Days.SUNDAY;
-                case 3:
-                    return Days.MONDAY;
-                case 4:
-                    return Days.TUESDAY;
-                case 5:
-                    return Days.WEDNESDAY;
-                case 6:
-                    return Days.THURSDAY;
-
-            }
-            return Days.DONT_MATTER;
+                2 => Days.SUNDAY,
+                3 => Days.MONDAY,
+                4 => Days.TUESDAY,
+                5 => Days.WEDNESDAY,
+                6 => Days.THURSDAY,
+                _ => Days.DONT_MATTER,
+            };
         }
 
         public string GetCountryName(string value)
@@ -197,7 +168,7 @@ namespace PairMatching.DomainModel.GoogleSheet
         public IEnumerable<string> GetLanguages(string value)
         {
             var lang = value.Split(',');
-            List<string> result = new List<string>();
+            List<string> result = new();
 
             foreach (var l in lang)
             {
@@ -222,17 +193,13 @@ namespace PairMatching.DomainModel.GoogleSheet
 
         public MoreLanguages GetMoreLanguages(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "כן":
-                    return MoreLanguages.YES;
-                case "לא":
-                case "":
-                    return MoreLanguages.NO;
-                case "אינני יודע אנגלית אך אני יכול ללמוד בשפות אחרות":
-                    return MoreLanguages.NOT_ENGLISH;
-            }
-            return MoreLanguages.NO;
+                "כן" => MoreLanguages.YES,
+                "לא" or "" => MoreLanguages.NO,
+                "אינני יודע אנגלית אך אני יכול ללמוד בשפות אחרות" => MoreLanguages.NOT_ENGLISH,
+                _ => MoreLanguages.NO,
+            };
         }
 
         public int GetPrefferdNumberOfMatchs(string value)

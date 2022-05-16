@@ -118,6 +118,9 @@ namespace PairMatching.Models
         public bool IsKnowMoreLanguages { get => Languages.Any(); }
 
         [BsonIgnore]
+        public bool IsFromIsrael => Country == "Israel";
+
+        [BsonIgnore]
         public IEnumerable<Student> FirstSuggestStudents { get; set; }
 
         [BsonIgnore]
@@ -131,6 +134,9 @@ namespace PairMatching.Models
         {
             get => !IsSimpleStudent && (MatchTo.Count < PrefferdNumberOfMatchs);
         }
+        public bool IsMatch { get; set; }
 
+        [BsonIgnore]
+        public IEnumerable<Student> MatchStudents { get; set; }
     }
 }

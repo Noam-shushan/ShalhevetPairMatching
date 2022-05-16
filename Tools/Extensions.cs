@@ -22,5 +22,22 @@ namespace PairMatching.Tools
                 .Select(grp => string.Join(" ", grp.Select(x => x.word))));
             return text;
         }
+
+        public static async Task<IEnumerable<T>> WhenAll<T>(params Task<T>[] tasks)
+        {
+            var allTasks = Task.WhenAll(tasks);
+
+            try
+            {
+                return await allTasks;
+            }
+            catch
+            {
+
+            }
+
+            throw allTasks.Exception ?? throw new Exception("Bad");
+        }  
+
     }
 }
