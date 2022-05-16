@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PairMatching.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace PairMatching.DomainModel.Services
 {
     public interface IParticipantService
     {
-
+        Task<IEnumerable<Participant>> GetAllParticipants();
     }
 }
