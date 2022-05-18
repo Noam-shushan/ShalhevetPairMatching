@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET5_0;NETCOREAPP
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\App.xaml
-2-1118251706
+7-802766902
 3124249034
-81241527203
+16-504634482
 221-1344762046
-Views\MainWindow.xaml;Views\ParticipiantsView.xaml;
+Controlers\Field.xaml;Controlers\SearchTextBox.xaml;Views\EmailsView.xaml;Views\MainWindow.xaml;Views\MatchingView.xaml;Views\ParisView.xaml;Views\ParticipiantsView.xaml;
 
 True
 

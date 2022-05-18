@@ -50,7 +50,7 @@ namespace PairMatching.Models
         /// </summary>
         public IEnumerable<PrefferdTracks> PrefferdTracks { get; set; }
 
-        public List<StudentMatchingHistory> MatchingHistories { get; set; }
+        public List<MatchingHistory> MatchingHistories { get; set; }
             = new();
 
         /// <summary>

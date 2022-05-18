@@ -29,19 +29,62 @@
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="auto" />
                                 </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="0,0,10,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBox
+                                        x:Name="tbSearch"
+                                        Grid.Column="0"
+                                        Width="100"
+                                        HorizontalAlignment="Right"
+                                        materialDesign:HintAssist.Hint="חפש"
+                                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                        Text="{Binding SearchWord, UpdateSourceTrigger=PropertyChanged}">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding
+                                                Command="{Binding SearchCommand}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBox}}}"
+                                                Gesture="Return" />
+                                        </TextBox.InputBindings>
+                                    </TextBox>
+                                    <Button
+                                        Grid.Column="1"
+                                        Command="{Binding SearchCommand}"
+                                        Content="{materialDesign:PackIcon Kind=Search,
+                                                                          Size=30}">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsLoading}" Value="False">
+                                                        <Setter Property="IsEnabled" Value="True" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                                        <Setter Property="IsEnabled" Value="False" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
                                 <ComboBox
-                                    Grid.Column="0"
+                                    Grid.Column="1"
                                     Margin="0,0,10,0"
                                     materialDesign:HintAssist.Hint="שנה"
-                                    Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                    Style="{StaticResource FilterComboBox}">
                                     <ComboBoxItem Content="כל השנים" />
                                     <ComboBoxItem Content="2021" />
                                     <ComboBoxItem Content="2022" />
                                 </ComboBox>
                                 <ComboBox
-                                    Grid.Column="1"
+                                    Grid.Column="2"
                                     materialDesign:HintAssist.Hint="סנן"
-                                    Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                    Style="{StaticResource FilterComboBox}">
                                     <ComboBoxItem Content="כל המששתתפים" />
                                     <ComboBoxItem Content="משתתפים מישראל" />
                                     <ComboBoxItem Content="משתתפים מהתפוצות" />

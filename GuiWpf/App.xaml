@@ -21,9 +21,15 @@
             </ResourceDictionary.MergedDictionaries>
             <Style
                 x:Key="ButtonContentStyle"
-                BasedOn="{StaticResource MaterialDesignFlatButton}"
+                BasedOn="{StaticResource MaterialDesignOutlinedButton}"
                 TargetType="Button">
                 <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+            <Style
+                x:Key="FilterComboBox"
+                BasedOn="{StaticResource MaterialDesignOutlinedComboBox}"
+                TargetType="ComboBox">
+                <Setter Property="FontSize" Value="11" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>
