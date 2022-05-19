@@ -74,10 +74,7 @@
                                         Grid.Row="2"
                                         FieldName="אימייל"
                                         Value="{Binding StageSuggestion.FromIsrael.Email}" />
-                                    <controlers:Field
-                                        Grid.Row="3"
-                                        Margin="4"
-                                        FieldName="מספר הצעות מתאימות" />
+                                    <controlers:Field Grid.Row="3" FieldName="מספר הצעות מתאימות" />
                                 </Grid>
                             </materialDesign:Card>
                             <materialDesign:Card
@@ -173,6 +170,8 @@
                                                 <Style x:Key="HoursStyle" TargetType="TextBlock">
                                                     <Setter Property="HorizontalAlignment" Value="Stretch" />
                                                     <Setter Property="VerticalAlignment" Value="Stretch" />
+                                                    <Setter Property="Margin" Value="2" />
+                                                    <Setter Property="Opacity" Value="0.8" />
                                                 </Style>
                                                 <Style
                                                     x:Key="HoursStyleIsrael"
@@ -208,7 +207,7 @@
                                                 ItemsSource="{Binding StageSuggestion.MatchingTimes.Sunday}">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <materialDesign:Card Style="{StaticResource TimesStyleCard}">
+                                                        <materialDesign:Card>
                                                             <StackPanel>
                                                                 <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
                                                                 <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
@@ -223,7 +222,7 @@
                                                 ItemsSource="{Binding StageSuggestion.MatchingTimes.Monday}">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <materialDesign:Card Style="{StaticResource TimesStyleCard}">
+                                                        <materialDesign:Card>
                                                             <StackPanel>
                                                                 <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
                                                                 <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
@@ -238,7 +237,7 @@
                                                 ItemsSource="{Binding StageSuggestion.MatchingTimes.Tuseday}">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <materialDesign:Card Style="{StaticResource TimesStyleCard}">
+                                                        <materialDesign:Card>
                                                             <StackPanel>
                                                                 <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
                                                                 <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
@@ -253,7 +252,7 @@
                                                 ItemsSource="{Binding StageSuggestion.MatchingTimes.Wednesday}">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <materialDesign:Card Style="{StaticResource TimesStyleCard}">
+                                                        <materialDesign:Card>
                                                             <StackPanel>
                                                                 <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
                                                                 <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
@@ -268,7 +267,7 @@
                                                 ItemsSource="{Binding StageSuggestion.MatchingTimes.Thurseday}">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <materialDesign:Card Style="{StaticResource TimesStyleCard}">
+                                                        <materialDesign:Card>
                                                             <StackPanel>
                                                                 <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
                                                                 <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
@@ -311,10 +310,7 @@
                                         Grid.Row="2"
                                         FieldName="אימייל"
                                         Value="{Binding StageSuggestion.FromWorld.Email}" />
-                                    <controlers:Field
-                                        Grid.Row="3"
-                                        Margin="4"
-                                        FieldName="מספר הצעות מתאימות" />
+                                    <controlers:Field Grid.Row="3" FieldName="מספר הצעות מתאימות" />
                                 </Grid>
                             </materialDesign:Card>
                         </Grid>

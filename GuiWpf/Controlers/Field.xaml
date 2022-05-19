@@ -22,13 +22,14 @@
                 Grid.Column="0"
                 Margin="3"
                 HorizontalAlignment="Left"
+                FontWeight="DemiBold"
                 Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
                 Text="{Binding ElementName=FildeItemInc, Path=FieldName}" />
             <TextBlock
                 Grid.Column="1"
                 Margin="0,3,0,3"
                 Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                Text=":  " />
+                Text=": " />
 
             <ContentPresenter
                 Grid.Column="2"
