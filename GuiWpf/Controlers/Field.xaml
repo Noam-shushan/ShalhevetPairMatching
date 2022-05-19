@@ -8,42 +8,45 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mscorlib="clr-namespace:System;assembly=mscorlib"
     Name="FildeItemInc"
-    Margin="0,0,0,4"
     FontSize="16"
     mc:Ignorable="d">
-    <materialDesign:Card>
+    <materialDesign:Card Margin="5" UniformCornerRadius="5">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock
                 Grid.Column="0"
+                Margin="3"
                 HorizontalAlignment="Left"
                 Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
                 Text="{Binding ElementName=FildeItemInc, Path=FieldName}" />
             <TextBlock
                 Grid.Column="1"
+                Margin="0,3,0,3"
                 Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
                 Text=":  " />
 
             <ContentPresenter
                 Grid.Column="2"
-                HorizontalAlignment="Right"
+                Margin="3"
                 Content="{Binding ElementName=FildeItemInc, Path=Value}">
                 <ContentPresenter.Resources>
                     <DataTemplate DataType="{x:Type mscorlib:Boolean}">
-                        <materialDesign:PackIcon>
+                        <materialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center">
                             <materialDesign:PackIcon.Style>
                                 <Style TargetType="materialDesign:PackIcon">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Path=.}" Value="True">
                                             <Setter Property="Kind" Value="Check" />
+                                            <Setter Property="Background" Value="#b1f0ce" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Path=.}" Value="False">
                                             <Setter Property="Kind" Value="CloseBoxOutline" />
+                                            <Setter Property="Background" Value="#fc153a" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -51,7 +54,7 @@
                         </materialDesign:PackIcon>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type mscorlib:String}">
-                        <TextBox Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding Path=.}" />
+                        <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding Path=.}" />
                     </DataTemplate>
                 </ContentPresenter.Resources>
             </ContentPresenter>

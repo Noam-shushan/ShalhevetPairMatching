@@ -1,14 +1,14 @@
 ﻿using System;
 using PairMatching.Models;
-using PairMatching.Configuration;
+using PairMatching.Configurations;
 
 namespace PairMatching.DataAccess.Infrastructure
 {
     public class ContextFactory
     {
-        readonly Configuration.MyConfiguration _configurations;
+        readonly MyConfiguration _configurations;
 
-        public ContextFactory(Configuration.MyConfiguration configurations)
+        public ContextFactory(MyConfiguration configurations)
         {
             _configurations = configurations;
         }

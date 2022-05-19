@@ -224,6 +224,18 @@
           "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
         }
       },
+      "RestSharp/107.3.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Text.Json": "5.0.0"
+        },
+        "compile": {
+          "lib/net5.0/RestSharp.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/RestSharp.dll": {}
+        }
+      },
       "SharpCompress/0.30.1": {
         "type": "package",
         "compile": {
@@ -297,9 +309,21 @@
           }
         }
       },
+      "System.Text.Json/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.0/System.Text.Json.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/System.Text.Json.dll": {}
+        }
+      },
       "Configurations/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
+        "dependencies": {
+          "MongoDB.Bson": "2.14.1"
+        },
         "compile": {
           "bin/placeholder/Configurations.dll": {}
         },
@@ -347,6 +371,22 @@
         },
         "runtime": {
           "bin/placeholder/Tools.dll": {}
+        }
+      },
+      "WixApi/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "dependencies": {
+          "Configurations": "1.0.0",
+          "Models": "1.0.0",
+          "Newtonsoft.Json": "13.0.1",
+          "RestSharp": "107.3.0"
+        },
+        "compile": {
+          "bin/placeholder/WixApi.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/WixApi.dll": {}
         }
       }
     }
@@ -735,6 +775,24 @@
         "portable.bouncycastle.nuspec"
       ]
     },
+    "RestSharp/107.3.0": {
+      "sha512": "qu+A+VAnVLX3OeWVNm11UJz0aVErqSfYqIiOUbJM9x98uLymCOoL/oXRAjMb6XHra27WXxHmzy9EKEOKXWR6Pw==",
+      "type": "package",
+      "path": "restsharp/107.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net5.0/RestSharp.dll",
+        "lib/net5.0/RestSharp.xml",
+        "lib/net6.0/RestSharp.dll",
+        "lib/net6.0/RestSharp.xml",
+        "lib/netstandard2.0/RestSharp.dll",
+        "lib/netstandard2.0/RestSharp.xml",
+        "restsharp.107.3.0.nupkg.sha512",
+        "restsharp.nuspec",
+        "restsharp.png"
+      ]
+    },
     "SharpCompress/0.30.1": {
       "sha512": "XqD4TpfyYGa7QTPzaGlMVbcecKnXy4YmYLDWrU+JIj7IuRNl7DH2END+Ll7ekWIY8o3dAMWLFDE1xdhfIWD1nw==",
       "type": "package",
@@ -965,6 +1023,28 @@
         "version.txt"
       ]
     },
+    "System.Text.Json/5.0.0": {
+      "sha512": "+luxMQNZ2WqeffBU7Ml6njIvxc8169NW2oU+ygNudXQGZiarjE7DOtN7bILiQjTZjkmwwRZGTtLzmdrSI/Ustw==",
+      "type": "package",
+      "path": "system.text.json/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.Text.Json.dll",
+        "lib/net461/System.Text.Json.xml",
+        "lib/netcoreapp3.0/System.Text.Json.dll",
+        "lib/netcoreapp3.0/System.Text.Json.xml",
+        "lib/netstandard2.0/System.Text.Json.dll",
+        "lib/netstandard2.0/System.Text.Json.xml",
+        "system.text.json.5.0.0.nupkg.sha512",
+        "system.text.json.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
     "Configurations/1.0.0": {
       "type": "project",
       "path": "../Configurations/Configurations.csproj",
@@ -984,6 +1064,11 @@
       "type": "project",
       "path": "../Tools/Tools.csproj",
       "msbuildProject": "../Tools/Tools.csproj"
+    },
+    "WixApi/1.0.0": {
+      "type": "project",
+      "path": "../WixApi/WixApi.csproj",
+      "msbuildProject": "../WixApi/WixApi.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -992,7 +1077,8 @@
       "DataAccess >= 1.0.0",
       "Google.Apis.Sheets.v4 >= 1.57.0.2657",
       "MailKit >= 3.2.0",
-      "Newtonsoft.Json >= 13.0.1"
+      "Newtonsoft.Json >= 13.0.1",
+      "WixApi >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1027,6 +1113,9 @@
             },
             "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\DataAccess\\DataAccess.csproj": {
               "projectPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\DataAccess\\DataAccess.csproj"
+            },
+            "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\WixApi\\WixApi.csproj": {
+              "projectPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\WixApi\\WixApi.csproj"
             }
           }
         }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using PairMatching.Configuration;
+using PairMatching.Configurations;
 
 namespace PairMatching.DomainModel.GoogleSheet
 {

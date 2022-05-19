@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.IO;
-using PairMatching.Configuration;
+using PairMatching.Configurations;
 
 namespace PairMatching.DomainModel.Email
 {

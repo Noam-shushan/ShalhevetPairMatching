@@ -1,4 +1,4 @@
-﻿namespace PairMatching.Configuration
+﻿namespace PairMatching.Configurations
 {
     public class MailSettings
     {

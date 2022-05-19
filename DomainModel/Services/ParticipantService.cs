@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PairMatching.WixApi;
+using PairMatching.Configurations;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -13,23 +15,58 @@ namespace PairMatching.DomainModel.Services
     {
         readonly IUnitOfWork _unitOfWork;
 
-        public ParticipantService(IDataAccessFactory dataAccessFactory)
+        readonly WixDataReader _wix;
+
+        public ParticipantService(IDataAccessFactory dataAccessFactory, MyConfiguration configuration)
         {
             _unitOfWork = dataAccessFactory.GetDataAccess();
+
+            _wix = new WixDataReader(configuration);
         }
 
-        public Task<IEnumerable<Participant>> GetAllParticipants()
+        public async Task<IEnumerable<Participant>> GetAllParticipants()
         {
-            return _unitOfWork
+            await ReadNewFromWix();
+
+            return await _unitOfWork
                 .ParticipantsRepositry
                 .GetAllAsync();
+
         }
 
-        public Task<IEnumerable<Student>> GetAllStudents()
+        private async Task ReadNewFromWix()
         {
-            return _unitOfWork
-                .StudentRepositry
-                .GetAllAsync(s => !s.IsDeleted);
+            var configColl = await _unitOfWork.ConfigRepositry
+                                    .GetMaxIndexOfWixData();
+
+            var config = configColl.FirstOrDefault();
+
+            var max = config?.WixIndex;
+            int temp = max ?? 100;
+            int index = temp < 100 ? 100 : temp;
+
+            var partsDtos = await _wix.GetNewParticipants(index);
+
+            if (partsDtos.Any())
+            {
+                var list = partsDtos
+                    .Select(x => x.ToParticipant());
+
+                await _unitOfWork.ParticipantsRepositry
+                    .Insert(list);
+
+                config.WixIndex = list.Max(x => x.WixIndex);
+                await _unitOfWork.ConfigRepositry.UpdateDbConfig(config);
+            }
+        }
+
+        public async Task<IEnumerable<Student>> GetAllStudents()
+        {
+            //var p = await _wix.GetNewParticipants();
+
+            return null;// await _unitOfWork
+                     //.StudentRepositry
+                //.GetAllAsync(s => !s.IsDeleted);
         }
     }
 }

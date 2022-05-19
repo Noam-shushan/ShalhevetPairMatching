@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using PairMatching.DomainModel.DataAccessFactory;
-using PairMatching.Configuration;
+using PairMatching.Configurations;
 using System.IO;
 using Newtonsoft.Json;
 using PairMatching.DomainModel.Email;

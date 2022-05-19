@@ -2,7 +2,7 @@
 using PairMatching.DataAccess.Repositories;
 using PairMatching.Models;
 using System.Threading.Tasks;
-using PairMatching.Configuration;
+using PairMatching.Configurations;
 
 namespace PairMatching.DataAccess.UnitOfWork
 {
@@ -12,17 +12,11 @@ namespace PairMatching.DataAccess.UnitOfWork
         
         const string participantsCollectionName = "Participants";
 
+        const string emailsCollectionName = "Emails";
+
+        const string matchingHistoryCollectionName = "MatchingHistory";
+
         const string pairsCollectionName = "Pairs";
-
-        public IModelRepository<Student> StudentRepositry { get; init; }
-
-        public IModelRepository<Pair> PairsRepositry { get; init; }
-
-        public IModelRepository<Participant> ParticipantsRepositry { get; init; }
-
-        public ConfigRepositry ConfigRepositry { get; init; }
-
-        readonly TaskManeger _taskManeger = new();
 
         public UnitOfWork(MyConfiguration configurations)
         {
@@ -35,8 +29,27 @@ namespace PairMatching.DataAccess.UnitOfWork
 
             ConfigRepositry = new ConfigRepositry(dataAccess);
 
-            ParticipantsRepositry = new ModelRepositroy<Participant>(dataAccess, pairsCollectionName, _taskManeger);
+            ParticipantsRepositry = new ModelRepositroy<Participant>(dataAccess, participantsCollectionName, _taskManeger);
+
+            EmailsRepositry = new ModelRepositroy<Email>(dataAccess, emailsCollectionName, _taskManeger);
+
+            MatchingHistorisRepositry = new ModelRepositroy<MatchingHistory>(dataAccess, matchingHistoryCollectionName, _taskManeger);
         }
+
+        public IModelRepository<Student> StudentRepositry { get; init; }
+
+        public IModelRepository<Pair> PairsRepositry { get; init; }
+
+        public IModelRepository<Participant> ParticipantsRepositry { get; init; }
+
+        public IModelRepository<MatchingHistory> MatchingHistorisRepositry { get; init; }
+
+        public IModelRepository<Email> EmailsRepositry { get; init; }
+
+        public ConfigRepositry ConfigRepositry { get; init; }
+
+        readonly TaskManeger _taskManeger = new();
+
 
         public async Task Complete()
         {

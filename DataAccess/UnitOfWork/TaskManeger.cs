@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using PairMatching.Tools;
 
 namespace PairMatching.DataAccess.UnitOfWork
 {
@@ -14,7 +15,7 @@ namespace PairMatching.DataAccess.UnitOfWork
 
         public async Task SaveChangesAsync()
         {
-            await Task.WhenAll(Tasks);
+            await Extensions.WhenAll<object>(Tasks);
             Tasks.Clear();
         } 
     }

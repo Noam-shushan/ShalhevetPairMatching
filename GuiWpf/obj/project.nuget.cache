@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "vC4iIVxE5zTx2pIx6zxbdG6uPNyeOVqDbOMGNZ14oe62v6VvasgJZSinCr+rv9i1hkBQWD6NMbGXWx9vh23hQA==",
+  "dgSpecHash": "OWMIctKGzB0fuJy+iR2dI7pK1QInYmUc7ZUZe/6u+DdeDJAaI+/J6q4K8L1jpgpXyUlc93lQNWa4LE7/K/7xaw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\GuiWpf\\GuiWpf.csproj",
   "expectedPackageFiles": [
@@ -24,12 +24,14 @@
     "C:\\Users\\Asuspcc\\.nuget\\packages\\prism.core\\8.1.97\\prism.core.8.1.97.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\prism.unity\\8.1.97\\prism.unity.8.1.97.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\prism.wpf\\8.1.97\\prism.wpf.8.1.97.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\restsharp\\107.3.0\\restsharp.107.3.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\sharpcompress\\0.30.1\\sharpcompress.0.30.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\system.formats.asn1\\5.0.0\\system.formats.asn1.5.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\system.security.cryptography.cng\\5.0.0\\system.security.cryptography.cng.5.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\system.security.cryptography.pkcs\\5.0.0\\system.security.cryptography.pkcs.5.0.0.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\system.text.json\\5.0.0\\system.text.json.5.0.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.2\\system.threading.tasks.extensions.4.5.2.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\unity.abstractions\\5.11.7\\unity.abstractions.5.11.7.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\unity.container\\5.11.11\\unity.container.5.11.11.nupkg.sha512"

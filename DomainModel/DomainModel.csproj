@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Configurations\Configurations.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\WixApi\WixApi.csproj" />
   </ItemGroup>
   <ItemGroup>
 	  <Resource Include="Email\HtmlTemplates\PairBrokeEnglish.html">
@@ -68,8 +69,5 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MatchingCalculations\" />
   </ItemGroup>
 </Project>

@@ -14,6 +14,11 @@ namespace PairMatching.DataAccess.UnitOfWork
 
         IModelRepository<Participant> ParticipantsRepositry { get; init; }
 
+        IModelRepository<MatchingHistory> MatchingHistorisRepositry { get; init; }
+
+        IModelRepository<Email> EmailsRepositry { get; init; }
+
+
         Task Complete();
     }
 }

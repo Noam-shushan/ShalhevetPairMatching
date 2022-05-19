@@ -1,4 +1,4 @@
-﻿using PairMatching.Configuration;
+﻿using PairMatching.Configurations;
 using PairMatching.Models;
 using System;
 using System.Collections.Generic;

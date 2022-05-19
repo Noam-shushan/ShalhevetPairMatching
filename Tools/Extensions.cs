@@ -23,7 +23,7 @@ namespace PairMatching.Tools
             return text;
         }
 
-        public static async Task<IEnumerable<T>> WhenAll<T>(params Task<T>[] tasks)
+        public static async Task<IEnumerable<T>> WhenAll<T>(List<Task> tasks1, params Task<T>[] tasks)
         {
             var allTasks = Task.WhenAll(tasks);
 

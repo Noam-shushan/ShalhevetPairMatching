@@ -10,6 +10,9 @@
     <Compile Update="Controlers\Field.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Controlers\SearchTextBox.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\EmailsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -25,6 +28,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controlers\Field.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controlers\SearchTextBox.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\EmailsView.xaml">

@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "uWUBiOzZoQTnevVvigy64IjFyxTG+DUQ+PrOfliuKM8n6F+Eh0U8zgu19dI9TNHFZaPjdZTQcKTUsSiXBtP7vQ==",
+  "dgSpecHash": "foTVx9FS/Mis8RKMpUXDPHSa0b2cXyvbH0SPsKd7aObwW/R/H+fgK6R6RUt7TNXY8ipI2H4IX9i8kXooyLY5vA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\Configurations.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.bson\\2.14.1\\mongodb.bson.2.14.1.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -2,7 +2,7 @@
 
 namespace PairMatching.Models
 {
-    public class ParticipantPreferences
+    public class Preferences
     {
         /// <summary>
         /// Preferred tracks of learning {TANYA, TALMUD, PARASHA ...}

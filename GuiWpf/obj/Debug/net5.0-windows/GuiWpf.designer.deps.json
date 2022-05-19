@@ -264,6 +264,17 @@
           }
         }
       },
+      "RestSharp/107.3.0": {
+        "dependencies": {
+          "System.Text.Json": "5.0.0"
+        },
+        "runtime": {
+          "lib/net5.0/RestSharp.dll": {
+            "assemblyVersion": "107.3.0.0",
+            "fileVersion": "107.3.0.0"
+          }
+        }
+      },
       "SharpCompress/0.30.1": {
         "runtime": {
           "lib/net5.0/SharpCompress.dll": {
@@ -323,6 +334,14 @@
           "runtimes/win/lib/netcoreapp3.0/System.Security.Cryptography.Pkcs.dll": {
             "rid": "win",
             "assetType": "runtime",
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      },
+      "System.Text.Json/5.0.0": {
+        "runtime": {
+          "lib/netcoreapp3.0/System.Text.Json.dll": {
             "assemblyVersion": "5.0.0.0",
             "fileVersion": "5.0.20.51904"
           }
@@ -495,6 +514,13 @@
       "path": "prism.wpf/8.1.97",
       "hashPath": "prism.wpf.8.1.97.nupkg.sha512"
     },
+    "RestSharp/107.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qu+A+VAnVLX3OeWVNm11UJz0aVErqSfYqIiOUbJM9x98uLymCOoL/oXRAjMb6XHra27WXxHmzy9EKEOKXWR6Pw==",
+      "path": "restsharp/107.3.0",
+      "hashPath": "restsharp.107.3.0.nupkg.sha512"
+    },
     "SharpCompress/0.30.1": {
       "type": "package",
       "serviceable": true,
@@ -536,6 +562,13 @@
       "sha512": "sha512-9TPLGjBCGKmNvG8pjwPeuYy0SMVmGZRwlTZvyPHDbYv/DRkoeumJdfumaaDNQzVGMEmbWtg07zUpSW9q70IlDQ==",
       "path": "system.security.cryptography.pkcs/5.0.0",
       "hashPath": "system.security.cryptography.pkcs.5.0.0.nupkg.sha512"
+    },
+    "System.Text.Json/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+luxMQNZ2WqeffBU7Ml6njIvxc8169NW2oU+ygNudXQGZiarjE7DOtN7bILiQjTZjkmwwRZGTtLzmdrSI/Ustw==",
+      "path": "system.text.json/5.0.0",
+      "hashPath": "system.text.json.5.0.0.nupkg.sha512"
     },
     "System.Threading.Tasks.Extensions/4.5.2": {
       "type": "package",
