@@ -8,7 +8,7 @@ namespace PairMatching.DataAccess.UnitOfWork
     {
         ConfigRepositry ConfigRepositry { get; init; }
 
-        IModelRepository<Pair> PairsRepositry { get; init; }
+        IModelRepository<OldPairDto> PairsRepositry { get; init; }
 
         IModelRepository<Student> StudentRepositry { get; init; }
 

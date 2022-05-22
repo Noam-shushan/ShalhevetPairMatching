@@ -50,7 +50,7 @@ namespace PairMatching.Models
         /// </summary>
         public IEnumerable<PrefferdTracks> PrefferdTracks { get; set; }
 
-        public List<MatchingHistory> MatchingHistories { get; set; }
+        public List<StudentMatchingHistory> MatchingHistories { get; set; }
             = new();
 
         /// <summary>
@@ -138,5 +138,54 @@ namespace PairMatching.Models
 
         [BsonIgnore]
         public IEnumerable<Student> MatchStudents { get; set; }
+
+        public Participant ToParticipant()
+        {
+            return new Participant
+            {
+                Country = Country,
+                DateOfRegistered = DateOfRegistered,
+                Email = Email,
+                Gender = Gender,
+                Languages = Languages,
+                Name = Name,
+                Notes = Notes,
+                OpenQuestions = new OpenQuestions
+                {
+                    BiographHeb = OpenQuestions.FirstOrDefault(o => o.Question == "Personal information").Answer,
+                    PersonalTraits = OpenQuestions.FirstOrDefault(o => o.Question == "Personality trates").Answer,
+                    AdditionalInfo = OpenQuestions.FirstOrDefault(o => o.Question == "Additional information").Answer,
+                    WhoIntroduced = OpenQuestions.FirstOrDefault(o => o.Question == "Who introduced you to this program").Answer,
+                    WhyJoinShalhevet = OpenQuestions.FirstOrDefault(o => o.Question == "What are your hopes and expectations from this program").Answer,
+                },
+                IsInArchive = IsInArchive,
+                PhoneNumber = PhoneNumber,
+                UtcOffset = UtcOffset,
+                PairPreferences = new Preferences
+                {
+                    EnglishLevel = DesiredEnglishLevel,
+                    Gender = PrefferdGender,
+                    LearningStyle = LearningStyle,
+                    NumberOfMatchs = PrefferdNumberOfMatchs,
+                    SkillLevel = DesiredSkillLevel,
+                    Tracks = PrefferdTracks,
+                    LearningTime = DesiredLearningTime
+                },
+                EnglishLevel = EnglishLevel,
+                SkillLevel = SkillLevel
+            };
+        }
+    }
+
+    public class StudentMatchingHistory
+    {
+        public DateTime DateOfMatch { get; set; }
+        public DateTime DateOfUnMatch { get; set; }
+        public List<Tuple<DateTime, PrefferdTracks>> TracksHistory { get; set; } =
+            new List<Tuple<DateTime, PrefferdTracks>>();
+        public string MatchStudentName { get; set; }
+        public int MatchStudentId { get; set; }
+        public bool IsUnMatch { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace PairMatching.DataAccess.UnitOfWork
 
             StudentRepositry = new ModelRepositroy<Student>(dataAccess, studentsCollectionName, _taskManeger);
 
-            PairsRepositry = new ModelRepositroy<Pair>(dataAccess, pairsCollectionName, _taskManeger);
+            PairsRepositry = new ModelRepositroy<OldPairDto>(dataAccess, pairsCollectionName, _taskManeger);
 
             ConfigRepositry = new ConfigRepositry(dataAccess);
 
@@ -38,7 +38,7 @@ namespace PairMatching.DataAccess.UnitOfWork
 
         public IModelRepository<Student> StudentRepositry { get; init; }
 
-        public IModelRepository<Pair> PairsRepositry { get; init; }
+        public IModelRepository<OldPairDto> PairsRepositry { get; init; }
 
         public IModelRepository<Participant> ParticipantsRepositry { get; init; }
 

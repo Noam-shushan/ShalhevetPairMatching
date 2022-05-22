@@ -18,7 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox materialDesign:ColorZoneAssist.Mode="Light">
+        <GroupBox Style="{StaticResource GroupBoxList}">
             <GroupBox.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>

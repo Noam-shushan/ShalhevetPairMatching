@@ -40,7 +40,17 @@
       "ProjectGuid": "5e9ae909-e16d-4251-94df-2c3ed268795a",
       "DisplayName": "Configurations",
       "ColorIndex": 6
+    },
+    "eee10655-0d58-4aea-81b4-70ca4a265c7a": {
+      "ProjectGuid": "eee10655-0d58-4aea-81b4-70ca4a265c7a",
+      "DisplayName": "WixApi",
+      "ColorIndex": 7
+    },
+    "9bf83876-b8f9-431f-937d-9b929772cf5e": {
+      "ProjectGuid": "9bf83876-b8f9-431f-937d-9b929772cf5e",
+      "DisplayName": "Testing",
+      "ColorIndex": 8
     }
   },
-  "NextColorIndex": 7
+  "NextColorIndex": 9
 }

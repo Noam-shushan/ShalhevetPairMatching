@@ -20,11 +20,27 @@ namespace GuiWpf.ViewModels
                 {
                     Name = "נעם",
                     Email = "noam8shu@gmail.com",
+                    OpenQuestions = new OpenQuestions
+                    {
+                        AdditionalInfo = "עליי פרטים נוספים",
+                        BiographHeb = "פרטים ביוגרפיים",
+                        PersonalTraits = "תחביבים",
+                        WhoIntroduced = "מי הכיר לי את התוכנית",
+                        WhyJoinShalhevet = "הצטרפתי כי בא לי"
+                    }
                 },
                 FromWorld = new Participant
                 {
                     Name = "Sara",
                     Email = "noamSararuth@gmail.com",
+                    OpenQuestions = new OpenQuestions
+                    {
+                        AdditionalInfo = "עליי פרטים נוספים",
+                        BiographHeb = "פרטים ביוגרפיים",
+                        PersonalTraits = "תחביבים",
+                        WhoIntroduced = "מי הכיר לי את התוכנית",
+                        WhyJoinShalhevet = "הצטרפתי כי בא לי"
+                    }
                 },
                 IsEnglishLevelMatch = true,
                 IsGenderMatch = true,

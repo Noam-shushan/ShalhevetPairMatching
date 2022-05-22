@@ -1,0 +1,15 @@
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\bin\Debug\net5.0\Testing.exe
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\bin\Debug\net5.0\Testing.deps.json
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\bin\Debug\net5.0\Testing.runtimeconfig.json
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\bin\Debug\net5.0\Testing.runtimeconfig.dev.json
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\bin\Debug\net5.0\Testing.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\bin\Debug\net5.0\ref\Testing.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\bin\Debug\net5.0\Testing.pdb
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\obj\Debug\net5.0\Testing.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\obj\Debug\net5.0\Testing.AssemblyInfoInputs.cache
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\obj\Debug\net5.0\Testing.AssemblyInfo.cs
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\obj\Debug\net5.0\Testing.csproj.CoreCompileInputs.cache
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\obj\Debug\net5.0\Testing.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\obj\Debug\net5.0\ref\Testing.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\obj\Debug\net5.0\Testing.pdb
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Testing\obj\Debug\net5.0\Testing.genruntimeconfig.cache

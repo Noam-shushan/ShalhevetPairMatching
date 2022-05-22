@@ -2,10 +2,12 @@
     x:Class="GuiWpf.Views.ParticipiantsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controlers="clr-namespace:GuiWpf.Controlers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -16,156 +18,285 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <TabControl
-            Grid.Row="0"
-            materialDesign:ColorZoneAssist.Mode="PrimaryLight"
-            Style="{StaticResource MaterialDesignTabControlBase}"
-            TabStripPlacement="Left">
-            <TabItem Header="משתתפים">
-                <Grid Margin="10">
-                    <GroupBox materialDesign:ColorZoneAssist.Mode="Light" Style="{StaticResource MaterialDesignCardGroupBox}">
-                        <GroupBox.Header>
+
+        <Grid Grid.Row="0" Margin="3">
+            <GroupBox Style="{StaticResource GroupBoxList}">
+                <GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Margin="0,0,10,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBox
+                                x:Name="tbSearch"
+                                Grid.Column="0"
+                                Width="100"
+                                HorizontalAlignment="Right"
+                                materialDesign:HintAssist.Hint="חפש"
+                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                Text="{Binding SearchWord, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.InputBindings>
+                                    <KeyBinding
+                                        Command="{Binding SearchCommand}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBox}}}"
+                                        Gesture="Return" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding SearchCommand}"
+                                Content="{materialDesign:PackIcon Kind=Search,
+                                                                  Size=30}">
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsLoading}" Value="False">
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </Grid>
+                        <ComboBox
+                            Grid.Column="1"
+                            Margin="0,0,10,0"
+                            materialDesign:HintAssist.Hint="שנה"
+                            Style="{StaticResource FilterComboBox}">
+                            <ComboBoxItem Content="כל השנים" />
+                            <ComboBoxItem Content="2021" />
+                            <ComboBoxItem Content="2022" />
+                        </ComboBox>
+                        <ComboBox
+                            Grid.Column="2"
+                            materialDesign:HintAssist.Hint="סנן"
+                            Style="{StaticResource FilterComboBox}">
+                            <ComboBoxItem Content="כל המששתתפים" />
+                            <ComboBoxItem Content="משתתפים מישראל" />
+                            <ComboBoxItem Content="משתתפים מהתפוצות" />
+                            <ComboBoxItem Content="משתתפים ללא חבורתא" />
+                        </ComboBox>
+                    </Grid>
+                </GroupBox.Header>
+                <DataGrid
+                    Height="auto"
+                    materialDesign:DataGridAssist.CornerRadius="10"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding Participiants}"
+                    ScrollViewer.CanContentScroll="True"
+                    SelectedItem="{Binding SelectedParticipant}"
+                    Style="{StaticResource MaterialDesignDataGrid}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <CheckBox />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Name}" Header="שם מלא" />
+                        <DataGridTextColumn Binding="{Binding Country}" Header="ארץ" />
+                        <DataGridTextColumn Binding="{Binding PhoneNumber}" Header="טלפון" />
+                        <DataGridTextColumn Binding="{Binding Email}" Header="מייל" />
+                        <DataGridTextColumn Binding="{Binding Gender, Converter={StaticResource GendersHebConverter}}" Header="מגדר" />
+                        <DataGridTextColumn Binding="{Binding DateOfRegistered, StringFormat=d}" Header="תאריך הרשמה" />
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק את כל הנבחרים">
+                                    <materialDesign:PackIcon Kind="Delete" />
+                                </Button>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק משתתף">
+                                        <materialDesign:PackIcon Kind="Delete" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל לכל הנבחרים">
+                                    <materialDesign:PackIcon Kind="Email" />
+                                </Button>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל למשתתף">
+                                        <materialDesign:PackIcon Kind="Email" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="ארכיון">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח לארכיון">
+                                        <materialDesign:PackIcon Kind="Archive" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0" Margin="0,0,10,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <TextBox
-                                        x:Name="tbSearch"
-                                        Grid.Column="0"
-                                        Width="100"
-                                        HorizontalAlignment="Right"
-                                        materialDesign:HintAssist.Hint="חפש"
-                                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                        Text="{Binding SearchWord, UpdateSourceTrigger=PropertyChanged}">
-                                        <TextBox.InputBindings>
-                                            <KeyBinding
-                                                Command="{Binding SearchCommand}"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBox}}}"
-                                                Gesture="Return" />
-                                        </TextBox.InputBindings>
-                                    </TextBox>
-                                    <Button
-                                        Grid.Column="1"
-                                        Command="{Binding SearchCommand}"
-                                        Content="{materialDesign:PackIcon Kind=Search,
-                                                                          Size=30}">
-                                        <Button.Style>
-                                            <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsLoading}" Value="False">
-                                                        <Setter Property="IsEnabled" Value="True" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
-                                                        <Setter Property="IsEnabled" Value="False" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
-                                </Grid>
-                                <ComboBox
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <GroupBox
+                                    Grid.RowSpan="2"
+                                    Grid.Column="0"
+                                    Margin="5"
+                                    DataContext="{Binding PairPreferences}"
+                                    Header="העדפות מחברותא">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+                                        <controlers:Field
+                                            Grid.Row="0"
+                                            FieldName="מגדר מועדף"
+                                            Value="{Binding Gender, Converter={StaticResource GendersHebConverter}}" />
+                                        <controlers:Field
+                                            Grid.Row="1"
+                                            FieldName="רמת אנגלית רצויה"
+                                            Value="{Binding EnglishLevel, Converter={StaticResource EnglishLevelsHebConverter}}" />
+                                        <controlers:Field
+                                            Grid.Row="2"
+                                            FieldName="רמת לימוד רצויה"
+                                            Value="{Binding SkillLevel, Converter={StaticResource SkillLevelsHebConverter}}" />
+                                        <controlers:Field
+                                            Grid.Row="3"
+                                            FieldName="סגנון לימוד"
+                                            Value="{Binding LearningStyle, Converter={StaticResource LearningStylesHebConverter}}" />
+                                        <controlers:Field
+                                            Grid.Row="4"
+                                            FieldName="מספר חברותות אופציונליות"
+                                            Value="{Binding NumberOfMatchs}" />
+                                        <GroupBox Grid.Row="5" Header="מסלולי לימוד">
+                                            <ListBox ItemsSource="{Binding Tracks}" Style="{StaticResource MaterialDesignChoiceChipListBox}">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Style="{StaticResource PrefferdTracksText}" />
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </GroupBox>
+
+                                    </Grid>
+                                </GroupBox>
+
+                                <GroupBox
+                                    Grid.Row="0"
                                     Grid.Column="1"
-                                    Margin="0,0,10,0"
-                                    materialDesign:HintAssist.Hint="שנה"
-                                    Style="{StaticResource FilterComboBox}">
-                                    <ComboBoxItem Content="כל השנים" />
-                                    <ComboBoxItem Content="2021" />
-                                    <ComboBoxItem Content="2022" />
-                                </ComboBox>
-                                <ComboBox
-                                    Grid.Column="2"
-                                    materialDesign:HintAssist.Hint="סנן"
-                                    Style="{StaticResource FilterComboBox}">
-                                    <ComboBoxItem Content="כל המששתתפים" />
-                                    <ComboBoxItem Content="משתתפים מישראל" />
-                                    <ComboBoxItem Content="משתתפים מהתפוצות" />
-                                    <ComboBoxItem Content="משתתפים ללא חבורתא" />
-                                </ComboBox>
+                                    Margin="5"
+                                    Header="זמני לימוד">
+                                    <ListBox ItemsSource="{Binding PairPreferences.LearningTime}" Style="{StaticResource MaterialDesignCardsListBox}">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <UniformGrid Columns="5" />
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+                                                    <materialDesign:Card
+                                                        Grid.Row="0"
+                                                        Margin="3"
+                                                        Background="#fff5d9"
+                                                        UniformCornerRadius="10">
+                                                        <TextBlock
+                                                            Padding="3"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource DaysText}" />
+                                                    </materialDesign:Card>
+                                                    <ListBox Grid.Row="1" ItemsSource="{Binding TimeInDay}">
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Style="{StaticResource TimesInDayText}" />
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
+                                                    </ListBox>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </GroupBox>
+
+
+                                <GroupBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="5"
+                                    Header="פרטים נוספים">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <controlers:Field
+                                            Grid.Row="0"
+                                            FieldName="רמת אנגלית"
+                                            Value="{Binding EnglishLevel, Converter={StaticResource EnglishLevelsHebConverter}}" />
+                                        <controlers:Field
+                                            Grid.Row="1"
+                                            FieldName="רמת לימוד"
+                                            Value="{Binding SkillLevel, Converter={StaticResource SkillLevelsHebConverter}}" />
+                                        <ListBox
+                                            Grid.Row="2"
+                                            ItemsSource="{Binding Languages}"
+                                            Style="{StaticResource MaterialDesignChoiceChipAccentListBox}" />
+                                    </Grid>
+                                </GroupBox>
+
                             </Grid>
-                        </GroupBox.Header>
-                        <DataGrid
-                            Height="auto"
-                            AutoGenerateColumns="False"
-                            ItemsSource="{Binding Participiants}"
-                            SelectedItem="{Binding SelectedParticipant}"
-                            Style="{StaticResource MaterialDesignDataGrid}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn>
-                                    <DataGridTemplateColumn.Header>
-                                        <CheckBox />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <CheckBox />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="שם מלא" />
-                                <DataGridTextColumn Header="ארץ" />
-                                <DataGridTextColumn Header="טלפון" />
-                                <DataGridTextColumn Header="מייל" />
-                                <DataGridTemplateColumn Header="מסלול מועדף">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ListBox Style="{StaticResource MaterialDesignFilterChipListBox}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
+                </DataGrid>
+            </GroupBox>
 
-                                <DataGridTemplateColumn>
-                                    <DataGridTemplateColumn.Header>
-                                        <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק את כל הנבחרים">
-                                            <materialDesign:PackIcon Kind="Delete" />
-                                        </Button>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק משתתף">
-                                                <materialDesign:PackIcon Kind="Delete" />
-                                            </Button>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn>
-                                    <DataGridTemplateColumn.Header>
-                                        <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל לכל הנבחרים">
-                                            <materialDesign:PackIcon Kind="Email" />
-                                        </Button>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל למשתתף">
-                                                <materialDesign:PackIcon Kind="Email" />
-                                            </Button>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="ארכיון">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח לארכיון">
-                                                <materialDesign:PackIcon Kind="Archive" />
-                                            </Button>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </GroupBox>
-                </Grid>
-            </TabItem>
-
-        </TabControl>
+        </Grid>
+        <Button
+            Grid.Row="1"
+            Command="{Binding Load}"
+            Content="טען"
+            Visibility="Collapsed" />
     </Grid>
 </UserControl>

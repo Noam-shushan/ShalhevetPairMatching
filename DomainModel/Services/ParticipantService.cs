@@ -64,9 +64,9 @@ namespace PairMatching.DomainModel.Services
         {
             //var p = await _wix.GetNewParticipants();
 
-            return null;// await _unitOfWork
-                     //.StudentRepositry
-                //.GetAllAsync(s => !s.IsDeleted);
+            return  await _unitOfWork
+                     .StudentRepositry
+                .GetAllAsync(s => !s.IsDeleted);
         }
     }
 }

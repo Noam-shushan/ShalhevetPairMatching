@@ -10,7 +10,7 @@ namespace PairMatching.Models
     public class Pair
     {
         [BsonId]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// flag that determine if the pair is deleted from the database 
@@ -20,12 +20,12 @@ namespace PairMatching.Models
         /// <summary>
         /// the first student id 
         /// </summary>
-        public int StudentFromIsraelId { get; set; }
+        public string ParticipantFromIsraelId { get; set; }
 
         /// <summary>
         /// The student id for the first student
         /// </summary>
-        public int StudentFromWorldId { get; set; }
+        public string ParticipantFromWorldId { get; set; }
 
         public DateTime DateOfCreate { get; set; }
 
@@ -38,14 +38,14 @@ namespace PairMatching.Models
         /// <summary>
         /// Preferred tracks of learning {TANYA, TALMUD, PARASHA ...}
         /// </summary>
-        public PrefferdTracks PrefferdTracks { get; set; }
+        public PrefferdTracks Track { get; set; }
 
         public List<Note> Notes { get; set; } = new List<Note>();
-        
+
         [BsonIgnore]
-        public Student StudentFromIsrael { get; set; }
-        
+        public Participant ParticipantFromIsrael { get; set; }
+
         [BsonIgnore]
-        public Student StudentFromWorld { get; set; }
+        public Participant ParticipantFromWorld { get; set; }
     }
 }

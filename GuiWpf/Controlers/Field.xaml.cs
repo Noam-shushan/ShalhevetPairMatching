@@ -42,6 +42,7 @@ namespace GuiWpf.Controlers
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(object), typeof(Field));
 
+
         public Field()
         {
             InitializeComponent();

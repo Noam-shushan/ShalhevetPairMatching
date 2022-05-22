@@ -20,10 +20,10 @@ namespace GuiWpf.ViewModels
             _participantService = participantService;
         }
 
-        public ObservableCollection<Student> Participiants { get; set; } = new();
+        public ObservableCollection<Participant> Participiants { get; set; } = new();
 
-        private Student _selectedParticipant = new();
-        public Student SelectedParticipant
+        private Participant _selectedParticipant = new();
+        public Participant SelectedParticipant
         {
             get => _selectedParticipant; 
             set 
@@ -39,7 +39,8 @@ namespace GuiWpf.ViewModels
         public DelegateCommand Load => _load ??= new(
             async () =>
             {
-                var list = await _participantService.GetAllStudents();
+                var studList = await _participantService.GetAllStudents();
+                var list = studList.Select(s => s.ToParticipant());
                 Participiants.Clear();
                 Participiants.AddRange(list);
             });
