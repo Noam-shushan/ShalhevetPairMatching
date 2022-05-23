@@ -28,12 +28,20 @@ namespace GuiWpf.ViewModels
             get => _selectedParticipant; 
             set 
             { 
-                if(SetProperty(ref _selectedParticipant, value))
+                if(!SetProperty(ref _selectedParticipant, value))
                 {
-                    var isc = true;
+                    //IsToggleRow = !IsToggleRow;
                 }; 
             }
         }
+
+        private bool _isToggleRow = false;
+        public bool IsToggleRow
+        {
+            get { return _isToggleRow; }
+            set { SetProperty(ref _isToggleRow, value); }
+        }
+
 
         DelegateCommand _load;
         public DelegateCommand Load => _load ??= new(
@@ -45,6 +53,29 @@ namespace GuiWpf.ViewModels
                 Participiants.AddRange(list);
             });
 
+        DelegateCommand _toggleRow;
+        public DelegateCommand ToggleRow => _toggleRow ??= new(
+            () =>
+            {
+                IsToggleRow = !IsToggleRow;
+            });
+
+        private string _searchParticipiantsWord = "";
+        public string SearchParticipiantsWord
+        {
+            get { return _searchParticipiantsWord; }
+            set 
+            { 
+                SetProperty(ref _searchParticipiantsWord, value); 
+            }
+        }
+
+        DelegateCommand _searchParticipiantsCommand;
+        public DelegateCommand SearchParticipiantsCommand => _searchParticipiantsCommand ??= new(
+            () =>
+            {
+                var s = SearchParticipiantsWord;
+            });
 
     }
 }

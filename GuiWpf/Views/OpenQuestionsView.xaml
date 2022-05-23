@@ -1,0 +1,77 @@
+﻿<UserControl
+    x:Class="GuiWpf.Views.OpenQuestionsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:GuiWpf.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:GuiWpf.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid>
+        <GroupBox
+            Margin="5"
+            materialDesign:ColorZoneAssist.Mode="Light"
+            BorderThickness="0"
+            DataContext="{Binding Path=OpenQuestions, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <GroupBox.Header>
+                <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="שאלות פתוחות" />
+            </GroupBox.Header>
+            <ScrollViewer materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" CanContentScroll="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <Expander Grid.Row="0" Style="{StaticResource OpenQuestionsExspender}">
+                        <Expander.Header>
+                            <TextBlock
+                                Style="{StaticResource OpenQuestionsHeaders}"
+                                Text="פרטים ביוגרפיים (גיל, מה עושה בחיים, רקע לימודי, השתייכות חברתית)"
+                                TextWrapping="WrapWithOverflow" />
+                        </Expander.Header>
+                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding BiographHeb}" />
+                    </Expander>
+
+                    <Expander Grid.Row="1" Style="{StaticResource OpenQuestionsExspender}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="תכונות אישיות, ערכים חשובים בשבילך, תחביבים ותחומי עניין" />
+                        </Expander.Header>
+                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding PersonalTraits}" />
+                    </Expander>
+
+                    <Expander Grid.Row="2" Style="{StaticResource OpenQuestionsExspender}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="מה מעניין אותך בהצטרפות לשלהבת?" />
+                        </Expander.Header>
+                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhyJoinShalhevet}" />
+                    </Expander>
+
+                    <Expander Grid.Row="3" Style="{StaticResource OpenQuestionsExspender}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דברים נוספים שהיית רוצה שנדע, או דברים שהיית רוצה לבקש מאיתנו?" />
+                        </Expander.Header>
+                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AdditionalInfo}" />
+                    </Expander>
+
+                    <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דרך מי (או דרך מה) הגעת לתכנית?" />
+                        </Expander.Header>
+                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhoIntroduced}" />
+                    </Expander>
+                </Grid>
+                <i:Interaction.Behaviors>
+                    <behaviors:IgnoreMouseWheelBehavior />
+                </i:Interaction.Behaviors>
+            </ScrollViewer>
+        </GroupBox>
+    </Grid>
+</UserControl>

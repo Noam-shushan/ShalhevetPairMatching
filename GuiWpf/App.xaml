@@ -18,11 +18,6 @@
                     PrimaryColor="CadetBlue"
                     SecondaryColor="Moccasin" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <!--<materialDesign:BundledTheme
-                    BaseTheme="Light"
-                    PrimaryColor="Blue"
-                    SecondaryColor="Amber" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
 
             <Style
@@ -33,9 +28,9 @@
             </Style>
             <Style
                 x:Key="FilterComboBox"
-                BasedOn="{StaticResource MaterialDesignOutlinedComboBox}"
+                BasedOn="{StaticResource MaterialDesignDataGridComboBox}"
                 TargetType="ComboBox">
-                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontSize" Value="13" />
             </Style>
             <Style
                 x:Key="GroupBoxList"
@@ -63,6 +58,10 @@
                 TargetType="TextBlock">
                 <Setter Property="TextWrapping" Value="WrapWithOverflow" />
                 <Setter Property="Padding" Value="3" />
+            </Style>
+
+            <Style x:Key="GroupBoxHeadersGridForDataGrid" TargetType="Grid">
+                <Setter Property="MaxHeight" Value="35" />
             </Style>
 
             <converters:EnglishLevelsHebConverter x:Key="EnglishLevelsHebConverter" />

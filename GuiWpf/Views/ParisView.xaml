@@ -2,6 +2,7 @@
     x:Class="GuiWpf.Views.ParisView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controlers="clr-namespace:GuiWpf.Controlers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -20,7 +21,7 @@
         </Grid.RowDefinitions>
         <GroupBox Style="{StaticResource GroupBoxList}">
             <GroupBox.Header>
-                <Grid>
+                <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
@@ -28,52 +29,11 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <Grid
+                    <controlers:SearchTextBox
                         Grid.Column="0"
-                        Margin="0,0,10,0"
-                        HorizontalAlignment="Left">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <TextBox
-                            x:Name="tbSearch"
-                            Grid.Column="0"
-                            Width="100"
-                            HorizontalAlignment="Right"
-                            materialDesign:HintAssist.Hint="חפש"
-                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                            Text="{Binding SearchWord, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBox.InputBindings>
-                                <KeyBinding
-                                    Command="{Binding SearchCommand}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBox}}}"
-                                    Gesture="Return" />
-                            </TextBox.InputBindings>
-                        </TextBox>
-                        <Button
-                            Grid.Column="1"
-                            Command="{Binding SearchCommand}"
-                            Content="{materialDesign:PackIcon Kind=Search,
-                                                              Size=30}">
-                            <Button.Style>
-                                <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsLoading}" Value="False">
-                                            <Setter Property="IsEnabled" Value="True" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsLoading}" Value="True">
-                                            <Setter Property="IsEnabled" Value="False" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </Grid>
+                        SearchCommand="{Binding SearchPairsCommand}"
+                        SearchWord="{Binding SearchPairsWord}" />
+
                     <ComboBox
                         Grid.Column="1"
                         Margin="0,0,10,0"

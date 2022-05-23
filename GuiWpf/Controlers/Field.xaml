@@ -8,8 +8,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mscorlib="clr-namespace:System;assembly=mscorlib"
     Name="FildeItemInc"
-    FontSize="16"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="TextStyle"
+            BasedOn="{StaticResource MaterialDesignSubtitle1TextBlock}"
+            TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+    </UserControl.Resources>
     <materialDesign:Card Margin="5" UniformCornerRadius="5">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -23,12 +30,12 @@
                 Margin="3"
                 HorizontalAlignment="Left"
                 FontWeight="DemiBold"
-                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                Style="{StaticResource TextStyle}"
                 Text="{Binding ElementName=FildeItemInc, Path=FieldName}" />
             <TextBlock
                 Grid.Column="1"
                 Margin="0,3,0,3"
-                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                Style="{StaticResource TextStyle}"
                 Text=": " />
 
             <ContentPresenter
@@ -55,7 +62,7 @@
                         </materialDesign:PackIcon>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type mscorlib:String}">
-                        <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding Path=.}" />
+                        <TextBlock Style="{StaticResource TextStyle}" Text="{Binding Path=.}" />
                     </DataTemplate>
                 </ContentPresenter.Resources>
             </ContentPresenter>

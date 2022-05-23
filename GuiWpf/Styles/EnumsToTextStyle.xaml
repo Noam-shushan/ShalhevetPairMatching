@@ -77,7 +77,7 @@
                 <Setter Property="Text" Value="לילה" />
             </DataTrigger>
             <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.INCAPABLE}">
-                <Setter Property="Text" Value="לא יכול ביום זה" />
+                <Setter Property="Text" Value="לא יכול" />
             </DataTrigger>
         </Style.Triggers>
     </Style>

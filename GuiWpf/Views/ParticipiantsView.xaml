@@ -4,11 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controlers="clr-namespace:GuiWpf.Controlers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     xmlns:prism="http://prismlibrary.com/"
+    Name="me"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -22,64 +24,27 @@
         <Grid Grid.Row="0" Margin="3">
             <GroupBox Style="{StaticResource GroupBoxList}">
                 <GroupBox.Header>
-                    <Grid>
+                    <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" Margin="0,0,10,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <TextBox
-                                x:Name="tbSearch"
-                                Grid.Column="0"
-                                Width="100"
-                                HorizontalAlignment="Right"
-                                materialDesign:HintAssist.Hint="חפש"
-                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                Text="{Binding SearchWord, UpdateSourceTrigger=PropertyChanged}">
-                                <TextBox.InputBindings>
-                                    <KeyBinding
-                                        Command="{Binding SearchCommand}"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBox}}}"
-                                        Gesture="Return" />
-                                </TextBox.InputBindings>
-                            </TextBox>
-                            <Button
-                                Grid.Column="1"
-                                Command="{Binding SearchCommand}"
-                                Content="{materialDesign:PackIcon Kind=Search,
-                                                                  Size=30}">
-                                <Button.Style>
-                                    <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsLoading}" Value="False">
-                                                <Setter Property="IsEnabled" Value="True" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
-                                                <Setter Property="IsEnabled" Value="False" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </Grid>
+                        <controlers:SearchTextBox
+                            Grid.Column="0"
+                            SearchCommand="{Binding SearchParticipiantsCommand}"
+                            SearchWord="{Binding SearchParticipiantsWord}" />
+
                         <ComboBox
                             Grid.Column="1"
-                            Margin="0,0,10,0"
+                            Margin="10,0,10,0"
                             materialDesign:HintAssist.Hint="שנה"
                             Style="{StaticResource FilterComboBox}">
                             <ComboBoxItem Content="כל השנים" />
                             <ComboBoxItem Content="2021" />
                             <ComboBoxItem Content="2022" />
                         </ComboBox>
+
                         <ComboBox
                             Grid.Column="2"
                             materialDesign:HintAssist.Hint="סנן"
@@ -97,9 +62,25 @@
                     AutoGenerateColumns="False"
                     IsReadOnly="True"
                     ItemsSource="{Binding Participiants}"
-                    ScrollViewer.CanContentScroll="True"
-                    SelectedItem="{Binding SelectedParticipant}"
-                    Style="{StaticResource MaterialDesignDataGrid}">
+                    ScrollViewer.CanContentScroll="False"
+                    SelectedItem="{Binding SelectedParticipant}">
+                    <DataGrid.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGrid}" TargetType="DataGrid">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsToggleRow}" Value="True">
+                                    <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsToggleRow}" Value="False">
+                                    <Setter Property="RowDetailsVisibilityMode" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Style>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding ToggleRow}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
@@ -161,7 +142,6 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
@@ -169,9 +149,10 @@
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <GroupBox
+                                    Grid.Row="0"
                                     Grid.RowSpan="2"
                                     Grid.Column="0"
-                                    Margin="5"
+                                    Margin="3"
                                     DataContext="{Binding PairPreferences}"
                                     Header="העדפות מחברותא">
                                     <Grid>
@@ -181,7 +162,7 @@
                                             <RowDefinition Height="auto" />
                                             <RowDefinition Height="auto" />
                                             <RowDefinition Height="auto" />
-                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <controlers:Field
                                             Grid.Row="0"
@@ -219,7 +200,7 @@
                                 <GroupBox
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Margin="5"
+                                    Margin="3"
                                     Header="זמני לימוד">
                                     <ListBox ItemsSource="{Binding PairPreferences.LearningTime}" Style="{StaticResource MaterialDesignCardsListBox}">
                                         <ListBox.ItemsPanel>
@@ -262,7 +243,7 @@
                                 <GroupBox
                                     Grid.Row="1"
                                     Grid.Column="1"
-                                    Margin="5"
+                                    Margin="3"
                                     Header="פרטים נוספים">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -285,10 +266,28 @@
                                             Style="{StaticResource MaterialDesignChoiceChipAccentListBox}" />
                                     </Grid>
                                 </GroupBox>
+                                <!--<local:OpenQuestionsView
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="2"
+                                    OpenQuestions="{Binding OpenQuestions}" />-->
+
 
                             </Grid>
                         </DataTemplate>
                     </DataGrid.RowDetailsTemplate>
+                    <!--<DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsToggleRow}" Value="True">
+                                    <Setter Property="DetailsVisibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsToggleRow}" Value="False">
+                                    <Setter Property="DetailsVisibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>-->
                 </DataGrid>
             </GroupBox>
 
@@ -297,6 +296,6 @@
             Grid.Row="1"
             Command="{Binding Load}"
             Content="טען"
-            Visibility="Collapsed" />
+            Visibility="Visible" />
     </Grid>
 </UserControl>

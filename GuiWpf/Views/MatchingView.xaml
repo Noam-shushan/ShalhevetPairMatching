@@ -82,65 +82,8 @@
                                             Value="{Binding StageSuggestion.FromIsrael.Email}" />
                                         <controlers:Field Grid.Row="3" FieldName="מספר הצעות מתאימות" />
 
-                                        <GroupBox
-                                            Grid.Row="4"
-                                            Margin="5"
-                                            materialDesign:ColorZoneAssist.Mode="Light"
-                                            BorderThickness="0"
-                                            DataContext="{Binding StageSuggestion.FromIsrael.OpenQuestions}">
-                                            <GroupBox.Header>
-                                                <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="שאלות פתוחות" />
-                                            </GroupBox.Header>
-                                            <ScrollViewer materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" CanContentScroll="True">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="auto" />
-                                                    </Grid.RowDefinitions>
+                                        <local:OpenQuestionsView Grid.Row="4" OpenQuestions="{Binding StageSuggestion.FromIsrael.OpenQuestions}" />
 
-                                                    <Expander Grid.Row="0" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock
-                                                                Style="{StaticResource OpenQuestionsHeaders}"
-                                                                Text="פרטים ביוגרפיים (גיל, מה עושה בחיים, רקע לימודי, השתייכות חברתית)"
-                                                                TextWrapping="WrapWithOverflow" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding BiographHeb}" />
-                                                    </Expander>
-
-                                                    <Expander Grid.Row="1" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="תכונות אישיות, ערכים חשובים בשבילך, תחביבים ותחומי עניין" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding PersonalTraits}" />
-                                                    </Expander>
-
-                                                    <Expander Grid.Row="2" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="מה מעניין אותך בהצטרפות לשלהבת?" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhyJoinShalhevet}" />
-                                                    </Expander>
-
-                                                    <Expander Grid.Row="3" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דברים נוספים שהיית רוצה שנדע, או דברים שהיית רוצה לבקש מאיתנו?" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AdditionalInfo}" />
-                                                    </Expander>
-
-                                                    <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דרך מי (או דרך מה) הגעת לתכנית?" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhoIntroduced}" />
-                                                    </Expander>
-                                                </Grid>
-                                            </ScrollViewer>
-                                        </GroupBox>
 
                                     </Grid>
                                 </materialDesign:Card>
@@ -394,65 +337,7 @@
                                             Value="{Binding StageSuggestion.FromWorld.Email}" />
                                         <controlers:Field Grid.Row="3" FieldName="מספר הצעות מתאימות" />
 
-                                        <GroupBox
-                                            Grid.Row="4"
-                                            Margin="5"
-                                            materialDesign:ColorZoneAssist.Mode="Light"
-                                            BorderThickness="0"
-                                            DataContext="{Binding StageSuggestion.FromIsrael.OpenQuestions}">
-                                            <GroupBox.Header>
-                                                <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="שאלות פתוחות" />
-                                            </GroupBox.Header>
-                                            <ScrollViewer materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" CanContentScroll="True">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="auto" />
-                                                    </Grid.RowDefinitions>
-
-                                                    <Expander Grid.Row="0" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock
-                                                                Style="{StaticResource OpenQuestionsHeaders}"
-                                                                Text="פרטים ביוגרפיים (גיל, מה עושה בחיים, רקע לימודי, השתייכות חברתית)"
-                                                                TextWrapping="WrapWithOverflow" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding BiographHeb}" />
-                                                    </Expander>
-
-                                                    <Expander Grid.Row="1" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="תכונות אישיות, ערכים חשובים בשבילך, תחביבים ותחומי עניין" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding PersonalTraits}" />
-                                                    </Expander>
-
-                                                    <Expander Grid.Row="2" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="מה מעניין אותך בהצטרפות לשלהבת?" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhyJoinShalhevet}" />
-                                                    </Expander>
-
-                                                    <Expander Grid.Row="3" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דברים נוספים שהיית רוצה שנדע, או דברים שהיית רוצה לבקש מאיתנו?" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AdditionalInfo}" />
-                                                    </Expander>
-
-                                                    <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
-                                                        <Expander.Header>
-                                                            <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דרך מי (או דרך מה) הגעת לתכנית?" />
-                                                        </Expander.Header>
-                                                        <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhoIntroduced}" />
-                                                    </Expander>
-                                                </Grid>
-                                            </ScrollViewer>
-                                        </GroupBox>
+                                        <local:OpenQuestionsView Grid.Row="4" OpenQuestions="{Binding StageSuggestion.FromWorld.OpenQuestions}" />
 
                                     </Grid>
                                 </materialDesign:Card>
@@ -469,56 +354,14 @@
                     <TabItem Header="תצוגת רשימה">
                         <GroupBox Style="{StaticResource GroupBoxList}">
                             <GroupBox.Header>
-                                <Grid>
+                                <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Grid
+                                    <controlers:SearchTextBox
                                         Grid.Column="0"
-                                        Margin="0,0,10,0"
-                                        HorizontalAlignment="Left">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
-                                        <TextBox
-                                            x:Name="tbSearch"
-                                            Grid.Column="0"
-                                            Width="100"
-                                            HorizontalAlignment="Right"
-                                            materialDesign:HintAssist.Hint="חפש"
-                                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                            Text="{Binding SearchWord, UpdateSourceTrigger=PropertyChanged}">
-                                            <TextBox.InputBindings>
-                                                <KeyBinding
-                                                    Command="{Binding SearchCommand}"
-                                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBox}}}"
-                                                    Gesture="Return" />
-                                            </TextBox.InputBindings>
-                                        </TextBox>
-                                        <Button
-                                            Grid.Column="1"
-                                            Command="{Binding SearchCommand}"
-                                            Content="{materialDesign:PackIcon Kind=Search,
-                                                                              Size=30}">
-                                            <Button.Style>
-                                                <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsLoading}" Value="False">
-                                                            <Setter Property="IsEnabled" Value="True" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsLoading}" Value="True">
-                                                            <Setter Property="IsEnabled" Value="False" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Button.Style>
-                                        </Button>
-                                    </Grid>
+                                        SearchCommand="{Binding SearchSuggestionsCommand}"
+                                        SearchWord="{Binding SearchSuggestionsWord}" />
                                 </Grid>
                             </GroupBox.Header>
                             <Grid>
@@ -571,58 +414,17 @@
             <TabItem Header="היסטוריית התאמות">
                 <GroupBox Style="{StaticResource GroupBoxList}">
                     <GroupBox.Header>
-                        <Grid>
+                        <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <Grid
+                            <controlers:SearchTextBox
                                 Grid.Column="0"
-                                Margin="0,0,10,0"
-                                HorizontalAlignment="Left">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <TextBox
-                                    Grid.Column="0"
-                                    Width="100"
-                                    HorizontalAlignment="Right"
-                                    materialDesign:HintAssist.Hint="חפש"
-                                    Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                    Text="{Binding SearchWord, UpdateSourceTrigger=PropertyChanged}">
-                                    <TextBox.InputBindings>
-                                        <KeyBinding
-                                            Command="{Binding SearchCommand}"
-                                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBox}}}"
-                                            Gesture="Return" />
-                                    </TextBox.InputBindings>
-                                </TextBox>
-                                <Button
-                                    Grid.Column="1"
-                                    Command="{Binding SearchCommand}"
-                                    Content="{materialDesign:PackIcon Kind=Search,
-                                                                      Size=30}">
-                                    <Button.Style>
-                                        <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsLoading}" Value="False">
-                                                    <Setter Property="IsEnabled" Value="True" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IsLoading}" Value="True">
-                                                    <Setter Property="IsEnabled" Value="False" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
-                            </Grid>
+                                SearchCommand="{Binding SearchHistoriesCommand}"
+                                SearchWord="{Binding SearchHistoriesWord}" />
                         </Grid>
                     </GroupBox.Header>
-                    <DataGrid>
+                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Histories}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="משתתף מישראל" />
                             <DataGridTextColumn Header="משתתף מהתפוצות" />
