@@ -7,16 +7,8 @@ using System.Threading.Tasks;
 
 namespace PairMatching.Models
 {
-    public class Pair
+    public class Pair : BaseModel
     {
-        [BsonId]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// flag that determine if the pair is deleted from the database 
-        /// </summary>
-        public bool IsDeleted { get; set; }
-
         /// <summary>
         /// the first student id 
         /// </summary>
@@ -40,12 +32,19 @@ namespace PairMatching.Models
         /// </summary>
         public PrefferdTracks Track { get; set; }
 
-        public List<Note> Notes { get; set; } = new List<Note>();
-
         [BsonIgnore]
         public Participant ParticipantFromIsrael { get; set; }
 
         [BsonIgnore]
         public Participant ParticipantFromWorld { get; set; }
+
+        public bool Equals(Pair other)
+        {
+            if (other is null)
+            {
+                return false;
+            } 
+            return Id == other.Id;
+        }
     }
 }

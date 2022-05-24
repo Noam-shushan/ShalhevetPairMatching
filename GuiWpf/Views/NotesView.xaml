@@ -1,0 +1,58 @@
+﻿<UserControl
+    x:Class="GuiWpf.Views.NotesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GuiWpf.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="200"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <GroupBox Header="הערות">
+        <materialDesign:Card Margin="5" UniformCornerRadius="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <DataGrid
+                    Grid.Row="0"
+                    materialDesign:DataGridAssist.CornerRadius="20"
+                    AutoGenerateColumns="False"
+                    ItemsSource="{Binding Path=Notes, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Date}" Header="תאריך" />
+                        <DataGridTextColumn Binding="{Binding Author}" Header="כותב ההערה" />
+                        <DataGridTextColumn Binding="{Binding Subject}" Header="נושא" />
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק הערה">
+                                        <materialDesign:PackIcon Kind="Delete" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                Text="{Binding Content}"
+                                TextWrapping="WrapWithOverflow" />
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
+                </DataGrid>
+                <Button
+                    Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    Command="{Binding Path=AddNoteCommand, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding Path=OwnerModel, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Style="{StaticResource MaterialDesignIconButton}">
+                    <materialDesign:PackIcon Kind="Add" />
+                </Button>
+            </Grid>
+        </materialDesign:Card>
+    </GroupBox>
+</UserControl>

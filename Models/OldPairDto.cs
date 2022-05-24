@@ -40,7 +40,7 @@ namespace PairMatching.Models
         /// </summary>
         public PrefferdTracks PrefferdTracks { get; set; }
 
-        public List<Note> Notes { get; set; } = new List<Note>();
+        public List<NoteOld> Notes { get; set; } = new List<NoteOld>();
         
         [BsonIgnore]
         public Student StudentFromIsrael { get; set; }

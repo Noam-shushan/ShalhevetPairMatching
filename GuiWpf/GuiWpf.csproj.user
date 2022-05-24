@@ -19,6 +19,9 @@
     <Compile Update="Views\MatchingView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\NotesView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\OpenQuestionsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -49,6 +52,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MatchingView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NotesView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\OpenQuestionsView.xaml">

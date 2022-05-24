@@ -7,11 +7,8 @@ using static PairMatching.Tools.HelperFunction;
 
 namespace PairMatching.Models
 {
-    public class Participant
+    public class Participant : BaseModel
     {
-        [BsonId]
-        public string Id { get; set; }
-
         public int WixIndex { get; set; }
 
         public string WixId { get; set; }
@@ -52,10 +49,6 @@ namespace PairMatching.Models
 
         public DateTime DateOfRegistered { get; set; }
 
-        /// <summary>
-        /// is this student as deleted from the database
-        /// </summary>
-        public bool IsDeleted { get; set; }
 
         /// <summary>
         /// the utc offset of the student
@@ -65,8 +58,6 @@ namespace PairMatching.Models
         public bool IsInArchive { get; set; }
 
         public IEnumerable<string> Languages { get; set; }
-
-        public List<Note> Notes { get; set; } = new();
 
         [BsonIgnore]
         public bool IsKnowMoreLanguages { get => Languages.Any(); }

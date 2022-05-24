@@ -60,7 +60,6 @@
                     Height="auto"
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
-                    IsReadOnly="True"
                     ItemsSource="{Binding Participiants}"
                     ScrollViewer.CanContentScroll="False"
                     SelectedItem="{Binding SelectedParticipant}">
@@ -92,12 +91,67 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="שם מלא" />
-                        <DataGridTextColumn Binding="{Binding Country}" Header="ארץ" />
-                        <DataGridTextColumn Binding="{Binding PhoneNumber}" Header="טלפון" />
-                        <DataGridTextColumn Binding="{Binding Email}" Header="מייל" />
-                        <DataGridTextColumn Binding="{Binding Gender, Converter={StaticResource GendersHebConverter}}" Header="מגדר" />
-                        <DataGridTextColumn Binding="{Binding DateOfRegistered, StringFormat=d}" Header="תאריך הרשמה" />
+                        <DataGridTextColumn
+                            Binding="{Binding Name}"
+                            Header="שם מלא"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding Country}"
+                            Header="ארץ"
+                            IsReadOnly="True" />
+                        <DataGridTemplateColumn Header="טלפון">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding PhoneNumber}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding PhoneNumber}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="מייל">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Email}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Email}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn
+                            Binding="{Binding Gender, Converter={StaticResource GendersHebConverter}}"
+                            Header="מגדר"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding DateOfRegistered, StringFormat=d}"
+                            Header="תאריך הרשמה"
+                            IsReadOnly="True">
+                            <!--<DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Text="תאריך הרשמה" />
+                                        <DatePicker
+                                            Grid.Column="1"
+                                            Margin="3,0,0,0"
+                                            Style="{StaticResource MaterialDesignDatePicker}" />
+                                    </Grid>
+
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>-->
+                        </DataGridTextColumn>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
                                 <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק את כל הנבחרים">
@@ -142,7 +196,8 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
@@ -239,7 +294,6 @@
                                     </ListBox>
                                 </GroupBox>
 
-
                                 <GroupBox
                                     Grid.Row="1"
                                     Grid.Column="1"
@@ -266,28 +320,60 @@
                                             Style="{StaticResource MaterialDesignChoiceChipAccentListBox}" />
                                     </Grid>
                                 </GroupBox>
-                                <!--<local:OpenQuestionsView
+
+                                <local:NotesView
                                     Grid.Row="0"
                                     Grid.RowSpan="2"
                                     Grid.Column="2"
-                                    OpenQuestions="{Binding OpenQuestions}" />-->
+                                    MaxWidth="500"
+                                    Margin="3"
+                                    HorizontalAlignment="Left"
+                                    Notes="{Binding Notes}" />
 
+                                <materialDesign:DialogHost
+                                    Grid.Row="0"
+                                    Grid.Column="3"
+                                    Margin="3"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    CloseOnClickAway="True"
+                                    Placement="Relative">
+                                    <materialDesign:DialogHost.DialogContent>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <Button
+                                                Grid.Row="0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                                Style="{StaticResource MaterialDesignToolButton}">
+                                                <materialDesign:PackIcon Kind="Close" />
+                                            </Button>
+                                            <local:OpenQuestionsView
+                                                Grid.Row="1"
+                                                MaxWidth="350"
+                                                MaxHeight="450"
+                                                OpenQuestions="{Binding OpenQuestions}" />
+                                        </Grid>
+                                    </materialDesign:DialogHost.DialogContent>
+                                    <Button Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" Style="{StaticResource ButtonContentStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="3"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="שאלות פתוחות" />
+                                            <materialDesign:PackIcon Margin="3" Kind="QuestionAnswer" />
+                                        </StackPanel>
+                                    </Button>
+                                </materialDesign:DialogHost>
 
                             </Grid>
                         </DataTemplate>
                     </DataGrid.RowDetailsTemplate>
-                    <!--<DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsToggleRow}" Value="True">
-                                    <Setter Property="DetailsVisibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsToggleRow}" Value="False">
-                                    <Setter Property="DetailsVisibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>-->
                 </DataGrid>
             </GroupBox>
 
@@ -296,6 +382,6 @@
             Grid.Row="1"
             Command="{Binding Load}"
             Content="טען"
-            Visibility="Visible" />
+            Visibility="Collapsed" />
     </Grid>
 </UserControl>

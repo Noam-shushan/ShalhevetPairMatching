@@ -112,7 +112,7 @@ namespace PairMatching.Models
 
         public IEnumerable<string> Languages { get; set; }
 
-        public List<Note> Notes { get; set; } = new();
+        public List<NoteOld> Notes { get; set; } = new();
 
         [BsonIgnore]
         public bool IsKnowMoreLanguages { get => Languages.Any(); }
@@ -149,7 +149,12 @@ namespace PairMatching.Models
                 Gender = Gender,
                 Languages = Languages,
                 Name = Name,
-                Notes = Notes,
+                Notes = Notes.Select(n => new Note
+                {
+                    Author = n.Author,
+                    Content = n.Text,
+                    Date = n.Date
+                }),
                 OpenQuestions = new OpenQuestions
                 {
                     BiographHeb = OpenQuestions.FirstOrDefault(o => o.Question == "Personal information").Answer,
