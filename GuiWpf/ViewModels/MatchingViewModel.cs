@@ -16,11 +16,11 @@ namespace GuiWpf.ViewModels
         {
             StageSuggestion = new PairSuggestion
             {
-                FromIsrael = new Participant
+                FromIsrael = new IsraelParticipant
                 {
                     Name = "נעם",
                     Email = "noam8shu@gmail.com",
-                    OpenQuestions = new OpenQuestions
+                    OpenQuestions = new OpenQuestionsForIsrael
                     {
                         AdditionalInfo = "עליי פרטים נוספים",
                         BiographHeb = "פרטים ביוגרפיים",
@@ -29,17 +29,12 @@ namespace GuiWpf.ViewModels
                         WhyJoinShalhevet = "הצטרפתי כי בא לי"
                     }
                 },
-                FromWorld = new Participant
+                FromWorld = new WorldParticipant
                 {
                     Name = "Sara",
                     Email = "noamSararuth@gmail.com",
-                    OpenQuestions = new OpenQuestions
+                    OpenQuestions = new OpenQuestionsForWorld
                     {
-                        AdditionalInfo = "עליי פרטים נוספים",
-                        BiographHeb = "פרטים ביוגרפיים",
-                        PersonalTraits = "תחביבים",
-                        WhoIntroduced = "מי הכיר לי את התוכנית",
-                        WhyJoinShalhevet = "הצטרפתי כי בא לי"
                     }
                 },
                 IsEnglishLevelMatch = true,

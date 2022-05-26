@@ -37,10 +37,10 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value.ToLower() switch
             {
-                "excellent (i don't know any hebrew whatsoever)" => EnglishLevels.GOOD,
-                "doesn't have to be perfect. i know some Hebrew" => EnglishLevels.NOT_GOOD,
-                "conversational level" => EnglishLevels.TALK_LEVEL,
-                _ => EnglishLevels.DONT_MATTER,
+                "excellent (i don't know any hebrew whatsoever)" => EnglishLevels.Good,
+                "doesn't have to be perfect. i know some Hebrew" => EnglishLevels.NotGood,
+                "conversational level" => EnglishLevels.ConversationalLevel,
+                _ => EnglishLevels.Defulte,
             };
         }
 
@@ -48,9 +48,9 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value.ToLower() switch
             {
-                "male" => Genders.MALE,
-                "female" => Genders.FMALE,
-                "prefer not to say" => Genders.DONT_MATTER,
+                "male" => Genders.Male,
+                "female" => Genders.Female,
+                "prefer not to say" => Genders.NoPrefrence,
                 _ => default,
             };
         }
@@ -59,11 +59,11 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value.ToLower() switch
             {
-                "deep and slow" => LearningStyles.DEEP_AND_SLOW,
-                "progressed, flowing" => LearningStyles.PROGRESSED_FLOWING,
-                "text centered" => LearningStyles.TEXTUALL_CENTERED,
-                "philosofical, free talking, deriving from text into thought" => LearningStyles.FREE,
-                _ => LearningStyles.DONT_MATTER,
+                "deep and slow" => LearningStyles.DeepAndSlow,
+                "progressed, flowing" => LearningStyles.ProgressedFlowing,
+                "text centered" => LearningStyles.TextCentered,
+                "philosofical, free talking, deriving from text into thought" => LearningStyles.Free,
+                _ => LearningStyles.DontMatter,
             };
         }
 
@@ -71,10 +71,10 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value.ToLower() switch
             {
-                "only with men" => Genders.MALE,
-                "only with women" => Genders.FMALE,
-                "no prefrence" => Genders.DONT_MATTER,
-                _ => Genders.DONT_MATTER,
+                "only with men" => Genders.Male,
+                "only with women" => Genders.Female,
+                "no prefrence" => Genders.NoPrefrence,
+                _ => Genders.NoPrefrence,
             };
         }
 
@@ -82,11 +82,11 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value.Replace(",", "").Trim().ToLower() switch
             {
-                "tanya" => PrefferdTracks.TANYA,
-                "talmud" => PrefferdTracks.TALMUD,
-                "parsha" => PrefferdTracks.PARASHA,
-                "tefilah (prayer)" => PrefferdTracks.PRAYER,
-                "pirkey avot (ethics of the fathers)" => PrefferdTracks.PIRKEY_AVOT,
+                "tanya" => PrefferdTracks.Tanya,
+                "talmud" => PrefferdTracks.Talmud,
+                "parsha" => PrefferdTracks.Parsha,
+                "tefilah (prayer)" => PrefferdTracks.Payer,
+                "pirkey avot (ethics of the fathers)" => PrefferdTracks.PirkeiAvot,
                 "no preference" => PrefferdTracks.DONT_MATTER,
                 "independent learning subject" => PrefferdTracks.IndependentLearning,
                 _ => PrefferdTracks.DONT_MATTER,
@@ -108,10 +108,10 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value.ToLower() switch
             {
-                "advanced" => SkillLevels.ADVANCED,
-                "moderate" => SkillLevels.MODERATE,
-                "begginer" => SkillLevels.BEGGINER,
-                _ => SkillLevels.DONT_MATTER,
+                "advanced" => SkillLevels.Advanced,
+                "moderate" => SkillLevels.Moderate,
+                "begginer" => SkillLevels.Beginner,
+                _ => SkillLevels.DontMatter,
             };
         }
 
@@ -133,16 +133,16 @@ namespace PairMatching.DomainModel.GoogleSheet
                 switch (s.Replace(",", "").Trim().ToLower())
                 {
                     case "morning":
-                        result.Add(TimesInDay.MORNING);
+                        result.Add(TimesInDay.Morning);
                         break;
                     case "noon":
-                        result.Add(TimesInDay.NOON);
+                        result.Add(TimesInDay.Noon);
                         break;
                     case "evening":
-                        result.Add(TimesInDay.EVENING);
+                        result.Add(TimesInDay.Evening);
                         break;
                     case "night":
-                        result.Add(TimesInDay.NIGHT);
+                        result.Add(TimesInDay.Night);
                         break;
                     case "this day is not available for me":
                         result.Add(TimesInDay.INCAPABLE);
@@ -156,12 +156,12 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return i switch
             {
-                2 => Days.SUNDAY,
-                3 => Days.MONDAY,
-                4 => Days.TUESDAY,
-                5 => Days.WEDNESDAY,
-                6 => Days.THURSDAY,
-                _ => Days.DONT_MATTER,
+                2 => Days.Sunday,
+                3 => Days.Monday,
+                4 => Days.Tuesday,
+                5 => Days.Wednesday,
+                6 => Days.Thursday,
+                _ => Days.Defulte,
             };
         }
 
@@ -181,10 +181,10 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value.ToLower() switch
             {
-                "yes" => MoreLanguages.YES,
-                "no" => MoreLanguages.NO,
-                "i don't know English but i can learn in other languages" => MoreLanguages.NOT_ENGLISH,
-                _ => MoreLanguages.NO,
+                "yes" => MoreLanguages.Yes,
+                "no" => MoreLanguages.No,
+                "i don't know English but i can learn in other languages" => MoreLanguages.NotEnglish,
+                _ => MoreLanguages.No,
             };
         }
 

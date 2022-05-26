@@ -35,7 +35,7 @@ namespace PairMatching.DataAccess.Repositories
             var recods = 
                 await _dataAccess.LoadManyAsync(_collectionName, predicate);
 
-            return recods.Take(50);
+            return recods;
         }
 
         public async Task<TModel> GetByIdAsync(int id)

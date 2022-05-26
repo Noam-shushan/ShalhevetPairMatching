@@ -21,20 +21,15 @@ namespace GuiWpf.Views
     /// </summary>
     public partial class OpenQuestionsView : UserControl
     {
-
-
-
-        public OpenQuestions OpenQuestions
+        public object OpenQuestions
         {
-            get { return (OpenQuestions)GetValue(OpenQuestionsProperty); }
+            get { return GetValue(OpenQuestionsProperty); }
             set { SetValue(OpenQuestionsProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for OpenQuestions.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OpenQuestionsProperty =
-            DependencyProperty.Register("OpenQuestions", typeof(OpenQuestions), typeof(OpenQuestionsView));
-
-
+            DependencyProperty.Register(nameof(OpenQuestions), typeof(object), typeof(OpenQuestionsView));
 
         public OpenQuestionsView()
         {

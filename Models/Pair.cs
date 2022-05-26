@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PairMatching.Models
 {
-    public class Pair : BaseModel
+    public record Pair : BaseModel
     {
         /// <summary>
         /// the first student id 
@@ -37,14 +37,5 @@ namespace PairMatching.Models
 
         [BsonIgnore]
         public Participant ParticipantFromWorld { get; set; }
-
-        public bool Equals(Pair other)
-        {
-            if (other is null)
-            {
-                return false;
-            } 
-            return Id == other.Id;
-        }
     }
 }

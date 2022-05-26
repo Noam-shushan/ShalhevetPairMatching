@@ -12,6 +12,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/EnumsToTextStyle.xaml" />
+                <ResourceDictionary Source="Styles\OpenQuestionStyle.xaml" />
 
                 <materialDesign:CustomColorTheme
                     BaseTheme="Light"
@@ -38,26 +39,6 @@
                 TargetType="GroupBox">
                 <Setter Property="materialDesign:ColorZoneAssist.Mode" Value="Light" />
                 <Setter Property="Margin" Value="5" />
-            </Style>
-
-            <Style
-                x:Key="OpenQuestionsExspender"
-                BasedOn="{StaticResource MaterialDesignExpander}"
-                TargetType="Expander">
-                <Setter Property="IsExpanded" Value="True" />
-            </Style>
-            <Style
-                x:Key="OpenQuestionsHeaders"
-                BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}"
-                TargetType="TextBlock">
-                <Setter Property="TextWrapping" Value="WrapWithOverflow" />
-            </Style>
-            <Style
-                x:Key="OpenQuestionsContent"
-                BasedOn="{StaticResource MaterialDesignBody2TextBlock}"
-                TargetType="TextBlock">
-                <Setter Property="TextWrapping" Value="WrapWithOverflow" />
-                <Setter Property="Padding" Value="3" />
             </Style>
 
             <Style x:Key="GroupBoxHeadersGridForDataGrid" TargetType="Grid">

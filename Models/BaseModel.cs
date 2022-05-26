@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace PairMatching.Models
 {
-    public class BaseModel : IEquatable<BaseModel>
+    public record BaseModel /*: IEquatable<BaseModel>*/
     {
         [BsonId]
         public string Id { get; set; }
@@ -14,26 +14,26 @@ namespace PairMatching.Models
         /// </summary>
         public bool IsDeleted { get; set; }
 
-        public IEnumerable<Note> Notes { get; set; }
+        public List<Note> Notes { get; set; } = new();
 
 
-        public bool Equals(BaseModel other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-            return Id == other.Id;
-        }
+        //public bool Equals(BaseModel other)
+        //{
+        //    if (other is null)
+        //    {
+        //        return false;
+        //    }
+        //    return Id == other.Id;
+        //}
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as BaseModel);
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    return Equals(obj as BaseModel);
+        //}
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, IsDeleted);
-        }
+        //public override int GetHashCode()
+        //{
+        //    return HashCode.Combine(Id, IsDeleted);
+        //}
     }
 }

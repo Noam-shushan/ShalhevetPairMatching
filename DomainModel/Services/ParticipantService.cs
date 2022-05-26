@@ -50,7 +50,7 @@ namespace PairMatching.DomainModel.Services
             if (partsDtos.Any())
             {
                 var list = partsDtos
-                    .Select(x => x.ToParticipant());
+                    .Select(p => p.ToParticipant());
 
                 await _unitOfWork.ParticipantsRepositry
                     .Insert(list);
@@ -62,11 +62,15 @@ namespace PairMatching.DomainModel.Services
 
         public async Task<IEnumerable<Student>> GetAllStudents()
         {
-            //var p = await _wix.GetNewParticipants();
+            var parts = await _wix.GetNewParticipants();
+            var list = parts.Select(p => p.ToParticipant())
+                .ToList();
 
-            return  await _unitOfWork
+            var result = await _unitOfWork
                      .StudentRepositry
                 .GetAllAsync(s => !s.IsDeleted);
+            return result
+                .Take(50);
         }
     }
 }

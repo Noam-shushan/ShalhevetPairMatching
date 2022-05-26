@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static PairMatching.Tools.HelperFunction;
 
 namespace PairMatching.Models
 {
-    public class Participant : BaseModel
+    public record Participant : BaseModel
     {
         public int WixIndex { get; set; }
 
@@ -17,8 +16,6 @@ namespace PairMatching.Models
         public int OldId { get; set; }
 
         public Preferences PairPreferences { get; set; }
-
-        public OpenQuestions OpenQuestions { get; set; }
 
         public IEnumerable<string> MatchTo { get; set; }
 
@@ -49,34 +46,16 @@ namespace PairMatching.Models
 
         public DateTime DateOfRegistered { get; set; }
 
-
-        /// <summary>
-        /// the utc offset of the student
-        /// </summary>
-        public TimeSpan UtcOffset { get; set; }
-
         public bool IsInArchive { get; set; }
 
-        public IEnumerable<string> Languages { get; set; }
+        public List<string> OtherLanguages { get; set; }
+
+        public MoreLanguages MoreLanguages { get; set; }
 
         [BsonIgnore]
-        public bool IsKnowMoreLanguages { get => Languages.Any(); }
+        public bool IsKnowMoreLanguages { get => OtherLanguages.Any(); }
 
         [BsonIgnore]
         public bool IsFromIsrael => Country == "Israel";
-
-        [BsonIgnore]
-        public int DiffFromIsrael { get => GetDifferenceUtc(UtcOffset).Hours; }
-
-        /// <summary>
-        ///  level of English
-        /// </summary>
-        public EnglishLevels EnglishLevel { get; set; }
-
-        /// <summary>
-        /// level of skill 
-        /// </summary>
-        public SkillLevels SkillLevel { get; set; }
-
     }
 }

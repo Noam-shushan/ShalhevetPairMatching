@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Eu/kNhg0wZlSS8wWKheVU73tVOzhfLL1DPTHLZHDfyQleUgCWkqExbOv8PtFa3R4bocMoXD7t6ZifgchqkUHrw==",
+  "dgSpecHash": "nljoUeWfGB/rACV/PAv8xs1nNvt/goLnB0cKRncF8Tp3bfZ6hNgmqSF6IvKbEUls0eNpKZNSJ9sZkgCild6qEQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Models\\Models.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\jsonsubtypes\\1.9.0\\jsonsubtypes.1.9.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.bson\\2.14.1\\mongodb.bson.2.14.1.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
   ],
   "logs": []

@@ -34,10 +34,10 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value switch
             {
-                "טובה" => EnglishLevels.GOOD,
-                "לא כל כך טובה" => EnglishLevels.NOT_GOOD,
-                "רמת שיחה" => EnglishLevels.TALK_LEVEL,
-                _ => EnglishLevels.DONT_MATTER,
+                "טובה" => EnglishLevels.Good,
+                "לא כל כך טובה" => EnglishLevels.NotGood,
+                "רמת שיחה" => EnglishLevels.ConversationalLevel,
+                _ => EnglishLevels.Defulte,
             };
         }
 
@@ -45,10 +45,10 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value switch
             {
-                "גבר" => Genders.MALE,
-                "אישה" => Genders.FMALE,
-                "לא משנה" => Genders.DONT_MATTER,
-                _ => Genders.DONT_MATTER,
+                "גבר" => Genders.Male,
+                "אישה" => Genders.Female,
+                "לא משנה" => Genders.NoPrefrence,
+                _ => Genders.NoPrefrence,
             };
         }
 
@@ -56,11 +56,11 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value switch
             {
-                "לימוד איטי ומעמיק" => LearningStyles.DEEP_AND_SLOW,
-                "לימוד מהיר, הספקי ומתקדם" => LearningStyles.PROGRESSED_FLOWING,
-                "לימוד צמוד טקסט" => LearningStyles.TEXTUALL_CENTERED,
-                "לימוד מעודד מחשבה מחוץ לטקסט, פילוסופי" => LearningStyles.FREE,
-                _ => LearningStyles.DONT_MATTER,
+                "לימוד איטי ומעמיק" => LearningStyles.DeepAndSlow,
+                "לימוד מהיר, הספקי ומתקדם" => LearningStyles.ProgressedFlowing,
+                "לימוד צמוד טקסט" => LearningStyles.TextCentered,
+                "לימוד מעודד מחשבה מחוץ לטקסט, פילוסופי" => LearningStyles.Free,
+                _ => LearningStyles.DontMatter,
             };
         }
 
@@ -68,10 +68,10 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value switch
             {
-                "אני מעוניין ללמוד רק עם גבר" => Genders.MALE,
-                "אני מעוניינת ללמוד רק עם אישה" => Genders.FMALE,
-                "אין לי העדפה" => Genders.DONT_MATTER,
-                _ => Genders.DONT_MATTER,
+                "אני מעוניין ללמוד רק עם גבר" => Genders.Male,
+                "אני מעוניינת ללמוד רק עם אישה" => Genders.Female,
+                "אין לי העדפה" => Genders.NoPrefrence,
+                _ => Genders.NoPrefrence,
             };
         }
 
@@ -79,11 +79,11 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value.Replace(",", "").Trim() switch
             {
-                "תניא" => PrefferdTracks.TANYA,
-                "גמרא" => PrefferdTracks.TALMUD,
-                "פרשת שבוע" => PrefferdTracks.PARASHA,
-                "תפילה" => PrefferdTracks.PRAYER,
-                "פרקי אבות" => PrefferdTracks.PIRKEY_AVOT,
+                "תניא" => PrefferdTracks.Tanya,
+                "גמרא" => PrefferdTracks.Talmud,
+                "פרשת שבוע" => PrefferdTracks.Parsha,
+                "תפילה" => PrefferdTracks.Payer,
+                "פרקי אבות" => PrefferdTracks.PirkeiAvot,
                 "אין לי העדפה" => PrefferdTracks.DONT_MATTER,
                 _ => PrefferdTracks.DONT_MATTER,
             };
@@ -105,11 +105,11 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value switch
             {
-                "טובה" => SkillLevels.ADVANCED,
-                "רמת שיחה (בינונית)" => SkillLevels.MODERATE,
-                "מתחיל" => SkillLevels.BEGGINER,
-                "אין לי העדפה" => SkillLevels.DONT_MATTER,
-                _ => SkillLevels.DONT_MATTER,
+                "טובה" => SkillLevels.Advanced,
+                "רמת שיחה (בינונית)" => SkillLevels.Moderate,
+                "מתחיל" => SkillLevels.Beginner,
+                "אין לי העדפה" => SkillLevels.DontMatter,
+                _ => SkillLevels.DontMatter,
             };
         }
 
@@ -128,16 +128,16 @@ namespace PairMatching.DomainModel.GoogleSheet
                 switch (s.Replace(",", "").Trim())
                 {
                     case "בוקר":
-                        result.Add(TimesInDay.MORNING);
+                        result.Add(TimesInDay.Morning);
                         break;
                     case "צהריים":
-                        result.Add(TimesInDay.NOON);
+                        result.Add(TimesInDay.Noon);
                         break;
                     case "ערב":
-                        result.Add(TimesInDay.EVENING);
+                        result.Add(TimesInDay.Evening);
                         break;
                     case "לילה":
-                        result.Add(TimesInDay.NIGHT);
+                        result.Add(TimesInDay.Night);
                         break;
                     case "אין לי זמן ביום זה":
                         result.Add(TimesInDay.INCAPABLE);
@@ -151,12 +151,12 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return i switch
             {
-                2 => Days.SUNDAY,
-                3 => Days.MONDAY,
-                4 => Days.TUESDAY,
-                5 => Days.WEDNESDAY,
-                6 => Days.THURSDAY,
-                _ => Days.DONT_MATTER,
+                2 => Days.Sunday,
+                3 => Days.Monday,
+                4 => Days.Tuesday,
+                5 => Days.Wednesday,
+                6 => Days.Thursday,
+                _ => Days.Defulte,
             };
         }
 
@@ -195,10 +195,10 @@ namespace PairMatching.DomainModel.GoogleSheet
         {
             return value switch
             {
-                "כן" => MoreLanguages.YES,
-                "לא" or "" => MoreLanguages.NO,
-                "אינני יודע אנגלית אך אני יכול ללמוד בשפות אחרות" => MoreLanguages.NOT_ENGLISH,
-                _ => MoreLanguages.NO,
+                "כן" => MoreLanguages.Yes,
+                "לא" or "" => MoreLanguages.No,
+                "אינני יודע אנגלית אך אני יכול ללמוד בשפות אחרות" => MoreLanguages.NotEnglish,
+                _ => MoreLanguages.No,
             };
         }
 

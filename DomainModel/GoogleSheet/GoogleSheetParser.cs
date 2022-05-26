@@ -2,6 +2,7 @@
 using PairMatching.Tools;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -91,7 +92,7 @@ namespace PairMatching.DomainModel.GoogleSheet
                         DateOfRegistered = GetDate(row[0]),
                         Name = row[columnIndexerHebrewSheet["Name"]],
                         DesiredLearningTime = GetLearningTime(row, studentDescriptor),
-                        OpenQuestions = GetQandAheb(row),
+                        OpenQuestions = GetQandAheb(row).ToList(),
                         PrefferdTracks = studentDescriptor.GetPrefferdTracks(row[columnIndexerHebrewSheet["PrefferdTracks"]]),
                         PrefferdGender = studentDescriptor.GetPrefferdGender(row[columnIndexerHebrewSheet["PrefferdGender"]]),
                         EnglishLevel = studentDescriptor.GetEnglishLevel(row[columnIndexerHebrewSheet["EnglishLevel"]]),
@@ -125,7 +126,7 @@ namespace PairMatching.DomainModel.GoogleSheet
                         DateOfRegistered = GetDate(row[0]),
                         Name = row[columnIndexerEnglishSheet["Name"]],
                         DesiredLearningTime = GetLearningTime(row, studentDescriptor),
-                        OpenQuestions = GetQandAeng(row),
+                        OpenQuestions = GetQandAeng(row).ToList(),
                         PrefferdTracks = studentDescriptor.GetPrefferdTracks(row[columnIndexerEnglishSheet["PrefferdTracks"]]),
                         PrefferdGender = studentDescriptor.GetPrefferdGender(row[columnIndexerEnglishSheet["PrefferdGender"]]),
                         DesiredEnglishLevel = studentDescriptor.GetEnglishLevel(row[columnIndexerEnglishSheet["DesiredEnglishLevel"]]),

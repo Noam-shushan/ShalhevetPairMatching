@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "ouJcKO+YFgxPB19Z3QZyNr6scstFARvPkKZhthrpJ5POxWBia0a5KebrCJPqbBKcopG635wm3Lo3DOohg8l5Yw==",
+  "dgSpecHash": "KzXyqAsV/V4fYQ8SjByuUOZJLiXxgPvbik9YOaA91Z9uPjnh8Y08/V/rWC4JKeAv425xjfdO+iJLUgEyGxFZnw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\WixApi\\WixApi.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\jsonsubtypes\\1.9.0\\jsonsubtypes.1.9.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.bson\\2.14.1\\mongodb.bson.2.14.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\restsharp\\107.3.0\\restsharp.107.3.0.nupkg.sha512",

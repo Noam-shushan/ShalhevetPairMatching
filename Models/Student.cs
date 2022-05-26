@@ -99,7 +99,7 @@ namespace PairMatching.Models
         /// </summary>
         public IEnumerable<LearningTime> DesiredLearningTime { get; set; }
 
-        public IEnumerable<OpenQuestion> OpenQuestions { get; set; }
+        public List<OpenQuestion> OpenQuestions { get; set; } = new();
 
         public int PrefferdNumberOfMatchs { get; set; }
 
@@ -110,7 +110,7 @@ namespace PairMatching.Models
 
         public bool IsInArchive { get; set; }
 
-        public IEnumerable<string> Languages { get; set; }
+        public IEnumerable<string> Languages { get; set; } = new List<string>();
 
         public List<NoteOld> Notes { get; set; } = new();
 
@@ -141,44 +141,79 @@ namespace PairMatching.Models
 
         public Participant ToParticipant()
         {
-            return new Participant
+            if (IsFromIsrael)
             {
-                Country = Country,
-                DateOfRegistered = DateOfRegistered,
-                Email = Email,
-                Gender = Gender,
-                Languages = Languages,
-                Name = Name,
-                Notes = Notes.Select(n => new Note
+                return new IsraelParticipant
                 {
-                    Author = n.Author,
-                    Content = n.Text,
-                    Date = n.Date
-                }),
-                OpenQuestions = new OpenQuestions
+                    Country = Country,
+                    DateOfRegistered = DateOfRegistered,
+                    Email = Email,
+                    Gender = Gender,
+                    OtherLanguages = Languages.ToList(),
+                    Name = Name,
+                    MoreLanguages = MoreLanguages,
+                    Notes = Notes.Select(n => new Note
+                    {
+                        Author = n.Author,
+                        Content = n.Text,
+                        Date = n.Date
+                    }).ToList(),
+                    IsInArchive = IsInArchive,
+                    PhoneNumber = PhoneNumber,
+                    PairPreferences = new Preferences
+                    {
+                        Gender = PrefferdGender,
+                        LearningStyle = LearningStyle,
+                        NumberOfMatchs = PrefferdNumberOfMatchs,
+                        Tracks = PrefferdTracks,
+                        LearningTime = DesiredLearningTime
+                    },
+                    OpenQuestions = new OpenQuestionsForIsrael
+                    {
+                        BiographHeb = OpenQuestions?.FirstOrDefault(o => o.Question == "Personal information").Answer,
+                        PersonalTraits = OpenQuestions?.FirstOrDefault(o => o.Question == "Personality trates").Answer,
+                        AdditionalInfo = OpenQuestions?.FirstOrDefault(o => o.Question == "Additional information").Answer,
+                        WhoIntroduced = OpenQuestions?.FirstOrDefault(o => o.Question == "Who introduced you to this program").Answer,
+                        WhyJoinShalhevet = OpenQuestions?.FirstOrDefault(o => o.Question == "What are your hopes and expectations from this program").Answer,
+                    },
+                    DesiredSkillLevel = DesiredSkillLevel,
+                    EnglishLevel = EnglishLevel
+                };
+            }
+            else
+            {
+                return new WorldParticipant
                 {
-                    BiographHeb = OpenQuestions.FirstOrDefault(o => o.Question == "Personal information").Answer,
-                    PersonalTraits = OpenQuestions.FirstOrDefault(o => o.Question == "Personality trates").Answer,
-                    AdditionalInfo = OpenQuestions.FirstOrDefault(o => o.Question == "Additional information").Answer,
-                    WhoIntroduced = OpenQuestions.FirstOrDefault(o => o.Question == "Who introduced you to this program").Answer,
-                    WhyJoinShalhevet = OpenQuestions.FirstOrDefault(o => o.Question == "What are your hopes and expectations from this program").Answer,
-                },
-                IsInArchive = IsInArchive,
-                PhoneNumber = PhoneNumber,
-                UtcOffset = UtcOffset,
-                PairPreferences = new Preferences
-                {
-                    EnglishLevel = DesiredEnglishLevel,
-                    Gender = PrefferdGender,
-                    LearningStyle = LearningStyle,
-                    NumberOfMatchs = PrefferdNumberOfMatchs,
-                    SkillLevel = DesiredSkillLevel,
-                    Tracks = PrefferdTracks,
-                    LearningTime = DesiredLearningTime
-                },
-                EnglishLevel = EnglishLevel,
-                SkillLevel = SkillLevel
-            };
+                    Country = Country,
+                    DateOfRegistered = DateOfRegistered,
+                    Email = Email,
+                    Gender = Gender,
+                    OtherLanguages = Languages.ToList(),
+                    Name = Name,
+                    MoreLanguages = MoreLanguages,
+                    Notes = Notes.Select(n => new Note
+                    {
+                        Author = n.Author,
+                        Content = n.Text,
+                        Date = n.Date
+                    }).ToList(),
+                    IsInArchive = IsInArchive,
+                    PhoneNumber = PhoneNumber,
+                    PairPreferences = new Preferences
+                    {
+                        Gender = PrefferdGender,
+                        LearningStyle = LearningStyle,
+                        NumberOfMatchs = PrefferdNumberOfMatchs,
+                        Tracks = PrefferdTracks,
+                        LearningTime = DesiredLearningTime
+                    },
+                    OpenQuestions = new OpenQuestionsForWorld
+                    {
+                    },
+                    SkillLevel = SkillLevel,
+                    DesiredEnglishLevel = DesiredEnglishLevel
+                };
+            }
         }
     }
 

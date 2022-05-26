@@ -1,4 +1,5 @@
 ﻿using PairMatching.Models;
+using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace GuiWpf.Views
     /// </summary>
     public partial class NotesView : UserControl
     {
+
+        // Using a DependencyProperty as the backing store for Model.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ModelProperty =
+            DependencyProperty.Register("Model", typeof(BaseModel), typeof(NotesView));
+
         public List<Note> Notes
         {
             get { return (List<Note>)GetValue(NotesProperty); }

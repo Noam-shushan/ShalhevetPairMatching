@@ -16,10 +16,10 @@ namespace GuiWpf.Converters
             Enum.TryParse(value.ToString(), out EnglishLevels englishLevel);
             return englishLevel switch
             {
-                EnglishLevels.GOOD => "טובה",
-                EnglishLevels.NOT_GOOD => "לא טובה",
-                EnglishLevels.TALK_LEVEL => "רמת שיחה",
-                EnglishLevels.DONT_MATTER => "לא משנה",
+                EnglishLevels.Good => "טובה",
+                EnglishLevels.NotGood => "לא טובה",
+                EnglishLevels.ConversationalLevel => "רמת שיחה",
+                EnglishLevels.Defulte => "לא משנה",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -37,9 +37,9 @@ namespace GuiWpf.Converters
             Enum.TryParse(value.ToString(), out Genders gender);
             return gender switch
             {
-                Genders.MALE => "גבר",
-                Genders.FMALE => "אישה",
-                Genders.DONT_MATTER => "לא משנה",
+                Genders.Male => "גבר",
+                Genders.Female => "אישה",
+                Genders.NoPrefrence => "לא משנה",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -57,10 +57,10 @@ namespace GuiWpf.Converters
             Enum.TryParse(value.ToString(), out SkillLevels skillLevel);
             return skillLevel switch
             {
-                SkillLevels.BEGGINER => "מתחיל",
-                SkillLevels.MODERATE => "בינוני",
-                SkillLevels.DONT_MATTER => "לא משנה",
-                SkillLevels.ADVANCED => "מתקדם",
+                SkillLevels.Beginner => "מתחיל",
+                SkillLevels.Moderate => "בינוני",
+                SkillLevels.DontMatter => "לא משנה",
+                SkillLevels.Advanced => "מתקדם",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -78,11 +78,11 @@ namespace GuiWpf.Converters
             Enum.TryParse(value.ToString(), out LearningStyles learningStyle);
             return learningStyle switch
             {
-                LearningStyles.DEEP_AND_SLOW => "לימוד איטי ומעמיק",
-                LearningStyles.PROGRESSED_FLOWING => "לימוד מהיר, הספקי ומתקדם",
-                LearningStyles.TEXTUALL_CENTERED => "לימוד צמוד טקסט",
-                LearningStyles.FREE => "לימוד מעודד מחשבה מחוץ לטקסט, פילוסופי",
-                LearningStyles.DONT_MATTER => "לא משנה",
+                LearningStyles.DeepAndSlow => "לימוד איטי ומעמיק",
+                LearningStyles.ProgressedFlowing => "לימוד מהיר, הספקי ומתקדם",
+                LearningStyles.TextCentered => "לימוד צמוד טקסט",
+                LearningStyles.Free => "לימוד מעודד מחשבה מחוץ לטקסט, פילוסופי",
+                LearningStyles.DontMatter => "לא משנה",
                 _ => throw new NotImplementedException(),
             };
         }

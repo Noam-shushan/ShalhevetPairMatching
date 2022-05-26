@@ -48,7 +48,6 @@
                     Grid.Row="1"
                     HorizontalAlignment="Right"
                     Command="{Binding Path=AddNoteCommand, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    CommandParameter="{Binding Path=OwnerModel, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}"
                     Style="{StaticResource MaterialDesignIconButton}">
                     <materialDesign:PackIcon Kind="Add" />
                 </Button>

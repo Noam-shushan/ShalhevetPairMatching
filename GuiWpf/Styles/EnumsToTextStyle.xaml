@@ -4,35 +4,35 @@
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models">
     <Style x:Key="EnglishLevelsText" TargetType="TextBlock">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=.}" Value="{x:Static models:EnglishLevels.GOOD}">
+            <DataTrigger Binding="{Binding Path=.}" Value="{x:Static models:EnglishLevels.Good}">
                 <Setter Property="Text" Value="טובה" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding Path=.}" Value="{x:Static models:EnglishLevels.TALK_LEVEL}">
+            <DataTrigger Binding="{Binding Path=.}" Value="{x:Static models:EnglishLevels.ConversationalLevel}">
                 <Setter Property="Text" Value="רמת שיחה" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding Path=.}" Value="{x:Static models:EnglishLevels.NOT_GOOD}">
+            <DataTrigger Binding="{Binding Path=.}" Value="{x:Static models:EnglishLevels.NotGood}">
                 <Setter Property="Text" Value="לא טובה" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding Path=.}" Value="{x:Static models:EnglishLevels.DONT_MATTER}">
+            <DataTrigger Binding="{Binding Path=.}" Value="{x:Static models:EnglishLevels.Defulte}">
                 <Setter Property="Text" Value="אין העדפה" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="PrefferdTracksText" TargetType="TextBlock">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.TANYA}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.Tanya}">
                 <Setter Property="Text" Value="תניא" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.TALMUD}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.Talmud}">
                 <Setter Property="Text" Value="גמרא" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.PARASHA}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.Parsha}">
                 <Setter Property="Text" Value="פרשה" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.PRAYER}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.Payer}">
                 <Setter Property="Text" Value="תפילה" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.PIRKEY_AVOT}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.PirkeiAvot}">
                 <Setter Property="Text" Value="פרקי אבות" />
             </DataTrigger>
             <DataTrigger Binding="{Binding}" Value="{x:Static models:PrefferdTracks.IndependentLearning}">
@@ -45,35 +45,35 @@
     </Style>
     <Style x:Key="DaysText" TargetType="TextBlock">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.SUNDAY}">
+            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.Sunday}">
                 <Setter Property="Text" Value="ראשון" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.MONDAY}">
+            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.Monday}">
                 <Setter Property="Text" Value="שני" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.TUESDAY}">
+            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.Tuesday}">
                 <Setter Property="Text" Value="שלישי" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.WEDNESDAY}">
+            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.Wednesday}">
                 <Setter Property="Text" Value="רביעי" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.THURSDAY}">
+            <DataTrigger Binding="{Binding Day}" Value="{x:Static models:Days.Thursday}">
                 <Setter Property="Text" Value="חמישי" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="TimesInDayText" TargetType="TextBlock">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.MORNING}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.Morning}">
                 <Setter Property="Text" Value="בוקר" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.NOON}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.Noon}">
                 <Setter Property="Text" Value="צהריים" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.EVENING}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.Evening}">
                 <Setter Property="Text" Value="ערב" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.NIGHT}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.Night}">
                 <Setter Property="Text" Value="לילה" />
             </DataTrigger>
             <DataTrigger Binding="{Binding}" Value="{x:Static models:TimesInDay.INCAPABLE}">

@@ -77,5 +77,11 @@ namespace GuiWpf.ViewModels
                 var s = SearchParticipiantsWord;
             });
 
+        DelegateCommand _addNoteCommand;
+        public DelegateCommand AddNoteCommand => _addNoteCommand ??= new(
+            () =>
+            {
+
+            });
     }
 }

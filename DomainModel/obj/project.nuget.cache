@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "5T0HB4CClEuCsp6Q9XFDB1iW1YKPMPRS5qW0xe67H3WBAjdK3yP0jO00Jx6vp7S5qVxIYxzkY6V/CM2oCxfARA==",
+  "dgSpecHash": "8SIYEHk3B1BIgVtMhNHP76smCS0ZeRVj/Es3D1PffY1NIlX+IG+5HNADGkZNG45bTAgtmAuouaRWqCcigm+IKw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\DomainModel\\DomainModel.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.auth\\1.57.0\\google.apis.auth.1.57.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.core\\1.57.0\\google.apis.core.1.57.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.sheets.v4\\1.57.0.2657\\google.apis.sheets.v4.1.57.0.2657.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\jsonsubtypes\\1.9.0\\jsonsubtypes.1.9.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mailkit\\3.2.0\\mailkit.3.2.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mimekit\\3.2.0\\mimekit.3.2.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mongodb.analyzer\\1.0.0\\mongodb.analyzer.1.0.0.nupkg.sha512",

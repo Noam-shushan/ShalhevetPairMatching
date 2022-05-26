@@ -182,9 +182,17 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "JsonSubTypes": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
             "MongoDB.Bson": {
               "target": "Package",
               "version": "[2.14.1, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
             }
           },
           "imports": [

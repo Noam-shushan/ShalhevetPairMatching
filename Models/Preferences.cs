@@ -14,15 +14,6 @@ namespace PairMatching.Models
         /// </summary>
         public Genders Gender { get; set; }
 
-        /// <summary>
-        ///  level of English
-        /// </summary>
-        public EnglishLevels EnglishLevel { get; set; }
-
-        /// <summary>
-        /// level of skill 
-        /// </summary>
-        public SkillLevels SkillLevel { get; set; }
 
         /// <summary>
         /// learning style 

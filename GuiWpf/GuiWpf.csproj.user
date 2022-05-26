@@ -39,10 +39,10 @@
     <Page Update="Controlers\SearchTextBox.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Styles\EnumsToTextStyle.xaml">
+    <Page Update="Styles\OpenQuestionStyle.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Styles\OpenQuestionsStyle.xaml">
+    <Page Update="Styles\EnumsToTextStyle.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\EmailsView.xaml">

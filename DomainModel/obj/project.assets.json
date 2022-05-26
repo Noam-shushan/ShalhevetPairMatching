@@ -63,6 +63,18 @@
           "lib/netstandard2.0/Google.Apis.Sheets.v4.dll": {}
         }
       },
+      "JsonSubTypes/1.9.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "10.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/JsonSubTypes.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/JsonSubTypes.dll": {}
+        }
+      },
       "MailKit/3.2.0": {
         "type": "package",
         "dependencies": {
@@ -353,7 +365,9 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
+          "JsonSubTypes": "1.9.0",
           "MongoDB.Bson": "2.14.1",
+          "Newtonsoft.Json": "13.0.1",
           "Tools": "1.0.0"
         },
         "compile": {
@@ -514,6 +528,25 @@
         "lib/netstandard2.0/Google.Apis.Sheets.v4.dll",
         "lib/netstandard2.0/Google.Apis.Sheets.v4.pdb",
         "lib/netstandard2.0/Google.Apis.Sheets.v4.xml"
+      ]
+    },
+    "JsonSubTypes/1.9.0": {
+      "sha512": "b7BHm3Oo5mqcIUWogcUsjOya9PmkNyLmwWtRfeCHwgGGXMGEFiz95ZxqfZQPXqxJRFr+2IxoiIcDv10tWUmvTQ==",
+      "type": "package",
+      "path": "jsonsubtypes/1.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "jsonsubtypes.1.9.0.nupkg.sha512",
+        "jsonsubtypes.nuspec",
+        "lib/net35/JsonSubTypes.dll",
+        "lib/net40/JsonSubTypes.dll",
+        "lib/net45/JsonSubTypes.dll",
+        "lib/net46/JsonSubTypes.dll",
+        "lib/net47/JsonSubTypes.dll",
+        "lib/netstandard1.3/JsonSubTypes.dll",
+        "lib/netstandard2.0/JsonSubTypes.dll"
       ]
     },
     "MailKit/3.2.0": {

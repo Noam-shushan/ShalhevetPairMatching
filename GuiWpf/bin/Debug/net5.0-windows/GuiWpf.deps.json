@@ -77,6 +77,17 @@
           }
         }
       },
+      "JsonSubTypes/1.9.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/JsonSubTypes.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.0"
+          }
+        }
+      },
       "MailKit/3.2.0": {
         "dependencies": {
           "MimeKit": "3.2.0"
@@ -371,7 +382,9 @@
       },
       "Models/1.0.0": {
         "dependencies": {
+          "JsonSubTypes": "1.9.0",
           "MongoDB.Bson": "2.14.1",
+          "Newtonsoft.Json": "13.0.1",
           "Tools": "1.0.0"
         },
         "runtime": {
@@ -436,6 +449,13 @@
       "sha512": "sha512-RmpSEXNe8WgUtUiNnj7QLxfILvHOoReUIt86Agp7Za6JvY8c7fVzXSrqXhYmiJkg0FJiAOYosI7jsaNqzWLWsg==",
       "path": "google.apis.sheets.v4/1.57.0.2657",
       "hashPath": "google.apis.sheets.v4.1.57.0.2657.nupkg.sha512"
+    },
+    "JsonSubTypes/1.9.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-b7BHm3Oo5mqcIUWogcUsjOya9PmkNyLmwWtRfeCHwgGGXMGEFiz95ZxqfZQPXqxJRFr+2IxoiIcDv10tWUmvTQ==",
+      "path": "jsonsubtypes/1.9.0",
+      "hashPath": "jsonsubtypes.1.9.0.nupkg.sha512"
     },
     "MailKit/3.2.0": {
       "type": "package",

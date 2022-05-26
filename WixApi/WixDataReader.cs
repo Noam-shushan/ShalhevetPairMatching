@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using PairMatching.Models.Dtos;
 using PairMatching.Configurations;
+using Newtonsoft.Json;
 
 namespace PairMatching.WixApi
 {
@@ -26,9 +26,14 @@ namespace PairMatching.WixApi
                 .WixApi["GET"]
                 .Replace("{INDEX OF THE LAST APPLICANTS RECIEVED}", $"{index}");
 
-            var content = await _http.GetAsync(query);
+            var jsonContent = await _http.GetAsync(query);
 
-            var data = JsonConvert.DeserializeObject<IEnumerable<ParticipantWixDto>>(content);
+            var parsedObject = JObject.Parse(jsonContent);
+
+            var jsonPartsDtos = parsedObject["items"].ToString();
+
+            var data = JsonConvert
+                .DeserializeObject<IEnumerable<ParticipantWixDto>>(jsonPartsDtos);
 
             return data;
         }
@@ -55,4 +60,9 @@ namespace PairMatching.WixApi
             await _http.PostWithRestSharpAsync(query, body);
         }
     }
+
+    class ItemsFromWix
+    {
+        public IEnumerable<ParticipantWixDto> items { get; set; }
+    } 
 }

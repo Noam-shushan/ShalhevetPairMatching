@@ -17,6 +17,17 @@
           "WixApi.dll": {}
         }
       },
+      "JsonSubTypes/1.9.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/JsonSubTypes.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.0"
+          }
+        }
+      },
       "MongoDB.Bson/2.14.1": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "5.0.0"
@@ -59,7 +70,9 @@
       },
       "Models/1.0.0": {
         "dependencies": {
+          "JsonSubTypes": "1.9.0",
           "MongoDB.Bson": "2.14.1",
+          "Newtonsoft.Json": "13.0.1",
           "Tools": "1.0.0"
         },
         "runtime": {
@@ -78,6 +91,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "JsonSubTypes/1.9.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-b7BHm3Oo5mqcIUWogcUsjOya9PmkNyLmwWtRfeCHwgGGXMGEFiz95ZxqfZQPXqxJRFr+2IxoiIcDv10tWUmvTQ==",
+      "path": "jsonsubtypes/1.9.0",
+      "hashPath": "jsonsubtypes.1.9.0.nupkg.sha512"
     },
     "MongoDB.Bson/2.14.1": {
       "type": "package",

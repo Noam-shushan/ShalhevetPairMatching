@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "OWMIctKGzB0fuJy+iR2dI7pK1QInYmUc7ZUZe/6u+DdeDJAaI+/J6q4K8L1jpgpXyUlc93lQNWa4LE7/K/7xaw==",
+  "dgSpecHash": "gXe9Zbgm84uMwTBo+4AJ81aayULQZieBy1BhfsLJu8Q6oblllvyY4dFtv05QdQRGIVctKofMHwACU7RkzMTPxg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\GuiWpf\\GuiWpf.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.auth\\1.57.0\\google.apis.auth.1.57.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.core\\1.57.0\\google.apis.core.1.57.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.sheets.v4\\1.57.0.2657\\google.apis.sheets.v4.1.57.0.2657.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\jsonsubtypes\\1.9.0\\jsonsubtypes.1.9.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mailkit\\3.2.0\\mailkit.3.2.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\materialdesigncolors\\2.0.6\\materialdesigncolors.2.0.6.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\materialdesignthemes\\4.5.0\\materialdesignthemes.4.5.0.nupkg.sha512",
