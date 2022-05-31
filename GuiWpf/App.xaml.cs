@@ -3,18 +3,14 @@ using Prism.Ioc;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using PairMatching.DomainModel.DataAccessFactory;
 using PairMatching.Configurations;
-using System.IO;
 using Newtonsoft.Json;
 using PairMatching.DomainModel.Email;
 using PairMatching.DomainModel.Services;
+using static PairMatching.Tools.HelperFunction;
 
 namespace GuiWpf
 {
@@ -34,8 +30,7 @@ namespace GuiWpf
 
         private MyConfiguration GetConfigurations()
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"appsetting.json");
-            var jsonString = File.ReadAllText(path);
+            var jsonString = ReadJson(@"appsetting.json");
             var configurations = JsonConvert.DeserializeObject<MyConfiguration>(jsonString);
             return configurations ?? throw new Exception("No Configurations");
         }

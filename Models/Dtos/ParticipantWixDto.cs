@@ -170,6 +170,7 @@ namespace PairMatching.Models.Dtos
             part.Country = utc;
             part.UtcOffset = TimeSpan.FromHours(timeOffset);
             part.JewishAffiliation = jewishAffiliation;
+            part.PairPreferences.Tracks = prefTra.Select(t => GetValueFromDescription<PrefferdTracks>(t));
 
             return part;
 

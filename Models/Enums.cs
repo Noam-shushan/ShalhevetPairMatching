@@ -74,7 +74,8 @@ namespace PairMatching.Models
         
         [EnumDescription("פרקי אבות", "Pirkei Avot (Ethics of the Fathers)")]
         PirkeiAvot,
-        
+
+        [EnumDescription("לא משנה", "Dont Prefferd")]
         DONT_MATTER,
         
         [EnumDescription("עצמאי" ,"Independent learning subject")]

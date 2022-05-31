@@ -23,3 +23,4 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0\DomainModel.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\bin\Debug\net5.0\WixApi.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\bin\Debug\net5.0\WixApi.pdb
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\bin\Debug\net5.0\Resources\Countries.json

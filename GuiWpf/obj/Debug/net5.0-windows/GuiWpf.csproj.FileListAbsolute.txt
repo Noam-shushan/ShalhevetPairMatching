@@ -9,11 +9,6 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\ref\GuiWpf.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\GuiWpf.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\DnsClient.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\Google.Apis.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\Google.Apis.Auth.PlatformServices.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\Google.Apis.Auth.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\Google.Apis.Core.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\Google.Apis.Sheets.v4.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\MailKit.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\MaterialDesignColors.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\MaterialDesignThemes.Wpf.dll
@@ -92,3 +87,9 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\NotesView.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Styles\OpenQuestionStyle.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\JsonSubTypes.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\CalcBinding.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\DynamicExpresso.Core.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\ModalControl.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\AddParticipantForm.g.cs
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\AddParticipantForm.baml
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\Resources\Countries.json

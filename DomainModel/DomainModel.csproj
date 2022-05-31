@@ -14,9 +14,14 @@
     <None Remove="Email\HtmlTemplates\ToSecretaryPairBroke.html" />
     <None Remove="Email\HtmlTemplates\YouGotPairEnglish.html" />
     <None Remove="Email\HtmlTemplates\YouGotPairHebrew.html" />
+    <None Remove="Services\Countries.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.57.0.2657" />
+    <Content Include="Resources\Countries.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>

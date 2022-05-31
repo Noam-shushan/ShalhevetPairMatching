@@ -45,10 +45,7 @@
                 <Setter Property="MaxHeight" Value="35" />
             </Style>
 
-            <converters:EnglishLevelsHebConverter x:Key="EnglishLevelsHebConverter" />
-            <converters:GendersHebConverter x:Key="GendersHebConverter" />
-            <converters:LearningStylesHebConverter x:Key="LearningStylesHebConverter" />
-            <converters:SkillLevelsHebConverter x:Key="SkillLevelsHebConverter" />
+            <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

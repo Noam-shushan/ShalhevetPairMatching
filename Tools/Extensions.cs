@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PairMatching.Tools
@@ -23,6 +25,15 @@ namespace PairMatching.Tools
                 .GroupBy(x => x.index / n)
                 .Select(grp => string.Join(" ", grp.Select(x => x.word))));
             return text;
+        }
+
+        public static TimeSpan ToTimeSpan(this string timeStr)
+        {
+            string timeFormat = Regex.Replace(timeStr, "[^0-9.:-]", "");
+            if(TimeSpan.TryParse(timeFormat, out TimeSpan res))
+                return res;
+            
+            throw new Exception($"can not parse {timeStr} to time");
         }
 
         public static async Task<IEnumerable<T>> WhenAll<T>(List<Task> tasks1, params Task<T>[] tasks)
@@ -56,7 +67,7 @@ namespace PairMatching.Tools
             return string.Empty;
         }
 
-        public static string GetDescriptionFromEnumValue(Enum value, string engOrHeb)
+        public static string GetDescriptionFromEnumValue(this Enum value, string engOrHeb = "heb")
         {
             EnumDescriptionAttribute attribute = value.GetType()
                 .GetField(value.ToString())
@@ -69,7 +80,7 @@ namespace PairMatching.Tools
             return string.Empty;
         }
 
-        public static T GetValueFromDescription<T>(string description) where T : Enum
+        public static T GetValueFromDescription<T>(string description)
         {
             var type = typeof(T);
             if (!type.IsEnum)
@@ -88,6 +99,28 @@ namespace PairMatching.Tools
                             })
                             .SingleOrDefault();
             return field == null ? default(T) : (T)field.Field.GetRawConstantValue();
+        }
+
+        public static object GetValueFromDescription(string description, Type type)
+        {
+            //object to = Activator.CreateInstance(type);
+            if (!type.IsEnum)
+                throw new ArgumentException();
+            FieldInfo[] fields = type.GetFields();
+            var field = fields
+                            .SelectMany(f => f.GetCustomAttributes(
+                                typeof(EnumDescriptionAttribute), false), (
+                                    f, a) => new { Field = f, Att = a })
+                            .Where(a =>
+                            {
+                                var ea = (EnumDescriptionAttribute)a.Att;
+                                return ea.EngDescriptions.Contains(description)
+                                ||
+                                ea.HebDescription == description;
+                            })
+                            .SingleOrDefault();
+            var result = field == null ? default : field.Field.GetRawConstantValue();
+            return Enum.Parse(type, result.ToString());
         }
     }
 

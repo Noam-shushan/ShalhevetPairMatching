@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET5_0;NETCOREAPP
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\App.xaml
-11-655597231
+12534237164
 3124249034
-19-92832551
-22468288261
-Controlers\Field.xaml;Controlers\SearchTextBox.xaml;Styles\EnumsToTextStyle.xaml;Styles\OpenQuestionStyle.xaml;Views\EmailsView.xaml;Views\MainWindow.xaml;Views\MatchingView.xaml;Views\NotesView.xaml;Views\OpenQuestionsView.xaml;Views\ParisView.xaml;Views\ParticipiantsView.xaml;
+231819346289
+222788204472
+Controlers\Field.xaml;Controlers\SearchTextBox.xaml;Styles\EnumsToTextStyle.xaml;Styles\OpenQuestionStyle.xaml;Views\AddParticipantForm.xaml;Views\EmailsView.xaml;Views\MainWindow.xaml;Views\MatchingView.xaml;Views\NotesView.xaml;Views\OpenQuestionsView.xaml;Views\ParisView.xaml;Views\ParticipiantsView.xaml;
 
 False
 

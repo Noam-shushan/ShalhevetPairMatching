@@ -6,6 +6,17 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
+      "CalcBinding/2.5.2": {
+        "dependencies": {
+          "DynamicExpresso.Core": "2.3.1"
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/CalcBinding.dll": {
+            "assemblyVersion": "2.5.2.0",
+            "fileVersion": "2.5.2.0"
+          }
+        }
+      },
       "DnsClient/1.4.0": {
         "runtime": {
           "lib/netstandard2.1/DnsClient.dll": {
@@ -14,53 +25,11 @@
           }
         }
       },
-      "Google.Apis/1.57.0": {
-        "dependencies": {
-          "Google.Apis.Core": "1.57.0"
-        },
+      "DynamicExpresso.Core/2.3.1": {
         "runtime": {
-          "lib/netstandard2.0/Google.Apis.dll": {
-            "assemblyVersion": "1.57.0.0",
-            "fileVersion": "1.57.0.0"
-          }
-        }
-      },
-      "Google.Apis.Auth/1.57.0": {
-        "dependencies": {
-          "Google.Apis": "1.57.0",
-          "Google.Apis.Core": "1.57.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {
-            "assemblyVersion": "1.57.0.0",
-            "fileVersion": "1.57.0.0"
-          },
-          "lib/netstandard2.0/Google.Apis.Auth.dll": {
-            "assemblyVersion": "1.57.0.0",
-            "fileVersion": "1.57.0.0"
-          }
-        }
-      },
-      "Google.Apis.Core/1.57.0": {
-        "dependencies": {
-          "Newtonsoft.Json": "13.0.1"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Core.dll": {
-            "assemblyVersion": "1.57.0.0",
-            "fileVersion": "1.57.0.0"
-          }
-        }
-      },
-      "Google.Apis.Sheets.v4/1.57.0.2657": {
-        "dependencies": {
-          "Google.Apis": "1.57.0",
-          "Google.Apis.Auth": "1.57.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Sheets.v4.dll": {
-            "assemblyVersion": "1.57.0.2657",
-            "fileVersion": "1.57.0.2657"
+          "lib/netstandard2.0/DynamicExpresso.Core.dll": {
+            "assemblyVersion": "2.3.1.0",
+            "fileVersion": "2.3.1.0"
           }
         }
       },
@@ -294,6 +263,14 @@
           }
         }
       },
+      "SimpleModal.WPF/1.0.0": {
+        "runtime": {
+          "lib/netcoreapp3.1/ModalControl.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "System.Buffers/4.5.1": {},
       "System.Formats.Asn1/5.0.0": {
         "runtime": {
@@ -385,6 +362,13 @@
     }
   },
   "libraries": {
+    "CalcBinding/2.5.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hbMnS12GUmWTFVROhKJMAQNv5Cqx+AjVGOGGjUOidEaRQ5oGr87PCZih5kfEA/8qlRMzpBsMPQ0fiOahPWwmXQ==",
+      "path": "calcbinding/2.5.2",
+      "hashPath": "calcbinding.2.5.2.nupkg.sha512"
+    },
     "DnsClient/1.4.0": {
       "type": "package",
       "serviceable": true,
@@ -392,33 +376,12 @@
       "path": "dnsclient/1.4.0",
       "hashPath": "dnsclient.1.4.0.nupkg.sha512"
     },
-    "Google.Apis/1.57.0": {
+    "DynamicExpresso.Core/2.3.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-30V7T2G98HQjfI6y0AzBOXJUu7j7Trl1ZzH0e6DKmUaXNCvdMPwxApjBKESeTOkWjMdFRmkpAGyDEoxim+Xq1A==",
-      "path": "google.apis/1.57.0",
-      "hashPath": "google.apis.1.57.0.nupkg.sha512"
-    },
-    "Google.Apis.Auth/1.57.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-xNY9rprn3iih1H5dymbxxHeZggn4bMYKtYdwO3Yr+Cj06f6xrxnL0LqEi1bmG46LBY2FlVMy9NKIF99tZ6ZBZg==",
-      "path": "google.apis.auth/1.57.0",
-      "hashPath": "google.apis.auth.1.57.0.nupkg.sha512"
-    },
-    "Google.Apis.Core/1.57.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-5wuY88PewhfaWsk37EEHcwU6CFqxpaWMm20ogWLXmaCw8NbTlV/Lna0gjtr2jpTLgb3mtVa7RC1AG/mgi530SQ==",
-      "path": "google.apis.core/1.57.0",
-      "hashPath": "google.apis.core.1.57.0.nupkg.sha512"
-    },
-    "Google.Apis.Sheets.v4/1.57.0.2657": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-RmpSEXNe8WgUtUiNnj7QLxfILvHOoReUIt86Agp7Za6JvY8c7fVzXSrqXhYmiJkg0FJiAOYosI7jsaNqzWLWsg==",
-      "path": "google.apis.sheets.v4/1.57.0.2657",
-      "hashPath": "google.apis.sheets.v4.1.57.0.2657.nupkg.sha512"
+      "sha512": "sha512-gAoOdAA7KypwC2aEWbm72ZcNj9ERn0GBrFyFrLm9tRZGd+z1rgnKlh+BtWJi9X32ldzOwItY/Ty5ao6CqbG5ig==",
+      "path": "dynamicexpresso.core/2.3.1",
+      "hashPath": "dynamicexpresso.core.2.3.1.nupkg.sha512"
     },
     "JsonSubTypes/1.9.0": {
       "type": "package",
@@ -545,6 +508,13 @@
       "sha512": "sha512-XqD4TpfyYGa7QTPzaGlMVbcecKnXy4YmYLDWrU+JIj7IuRNl7DH2END+Ll7ekWIY8o3dAMWLFDE1xdhfIWD1nw==",
       "path": "sharpcompress/0.30.1",
       "hashPath": "sharpcompress.0.30.1.nupkg.sha512"
+    },
+    "SimpleModal.WPF/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dtTvUl6O2peKZz2oCh5Y6mRjYL+q/Izxm6+z/Nzdpbcgxdo/qTD39stwegu/sY0uBTAYGJEy2P9X8mwpOMM+rw==",
+      "path": "simplemodal.wpf/1.0.0",
+      "hashPath": "simplemodal.wpf.1.0.0.nupkg.sha512"
     },
     "System.Buffers/4.5.1": {
       "type": "package",

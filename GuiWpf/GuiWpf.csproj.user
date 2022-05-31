@@ -13,6 +13,9 @@
     <Compile Update="Controlers\SearchTextBox.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\AddParticipantForm.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\EmailsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -43,6 +46,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Styles\EnumsToTextStyle.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\AddParticipantForm.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\EmailsView.xaml">

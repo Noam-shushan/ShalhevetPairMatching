@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,18 @@ namespace PairMatching.Tools
             return record.GetType()
                 .GetProperty("Id")
                 .GetValue(record, null);
+        }
+
+        public static string ReadJson(string fileName)
+        {
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException(path);
+            }
+            
+            var jsonString = File.ReadAllText(path);
+            return jsonString;
         }
     }
 }

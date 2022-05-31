@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using PairMatching.WixApi;
 using PairMatching.Configurations;
+using System.IO;
+using Newtonsoft.Json;
+using PairMatching.Tools;
+using static PairMatching.Tools.HelperFunction;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -62,9 +66,9 @@ namespace PairMatching.DomainModel.Services
 
         public async Task<IEnumerable<Student>> GetAllStudents()
         {
-            var parts = await _wix.GetNewParticipants();
-            var list = parts.Select(p => p.ToParticipant())
-                .ToList();
+            //var parts = await _wix.GetNewParticipants();
+            //var list = parts.Select(p => p.ToParticipant())
+            //    .ToList();
 
             var result = await _unitOfWork
                      .StudentRepositry
@@ -72,5 +76,27 @@ namespace PairMatching.DomainModel.Services
             return result
                 .Take(50);
         }
+
+        public IEnumerable<CountryUtc> GetCountryUtcs()
+        {
+            var jsonString = ReadJson(@"Resources\Countries.json");
+            var result = JsonConvert.DeserializeObject<IEnumerable<CountryUtc>>(jsonString);
+            foreach (var country in result)
+            {
+                country.UtcOffset = country.UtcTimeOffset.ToTimeSpan();
+            }
+            return result;
+        }
+
+        
+    }
+
+    public class CountryUtc
+    {
+        public string Country { get; set; }
+
+        public string UtcTimeOffset { get; set; }
+
+        public TimeSpan UtcOffset { get; set; }
     }
 }

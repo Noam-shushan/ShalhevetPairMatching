@@ -8,16 +8,27 @@ using PairMatching.Models;
 using Prism.Mvvm;
 using Prism.Commands;
 using PairMatching.DomainModel.Services;
+using Prism.Events;
+using GuiWpf.Events;
 
 namespace GuiWpf.ViewModels
 {
     public class ParticipiantsViewModel : BindableBase
     {
         readonly IParticipantService _participantService;
+        readonly IEventAggregator _ea;
 
-        public ParticipiantsViewModel(IParticipantService participantService)
+        public ParticipiantsViewModel(IParticipantService participantService, IEventAggregator ea)
         {
             _participantService = participantService;
+            _ea = ea;
+            _ea.GetEvent<CloseDialogEvent>().Subscribe(CloseFormResived);
+            _ea.GetEvent<AddParticipantEvent>().Subscribe(NewParticipantResived);
+        }
+
+        private void NewParticipantResived(Participant part)
+        {
+            Participiants.Add(part);
         }
 
         public ObservableCollection<Participant> Participiants { get; set; } = new();
@@ -38,8 +49,29 @@ namespace GuiWpf.ViewModels
         private bool _isToggleRow = false;
         public bool IsToggleRow
         {
-            get { return _isToggleRow; }
-            set { SetProperty(ref _isToggleRow, value); }
+            get => _isToggleRow; 
+            set => SetProperty(ref _isToggleRow, value); 
+        }
+
+
+
+        private bool _isAddFormOpen = false;
+        public bool IsAddFormOpen
+        {
+            get { return _isAddFormOpen; }
+            set { SetProperty(ref _isAddFormOpen, value); }
+        }
+
+        DelegateCommand _addParticipantCommand;
+        public DelegateCommand AddParticipantCommand => _addParticipantCommand ??= new(
+            () =>
+            {
+                IsAddFormOpen = !IsAddFormOpen;
+            });
+
+        private void CloseFormResived(bool isClose)
+        {
+            IsAddFormOpen = isClose;
         }
 
 
@@ -59,6 +91,8 @@ namespace GuiWpf.ViewModels
             {
                 IsToggleRow = !IsToggleRow;
             });
+
+
 
         private string _searchParticipiantsWord = "";
         public string SearchParticipiantsWord

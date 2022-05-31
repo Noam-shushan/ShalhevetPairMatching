@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     "net5.0-windows7.0": {
+      "CalcBinding/2.5.2": {
+        "type": "package",
+        "dependencies": {
+          "DynamicExpresso.Core": "2.3.1"
+        },
+        "compile": {
+          "lib/netcoreapp3.0/CalcBinding.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/CalcBinding.dll": {}
+        }
+      },
       "DnsClient/1.4.0": {
         "type": "package",
         "compile": {
@@ -11,56 +23,13 @@
           "lib/netstandard2.1/DnsClient.dll": {}
         }
       },
-      "Google.Apis/1.57.0": {
+      "DynamicExpresso.Core/2.3.1": {
         "type": "package",
-        "dependencies": {
-          "Google.Apis.Core": "1.57.0"
-        },
         "compile": {
-          "lib/netstandard2.0/Google.Apis.dll": {}
+          "lib/netstandard2.0/DynamicExpresso.Core.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/Google.Apis.dll": {}
-        }
-      },
-      "Google.Apis.Auth/1.57.0": {
-        "type": "package",
-        "dependencies": {
-          "Google.Apis": "1.57.0",
-          "Google.Apis.Core": "1.57.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {},
-          "lib/netstandard2.0/Google.Apis.Auth.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {},
-          "lib/netstandard2.0/Google.Apis.Auth.dll": {}
-        }
-      },
-      "Google.Apis.Core/1.57.0": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "13.0.1"
-        },
-        "compile": {
-          "lib/netstandard2.0/Google.Apis.Core.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Core.dll": {}
-        }
-      },
-      "Google.Apis.Sheets.v4/1.57.0.2657": {
-        "type": "package",
-        "dependencies": {
-          "Google.Apis": "1.57.0",
-          "Google.Apis.Auth": "1.57.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/Google.Apis.Sheets.v4.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Sheets.v4.dll": {}
+          "lib/netstandard2.0/DynamicExpresso.Core.dll": {}
         }
       },
       "JsonSubTypes/1.9.0": {
@@ -334,6 +303,18 @@
           "lib/net5.0/SharpCompress.dll": {}
         }
       },
+      "SimpleModal.WPF/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/ModalControl.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/ModalControl.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ]
+      },
       "System.Buffers/4.5.1": {
         "type": "package",
         "compile": {
@@ -478,7 +459,6 @@
         "dependencies": {
           "Configurations": "1.0.0",
           "DataAccess": "1.0.0",
-          "Google.Apis.Sheets.v4": "1.57.0.2657",
           "MailKit": "3.2.0",
           "Newtonsoft.Json": "13.0.1",
           "WixApi": "1.0.0"
@@ -535,6 +515,21 @@
     }
   },
   "libraries": {
+    "CalcBinding/2.5.2": {
+      "sha512": "hbMnS12GUmWTFVROhKJMAQNv5Cqx+AjVGOGGjUOidEaRQ5oGr87PCZih5kfEA/8qlRMzpBsMPQ0fiOahPWwmXQ==",
+      "type": "package",
+      "path": "calcbinding/2.5.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "calcbinding.2.5.2.nupkg.sha512",
+        "calcbinding.nuspec",
+        "lib/net40/CalcBinding.dll",
+        "lib/net45/CalcBinding.dll",
+        "lib/netcoreapp3.0/CalcBinding.dll"
+      ]
+    },
     "DnsClient/1.4.0": {
       "sha512": "CO1NG1zQdV0nEAXmr/KppLZ0S1qkaPwV0kPX5YPgmYBtrBVh1XMYHM54IXy3RBJu1k4thFtpzwo4HNHqxiuFYw==",
       "type": "package",
@@ -557,106 +552,18 @@
         "lib/netstandard2.1/DnsClient.xml"
       ]
     },
-    "Google.Apis/1.57.0": {
-      "sha512": "30V7T2G98HQjfI6y0AzBOXJUu7j7Trl1ZzH0e6DKmUaXNCvdMPwxApjBKESeTOkWjMdFRmkpAGyDEoxim+Xq1A==",
+    "DynamicExpresso.Core/2.3.1": {
+      "sha512": "gAoOdAA7KypwC2aEWbm72ZcNj9ERn0GBrFyFrLm9tRZGd+z1rgnKlh+BtWJi9X32ldzOwItY/Ty5ao6CqbG5ig==",
       "type": "package",
-      "path": "google.apis/1.57.0",
+      "path": "dynamicexpresso.core/2.3.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "LICENSE",
-        "NuGetIcon.png",
-        "google.apis.1.57.0.nupkg.sha512",
-        "google.apis.nuspec",
-        "lib/net45/Google.Apis.PlatformServices.dll",
-        "lib/net45/Google.Apis.dll",
-        "lib/net45/Google.Apis.pdb",
-        "lib/net45/Google.Apis.xml",
-        "lib/netstandard1.3/Google.Apis.dll",
-        "lib/netstandard1.3/Google.Apis.pdb",
-        "lib/netstandard1.3/Google.Apis.xml",
-        "lib/netstandard2.0/Google.Apis.dll",
-        "lib/netstandard2.0/Google.Apis.pdb",
-        "lib/netstandard2.0/Google.Apis.xml"
-      ]
-    },
-    "Google.Apis.Auth/1.57.0": {
-      "sha512": "xNY9rprn3iih1H5dymbxxHeZggn4bMYKtYdwO3Yr+Cj06f6xrxnL0LqEi1bmG46LBY2FlVMy9NKIF99tZ6ZBZg==",
-      "type": "package",
-      "path": "google.apis.auth/1.57.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE",
-        "NuGetIcon.png",
-        "google.apis.auth.1.57.0.nupkg.sha512",
-        "google.apis.auth.nuspec",
-        "lib/net45/Google.Apis.Auth.PlatformServices.dll",
-        "lib/net45/Google.Apis.Auth.dll",
-        "lib/net45/Google.Apis.Auth.pdb",
-        "lib/net45/Google.Apis.Auth.xml",
-        "lib/net461/Google.Apis.Auth.PlatformServices.dll",
-        "lib/net461/Google.Apis.Auth.dll",
-        "lib/net461/Google.Apis.Auth.pdb",
-        "lib/net461/Google.Apis.Auth.xml",
-        "lib/netstandard1.3/Google.Apis.Auth.PlatformServices.dll",
-        "lib/netstandard1.3/Google.Apis.Auth.dll",
-        "lib/netstandard1.3/Google.Apis.Auth.pdb",
-        "lib/netstandard1.3/Google.Apis.Auth.xml",
-        "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll",
-        "lib/netstandard2.0/Google.Apis.Auth.dll",
-        "lib/netstandard2.0/Google.Apis.Auth.pdb",
-        "lib/netstandard2.0/Google.Apis.Auth.xml"
-      ]
-    },
-    "Google.Apis.Core/1.57.0": {
-      "sha512": "5wuY88PewhfaWsk37EEHcwU6CFqxpaWMm20ogWLXmaCw8NbTlV/Lna0gjtr2jpTLgb3mtVa7RC1AG/mgi530SQ==",
-      "type": "package",
-      "path": "google.apis.core/1.57.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE",
-        "NuGetIcon.png",
-        "google.apis.core.1.57.0.nupkg.sha512",
-        "google.apis.core.nuspec",
-        "lib/net45/Google.Apis.Core.dll",
-        "lib/net45/Google.Apis.Core.pdb",
-        "lib/net45/Google.Apis.Core.xml",
-        "lib/netstandard1.3/Google.Apis.Core.dll",
-        "lib/netstandard1.3/Google.Apis.Core.pdb",
-        "lib/netstandard1.3/Google.Apis.Core.xml",
-        "lib/netstandard2.0/Google.Apis.Core.dll",
-        "lib/netstandard2.0/Google.Apis.Core.pdb",
-        "lib/netstandard2.0/Google.Apis.Core.xml"
-      ]
-    },
-    "Google.Apis.Sheets.v4/1.57.0.2657": {
-      "sha512": "RmpSEXNe8WgUtUiNnj7QLxfILvHOoReUIt86Agp7Za6JvY8c7fVzXSrqXhYmiJkg0FJiAOYosI7jsaNqzWLWsg==",
-      "type": "package",
-      "path": "google.apis.sheets.v4/1.57.0.2657",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE",
-        "NuGetIcon.png",
-        "google.apis.sheets.v4.1.57.0.2657.nupkg.sha512",
-        "google.apis.sheets.v4.nuspec",
-        "lib/net40/Google.Apis.Sheets.v4.dll",
-        "lib/net40/Google.Apis.Sheets.v4.pdb",
-        "lib/net40/Google.Apis.Sheets.v4.xml",
-        "lib/net45/Google.Apis.Sheets.v4.dll",
-        "lib/net45/Google.Apis.Sheets.v4.pdb",
-        "lib/net45/Google.Apis.Sheets.v4.xml",
-        "lib/netstandard1.0/Google.Apis.Sheets.v4.dll",
-        "lib/netstandard1.0/Google.Apis.Sheets.v4.pdb",
-        "lib/netstandard1.0/Google.Apis.Sheets.v4.xml",
-        "lib/netstandard1.3/Google.Apis.Sheets.v4.dll",
-        "lib/netstandard1.3/Google.Apis.Sheets.v4.pdb",
-        "lib/netstandard1.3/Google.Apis.Sheets.v4.xml",
-        "lib/netstandard2.0/Google.Apis.Sheets.v4.dll",
-        "lib/netstandard2.0/Google.Apis.Sheets.v4.pdb",
-        "lib/netstandard2.0/Google.Apis.Sheets.v4.xml"
+        "dynamicexpresso.core.2.3.1.nupkg.sha512",
+        "dynamicexpresso.core.nuspec",
+        "lib/net45/DynamicExpresso.Core.dll",
+        "lib/net461/DynamicExpresso.Core.dll",
+        "lib/netstandard2.0/DynamicExpresso.Core.dll"
       ]
     },
     "JsonSubTypes/1.9.0": {
@@ -1129,6 +1036,18 @@
         "sharpcompress.nuspec"
       ]
     },
+    "SimpleModal.WPF/1.0.0": {
+      "sha512": "dtTvUl6O2peKZz2oCh5Y6mRjYL+q/Izxm6+z/Nzdpbcgxdo/qTD39stwegu/sY0uBTAYGJEy2P9X8mwpOMM+rw==",
+      "type": "package",
+      "path": "simplemodal.wpf/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netcoreapp3.1/ModalControl.dll",
+        "simplemodal.wpf.1.0.0.nupkg.sha512",
+        "simplemodal.wpf.nuspec"
+      ]
+    },
     "System.Buffers/4.5.1": {
       "sha512": "Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
       "type": "package",
@@ -1495,11 +1414,13 @@
   },
   "projectFileDependencyGroups": {
     "net5.0-windows7.0": [
+      "CalcBinding >= 2.5.2",
       "Configurations >= 1.0.0",
       "DomainModel >= 1.0.0",
       "MaterialDesignThemes >= 4.5.0",
       "Models >= 1.0.0",
       "Prism.Unity >= 8.1.97",
+      "SimpleModal.WPF >= 1.0.0",
       "Tools >= 1.0.0"
     ]
   },
@@ -1555,6 +1476,10 @@
       "net5.0-windows7.0": {
         "targetAlias": "net5.0-windows",
         "dependencies": {
+          "CalcBinding": {
+            "target": "Package",
+            "version": "[2.5.2, )"
+          },
           "MaterialDesignThemes": {
             "target": "Package",
             "version": "[4.5.0, )"
@@ -1562,6 +1487,10 @@
           "Prism.Unity": {
             "target": "Package",
             "version": "[8.1.97, )"
+          },
+          "SimpleModal.WPF": {
+            "target": "Package",
+            "version": "[1.0.0, )"
           }
         },
         "imports": [

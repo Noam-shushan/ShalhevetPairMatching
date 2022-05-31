@@ -188,10 +188,6 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
-            "Google.Apis.Sheets.v4": {
-              "target": "Package",
-              "version": "[1.57.0.2657, )"
-            },
             "MailKit": {
               "target": "Package",
               "version": "[3.2.0, )"

@@ -1,14 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "8SIYEHk3B1BIgVtMhNHP76smCS0ZeRVj/Es3D1PffY1NIlX+IG+5HNADGkZNG45bTAgtmAuouaRWqCcigm+IKw==",
+  "dgSpecHash": "Jo31zuH6H64Hr7KlkfCYf3XUrRCRK6iNcLFVDN/zplsavVNYh3Kwg5a/Z6qiy8SE4WTAWCU/stLzNIefYmo1tg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\DomainModel\\DomainModel.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Asuspcc\\.nuget\\packages\\dnsclient\\1.4.0\\dnsclient.1.4.0.nupkg.sha512",
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis\\1.57.0\\google.apis.1.57.0.nupkg.sha512",
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.auth\\1.57.0\\google.apis.auth.1.57.0.nupkg.sha512",
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.core\\1.57.0\\google.apis.core.1.57.0.nupkg.sha512",
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\google.apis.sheets.v4\\1.57.0.2657\\google.apis.sheets.v4.1.57.0.2657.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\jsonsubtypes\\1.9.0\\jsonsubtypes.1.9.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mailkit\\3.2.0\\mailkit.3.2.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mimekit\\3.2.0\\mimekit.3.2.0.nupkg.sha512",

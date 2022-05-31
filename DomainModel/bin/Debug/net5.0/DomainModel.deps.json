@@ -10,7 +10,6 @@
         "dependencies": {
           "Configurations": "1.0.0",
           "DataAccess": "1.0.0",
-          "Google.Apis.Sheets.v4": "1.57.0.2657",
           "MailKit": "3.2.0",
           "Newtonsoft.Json": "13.0.1",
           "WixApi": "1.0.0"
@@ -24,56 +23,6 @@
           "lib/netstandard2.1/DnsClient.dll": {
             "assemblyVersion": "1.4.0.0",
             "fileVersion": "1.4.0.0"
-          }
-        }
-      },
-      "Google.Apis/1.57.0": {
-        "dependencies": {
-          "Google.Apis.Core": "1.57.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.dll": {
-            "assemblyVersion": "1.57.0.0",
-            "fileVersion": "1.57.0.0"
-          }
-        }
-      },
-      "Google.Apis.Auth/1.57.0": {
-        "dependencies": {
-          "Google.Apis": "1.57.0",
-          "Google.Apis.Core": "1.57.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {
-            "assemblyVersion": "1.57.0.0",
-            "fileVersion": "1.57.0.0"
-          },
-          "lib/netstandard2.0/Google.Apis.Auth.dll": {
-            "assemblyVersion": "1.57.0.0",
-            "fileVersion": "1.57.0.0"
-          }
-        }
-      },
-      "Google.Apis.Core/1.57.0": {
-        "dependencies": {
-          "Newtonsoft.Json": "13.0.1"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Core.dll": {
-            "assemblyVersion": "1.57.0.0",
-            "fileVersion": "1.57.0.0"
-          }
-        }
-      },
-      "Google.Apis.Sheets.v4/1.57.0.2657": {
-        "dependencies": {
-          "Google.Apis": "1.57.0",
-          "Google.Apis.Auth": "1.57.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Google.Apis.Sheets.v4.dll": {
-            "assemblyVersion": "1.57.0.2657",
-            "fileVersion": "1.57.0.2657"
           }
         }
       },
@@ -339,34 +288,6 @@
       "sha512": "sha512-CO1NG1zQdV0nEAXmr/KppLZ0S1qkaPwV0kPX5YPgmYBtrBVh1XMYHM54IXy3RBJu1k4thFtpzwo4HNHqxiuFYw==",
       "path": "dnsclient/1.4.0",
       "hashPath": "dnsclient.1.4.0.nupkg.sha512"
-    },
-    "Google.Apis/1.57.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-30V7T2G98HQjfI6y0AzBOXJUu7j7Trl1ZzH0e6DKmUaXNCvdMPwxApjBKESeTOkWjMdFRmkpAGyDEoxim+Xq1A==",
-      "path": "google.apis/1.57.0",
-      "hashPath": "google.apis.1.57.0.nupkg.sha512"
-    },
-    "Google.Apis.Auth/1.57.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-xNY9rprn3iih1H5dymbxxHeZggn4bMYKtYdwO3Yr+Cj06f6xrxnL0LqEi1bmG46LBY2FlVMy9NKIF99tZ6ZBZg==",
-      "path": "google.apis.auth/1.57.0",
-      "hashPath": "google.apis.auth.1.57.0.nupkg.sha512"
-    },
-    "Google.Apis.Core/1.57.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-5wuY88PewhfaWsk37EEHcwU6CFqxpaWMm20ogWLXmaCw8NbTlV/Lna0gjtr2jpTLgb3mtVa7RC1AG/mgi530SQ==",
-      "path": "google.apis.core/1.57.0",
-      "hashPath": "google.apis.core.1.57.0.nupkg.sha512"
-    },
-    "Google.Apis.Sheets.v4/1.57.0.2657": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-RmpSEXNe8WgUtUiNnj7QLxfILvHOoReUIt86Agp7Za6JvY8c7fVzXSrqXhYmiJkg0FJiAOYosI7jsaNqzWLWsg==",
-      "path": "google.apis.sheets.v4/1.57.0.2657",
-      "hashPath": "google.apis.sheets.v4.1.57.0.2657.nupkg.sha512"
     },
     "JsonSubTypes/1.9.0": {
       "type": "package",

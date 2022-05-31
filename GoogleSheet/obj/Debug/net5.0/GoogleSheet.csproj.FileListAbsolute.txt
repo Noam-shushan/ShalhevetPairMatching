@@ -1,0 +1,5 @@
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GoogleSheet\obj\Debug\net5.0\GoogleSheet.csproj.AssemblyReference.cache
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GoogleSheet\obj\Debug\net5.0\GoogleSheet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GoogleSheet\obj\Debug\net5.0\GoogleSheet.AssemblyInfoInputs.cache
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GoogleSheet\obj\Debug\net5.0\GoogleSheet.AssemblyInfo.cs
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GoogleSheet\obj\Debug\net5.0\GoogleSheet.csproj.CoreCompileInputs.cache
