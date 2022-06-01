@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using PairMatching.DomainModel.Email;
 using PairMatching.DomainModel.Services;
 using static PairMatching.Tools.HelperFunction;
+using Prism.Mvvm;
+using GuiWpf.ViewModels;
 
 namespace GuiWpf
 {
@@ -25,6 +27,7 @@ namespace GuiWpf
             containerRegistry.RegisterInstance(GetConfigurations());
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
             containerRegistry.Register<IParticipantService, ParticipantService>();
+            containerRegistry.Register<IPairsService, PairService>();
             containerRegistry.RegisterScoped<SendEmail>();
         }
 
@@ -38,6 +41,18 @@ namespace GuiWpf
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();
+        }
+
+        protected override void ConfigureViewModelLocator()
+        {
+            base.ConfigureViewModelLocator();
+
+            ViewModelLocationProvider.Register<ParticipiantsView, ParticipiantsViewModel>();
+            ViewModelLocationProvider.Register<MatchingView, MatchingViewModel>();
+            ViewModelLocationProvider.Register<AddParticipantForm, AddParticipantFormViewModel>();
+            ViewModelLocationProvider.Register<EmailsView, EmailsViewModel>();
+            ViewModelLocationProvider.Register<ParisView, PairsViewModel>();
+            ViewModelLocationProvider.Register<NotesView, NotesViewModel>();
         }
     }
 }

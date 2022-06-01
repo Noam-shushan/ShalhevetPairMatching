@@ -11,4 +11,12 @@ namespace GuiWpf.Events
     public class CloseDialogEvent : PubSubEvent<bool> { }
 
     public class AddParticipantEvent : PubSubEvent<Participant> { }
+
+    public class GetNotesListEvent : PubSubEvent<IEnumerable<Note>> { }
+
+    public class NewNoteEvent : PubSubEvent<Note> { }
+
+    public class DeleteNoteEvent : PubSubEvent<Note> { }
+
+
 }

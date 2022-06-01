@@ -23,31 +23,31 @@ namespace GuiWpf.Views
     public partial class NotesView : UserControl
     {
 
-        // Using a DependencyProperty as the backing store for Model.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ModelProperty =
-            DependencyProperty.Register("Model", typeof(BaseModel), typeof(NotesView));
+        //// Using a DependencyProperty as the backing store for Model.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty ModelProperty =
+        //    DependencyProperty.Register("Model", typeof(BaseModel), typeof(NotesView));
 
-        public List<Note> Notes
-        {
-            get { return (List<Note>)GetValue(NotesProperty); }
-            set { SetValue(NotesProperty, value); }
-        }
+        //public List<Note> Notes
+        //{
+        //    get { return (List<Note>)GetValue(NotesProperty); }
+        //    set { SetValue(NotesProperty, value); }
+        //}
 
-        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty NotesProperty =
-            DependencyProperty.Register("Notes", typeof(List<Note>), typeof(NotesView));
+        //// Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty NotesProperty =
+        //    DependencyProperty.Register("Notes", typeof(List<Note>), typeof(NotesView));
 
 
 
-        public ICommand AddNoteCommand
-        {
-            get { return (ICommand)GetValue(AddNoteCommandProperty); }
-            set { SetValue(AddNoteCommandProperty, value); }
-        }
+        //public ICommand AddNoteCommand
+        //{
+        //    get { return (ICommand)GetValue(AddNoteCommandProperty); }
+        //    set { SetValue(AddNoteCommandProperty, value); }
+        //}
 
-        // Using a DependencyProperty as the backing store for AddNoteCommand.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AddNoteCommandProperty =
-            DependencyProperty.Register("AddNoteCommand", typeof(ICommand), typeof(NotesView), new PropertyMetadata(null));
+        //// Using a DependencyProperty as the backing store for AddNoteCommand.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty AddNoteCommandProperty =
+        //    DependencyProperty.Register("AddNoteCommand", typeof(ICommand), typeof(NotesView), new PropertyMetadata(null));
 
 
         public NotesView()

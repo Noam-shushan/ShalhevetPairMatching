@@ -4,9 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controlers="clr-namespace:GuiWpf.Controlers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ex="clr-namespace:GuiWpf.Exstensions"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -18,8 +20,9 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <GroupBox Style="{StaticResource GroupBoxList}">
+        <GroupBox Grid.Row="0" Style="{StaticResource GroupBoxList}">
             <GroupBox.Header>
                 <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
                     <Grid.ColumnDefinitions>
@@ -61,22 +64,19 @@
                     </ComboBox>
                 </Grid>
             </GroupBox.Header>
-            <DataGrid>
+            <DataGrid
+                materialDesign:DataGridAssist.CornerRadius="10"
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding Pairs}"
+                ScrollViewer.CanContentScroll="False"
+                SelectedItem="{Binding SelectedPair}">
                 <DataGrid.Resources>
                     <DataTemplate x:Key="pairDetails" DataType="{x:Type DataGridTemplateColumn}">
                         <StackPanel DataContext="{Binding}">
-                            <StackPanel Margin="5" Orientation="Horizontal">
-                                <TextBlock Text="שם:  " />
-                                <TextBlock Text="{Binding Path=Name}" />
-                            </StackPanel>
-                            <StackPanel Margin="5" Orientation="Horizontal">
-                                <TextBlock Text="מייל:  " />
-                                <TextBlock Text="{Binding Path=Email}" />
-                            </StackPanel>
-                            <StackPanel Margin="5" Orientation="Horizontal">
-                                <TextBlock Text="טלפון:  " />
-                                <TextBlock Text="{Binding Path=PhoneNumber}" />
-                            </StackPanel>
+                            <controlers:Field FieldName="שם" Value="{Binding Path=Name}" />
+                            <controlers:Field FieldName="אימייל" Value="{Binding Path=Email}" />
+                            <controlers:Field FieldName="טלפון" Value="{Binding Path=PhoneNumber}" />
+                            <controlers:Field FieldName="ארץ" Value="{Binding Path=Country}" />
                         </StackPanel>
                     </DataTemplate>
                 </DataGrid.Resources>
@@ -91,21 +91,30 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="משתתף מישראל">
+                    <DataGridTextColumn
+                        Binding="{Binding ParticipantFromIsrael.Name}"
+                        Header="משתתף מישראל"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Binding="{Binding ParticipantFromWorld.Name}"
+                        Header="משתתף מהתפוצות"
+                        IsReadOnly="True" />
+                    <DataGridTemplateColumn Header="מסלול">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <ContentPresenter ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
+                                <TextBlock Text="{Binding Track, Converter={StaticResource EnumToStringConverter}}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="משתתף מהתפוצות">
-                        <DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <ContentPresenter ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
+                                <ComboBox
+                                    materialDesign:HintAssist.Hint="מסלול"
+                                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}"
+                                    SelectedValue="{Binding Track, Converter={StaticResource EnumToStringConverter}}"
+                                    Style="{StaticResource MaterialDesignOutlinedComboBox}" />
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="מסלול" />
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.Header>
                             <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק את כל הנבחרים">
@@ -135,7 +144,35 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <GroupBox
+                                Grid.Column="0"
+                                Margin="5"
+                                Header="מישראל">
+                                <ContentPresenter Content="{Binding ParticipantFromIsrael}" ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
+                            </GroupBox>
+                            <GroupBox
+                                Grid.Column="1"
+                                Margin="5"
+                                Header="מהתפוצות">
+                                <ContentPresenter Content="{Binding ParticipantFromWorld}" ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
+                            </GroupBox>
+                            <local:NotesView Grid.Column="2" Margin="5" />
+                        </Grid>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
             </DataGrid>
         </GroupBox>
+        <Button
+            Grid.Row="1"
+            Command="{Binding LoadCommand}"
+            Content="טען" />
     </Grid>
 </UserControl>

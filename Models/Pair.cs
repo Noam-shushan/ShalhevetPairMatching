@@ -9,14 +9,8 @@ namespace PairMatching.Models
 {
     public record Pair : BaseModel
     {
-        /// <summary>
-        /// the first student id 
-        /// </summary>
         public string ParticipantFromIsraelId { get; set; }
 
-        /// <summary>
-        /// The student id for the first student
-        /// </summary>
         public string ParticipantFromWorldId { get; set; }
 
         public DateTime DateOfCreate { get; set; }

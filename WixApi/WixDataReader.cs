@@ -51,18 +51,13 @@ namespace PairMatching.WixApi
             return data;
         }
 
-        public async Task PostToWix(ParticipantWixDto participantDto) 
+        public async Task PostToWix(UpdateParticipantOnWixDto participantDto) 
         {
             var query = _configuration.WixApi["POST"];
 
-            var body = JsonConvert.SerializeObject(participantDto);
+            var body = JsonConvert.SerializeObject(participantDto, Formatting.Indented);
 
-            await _http.PostWithRestSharpAsync(query, body);
+            await _http.PostAsync(query, body);
         }
     }
-
-    class ItemsFromWix
-    {
-        public IEnumerable<ParticipantWixDto> items { get; set; }
-    } 
 }

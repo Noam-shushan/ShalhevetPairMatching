@@ -50,7 +50,12 @@
       "ProjectGuid": "9bf83876-b8f9-431f-937d-9b929772cf5e",
       "DisplayName": "Testing",
       "ColorIndex": 8
+    },
+    "5808659a-4208-4d45-b162-26ce591c43a5": {
+      "ProjectGuid": "5808659a-4208-4d45-b162-26ce591c43a5",
+      "DisplayName": "GoogleSheet",
+      "ColorIndex": 9
     }
   },
-  "NextColorIndex": 9
+  "NextColorIndex": 10
 }

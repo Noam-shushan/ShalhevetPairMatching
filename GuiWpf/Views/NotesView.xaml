@@ -2,56 +2,118 @@
     x:Class="GuiWpf.Views.NotesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="200"
     d:DesignWidth="400"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <GroupBox Header="הערות">
-        <materialDesign:Card Margin="5" UniformCornerRadius="20">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-                <DataGrid
-                    Grid.Row="0"
-                    materialDesign:DataGridAssist.CornerRadius="20"
-                    AutoGenerateColumns="False"
-                    ItemsSource="{Binding Path=Notes, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Date}" Header="תאריך" />
-                        <DataGridTextColumn Binding="{Binding Author}" Header="כותב ההערה" />
-                        <DataGridTextColumn Binding="{Binding Subject}" Header="נושא" />
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק הערה">
-                                        <materialDesign:PackIcon Kind="Delete" />
-                                    </Button>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                    <DataGrid.RowDetailsTemplate>
-                        <DataTemplate>
-                            <TextBlock
-                                Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                Text="{Binding Content}"
-                                TextWrapping="WrapWithOverflow" />
-                        </DataTemplate>
-                    </DataGrid.RowDetailsTemplate>
-                </DataGrid>
-                <Button
-                    Grid.Row="1"
-                    HorizontalAlignment="Right"
-                    Command="{Binding Path=AddNoteCommand, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    Style="{StaticResource MaterialDesignIconButton}">
-                    <materialDesign:PackIcon Kind="Add" />
-                </Button>
-            </Grid>
-        </materialDesign:Card>
-    </GroupBox>
+    <Grid>
+        <GroupBox Header="הערות">
+            <materialDesign:Card Margin="5" UniformCornerRadius="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <DataGrid
+                        Grid.Row="0"
+                        materialDesign:DataGridAssist.CornerRadius="20"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding Notes}"
+                        SelectedItem="{Binding SelectedNote}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Date, StringFormat=d}" Header="תאריך" />
+                            <DataGridTextColumn Binding="{Binding Author}" Header="כותב ההערה" />
+                            <DataGridTextColumn Binding="{Binding Subject}" Header="נושא" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Command="{Binding Path=DataContext.DeleteNoteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                            Style="{StaticResource MaterialDesignIconButton}"
+                                            ToolTip="מחק הערה">
+                                            <materialDesign:PackIcon Kind="Delete" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                    Text="{Binding Content}"
+                                    TextWrapping="WrapWithOverflow" />
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+
+                    </DataGrid>
+                    <Button
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Command="{Binding OpenNewNoteFormCommand}"
+                        Style="{StaticResource MaterialDesignIconButton}">
+                        <materialDesign:PackIcon Kind="Add" />
+                    </Button>
+                    <custom:Modal Panel.ZIndex="1" IsOpen="{Binding IsNewNoteFormOpen}">
+                        <DockPanel>
+                            <Button
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Command="{Binding OpenNewNoteFormCommand}"
+                                DockPanel.Dock="Top"
+                                Style="{StaticResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Kind="Close" />
+                            </Button>
+
+                            <Grid Margin="25,0,25,5" DockPanel.Dock="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox
+                                    Grid.Row="0"
+                                    Margin="0,5"
+                                    materialDesign:HintAssist.Hint="כותב ההערה"
+                                    Text="{Binding Author}" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Margin="0,5"
+                                    materialDesign:HintAssist.Hint="נושא"
+                                    Text="{Binding Subject}" />
+                                <TextBox
+                                    Grid.Row="2"
+                                    Margin="0,5"
+                                    materialDesign:HintAssist.Hint="תוכן"
+                                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                    Text="{Binding Content}"
+                                    TextWrapping="WrapWithOverflow" />
+                                <Button
+                                    Grid.Row="3"
+                                    VerticalAlignment="Bottom"
+                                    Command="{Binding AddNoteCommand}"
+                                    Content="הוסף"
+                                    Style="{StaticResource ButtonContentStyle}" />
+                            </Grid>
+                        </DockPanel>
+                    </custom:Modal>
+                </Grid>
+
+            </materialDesign:Card>
+        </GroupBox>
+    </Grid>
 </UserControl>

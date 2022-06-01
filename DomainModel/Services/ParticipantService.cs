@@ -1,6 +1,7 @@
 ﻿using PairMatching.DataAccess.UnitOfWork;
 using PairMatching.DomainModel.DataAccessFactory;
 using PairMatching.Models;
+using PairMatching.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,12 +65,31 @@ namespace PairMatching.DomainModel.Services
             }
         }
 
+        public async Task UpdateParticipant(Participant participant)
+        {
+            await _wix.PostToWix(new UpdateParticipantOnWixDto
+            {
+                _id = participant.WixId,
+                email = participant.Email,
+                fullName = participant.Name,
+                chevrutaId = "",
+                preferredTrack = participant
+                .PairPreferences
+                .Tracks
+                .Select(t => t.GetDescriptionFromEnumValue()).ToList(),
+                tel = participant.PhoneNumber
+            });
+        }
+
+        public async Task<IEnumerable<Participant>> GetParticipantsWix()
+        {
+            var parts = await _wix.GetNewParticipants();
+            var list = parts.Select(p => p.ToParticipant());
+            return list;
+        }
+
         public async Task<IEnumerable<Student>> GetAllStudents()
         {
-            //var parts = await _wix.GetNewParticipants();
-            //var list = parts.Select(p => p.ToParticipant())
-            //    .ToList();
-
             var result = await _unitOfWork
                      .StudentRepositry
                 .GetAllAsync(s => !s.IsDeleted);

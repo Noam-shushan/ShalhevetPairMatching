@@ -12,6 +12,11 @@ namespace PairMatching.DomainModel.Services
         Task<IEnumerable<Participant>> GetAllParticipants();
 
         Task<IEnumerable<Student>> GetAllStudents();
+
         IEnumerable<CountryUtc> GetCountryUtcs();
+
+        Task<IEnumerable<Participant>> GetParticipantsWix();
+
+        Task UpdateParticipant(Participant participant);
     }
 }

@@ -39,9 +39,10 @@ namespace GuiWpf.ViewModels
             get => _selectedParticipant; 
             set 
             { 
-                if(!SetProperty(ref _selectedParticipant, value))
+                if(SetProperty(ref _selectedParticipant, value))
                 {
-                    //IsToggleRow = !IsToggleRow;
+                    _ea.GetEvent<GetNotesListEvent>()
+                        .Publish(SelectedParticipant.Notes);
                 }; 
             }
         }
@@ -79,8 +80,9 @@ namespace GuiWpf.ViewModels
         public DelegateCommand Load => _load ??= new(
             async () =>
             {
-                var studList = await _participantService.GetAllStudents();
-                var list = studList.Select(s => s.ToParticipant());
+                //var studList = await _participantService.GetAllStudents();
+                //var list = studList.Select(s => s.ToParticipant());
+                var list = await _participantService.GetParticipantsWix();
                 Participiants.Clear();
                 Participiants.AddRange(list);
             });
@@ -106,16 +108,10 @@ namespace GuiWpf.ViewModels
 
         DelegateCommand _searchParticipiantsCommand;
         public DelegateCommand SearchParticipiantsCommand => _searchParticipiantsCommand ??= new(
-            () =>
+            async () =>
             {
                 var s = SearchParticipiantsWord;
-            });
-
-        DelegateCommand _addNoteCommand;
-        public DelegateCommand AddNoteCommand => _addNoteCommand ??= new(
-            () =>
-            {
-
+                await _participantService.UpdateParticipant(SelectedParticipant);
             });
     }
 }

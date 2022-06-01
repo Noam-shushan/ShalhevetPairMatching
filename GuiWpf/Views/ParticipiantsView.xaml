@@ -369,8 +369,7 @@
                                     Grid.Column="2"
                                     MaxWidth="500"
                                     Margin="3"
-                                    HorizontalAlignment="Left"
-                                    Notes="{Binding Notes}" />
+                                    HorizontalAlignment="Left" />
 
                                 <materialDesign:DialogHost
                                     Grid.Row="0"

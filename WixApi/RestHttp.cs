@@ -1,23 +1,25 @@
 ﻿using RestSharp;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using System;
 
 
 namespace PairMatching.WixApi
 {
     public class RestHttp
     {
-        public async Task PostAsync(string uri, object data)
+        public async Task PostAsync(string uri, string data)
         {
             try
             {
                 using var client = new HttpClient();
 
-                var content = new StringContent(data.ToString());
+                var content = new StringContent(data, Encoding.UTF8);
 
                 await client.PostAsync(uri, content);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -31,12 +33,13 @@ namespace PairMatching.WixApi
 
                 var request = new RestRequest("/resource/", Method.Post);
 
-                request.AddParameter("application/json; charset=utf-8", body, ParameterType.RequestBody);
-                request.RequestFormat = DataFormat.Json;
+                request.AddJsonBody(body);
+                //request.AddParameter("application/json; charset=utf-8", body, ParameterType.RequestBody);
+                //request.RequestFormat = DataFormat.Json;
 
                 await client.PostAsync(request);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 throw;
             }

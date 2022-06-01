@@ -47,5 +47,26 @@ namespace PairMatching.Models
         
         [BsonIgnore]
         public Student StudentFromWorld { get; set; }
+
+        public Pair ToNewPair()
+        {
+            return new Pair
+            {
+                DateOfCreate = DateOfCreate,
+                DateOfDelete = DateOfDelete,
+                DateOfUpdate = DateOfUpdate,
+                IsActive = IsActive,
+                IsDeleted = IsDeleted,
+                Notes = Notes.Select(n => new Note
+                {
+                    Author = n.Author,
+                    Content = n.Text,
+                    Date = n.Date
+                }).ToList(),
+                Track = PrefferdTracks,
+                ParticipantFromIsrael = StudentFromIsrael.ToParticipant(),
+                ParticipantFromWorld = StudentFromWorld.ToParticipant()
+            };
+        }
     }
 }

@@ -10,7 +10,6 @@
     Title="שלהבת"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FlowDirection="RightToLeft"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
