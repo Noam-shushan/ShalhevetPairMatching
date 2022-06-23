@@ -1,8 +1,9 @@
-New version of PairMatching
+A new version of PairMatching
 
-(still in progress..:)
+(Still in progress..:)
 
 * More organized and designed 
 * Better UI
-* Fix many bug's 
+* Fix many bugs 
+* Moving from Framework to .NET 5
 
