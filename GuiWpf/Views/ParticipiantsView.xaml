@@ -424,6 +424,6 @@
             Grid.Row="1"
             Command="{Binding Load}"
             Content="טען"
-            Visibility="Visible" />
+            Visibility="Collapsed" />
     </Grid>
 </UserControl>

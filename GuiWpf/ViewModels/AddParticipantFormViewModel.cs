@@ -90,6 +90,48 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _learningTimes, value);
         }
 
+        private Genders _prefferdGender;
+        public Genders PrefferdGender
+        {
+            get => _prefferdGender;
+            set => SetProperty(ref _prefferdGender, value);
+        }
+
+        private LearningStyles _learningStyle;
+        public LearningStyles LearningStyle
+        {
+            get => _learningStyle;
+            set => SetProperty(ref _learningStyle, value);
+        }
+
+        private SkillLevels _desiredSkillLevel;
+        public SkillLevels DesiredSkillLevel
+        {
+            get => _desiredSkillLevel;
+            set => SetProperty(ref _desiredSkillLevel, value);
+        }
+
+        private EnglishLevels _desiredEnglishLevel;
+        public EnglishLevels DesiredEnglishLevel
+        {
+            get => _desiredEnglishLevel;
+            set => SetProperty(ref _desiredEnglishLevel, value);
+        }
+
+        private EnglishLevels _englishLevel;
+        public EnglishLevels EnglishLevel
+        {
+            get => _englishLevel;
+            set => SetProperty(ref _englishLevel, value);
+        }
+
+        private int _numberOfMatchs;
+        public int NumberOfMatchs
+        {
+            get => _numberOfMatchs;
+            set => SetProperty(ref _numberOfMatchs, value);
+        }
+
         private List<string> _otherLanguages;
         public List<string> OtherLanguages
         {
@@ -97,26 +139,61 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _otherLanguages, value);
         }
 
+        private bool _isFromIsrael;
+        public bool IsFromIsrael
+        {
+            get => _isFromIsrael;
+            set => SetProperty(ref _isFromIsrael, value);
+        }
+
         DelegateCommand _addCommand;
         public DelegateCommand AddCommand => _addCommand ??= new(
         () =>
         {
-            _ea.GetEvent<AddParticipantEvent>().Publish(new Participant
+            Participant newPart;
+            var pref = new Preferences
             {
-                Email = Email,
-                Gender = Gender,
-                Name = Name,
-                PhoneNumber = PhoneNumber,
-                Country = Country.Country,
-                PairPreferences = new()
+                Tracks = new[] { PrefferdTrack },
+                Gender = PrefferdGender,
+                LearningTime = LearningTimes,
+                LearningStyle = LearningStyle
+            };
+            if(IsFromIsrael)
+            {
+                newPart = new IsraelParticipant
                 {
-                    Tracks = new []{ PrefferdTrack }
-                },
-                DateOfRegistered = DateTime.Now,
-                IsDeleted = false,
-                IsInArchive = false 
-
-            });
+                    Country = "Israel",
+                    DateOfRegistered = DateTime.Now,
+                    Email = Email,
+                    Gender = Gender,
+                    IsDeleted = false,
+                    IsInArchive = false,
+                    Name = Name,
+                    PhoneNumber = PhoneNumber,
+                    PairPreferences = pref,
+                    DesiredSkillLevel = DesiredSkillLevel,
+                    EnglishLevel = EnglishLevel,  
+                };
+            }
+            else
+            {
+                newPart = new WorldParticipant
+                {
+                    DateOfRegistered = DateTime.Now,
+                    Email = Email,
+                    Country = Country.Country,
+                    UtcOffset = Country.UtcOffset,
+                    SkillLevel = SkillLevel,
+                    Gender = Gender,
+                    IsDeleted = false,
+                    IsInArchive = false,
+                    Name = Name,
+                    PhoneNumber = PhoneNumber,
+                    PairPreferences = pref,
+                    DesiredEnglishLevel = DesiredEnglishLevel
+                };
+            }
+            _ea.GetEvent<AddParticipantEvent>().Publish(newPart);
             Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
         });

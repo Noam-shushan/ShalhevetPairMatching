@@ -23,6 +23,8 @@ namespace PairMatching.DomainModel.Services
             _wix = new WixDataReader(config);
         }
 
+        // find max of array    
+
         public async Task<IEnumerable<Pair>> GetAllPairs()
         {
             var oldPairs = await _unitOfWork
