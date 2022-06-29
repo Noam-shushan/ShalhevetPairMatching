@@ -6,7 +6,6 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\GuiWpf.runtimeconfig.json
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\GuiWpf.runtimeconfig.dev.json
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\GuiWpf.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\ref\GuiWpf.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\GuiWpf.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\DnsClient.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\MailKit.dll
@@ -93,3 +92,6 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\AddParticipantForm.g.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\AddParticipantForm.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\Resources\Countries.json
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\SendEmailView.g.cs
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\SendEmailView.baml
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\refint\GuiWpf.dll

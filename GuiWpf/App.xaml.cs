@@ -26,8 +26,11 @@ namespace GuiWpf
         {
             containerRegistry.RegisterInstance(GetConfigurations());
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
+            
             containerRegistry.Register<IParticipantService, ParticipantService>();
             containerRegistry.Register<IPairsService, PairService>();
+            containerRegistry.Register<IEmailService, EmailService>();
+
             containerRegistry.RegisterScoped<SendEmail>();
         }
 
@@ -53,6 +56,7 @@ namespace GuiWpf
             ViewModelLocationProvider.Register<EmailsView, EmailsViewModel>();
             ViewModelLocationProvider.Register<ParisView, PairsViewModel>();
             ViewModelLocationProvider.Register<NotesView, NotesViewModel>();
+            ViewModelLocationProvider.Register<SendEmailView, SendEmailViewModel>();
         }
     }
 }

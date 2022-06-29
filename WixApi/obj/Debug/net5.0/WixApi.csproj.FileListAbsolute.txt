@@ -1,6 +1,5 @@
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\bin\Debug\net5.0\WixApi.deps.json
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\bin\Debug\net5.0\WixApi.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\bin\Debug\net5.0\ref\WixApi.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\bin\Debug\net5.0\WixApi.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\bin\Debug\net5.0\Configurations.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\bin\Debug\net5.0\Models.dll
@@ -17,3 +16,4 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\WixA
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\WixApi.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\ref\WixApi.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\WixApi.pdb
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\refint\WixApi.dll

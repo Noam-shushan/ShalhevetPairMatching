@@ -11,16 +11,20 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    FontSize="10"
     mc:Ignorable="d">
     <Grid>
         <TabControl materialDesign:ColorZoneAssist.Mode="PrimaryLight" TabStripPlacement="Left">
             <TabItem Header="הצעות להתאמה">
                 <TabControl
                     Margin="5"
-                    materialDesign:ColorZoneAssist.Mode="SecondaryDark"
-                    Style="{StaticResource MaterialDesignFilledTabControl}"
+                    materialDesign:ColorZoneAssist.Mode="Light"
+                    Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
                     TabStripPlacement="Top">
-                    <TabItem Header="תצוגה מלאה">
+                    <TabItem
+                        Width="200"
+                        Height="50"
+                        Header="תצוגה מלאה">
                         <Grid>
                             <Grid.Resources>
                                 <Style x:Key="SuggustionChards" TargetType="materialDesign:Card">
@@ -153,6 +157,8 @@
                                                     <Style x:Key="StyleCard" TargetType="materialDesign:Card">
                                                         <Setter Property="UniformCornerRadius" Value="10" />
                                                         <Setter Property="Margin" Value="3" />
+                                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
                                                     </Style>
                                                     <Style
                                                         x:Key="DaysStyleCard"
@@ -214,6 +220,8 @@
                                                 <materialDesign:Card Grid.Column="4" Style="{StaticResource DaysStyleCard}">
                                                     <TextBlock Style="{StaticResource DaysStyle}" Text="חמישי" />
                                                 </materialDesign:Card>
+
+                                                <!--  somthing to oregnaiz here. use is like in partisicpiants view  -->
                                                 <ListBox
                                                     Grid.Row="1"
                                                     Grid.Column="0"
@@ -351,7 +359,10 @@
                             </ListBox>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="תצוגת רשימה">
+                    <TabItem
+                        Width="200"
+                        Height="50"
+                        Header="תצוגת רשימה">
                         <GroupBox Style="{StaticResource GroupBoxList}">
                             <GroupBox.Header>
                                 <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">

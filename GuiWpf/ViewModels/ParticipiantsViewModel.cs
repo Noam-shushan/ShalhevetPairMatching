@@ -22,6 +22,12 @@ namespace GuiWpf.ViewModels
         {
             _participantService = participantService;
             _ea = ea;
+
+            SubscribeToEvents();
+        }
+
+        private void SubscribeToEvents()
+        {
             _ea.GetEvent<CloseDialogEvent>().Subscribe(CloseFormResived);
             _ea.GetEvent<AddParticipantEvent>().Subscribe(NewParticipantResived);
         }

@@ -34,6 +34,9 @@
     <Compile Update="Views\ParticipiantsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\SendEmailView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controlers\Field.xaml">
@@ -70,6 +73,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ParticipiantsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SendEmailView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

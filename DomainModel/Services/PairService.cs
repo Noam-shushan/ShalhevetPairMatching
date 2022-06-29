@@ -21,10 +21,19 @@ namespace PairMatching.DomainModel.Services
             _unitOfWork = dataAccessFactory.GetDataAccess();
 
             _wix = new WixDataReader(config);
+        }    
+        
+        // Get the most preffred track from pairs repositry 
+        public async Task<PrefferdTracks> GetMostPrefferdTracks()
+        {
+            var pairs = await GetAllPairs();
+            var mostPrefferdTracks = pairs.GroupBy(p => p.Track)
+             .OrderByDescending(g => g.Count())
+             .FirstOrDefault()
+             .Key;
+            return mostPrefferdTracks;
         }
-
-        // find max of array    
-
+        
         public async Task<IEnumerable<Pair>> GetAllPairs()
         {
             var oldPairs = await _unitOfWork
