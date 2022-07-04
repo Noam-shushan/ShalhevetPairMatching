@@ -12,116 +12,122 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Grid>
-        <materialDesign:Card UniformCornerRadius="50">
-            <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}">
-                <GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            Foreground="#F5F5F5"
-                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                            Text="הודעה חדשה" />
-
-                        <Button
-                            Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            Style="{StaticResource MaterialDesignIconForegroundButton}">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                Kind="WindowMinimize" />
-                        </Button>
-
-                        <Button
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            Command="{Binding CloesCommand}"
-                            Style="{StaticResource MaterialDesignIconForegroundButton}">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                Kind="Close" />
-                        </Button>
-                    </Grid>
-                </GroupBox.Header>
-
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Border
+                Grid.Row="0"
+                Background="CadetBlue"
+                CornerRadius="0 20 0 0">
                 <Grid>
-                    <Grid.Resources>
-                        <Style
-                            x:Key="EmailTextBoxStyle"
-                            BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"
-                            TargetType="TextBox">
-                            <Setter Property="MinWidth" Value="850" />
-                        </Style>
-                    </Grid.Resources>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
 
-                    <ListBox
-                        Grid.Row="0"
-                        materialDesign:HintAssist.Hint="נמענים"
-                        ItemsSource="{Binding To}" />
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="5,0"
+                        VerticalAlignment="Center"
+                        Foreground="#F5F5F5"
+                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                        Text="הודעה חדשה" />
 
-                    <TextBox
-                        Grid.Row="1"
-                        Margin="0,2"
-                        materialDesign:HintAssist.Hint="נושא"
-                        Text="{Binding Subject}" />
+                    <Button
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        BorderThickness="0"
+                        Style="{StaticResource MaterialDesignIconForegroundButton}">
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Kind="WindowMinimize" />
+                    </Button>
 
-                    <TextBox
-                        Grid.Row="2"
-                        Height="300"
-                        Margin="0,2"
-                        materialDesign:HintAssist.Hint="תוכן"
-                        AcceptsReturn="True"
-                        FontSize="16"
-                        SpellCheck.IsEnabled="True"
-                        Style="{StaticResource EmailTextBoxStyle}"
-                        Text="{Binding Content}"
-                        TextWrapping="WrapWithOverflow" />
+                    <Button
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        Command="{Binding CloesCommand}"
+                        Style="{StaticResource MaterialDesignIconForegroundButton}">
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Kind="Close" />
+                    </Button>
+                </Grid>
+            </Border>
 
-                    <Grid Grid.Row="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
 
-                        <Button
-                            Grid.Column="0"
-                            Command="{Binding SendCommand}"
-                            Content="שליחה"
-                            Foreground="#F5F5F5" />
+            <Grid Grid.Row="1" Margin="10">
+                <Grid.Resources>
+                    <Style
+                        x:Key="EmailTextBoxStyle"
+                        BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"
+                        TargetType="TextBox">
+                        <Setter Property="MinWidth" Value="850" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
 
-                        <Button
-                            Grid.Column="1"
-                            Margin="10,0"
-                            Command="{Binding AddAttachmentCommand}"
-                            Style="{StaticResource MaterialDesignIconButton}">
-                            <materialDesign:PackIcon Kind="AttachFile" />
-                        </Button>
+                <ListBox
+                    Grid.Row="0"
+                    materialDesign:HintAssist.Hint="נמענים"
+                    ItemsSource="{Binding To}" />
 
-                        <ListBox Grid.Column="2" />
-                    </Grid>
+                <TextBox
+                    Grid.Row="1"
+                    Margin="0,2"
+                    materialDesign:HintAssist.Hint="נושא"
+                    Text="{Binding Subject}" />
+
+                <TextBox
+                    Grid.Row="2"
+                    Height="300"
+                    Margin="0,2"
+                    materialDesign:HintAssist.Hint="תוכן"
+                    AcceptsReturn="True"
+                    FontSize="16"
+                    SpellCheck.IsEnabled="True"
+                    Style="{StaticResource EmailTextBoxStyle}"
+                    Text="{Binding Content}"
+                    TextWrapping="WrapWithOverflow" />
+
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Grid.Column="0"
+                        Command="{Binding SendCommand}"
+                        Content="שליחה"
+                        Foreground="#F5F5F5" />
+
+                    <Button
+                        Grid.Column="1"
+                        Margin="10,0"
+                        Command="{Binding AddAttachmentCommand}"
+                        Style="{StaticResource MaterialDesignIconButton}">
+                        <materialDesign:PackIcon Kind="AttachFile" />
+                    </Button>
+
+                    <ListBox Grid.Column="2" />
 
                 </Grid>
-
-            </GroupBox>
-        </materialDesign:Card>
-
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

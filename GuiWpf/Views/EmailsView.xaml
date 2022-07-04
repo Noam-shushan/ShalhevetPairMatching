@@ -13,16 +13,23 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid>
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Style="{StaticResource GroupBoxList}">
-            <GroupBox.Header>
-                <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
+        <materialDesign:Card Grid.Row="0" Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid
+                    Grid.Row="0"
+                    Margin="5"
+                    Background="{StaticResource MaterialDesignLightBackground}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
@@ -42,17 +49,17 @@
                         <materialDesign:PackIcon Kind="PlusCircle" />
                     </Button>
                 </Grid>
-            </GroupBox.Header>
 
-            <DataGrid>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="תאריך" />
-                    <DataGridTextColumn Header="נושא" />
-                    <DataGridTextColumn Header="מספר נמענים" />
-                </DataGrid.Columns>
+                <DataGrid Grid.Row="1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="תאריך" />
+                        <DataGridTextColumn Header="נושא" />
+                        <DataGridTextColumn Header="מספר נמענים" />
+                    </DataGrid.Columns>
 
-            </DataGrid>
-        </GroupBox>
+                </DataGrid>
+            </Grid>
+        </materialDesign:Card>
 
         <custom:Modal Panel.ZIndex="1" IsOpen="{Binding IsSendEmailOpen}">
             <local:SendEmailView />

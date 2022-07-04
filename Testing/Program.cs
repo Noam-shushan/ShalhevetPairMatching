@@ -6,6 +6,7 @@ namespace Testing
     {
         static void Main(string[] args)
         {
+            new BipartiteMatchingTesting().BipartiteMatchingTest();
             Console.WriteLine("Hello World!");
         }
     }

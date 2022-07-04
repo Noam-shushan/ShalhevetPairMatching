@@ -42,63 +42,72 @@
 
     </UserControl.Resources>
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="3">
-            <GroupBox Style="{StaticResource GroupBoxList}">
-                <GroupBox.Header>
-                    <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <controlers:SearchTextBox
-                            Grid.Column="0"
-                            SearchCommand="{Binding SearchParticipiantsCommand}"
-                            SearchWord="{Binding SearchParticipiantsWord}" />
+        <materialDesign:Card Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                        <ComboBox
-                            Grid.Column="1"
-                            Margin="10,0,10,0"
-                            materialDesign:HintAssist.Hint="שנה"
-                            Style="{StaticResource FilterComboBox}">
-                            <ComboBoxItem Content="כל השנים" />
-                            <ComboBoxItem Content="2021" />
-                            <ComboBoxItem Content="2022" />
-                        </ComboBox>
+                <Grid
+                    Grid.Row="0"
+                    Margin="5"
+                    Background="{StaticResource MaterialDesignLightBackground}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                        <ComboBox
-                            Grid.Column="2"
-                            materialDesign:HintAssist.Hint="סנן"
-                            Style="{StaticResource FilterComboBox}">
-                            <ComboBoxItem Content="כל המששתתפים" />
-                            <ComboBoxItem Content="משתתפים מישראל" />
-                            <ComboBoxItem Content="משתתפים מהתפוצות" />
-                            <ComboBoxItem Content="משתתפים ללא חבורתא" />
-                        </ComboBox>
+                    <controlers:SearchTextBox
+                        Grid.Column="0"
+                        SearchCommand="{Binding SearchParticipiantsCommand}"
+                        SearchWord="{Binding SearchParticipiantsWord}" />
 
-                        <Button
-                            Grid.Column="3"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Command="{Binding AddParticipantCommand}"
-                            Foreground="CadetBlue"
-                            Style="{StaticResource MaterialDesignToolButton}">
-                            <materialDesign:PackIcon
-                                Width="28"
-                                Height="28"
-                                Kind="Add" />
-                        </Button>
+                    <ComboBox
+                        Grid.Column="1"
+                        Margin="10,0,10,0"
+                        materialDesign:HintAssist.Hint="שנה"
+                        Style="{StaticResource FilterComboBox}">
+                        <ComboBoxItem Content="כל השנים" />
+                        <ComboBoxItem Content="2021" />
+                        <ComboBoxItem Content="2022" />
+                    </ComboBox>
 
-                    </Grid>
-                </GroupBox.Header>
+                    <ComboBox
+                        Grid.Column="2"
+                        materialDesign:HintAssist.Hint="סנן"
+                        Style="{StaticResource FilterComboBox}">
+                        <ComboBoxItem Content="כל המששתתפים" />
+                        <ComboBoxItem Content="משתתפים מישראל" />
+                        <ComboBoxItem Content="משתתפים מהתפוצות" />
+                        <ComboBoxItem Content="משתתפים ללא חבורתא" />
+                    </ComboBox>
+
+                    <Button
+                        Grid.Column="3"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Command="{Binding AddParticipantCommand}"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        ToolTip="הוסף משתתף">
+                        <materialDesign:PackIcon
+                            Width="28"
+                            Height="28"
+                            Kind="PlusCircle" />
+                    </Button>
+
+                </Grid>
 
                 <DataGrid
+                    Grid.Row="1"
                     Height="auto"
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
@@ -428,8 +437,8 @@
                         </DataTemplate>
                     </DataGrid.RowDetailsTemplate>
                 </DataGrid>
-            </GroupBox>
-        </Grid>
+            </Grid>
+        </materialDesign:Card>
 
         <custom:Modal Panel.ZIndex="1" IsOpen="{Binding IsAddFormOpen}">
             <local:AddParticipantForm Margin="25" />

@@ -17,19 +17,19 @@
     WindowStyle="ThreeDBorderWindow"
     mc:Ignorable="d">
     <Window.Resources>
-        <!--<Style
+        <Style
             x:Key="TabItemBaseStyle"
             BasedOn="{StaticResource MaterialDesignTabItem}"
-            TargetType="TabItem">
-            <Setter Property="HeaderTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
-
+            TargetType="{x:Type TabItem}">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="20" />
+                    <Setter Property="BorderThickness" Value="1" />
+                </Style>
+            </Style.Resources>
+        </Style>
     </Window.Resources>
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
@@ -40,7 +40,7 @@
         </Grid.RowDefinitions>
         <TabControl
             materialDesign:ColorZoneAssist.Mode="PrimaryDark"
-            Style="{StaticResource MaterialDesignFilledTabControl}"
+            Style="{StaticResource MaterialDesignTabControl}"
             TabStripPlacement="Top">
             <TabItem Header="משתתפים">
                 <local:ParticipiantsView />
