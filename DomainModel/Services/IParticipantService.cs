@@ -16,7 +16,8 @@ namespace PairMatching.DomainModel.Services
         IEnumerable<CountryUtc> GetCountryUtcs();
 
         Task<IEnumerable<Participant>> GetParticipantsWix();
-
+        Task MoveOneToNewDatabaseTest();
+        Task MoveToNewDatabaseTest();
         Task UpdateParticipant(Participant participant);
     }
 }

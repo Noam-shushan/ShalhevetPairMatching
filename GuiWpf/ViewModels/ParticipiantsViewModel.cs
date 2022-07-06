@@ -88,9 +88,10 @@ namespace GuiWpf.ViewModels
             {
                 //var studList = await _participantService.GetAllStudents();
                 //var list = studList.Select(s => s.ToParticipant());
-                var list = await _participantService.GetParticipantsWix();
-                Participiants.Clear();
-                Participiants.AddRange(list);
+                await _participantService.MoveOneToNewDatabaseTest();
+                //var list = await _participantService.GetParticipantsWix();
+                //Participiants.Clear();
+                //Participiants.AddRange(list);
             });
 
         DelegateCommand _toggleRow;

@@ -1,81 +1,29 @@
 ﻿using PairMatching.Models;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PairMatching.DomainModel.MatchingCalculations
 {
-    public enum Kind
-    {
-        FromIsrael,
-        FromWorld,
-        Source, 
-        Target
-    }
-    
-    public class Verterx : IEquatable<Verterx>
-    {
-        public string PartId { get; set; }
-
-        public int Index { get; set; }
-
-        public Kind Kind { get; set; }
-
-        public Tuple<Verterx,Edge> Pred { get; set; }
-
-        public bool Equals(Verterx other)
-        {
-            if (other is null) 
-                return false;
-            
-            return PartId == other.PartId;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Verterx);
-        }
-
-        public override int GetHashCode()
-        {
-            return PartId.GetHashCode();
-        }
-    }
-
-    public class Edge : IEquatable<Edge>
-    {
-        public Verterx V1 { get; set; }
-        public Verterx V2 { get; set; }
-
-        public int Capacity { get; set; }
-
-        public int Flow { get; set; }
-
-        public int Weight { get; set; }
-
-        public bool Equals(Edge other)
-        {
-            if (other is null)
-                return false;
-
-            return V1.Equals(other.V1) && V2.Equals(other.V2);
-        }
-    }
-
     public class BipartiteMatching
     {
-        //readonly Edge[,] _matrix;
+        int[,] _matrix;
 
-        readonly HashSet<Edge> _edges;
+        HashSet<Edge> _edges;
 
-        readonly List<Verterx> _vertices;
+        List<Verterx> _vertices;
 
-        readonly Verterx _source;
+        Verterx _source;
         
-        readonly Verterx _targert;
+        Verterx _targert;
 
         public BipartiteMatching(IEnumerable<PairSuggestion> pairSuggestions, IEnumerable<Participant> participants)
+        {
+            InitializeVertices(participants);
+            InitializeEdges(pairSuggestions);
+        }
+
+        private void InitializeVertices(IEnumerable<Participant> participants)
         {
             _source = new Verterx { Kind = Kind.Source, PartId = "0" };
             _targert = new Verterx { Kind = Kind.Target, PartId = "-1" };
@@ -87,7 +35,10 @@ namespace PairMatching.DomainModel.MatchingCalculations
                 Index = ind++,
                 Kind = p.IsFromIsrael ? Kind.FromIsrael : Kind.FromWorld
             }).ToList();
+        }
 
+        private void InitializeEdges(IEnumerable<PairSuggestion> pairSuggestions)
+        {
             _edges = (from v in _vertices
                       where v.Kind == Kind.FromIsrael
                       select new Edge
@@ -98,6 +49,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
                           Flow = 0,
                           Weight = 1
                       }).ToHashSet();
+
             _edges.UnionWith(from v in _vertices
                              where v.Kind == Kind.FromWorld
                              select new Edge
@@ -108,12 +60,6 @@ namespace PairMatching.DomainModel.MatchingCalculations
                                  Flow = 0,
                                  Weight = 1
                              });
-            InitializeEdges(pairSuggestions);
-
-        }
-
-        private void InitializeEdges(IEnumerable<PairSuggestion> pairSuggestions)
-        {
             var realEdges = from v in _vertices
                             from u in _vertices
                             where pairSuggestions.Any(p =>
@@ -132,38 +78,48 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public IEnumerable<Edge> EdmoudnsKarp()
         {
-            var path = BFS();
+            var path = FindTarget();
             while(path != null)
             {
                 var pathToFlow = _edges.Intersect(path);
+                
+                int flow = pathToFlow.Min(e => e.Capacity - e.Flow);
+                
                 foreach (var e in pathToFlow)
                 {
-                    e.Flow++;
+                    e.Flow += flow;
                 }
-                path = BFS();
+                path = FindTarget();
             }
-            return _edges.Where(e => e.Flow > 0 && e.V1 != _source && e.V2 != _targert);
+            return _edges.Where(e => e.Flow == e.Capacity && (e.V1 != _source || e.V2 != _targert));
         }
 
-        private List<Edge> BFS()
+        /// <summary>
+        /// Finds the target. using BFS algorithem
+        /// </summary>
+        /// <returns></returns>
+        private List<Edge> FindTarget()
         {
             var queue = new Queue<Verterx>();
             queue.Enqueue(_source);
 
+            var edges = ResidualNetwork();
             var path = new List<Edge>();
 
-            while (queue.Count > 0)
+            while (queue.Count > 0) // while the queue is not empty
             {
                 var vertex = queue.Dequeue();
 
-                foreach (var edge in _edges.Where(e => e.V1.Equals(vertex)))
+                // Loop for the adjustments of this vertex
+                foreach (var edge in edges.Where(e => e.V1.Equals(vertex)))
                 {
-                    if (edge.Capacity == edge.Flow)
+                    if (edge.Weight == 0)
                     {
                         continue;
                     }
+                    // Target is found
                     if (edge.V2 == _targert)
-                    {
+                    {   // Build the path to the target
                         path.Add(edge);
                         var pred = edge.V1;
                         while (pred.Pred != null)
@@ -173,7 +129,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
                         }
                         return path;
                     }
-                    if (!queue.Contains(edge.V2))
+                    if (!queue.Contains(edge.V2)) // If the 
                     {
                         edge.V2.Pred = new(edge.V1, edge);
                         queue.Enqueue(edge.V2);
@@ -181,6 +137,95 @@ namespace PairMatching.DomainModel.MatchingCalculations
                 }
             }
             return null;
+        }
+        
+        HashSet<Edge> ResidualNetwork()
+        {
+            var residualNetwork = new HashSet<Edge>();
+            foreach (var edge in _edges)
+            {
+                if (edge.Capacity > edge.Flow)
+                {
+                    residualNetwork.Add(new Edge
+                    {
+                        V1 = edge.V1,
+                        V2 = edge.V2,
+                        Weight = edge.Capacity - edge.Flow
+                    });
+                    residualNetwork.Add(new Edge
+                    {
+                        V1 = edge.V2,
+                        V2 = edge.V1,
+                        Weight = edge.Flow
+                    });
+                }
+            }
+            return residualNetwork;
+        }
+
+        public IEnumerable<Edge> HungarianAlgorithm()
+        {
+            InitializeMatrix();
+            ReduceRows();
+            ReduceColomns();
+            return null; // TODO need to be done
+        }
+
+        private void ReduceColomns()
+        {
+            for (int i = 0; i < _matrix.GetLength(1); i++)
+            {
+                int maxCol = _matrix[0, i];
+                for (int j = 1; j < _matrix.GetLength(0); j++)
+                {
+                    if (_matrix[j, i] > maxCol)
+                    {
+                        maxCol = _matrix[j, i];
+                    }
+                }
+                for (int j = 0; j < _matrix.GetLength(0); j++)
+                {
+                    _matrix[j, i] -= maxCol;
+                }
+            }
+        }
+
+        private void ReduceRows()
+        {
+            for (int i = 0; i < _matrix.GetLength(0); i++)
+            {
+                int maxRow = _matrix[i, 0];
+                for (int j = 1; j < _matrix.GetLength(1); j++)
+                {
+                    if (_matrix[i, j] > maxRow)
+                    {
+                        maxRow = _matrix[i, j];
+                    }
+                }
+                for (int j = 0; j < _matrix.GetLength(1); j++)
+                {
+                    _matrix[i, j] -= maxRow;
+                }
+            }
+        }
+
+        private void InitializeMatrix()
+        {
+            _matrix = new int[_vertices.Count, _vertices.Count];
+            
+            var edges = _edges.Where(e => e.V1 != _source || e.V2 != _targert);
+
+            foreach (var v in _vertices)
+            {
+                foreach (var u in _vertices)
+                {
+                    var v_u = edges.FirstOrDefault(e => e.V1.Equals(v) && e.V2.Equals(u));
+                    if (v_u != null)
+                    {
+                        _matrix[v.Index, u.Index] = v_u.Weight;
+                    }
+                }
+            }
         }
     }
 }

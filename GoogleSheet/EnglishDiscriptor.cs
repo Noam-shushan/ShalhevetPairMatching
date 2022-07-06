@@ -40,7 +40,7 @@ namespace PairMatching.GoogleSheet
                 "excellent (i don't know any hebrew whatsoever)" => EnglishLevels.Good,
                 "doesn't have to be perfect. i know some Hebrew" => EnglishLevels.NotGood,
                 "conversational level" => EnglishLevels.ConversationalLevel,
-                _ => EnglishLevels.Defulte,
+                _ => default,
             };
         }
 
@@ -51,7 +51,7 @@ namespace PairMatching.GoogleSheet
                 "male" => Genders.Male,
                 "female" => Genders.Female,
                 "prefer not to say" => Genders.NoPrefrence,
-                _ => default,
+                _ => Genders.NoPrefrence,
             };
         }
 
@@ -63,7 +63,7 @@ namespace PairMatching.GoogleSheet
                 "progressed, flowing" => LearningStyles.ProgressedFlowing,
                 "text centered" => LearningStyles.TextCentered,
                 "philosofical, free talking, deriving from text into thought" => LearningStyles.Free,
-                _ => LearningStyles.DontMatter,
+                _ => LearningStyles.NoPrefrence,
             };
         }
 
@@ -87,9 +87,9 @@ namespace PairMatching.GoogleSheet
                 "parsha" => PrefferdTracks.Parsha,
                 "tefilah (prayer)" => PrefferdTracks.Payer,
                 "pirkey avot (ethics of the fathers)" => PrefferdTracks.PirkeiAvot,
-                "no preference" => PrefferdTracks.DONT_MATTER,
+                "no preference" => PrefferdTracks.NoPrefrence,
                 "independent learning subject" => PrefferdTracks.IndependentLearning,
-                _ => PrefferdTracks.DONT_MATTER,
+                _ => PrefferdTracks.NoPrefrence,
             };
         }
 
@@ -111,7 +111,7 @@ namespace PairMatching.GoogleSheet
                 "advanced" => SkillLevels.Advanced,
                 "moderate" => SkillLevels.Moderate,
                 "begginer" => SkillLevels.Beginner,
-                _ => SkillLevels.DontMatter,
+                _ => SkillLevels.NoPrefrence,
             };
         }
 
@@ -145,7 +145,7 @@ namespace PairMatching.GoogleSheet
                         result.Add(TimesInDay.Night);
                         break;
                     case "this day is not available for me":
-                        result.Add(TimesInDay.INCAPABLE);
+                        result.Add(TimesInDay.Incapable);
                         break;
                 }
             }

@@ -48,9 +48,6 @@
     <Page Update="Styles\OpenQuestionStyle.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Styles\EnumsToTextStyle.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Views\AddParticipantForm.xaml">
       <SubType>Designer</SubType>
     </Page>

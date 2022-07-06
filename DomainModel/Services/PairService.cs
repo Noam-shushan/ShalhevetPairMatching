@@ -37,7 +37,7 @@ namespace PairMatching.DomainModel.Services
         public async Task<IEnumerable<Pair>> GetAllPairs()
         {
             var oldPairs = await _unitOfWork
-                .PairsRepositry
+                .OldPairsRepositry
                 .GetAllAsync();
             var studList = await _unitOfWork
                     .StudentRepositry

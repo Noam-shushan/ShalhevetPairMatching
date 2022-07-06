@@ -8,11 +8,15 @@ namespace PairMatching.DataAccess.UnitOfWork
     {
         ConfigRepositry ConfigRepositry { get; init; }
 
-        IModelRepository<OldPairDto> PairsRepositry { get; init; }
+        IModelRepository<OldPairDto> OldPairsRepositry { get; init; }
 
         IModelRepository<Student> StudentRepositry { get; init; }
 
-        IModelRepository<Participant> ParticipantsRepositry { get; init; }
+        IModelRepository<IsraelParticipant> IsraelParticipantsRepositry { get; init; }
+        
+        IModelRepository<WorldParticipant> WorldParticipantsRepositry { get; init; }
+
+        IModelRepository<Pair> PairsRepositry { get; init; }
 
         IModelRepository<MatchingHistory> MatchingHistorisRepositry { get; init; }
 

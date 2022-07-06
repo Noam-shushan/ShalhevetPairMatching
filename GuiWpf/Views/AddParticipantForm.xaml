@@ -17,17 +17,18 @@
     <UserControl.Resources>
         <Style
             x:Key="Fields"
-            BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"
+            BasedOn="{StaticResource MaterialDesignOutlinedTextBox}"
             TargetType="TextBox">
             <Setter Property="MinWidth" Value="300" />
         </Style>
         <Style x:Key="FieldsWrapPanel" TargetType="WrapPanel">
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="10,5,5,5" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="15,8" />
+            <Setter Property="Grid.Column" Value="0" />
         </Style>
 
         <Style x:Key="IconsStyle" TargetType="materialDesign:PackIcon">
-            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,4,0" />
             <Setter Property="Foreground" Value="CadetBlue" />
         </Style>
@@ -35,7 +36,9 @@
         <Style
             x:Key="BaseComboBox"
             BasedOn="{StaticResource MaterialDesignOutlinedComboBox}"
-            TargetType="ComboBox" />
+            TargetType="ComboBox">
+            <Setter Property="Margin" Value="15,8" />
+        </Style>
         <Style
             x:Key="HideComboBoxIfIsrael"
             BasedOn="{StaticResource BaseComboBox}"
@@ -63,61 +66,100 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <Border
+            Background="CadetBlue"
+            CornerRadius="0 20 0 0"
+            DockPanel.Dock="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="5,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Foreground="#F5F5F5"
+                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                    Text="משתתף חדש" />
+                <Button
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource MaterialDesignIconForegroundButton}">
+                    <materialDesign:PackIcon
+                        Width="20"
+                        Height="20"
+                        Kind="Close" />
+                </Button>
+            </Grid>
+        </Border>
 
-
-        <WrapPanel Grid.Row="0" Style="{StaticResource FieldsWrapPanel}">
-            <materialDesign:PackIcon Kind="Person" Style="{StaticResource IconsStyle}" />
-            <TextBox
-                materialDesign:HintAssist.Hint="שם"
-                Style="{StaticResource Fields}"
-                Text="{Binding Name}" />
-        </WrapPanel>
-
-        <WrapPanel Grid.Row="1" Style="{StaticResource FieldsWrapPanel}">
-            <materialDesign:PackIcon Kind="Email" Style="{StaticResource IconsStyle}" />
-            <TextBox
-                materialDesign:HintAssist.Hint="אימייל"
-                materialDesign:ValidationAssist.UsePopup="True"
-                Style="{StaticResource Fields}"
-                Text="{Binding Email}" />
-        </WrapPanel>
-
-        <WrapPanel Grid.Row="2" Style="{StaticResource FieldsWrapPanel}">
-            <materialDesign:PackIcon Kind="Phone" Style="{StaticResource IconsStyle}" />
-            <TextBox
-                materialDesign:HintAssist.Hint="טלפון"
-                Style="{StaticResource Fields}"
-                Text="{Binding PhoneNumber}" />
-        </WrapPanel>
-
-        <Grid Grid.Row="3" Margin="20">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <CheckBox
-                Grid.Column="0"
-                Margin="5,0"
-                Content="? מישראל"
-                FlowDirection="LeftToRight"
-                IsChecked="{Binding IsFromIsrael}" />
+
+
+
+            <WrapPanel Grid.Row="0" Style="{StaticResource FieldsWrapPanel}">
+                <materialDesign:PackIcon Kind="Person" Style="{StaticResource IconsStyle}" />
+                <TextBox
+                    materialDesign:HintAssist.Hint="שם"
+                    Style="{StaticResource Fields}"
+                    Text="{Binding Name}" />
+            </WrapPanel>
+
+            <WrapPanel Grid.Row="1" Style="{StaticResource FieldsWrapPanel}">
+                <materialDesign:PackIcon Kind="Email" Style="{StaticResource IconsStyle}" />
+                <TextBox
+                    materialDesign:HintAssist.Hint="אימייל"
+                    materialDesign:ValidationAssist.UsePopup="True"
+                    Style="{StaticResource Fields}"
+                    Text="{Binding Email}" />
+            </WrapPanel>
+
+            <WrapPanel Grid.Row="2" Style="{StaticResource FieldsWrapPanel}">
+                <materialDesign:PackIcon Kind="Phone" Style="{StaticResource IconsStyle}" />
+                <TextBox
+                    materialDesign:HintAssist.Hint="טלפון"
+                    Style="{StaticResource Fields}"
+                    Text="{Binding PhoneNumber}" />
+            </WrapPanel>
+
+            <Border
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="15,8"
+                HorizontalAlignment="Stretch"
+                BorderBrush="Black"
+                BorderThickness="1"
+                CornerRadius="5">
+                <CheckBox
+                    HorizontalAlignment="Center"
+                    Content="? מישראל"
+                    FlowDirection="LeftToRight"
+                    IsChecked="{Binding IsFromIsrael}" />
+            </Border>
 
             <ComboBox
-                Grid.Column="1"
+                Grid.Row="1"
+                Grid.Column="2"
                 materialDesign:HintAssist.Hint="ארץ"
                 materialDesign:HintAssist.HintOpacity="1"
                 IsTextSearchCaseSensitive="False"
@@ -133,123 +175,92 @@
             </ComboBox>
 
             <ComboBox
+                Grid.Row="2"
                 Grid.Column="2"
-                Margin="5,0"
                 materialDesign:HintAssist.Hint="רמת לימוד"
                 ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:SkillLevels}}}"
                 SelectedValue="{Binding SkillLevel, Converter={StaticResource EnumToStringConverter}}"
                 Style="{StaticResource HideComboBoxIfIsrael}" />
 
             <ComboBox
-                Grid.Column="3"
-                Margin="5,0"
+                Grid.Row="3"
+                Grid.Column="2"
                 materialDesign:HintAssist.Hint="רמת אנגלית רצויה מחברותא"
                 ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:EnglishLevels}}}"
                 SelectedValue="{Binding DesiredEnglishLevel, Converter={StaticResource EnumToStringConverter}}"
                 Style="{StaticResource HideComboBoxIfIsrael}" />
 
             <ComboBox
-                Grid.Column="4"
-                Margin="5,0"
+                Grid.Row="1"
+                Grid.Column="2"
                 materialDesign:HintAssist.Hint="רמת לימוד רצויה מחברותא"
                 ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:SkillLevels}}}"
                 SelectedValue="{Binding DesiredSkillLevel, Converter={StaticResource EnumToStringConverter}}"
                 Style="{StaticResource HideComboBoxIfWorld}" />
 
             <ComboBox
-                Grid.Column="5"
-                Margin="5,0"
+                Grid.Row="2"
+                Grid.Column="2"
                 materialDesign:HintAssist.Hint="רמת אנגלית"
                 ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:EnglishLevels}}}"
                 SelectedValue="{Binding EnglishLevel, Converter={StaticResource EnumToStringConverter}}"
                 Style="{StaticResource HideComboBoxIfWorld}" />
-        </Grid>
-
-        <Grid Grid.Row="4" Margin="15">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
 
             <ComboBox
+                Grid.Row="3"
                 Grid.Column="0"
-                Margin="5,0"
-                HorizontalAlignment="Left"
                 materialDesign:HintAssist.Hint="מגדר"
                 ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Genders}}}"
                 SelectedValue="{Binding Gender, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                Style="{StaticResource BaseComboBox}" />
 
             <ComboBox
-                Grid.Column="1"
-                Margin="5,0"
+                Grid.Row="4"
+                Grid.Column="0"
                 materialDesign:HintAssist.Hint="מסלול"
                 ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}"
                 SelectedValue="{Binding PrefferdTrack, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                Style="{StaticResource BaseComboBox}" />
 
             <ComboBox
+                Grid.Row="4"
                 Grid.Column="2"
-                Margin="5,0"
                 materialDesign:HintAssist.Hint="סגנון לימוד"
                 ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:LearningStyles}}}"
                 SelectedValue="{Binding LearningStyle, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                Style="{StaticResource BaseComboBox}" />
 
             <ComboBox
-                Grid.Column="3"
-                Margin="5,0"
-                HorizontalAlignment="Left"
+                Grid.Row="5"
+                Grid.Column="2"
                 materialDesign:HintAssist.Hint="מגדר מועדף"
                 ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Genders}}}"
                 SelectedValue="{Binding PrefferdGender, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                Style="{StaticResource BaseComboBox}" />
 
             <ComboBox
-                Grid.Column="4"
+                Grid.Row="5"
+                Grid.Column="0"
                 materialDesign:HintAssist.Hint="מספר חברותות אופציונאלי"
                 SelectedValue="{Binding NumberOfMatchs}"
                 SelectedValuePath="Content"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                Style="{StaticResource BaseComboBox}">
                 <ComboBoxItem Content="1" />
                 <ComboBoxItem Content="2" />
                 <ComboBoxItem Content="3" />
             </ComboBox>
 
-        </Grid>
-
-        <Grid Grid.Row="5" Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-        </Grid>
-
-        <Grid Grid.Row="6" Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
             <Button
+                Grid.Row="8"
                 Grid.Column="0"
-                Width="80"
+                Grid.ColumnSpan="3"
                 Height="40"
-                Margin="10,0"
-                HorizontalAlignment="Center"
-                Command="{Binding CancelCommand}"
-                Content="ביטול" />
-            <Button
-                Grid.Column="1"
-                Width="80"
-                Height="40"
+                Margin="10"
                 HorizontalAlignment="Center"
                 Command="{Binding AddCommand}"
-                Content="הוסף" />
-        </Grid>
+                Content="הוסף"
+                Foreground="#F5F5F5" />
 
-    </Grid>
+        </Grid>
+    </DockPanel>
 </UserControl>

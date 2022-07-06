@@ -142,158 +142,86 @@
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition />
-                                                    <RowDefinition />
-                                                    <RowDefinition />
-                                                    <RowDefinition />
                                                 </Grid.RowDefinitions>
                                                 <Grid.Resources>
-                                                    <Style x:Key="StyleCard" TargetType="materialDesign:Card">
-                                                        <Setter Property="UniformCornerRadius" Value="10" />
-                                                        <Setter Property="Margin" Value="3" />
-                                                        <Setter Property="HorizontalAlignment" Value="Center" />
-                                                        <Setter Property="VerticalAlignment" Value="Center" />
-                                                    </Style>
-                                                    <Style
-                                                        x:Key="DaysStyleCard"
-                                                        BasedOn="{StaticResource StyleCard}"
-                                                        TargetType="materialDesign:Card">
-                                                        <Setter Property="Background" Value="#fff5d9" />
-                                                    </Style>
-                                                    <Style
-                                                        x:Key="TimesStyleCard"
-                                                        BasedOn="{StaticResource StyleCard}"
-                                                        TargetType="materialDesign:Card">
-                                                        <Setter Property="Margin" Value="5" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsHoursMatch}" Value="True">
-                                                                <Setter Property="Background" Value="#b1f0ce" />
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding IsHoursMatch}" Value="False">
-                                                                <Setter Property="Background" Value="#fc153a" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-
-                                                    </Style>
                                                     <Style x:Key="DaysStyle" TargetType="TextBlock">
                                                         <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        <Setter Property="FontSize" Value="12" />
                                                         <Setter Property="VerticalAlignment" Value="Center" />
                                                     </Style>
                                                     <Style x:Key="HoursStyle" TargetType="TextBlock">
                                                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                                                         <Setter Property="VerticalAlignment" Value="Stretch" />
                                                         <Setter Property="Margin" Value="2" />
+                                                        <Setter Property="FontSize" Value="11" />
+                                                        <Setter Property="FontWeight" Value="DemiBold" />
                                                         <Setter Property="Padding" Value="3" />
-                                                        <Setter Property="Opacity" Value="0.8" />
                                                     </Style>
-                                                    <Style
-                                                        x:Key="HoursStyleIsrael"
-                                                        BasedOn="{StaticResource HoursStyle}"
-                                                        TargetType="TextBlock">
-                                                        <Setter Property="Background" Value="#1a90f8" />
-                                                    </Style>
-                                                    <Style
-                                                        x:Key="HoursStyleWorld"
-                                                        BasedOn="{StaticResource HoursStyle}"
-                                                        TargetType="TextBlock">
-                                                        <Setter Property="Background" Value="#d9711c" />
+                                                    <Style x:Key="BoredersStyle" TargetType="Border">
+                                                        <Setter Property="CornerRadius" Value="10" />
                                                     </Style>
                                                 </Grid.Resources>
-                                                <materialDesign:Card Grid.Column="0" Style="{StaticResource DaysStyleCard}">
-                                                    <TextBlock Style="{StaticResource DaysStyle}" Text="ראשון" />
-                                                </materialDesign:Card>
-                                                <materialDesign:Card Grid.Column="1" Style="{StaticResource DaysStyleCard}">
-                                                    <TextBlock Style="{StaticResource DaysStyle}" Text="שני" />
-                                                </materialDesign:Card>
-                                                <materialDesign:Card Grid.Column="2" Style="{StaticResource DaysStyleCard}">
-                                                    <TextBlock Style="{StaticResource DaysStyle}" Text="שלישי" />
-                                                </materialDesign:Card>
-                                                <materialDesign:Card Grid.Column="3" Style="{StaticResource DaysStyleCard}">
-                                                    <TextBlock Style="{StaticResource DaysStyle}" Text="רביעי" />
-                                                </materialDesign:Card>
-                                                <materialDesign:Card Grid.Column="4" Style="{StaticResource DaysStyleCard}">
-                                                    <TextBlock Style="{StaticResource DaysStyle}" Text="חמישי" />
-                                                </materialDesign:Card>
+                                                <ListBox ItemsSource="{Binding StageSuggestion.MatchingTimes}">
+                                                    <ListBox.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ListBox.ItemsPanel>
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition />
+                                                                </Grid.RowDefinitions>
+                                                                <materialDesign:Card Background="#fff5d9" UniformCornerRadius="10">
+                                                                    <Grid>
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition Height="auto" />
+                                                                            <RowDefinition Height="auto" />
+                                                                            <RowDefinition />
+                                                                        </Grid.RowDefinitions>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="auto" />
+                                                                            <ColumnDefinition Width="auto" />
+                                                                        </Grid.ColumnDefinitions>
 
-                                                <!--  somthing to oregnaiz here. use is like in partisicpiants view  -->
-                                                <ListBox
-                                                    Grid.Row="1"
-                                                    Grid.Column="0"
-                                                    ItemsSource="{Binding StageSuggestion.MatchingTimes.Sunday}">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <materialDesign:Card>
-                                                                <StackPanel>
-                                                                    <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
-                                                                    <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
-                                                                </StackPanel>
-                                                            </materialDesign:Card>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
-                                                <ListBox
-                                                    Grid.Row="1"
-                                                    Grid.Column="1"
-                                                    ItemsSource="{Binding StageSuggestion.MatchingTimes.Monday}">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <materialDesign:Card>
-                                                                <StackPanel>
-                                                                    <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
-                                                                    <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
-                                                                </StackPanel>
-                                                            </materialDesign:Card>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
-                                                <ListBox
-                                                    Grid.Row="1"
-                                                    Grid.Column="2"
-                                                    ItemsSource="{Binding StageSuggestion.MatchingTimes.Tuseday}">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <materialDesign:Card>
-                                                                <StackPanel>
-                                                                    <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
-                                                                    <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
-                                                                </StackPanel>
-                                                            </materialDesign:Card>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
-                                                <ListBox
-                                                    Grid.Row="1"
-                                                    Grid.Column="3"
-                                                    ItemsSource="{Binding StageSuggestion.MatchingTimes.Wednesday}">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <materialDesign:Card>
-                                                                <StackPanel>
-                                                                    <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
-                                                                    <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
-                                                                </StackPanel>
-                                                            </materialDesign:Card>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
-                                                <ListBox
-                                                    Grid.Row="1"
-                                                    Grid.Column="4"
-                                                    ItemsSource="{Binding StageSuggestion.MatchingTimes.Thurseday}">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <materialDesign:Card>
-                                                                <StackPanel>
-                                                                    <TextBlock Style="{StaticResource HoursStyleIsrael}" Text="{Binding MatchHoursIsrael}" />
-                                                                    <TextBlock Style="{StaticResource HoursStyleWorld}" Text="{Binding MatchHoursWorld}" />
-                                                                </StackPanel>
-                                                            </materialDesign:Card>
+                                                                        <TextBlock
+                                                                            Grid.Row="0"
+                                                                            Grid.Column="0"
+                                                                            Margin="3"
+                                                                            Style="{StaticResource DaysStyle}"
+                                                                            Text="{Binding IsraelDay, Converter={StaticResource EnumToStringConverter}}" />
+
+                                                                        <TextBlock
+                                                                            Grid.Row="0"
+                                                                            Grid.Column="1"
+                                                                            Margin="3"
+                                                                            Style="{StaticResource DaysStyle}"
+                                                                            Text="{Binding WorldDay, Converter={StaticResource EnumToStringConverter}}" />
+
+                                                                        <Border
+                                                                            Grid.Row="1"
+                                                                            Grid.Column="0"
+                                                                            Margin="3"
+                                                                            Background="#1a90f8"
+                                                                            Style="{StaticResource BoredersStyle}">
+                                                                            <TextBlock Style="{StaticResource HoursStyle}" Text="{Binding HoursIsrael, Converter={StaticResource EnumToStringConverter}}" />
+                                                                        </Border>
+
+                                                                        <Border
+                                                                            Grid.Row="1"
+                                                                            Grid.Column="1"
+                                                                            Margin="3"
+                                                                            Background="#d9711c"
+                                                                            Style="{StaticResource BoredersStyle}">
+                                                                            <TextBlock Style="{StaticResource HoursStyle}" Text="{Binding HoursWorld, Converter={StaticResource EnumToStringConverter}}" />
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </materialDesign:Card>
+                                                            </Grid>
                                                         </DataTemplate>
                                                     </ListBox.ItemTemplate>
                                                 </ListBox>

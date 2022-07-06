@@ -51,6 +51,24 @@ namespace PairMatching.DataAccess.Infrastructure
             }
         }
 
+        public async Task<T> LoadOneAsync<T>(string collectionName, string id)
+        {
+            try
+            {
+                var collection = ConnectToMongo<T>(collectionName);
+
+                var filter = Builders<T>.Filter.Eq("Id", id);
+
+                var record = await collection.FindAsync(filter);
+
+                return await record.FirstOrDefaultAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<T>> LoadManyAsync<T>(string collectionName, Expression<Func<T, bool>> predicate = null)
         {
             var collection = ConnectToMongo<T>(collectionName);
@@ -88,7 +106,7 @@ namespace PairMatching.DataAccess.Infrastructure
             return task;
         }
 
-        public Task UpdateOne<T>(string collectionName, T record, int id)
+        public Task UpdateOne<T>(string collectionName, T record, string id)
         {
             var collection = ConnectToMongo<T>(collectionName);
 

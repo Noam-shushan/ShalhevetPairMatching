@@ -21,6 +21,8 @@ namespace Testing
             var bipartiteMatching = new BipartiteMatching(pairSuggestions, participants);
             
             var result = bipartiteMatching.EdmoudnsKarp();
+            // Print result 
+            Console.WriteLine(string.Join("\n", result));
         }
 
         private static List<Participant> CreateParticipaintData()
@@ -104,51 +106,7 @@ namespace Testing
                     },
                     FromWorld = new Participant
                     {
-                        Id = "B1",
-                        Country = "US",
-                        Name = "Mary",
-                    },
-                },
-                new PairSuggestion
-                {
-                    FromIsrael = new Participant
-                    {
-                        Id = "A2",
-                        Country = "Israel",
-                        Name = "John",
-                    },
-                    FromWorld = new Participant
-                    {
                         Id = "B2",
-                        Country = "US",
-                        Name = "Mary",
-                    },
-                },
-                new PairSuggestion
-                {
-                    FromIsrael = new Participant
-                    {
-                        Id = "A3",
-                        Country = "Israel",
-                        Name = "John" },
-                    FromWorld = new Participant
-                    {
-                        Id = "B3",
-                        Country = "US",
-                        Name = "Mary"
-                    }
-                },
-                new PairSuggestion
-                {
-                    FromIsrael = new Participant
-                    {
-                        Id = "A4",
-                        Country = "Israel",
-                        Name = "John",
-                    },
-                    FromWorld = new Participant
-                    {
-                        Id = "B5",
                         Country = "US",
                         Name = "Mary",
                     },
@@ -163,10 +121,24 @@ namespace Testing
                     },
                     FromWorld = new Participant
                     {
-                        Id = "B2",
+                        Id = "B3",
                         Country = "US",
                         Name = "Mary",
                     },
+                },
+                new PairSuggestion
+                {
+                    FromIsrael = new Participant
+                    {
+                        Id = "A2",
+                        Country = "Israel",
+                        Name = "John" },
+                    FromWorld = new Participant
+                    {
+                        Id = "B2",
+                        Country = "US",
+                        Name = "Mary"
+                    }
                 },
                 new PairSuggestion
                 {
@@ -187,13 +159,13 @@ namespace Testing
                 {
                     FromIsrael = new Participant
                     {
-                        Id = "A3",
+                        Id = "A2",
                         Country = "Israel",
                         Name = "John",
                     },
                     FromWorld = new Participant
                     {
-                        Id = "B1",
+                        Id = "B4",
                         Country = "US",
                         Name = "Mary",
                     },
@@ -202,7 +174,7 @@ namespace Testing
                 {
                     FromIsrael = new Participant
                     {
-                        Id = "A2",
+                        Id = "A3",
                         Country = "Israel",
                         Name = "John",
                     },
@@ -224,6 +196,81 @@ namespace Testing
                     FromWorld = new Participant
                     {
                         Id = "B2",
+                        Country = "US",
+                        Name = "Mary",
+                    },
+                },
+                new PairSuggestion
+                {
+                    FromIsrael = new Participant
+                    {
+                        Id = "A3",
+                        Country = "Israel",
+                        Name = "John",
+                    },
+                    FromWorld = new Participant
+                    {
+                        Id = "B3",
+                        Country = "US",
+                        Name = "Mary",
+                    },
+                },
+                new PairSuggestion
+                {
+                    FromIsrael = new Participant
+                    {
+                        Id = "A3",
+                        Country = "Israel",
+                        Name = "John",
+                    },
+                    FromWorld = new Participant
+                    {
+                        Id = "B5",
+                        Country = "US",
+                        Name = "Mary",
+                    },
+                },
+                new PairSuggestion
+                {
+                    FromIsrael = new Participant
+                    {
+                        Id = "A4",
+                        Country = "Israel",
+                        Name = "John",
+                    },
+                    FromWorld = new Participant
+                    {
+                        Id = "B3",
+                        Country = "US",
+                        Name = "Mary",
+                    },
+                },
+                new PairSuggestion
+                {
+                    FromIsrael = new Participant
+                    {
+                        Id = "A5",
+                        Country = "Israel",
+                        Name = "John",
+                    },
+                    FromWorld = new Participant
+                    {
+                        Id = "B3",
+                        Country = "US",
+                        Name = "Mary",
+                    },
+                },
+                new PairSuggestion
+                {
+                    FromIsrael = new Participant
+                    {
+                        Id = "A5",
+                        Country = "Israel",
+                        Name = "John",
+                    },
+                    FromWorld = new Participant
+                    {
+                        Id = "B4",
                         Country = "US",
                         Name = "Mary",
                     },

@@ -8,52 +8,65 @@ namespace PairMatching.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        const string studentsCollectionName = "Students";
+        const string studentsCollection = "Students";
         
-        const string participantsCollectionName = "Participants";
+        const string israelParticipantsCollection = "IsraelParticipants";
+        
+        const string worldparticipantsCollection = "WorldParticipants";
 
-        const string emailsCollectionName = "Emails";
+        const string emailsCollection = "Emails";
 
-        const string matchingHistoryCollectionName = "MatchingHistory";
+        const string matchingHistoryCollection = "MatchingHistory";
 
-        const string pairsCollectionName = "Pairs";
+        const string pairsCollection = "Pairs";
+        
+        const string newPairsCollection = "NewPairs";
 
         public UnitOfWork(MyConfiguration configurations)
         {
             var dataAccess = new ContextFactory(configurations)
                 .GetContext();
 
-            StudentRepositry = new ModelRepositroy<Student>(dataAccess, studentsCollectionName, _taskManeger);
+            StudentRepositry = new ModelRepositroy<Student>(dataAccess, studentsCollection, _taskManeger);
 
-            PairsRepositry = new ModelRepositroy<OldPairDto>(dataAccess, pairsCollectionName, _taskManeger);
+            OldPairsRepositry = new ModelRepositroy<OldPairDto>(dataAccess, pairsCollection, _taskManeger);
 
             ConfigRepositry = new ConfigRepositry(dataAccess);
 
-            ParticipantsRepositry = new ModelRepositroy<Participant>(dataAccess, participantsCollectionName, _taskManeger);
+            IsraelParticipantsRepositry = new ModelRepositroy<IsraelParticipant>(dataAccess, israelParticipantsCollection, _taskManeger);
+            
+            WorldParticipantsRepositry = new ModelRepositroy<WorldParticipant>(dataAccess, worldparticipantsCollection, _taskManeger);
 
-            EmailsRepositry = new ModelRepositroy<Email>(dataAccess, emailsCollectionName, _taskManeger);
+            PairsRepositry = new ModelRepositroy<Pair>(dataAccess, newPairsCollection, _taskManeger);
 
-            MatchingHistorisRepositry = new ModelRepositroy<MatchingHistory>(dataAccess, matchingHistoryCollectionName, _taskManeger);
+            EmailsRepositry = new ModelRepositroy<Email>(dataAccess, emailsCollection, _taskManeger);
+
+            MatchingHistorisRepositry = new ModelRepositroy<MatchingHistory>(dataAccess, matchingHistoryCollection, _taskManeger);
         }
+
+        public IModelRepository<IsraelParticipant> IsraelParticipantsRepositry { get; init; }
+        
+        public IModelRepository<WorldParticipant> WorldParticipantsRepositry { get; init; }
 
         public IModelRepository<Student> StudentRepositry { get; init; }
 
-        public IModelRepository<OldPairDto> PairsRepositry { get; init; }
-
-        public IModelRepository<Participant> ParticipantsRepositry { get; init; }
+        public IModelRepository<OldPairDto> OldPairsRepositry { get; init; }
+        
+        public IModelRepository<Pair> PairsRepositry { get; init; }
 
         public IModelRepository<MatchingHistory> MatchingHistorisRepositry { get; init; }
 
         public IModelRepository<Email> EmailsRepositry { get; init; }
 
         public ConfigRepositry ConfigRepositry { get; init; }
-
+        
         readonly TaskManeger _taskManeger = new();
-
 
         public async Task Complete()
         {
             await _taskManeger.SaveChangesAsync();
         }
+
+
     }
 }

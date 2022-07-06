@@ -10,6 +10,8 @@ namespace PairMatching.DataAccess.Infrastructure
 
     public interface IDataAccess
     { 
+        Task<T> LoadOneAsync<T>(string collectionName, string id);
+        
         Task<T> LoadOneAsync<T>(string collectionName, int id);
 
         Task<IEnumerable<T>> LoadManyAsync<T>(string collectionName, Expression<Func<T, bool>> predicate = null);
@@ -18,6 +20,6 @@ namespace PairMatching.DataAccess.Infrastructure
 
         Task InsertOne<T>(string collectionName, T record);
 
-        Task UpdateOne<T>(string collectionName, T record, int id);
+        Task UpdateOne<T>(string collectionName, T record, string id);
     }
 }

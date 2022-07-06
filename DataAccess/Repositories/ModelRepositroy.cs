@@ -47,14 +47,14 @@ namespace PairMatching.DataAccess.Repositories
         public Task Insert(TModel model)
         {
             var task = _dataAccess.InsertOne(_collectionName, model);
-            _taskManeger.Add(task);
+            //_taskManeger.Add(task);
             return task;
         }
 
         public Task Insert(IEnumerable<TModel> models)
         {
             var task = _dataAccess.InsertMany(_collectionName, models);
-            _taskManeger.Add(task);
+            //_taskManeger.Add(task);
             return task;
         }
 
@@ -62,13 +62,19 @@ namespace PairMatching.DataAccess.Repositories
         {
             var id = GetCurrentId(model);
             var task = _dataAccess.UpdateOne(_collectionName, model, id);
-            _taskManeger.Add(task);
+            //_taskManeger.Add(task);
             return task;
         }
 
         public Task Delete(int id)
         {
             throw new NotImplementedException();
+        }
+         
+        public async Task<TModel> GetByIdAsync(string id)
+        {
+            var model = await _dataAccess.LoadOneAsync<TModel>(_collectionName, id);
+            return model ?? throw new KeyNotFoundException($"Model with id = '{id}' not found");
         }
     }
 }

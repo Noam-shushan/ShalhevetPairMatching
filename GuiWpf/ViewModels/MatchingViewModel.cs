@@ -11,7 +11,6 @@ namespace GuiWpf.ViewModels
 {
     public class MatchingViewModel : BindableBase
     {
-
         public MatchingViewModel()
         {
             StageSuggestion = new PairSuggestion
@@ -41,34 +40,28 @@ namespace GuiWpf.ViewModels
                 IsGenderMatch = true,
                 IsLearningStyleMatch = false,
                 IsSkillLevelMatch = false,
-                MatchingTimes = new MatchingTimes
+                MatchingTimes = new List<MatchingTime>
                 {
-                    Sunday = new List<MatchHours>
+                    new MatchingTime
                     {
-                        new()
-                        {
-                            IsHoursMatch = true,
-                            MatchHoursIsrael = "ערב",
-                            MatchHoursWorld = "בוקר"
-                        }
+                        IsraelDay = Days.Sunday,
+                        WorldDay = Days.Sunday,
+                        HoursIsrael = TimesInDay.Morning,
+                        HoursWorld = TimesInDay.Evening
                     },
-                    Monday = new List<MatchHours>
+                    new MatchingTime
                     {
-                        new()
-                        {
-                            IsHoursMatch = true,
-                            MatchHoursIsrael = "צהריים",
-                            MatchHoursWorld = "לילה"
-                        }
+                        IsraelDay = Days.Monday,
+                        WorldDay = Days.Monday,
+                        HoursIsrael = TimesInDay.Morning,
+                        HoursWorld = TimesInDay.Evening
                     },
-                    Wednesday = new List<MatchHours>
+                   new MatchingTime
                     {
-                        new()
-                        {
-                            IsHoursMatch = true,
-                            MatchHoursIsrael = "ערב",
-                            MatchHoursWorld = "בוקר"
-                        }
+                        IsraelDay = Days.Wednesday,
+                        WorldDay = Days.Tuesday,
+                        HoursIsrael = TimesInDay.Night,
+                        HoursWorld = TimesInDay.Morning
                     },
                 }
             };

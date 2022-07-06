@@ -60,7 +60,7 @@ namespace PairMatching.GoogleSheet
                 "לימוד מהיר, הספקי ומתקדם" => LearningStyles.ProgressedFlowing,
                 "לימוד צמוד טקסט" => LearningStyles.TextCentered,
                 "לימוד מעודד מחשבה מחוץ לטקסט, פילוסופי" => LearningStyles.Free,
-                _ => LearningStyles.DontMatter,
+                _ => LearningStyles.NoPrefrence,
             };
         }
 
@@ -84,8 +84,8 @@ namespace PairMatching.GoogleSheet
                 "פרשת שבוע" => PrefferdTracks.Parsha,
                 "תפילה" => PrefferdTracks.Payer,
                 "פרקי אבות" => PrefferdTracks.PirkeiAvot,
-                "אין לי העדפה" => PrefferdTracks.DONT_MATTER,
-                _ => PrefferdTracks.DONT_MATTER,
+                "אין לי העדפה" => PrefferdTracks.NoPrefrence,
+                _ => PrefferdTracks.NoPrefrence,
             };
         }
 
@@ -108,8 +108,8 @@ namespace PairMatching.GoogleSheet
                 "טובה" => SkillLevels.Advanced,
                 "רמת שיחה (בינונית)" => SkillLevels.Moderate,
                 "מתחיל" => SkillLevels.Beginner,
-                "אין לי העדפה" => SkillLevels.DontMatter,
-                _ => SkillLevels.DontMatter,
+                "אין לי העדפה" => SkillLevels.NoPrefrence,
+                _ => SkillLevels.NoPrefrence,
             };
         }
 
@@ -140,7 +140,7 @@ namespace PairMatching.GoogleSheet
                         result.Add(TimesInDay.Night);
                         break;
                     case "אין לי זמן ביום זה":
-                        result.Add(TimesInDay.INCAPABLE);
+                        result.Add(TimesInDay.Incapable);
                         break;
                 }
             }

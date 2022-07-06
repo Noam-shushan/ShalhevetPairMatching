@@ -33,10 +33,10 @@ namespace PairMatching.Models
 
         [EnumDescription("חמישי", "Thursday")]
         Thursday,
-
-        [EnumDescription("אין", "nop")]
+        
         Defulte
     }
+    
     public enum TimesInDay 
     {
         [EnumDescription("בוקר", "Morning")]
@@ -51,11 +51,10 @@ namespace PairMatching.Models
         [EnumDescription("מאוחר בלילה", "Late night")]
         Night,
 
-        [EnumDescription("אין", "nop")]
         Defulte,
 
         [EnumDescription("לא יכול ביום זה", "nop")]
-        INCAPABLE 
+        Incapable 
     }
 
     public enum PrefferdTracks 
@@ -76,11 +75,12 @@ namespace PairMatching.Models
         PirkeiAvot,
 
         [EnumDescription("לא משנה", "Dont Prefferd")]
-        DONT_MATTER,
+        NoPrefrence,
         
         [EnumDescription("עצמאי" ,"Independent learning subject")]
         IndependentLearning
     }
+    
     public enum EnglishLevels 
     { 
         [EnumDescription("לא כל כך טובה", "Doesn't have to be perfect. I know some Hebrew")]
@@ -91,9 +91,8 @@ namespace PairMatching.Models
         
         [EnumDescription("טובה", "Excellent (I don't know any Hebrew whatsoever)")]
         Good,
-
-        [EnumDescription("אין", "nop")]
-        Defulte 
+        
+        Defulte,
     }
 
     public enum SkillLevels 
@@ -108,7 +107,7 @@ namespace PairMatching.Models
         Advanced,
         
         [EnumDescription("אין העדפה" ,"אין לי מסלול מועדף")]
-        DontMatter 
+        NoPrefrence
     }
 
     public enum LearningStyles 
@@ -126,7 +125,7 @@ namespace PairMatching.Models
         Free, 
         
         [EnumDescription("אין לי העדפה", "No significant or particular style")]
-        DontMatter 
+        NoPrefrence
     }
 
     public enum MoreLanguages 

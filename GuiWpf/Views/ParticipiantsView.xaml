@@ -441,13 +441,13 @@
         </materialDesign:Card>
 
         <custom:Modal Panel.ZIndex="1" IsOpen="{Binding IsAddFormOpen}">
-            <local:AddParticipantForm Margin="25" />
+            <local:AddParticipantForm />
         </custom:Modal>
 
         <Button
             Grid.Row="1"
             Command="{Binding Load}"
             Content="טען"
-            Visibility="Collapsed" />
+            Visibility="Visible" />
     </Grid>
 </UserControl>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public Participant FromWorld { get; set; }
 
-        public MatchingTimes MatchingTimes { get; set; }
+        public List<MatchingTime> MatchingTimes { get; set; } = new List<MatchingTime>();
 
         public bool IsEnglishLevelMatch { get; set; }
 
@@ -22,5 +23,18 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public bool IsGenderMatch { get; set; }
 
+        public int MatchingScore { get; set; }
+        
+        public bool IsTrackMatch { get; internal set; }
+
+        public bool IsMinmunMatch 
+        {
+            get =>
+                MatchingTimes.Count > 0 &&
+                IsEnglishLevelMatch &&
+                IsSkillLevelMatch &&
+                IsGenderMatch &&
+                IsTrackMatch;
+        }
     }
 }

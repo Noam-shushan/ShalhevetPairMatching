@@ -51,6 +51,32 @@ namespace PairMatching.DataAccess.Infrastructure
             }
         }
 
+        public async Task<T> LoadOneAsync<T>(string collectionName, string id)
+        {
+            var filePath = dir + collectionName + suffixFile;
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    var jsonString = await File.ReadAllTextAsync(filePath);
+                    var list = JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
+                    return (from m in list
+                            where GetCurrentId(m) == id
+                            select m)
+                            .FirstOrDefault();
+
+                }
+                else
+                {
+                    return default;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"can not load the file {filePath}" + ex.Message);
+            }
+        }
+
         public async Task<IEnumerable<T>> LoadManyAsync<T>(string collectionName, Expression<Func<T, bool>> predicate = null)
         {
             var filePath = dir + collectionName + suffixFile;
@@ -123,6 +149,11 @@ namespace PairMatching.DataAccess.Infrastructure
         {
             throw new NotImplementedException();
         }
+
+        public Task UpdateOne<T>(string collectionName, T record, string id)
+        {
+            throw new NotImplementedException();
+        }        
 
         private string GetNewId()
         {

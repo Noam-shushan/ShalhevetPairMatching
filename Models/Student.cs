@@ -207,8 +207,20 @@ namespace PairMatching.Models
                         Tracks = PrefferdTracks,
                         LearningTime = DesiredLearningTime
                     },
+                    WixIndex = 0,
+                    Age = 0,
+                    JewishAffiliation = "",
+                    JewishAndComAff = "",
+                    Profession = "",
+                    UtcOffset = UtcOffset,
+                    OldId = Id,
+                    WixId = "",
                     OpenQuestions = new OpenQuestionsForWorld
                     {
+                        AdditionalInfo = OpenQuestions?.FirstOrDefault(o => o.Question == "Additional information").Answer,
+                        WhoIntroduced = OpenQuestions?.FirstOrDefault(o => o.Question == "Who introduced you to this program").Answer,
+                        HopesExpectations = new List<string> { OpenQuestions?.FirstOrDefault(o => o.Question == "What are your hopes and expectations from this program").Answer },
+                        PersonalBackground = OpenQuestions?.FirstOrDefault(o => o.Question == "Personal information").Answer     
                     },
                     SkillLevel = SkillLevel,
                     DesiredEnglishLevel = DesiredEnglishLevel

@@ -24,6 +24,8 @@ namespace PairMatching.DataAccess.Repositories
         /// <returns>The record match to this id</returns>
         Task<TModel> GetByIdAsync(int id);
 
+        Task<TModel> GetByIdAsync(string id);
+
         /// <summary>
         /// Insert one record of this model to the database
         /// </summary>
