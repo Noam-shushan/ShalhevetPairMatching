@@ -2,17 +2,21 @@
   "version": 3,
   "targets": {
     "net5.0-windows7.0": {
-      "CalcBinding/2.5.2": {
+      "ControlzEx/4.4.0": {
         "type": "package",
         "dependencies": {
-          "DynamicExpresso.Core": "2.3.1"
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.19",
+          "System.Text.Json": "4.7.2"
         },
         "compile": {
-          "lib/netcoreapp3.0/CalcBinding.dll": {}
+          "lib/netcoreapp3.1/ControlzEx.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.0/CalcBinding.dll": {}
-        }
+          "lib/netcoreapp3.1/ControlzEx.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ]
       },
       "DnsClient/1.4.0": {
         "type": "package",
@@ -21,15 +25,6 @@
         },
         "runtime": {
           "lib/netstandard2.1/DnsClient.dll": {}
-        }
-      },
-      "DynamicExpresso.Core/2.3.1": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/DynamicExpresso.Core.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/DynamicExpresso.Core.dll": {}
         }
       },
       "JsonSubTypes/1.9.0": {
@@ -42,6 +37,26 @@
         },
         "runtime": {
           "lib/netstandard2.0/JsonSubTypes.dll": {}
+        }
+      },
+      "MahApps.Metro/2.4.9": {
+        "type": "package",
+        "dependencies": {
+          "ControlzEx": "[4.4.0, 6.0.0)"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/MahApps.Metro.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/MahApps.Metro.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ],
+        "resource": {
+          "lib/netcoreapp3.1/de/MahApps.Metro.resources.dll": {
+            "locale": "de"
+          }
         }
       },
       "MailKit/3.2.0": {
@@ -515,19 +530,28 @@
     }
   },
   "libraries": {
-    "CalcBinding/2.5.2": {
-      "sha512": "hbMnS12GUmWTFVROhKJMAQNv5Cqx+AjVGOGGjUOidEaRQ5oGr87PCZih5kfEA/8qlRMzpBsMPQ0fiOahPWwmXQ==",
+    "ControlzEx/4.4.0": {
+      "sha512": "pZ5z4hYWwE4R13UMCVs6vII//nL7hz+Nwn4oJlnsZJRGqJNy6Z9KnJiTZfly6lKFu0pMc1aWBZpx+VqFTQKP1Q==",
       "type": "package",
-      "path": "calcbinding/2.5.2",
+      "path": "controlzex/4.4.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "LICENSE",
-        "calcbinding.2.5.2.nupkg.sha512",
-        "calcbinding.nuspec",
-        "lib/net40/CalcBinding.dll",
-        "lib/net45/CalcBinding.dll",
-        "lib/netcoreapp3.0/CalcBinding.dll"
+        "controlzex.4.4.0.nupkg.sha512",
+        "controlzex.nuspec",
+        "lib/net45/ControlzEx.dll",
+        "lib/net45/ControlzEx.pdb",
+        "lib/net45/ControlzEx.xml",
+        "lib/net462/ControlzEx.dll",
+        "lib/net462/ControlzEx.pdb",
+        "lib/net462/ControlzEx.xml",
+        "lib/netcoreapp3.0/ControlzEx.dll",
+        "lib/netcoreapp3.0/ControlzEx.pdb",
+        "lib/netcoreapp3.0/ControlzEx.xml",
+        "lib/netcoreapp3.1/ControlzEx.dll",
+        "lib/netcoreapp3.1/ControlzEx.pdb",
+        "lib/netcoreapp3.1/ControlzEx.xml",
+        "logo-mini.png"
       ]
     },
     "DnsClient/1.4.0": {
@@ -552,20 +576,6 @@
         "lib/netstandard2.1/DnsClient.xml"
       ]
     },
-    "DynamicExpresso.Core/2.3.1": {
-      "sha512": "gAoOdAA7KypwC2aEWbm72ZcNj9ERn0GBrFyFrLm9tRZGd+z1rgnKlh+BtWJi9X32ldzOwItY/Ty5ao6CqbG5ig==",
-      "type": "package",
-      "path": "dynamicexpresso.core/2.3.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "dynamicexpresso.core.2.3.1.nupkg.sha512",
-        "dynamicexpresso.core.nuspec",
-        "lib/net45/DynamicExpresso.Core.dll",
-        "lib/net461/DynamicExpresso.Core.dll",
-        "lib/netstandard2.0/DynamicExpresso.Core.dll"
-      ]
-    },
     "JsonSubTypes/1.9.0": {
       "sha512": "b7BHm3Oo5mqcIUWogcUsjOya9PmkNyLmwWtRfeCHwgGGXMGEFiz95ZxqfZQPXqxJRFr+2IxoiIcDv10tWUmvTQ==",
       "type": "package",
@@ -583,6 +593,40 @@
         "lib/net47/JsonSubTypes.dll",
         "lib/netstandard1.3/JsonSubTypes.dll",
         "lib/netstandard2.0/JsonSubTypes.dll"
+      ]
+    },
+    "MahApps.Metro/2.4.9": {
+      "sha512": "eMTkg6TBnCwHzszw7CP+pxsBeB4ZMsJFiTJJoifUVBysRyEenzzR+TKQJuMvvKK6KzvLxwHmJsFhi9o5p4vxhQ==",
+      "type": "package",
+      "path": "mahapps.metro/2.4.9",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/MahApps.Metro.dll",
+        "lib/net452/MahApps.Metro.pdb",
+        "lib/net452/MahApps.Metro.xml",
+        "lib/net452/de/MahApps.Metro.resources.dll",
+        "lib/net46/MahApps.Metro.dll",
+        "lib/net46/MahApps.Metro.pdb",
+        "lib/net46/MahApps.Metro.xml",
+        "lib/net46/de/MahApps.Metro.resources.dll",
+        "lib/net47/MahApps.Metro.dll",
+        "lib/net47/MahApps.Metro.pdb",
+        "lib/net47/MahApps.Metro.xml",
+        "lib/net47/de/MahApps.Metro.resources.dll",
+        "lib/netcoreapp3.0/MahApps.Metro.dll",
+        "lib/netcoreapp3.0/MahApps.Metro.pdb",
+        "lib/netcoreapp3.0/MahApps.Metro.xml",
+        "lib/netcoreapp3.0/de/MahApps.Metro.resources.dll",
+        "lib/netcoreapp3.1/MahApps.Metro.dll",
+        "lib/netcoreapp3.1/MahApps.Metro.pdb",
+        "lib/netcoreapp3.1/MahApps.Metro.xml",
+        "lib/netcoreapp3.1/de/MahApps.Metro.resources.dll",
+        "mahapps.metro.2.4.9.nupkg.sha512",
+        "mahapps.metro.logo.png",
+        "mahapps.metro.nuspec",
+        "tools/VisualStudioToolsManifest.xml"
       ]
     },
     "MailKit/3.2.0": {
@@ -1414,9 +1458,9 @@
   },
   "projectFileDependencyGroups": {
     "net5.0-windows7.0": [
-      "CalcBinding >= 2.5.2",
       "Configurations >= 1.0.0",
       "DomainModel >= 1.0.0",
+      "MahApps.Metro >= 2.4.9",
       "MaterialDesignThemes >= 4.5.0",
       "Models >= 1.0.0",
       "Prism.Unity >= 8.1.97",
@@ -1476,9 +1520,9 @@
       "net5.0-windows7.0": {
         "targetAlias": "net5.0-windows",
         "dependencies": {
-          "CalcBinding": {
+          "MahApps.Metro": {
             "target": "Package",
-            "version": "[2.5.2, )"
+            "version": "[2.4.9, )"
           },
           "MaterialDesignThemes": {
             "target": "Package",

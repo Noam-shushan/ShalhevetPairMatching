@@ -10,34 +10,34 @@ namespace PairMatching.Models
     {
         public int WixIndex { get; set; }
 
-        public string WixId { get; set; }
+        public string WixId { get; set; } = "";
 
         // hop i dont need it
         public int OldId { get; set; }
 
         public Preferences PairPreferences { get; set; }
 
-        public IEnumerable<string> MatchTo { get; set; }
+        public IEnumerable<string> MatchTo { get; set; } = new List<string>();
 
         /// <summary>
         /// the name of the student
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// the country of the student
         /// </summary>
-        public string Country { get; set; }
+        public string Country { get; set; } = "";
 
         /// <summary>
         /// the email of the student
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         /// <summary>
         /// the phone number of the student
         /// </summary>
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = "";
 
         /// <summary>
         /// the gender of the student
@@ -48,7 +48,7 @@ namespace PairMatching.Models
 
         public bool IsInArchive { get; set; }
 
-        public List<string> OtherLanguages { get; set; }
+        public List<string> OtherLanguages { get; set; } = new();
 
         public MoreLanguages MoreLanguages { get; set; }
 

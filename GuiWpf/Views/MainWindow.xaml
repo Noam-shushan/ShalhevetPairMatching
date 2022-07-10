@@ -1,9 +1,10 @@
-﻿<Window
+﻿<mah:MetroWindow
     x:Class="GuiWpf.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:GuiWpf.Views"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
@@ -32,12 +33,14 @@
         </Style>
     </Window.Resources>
     <Grid Margin="8">
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <TabControl
             materialDesign:ColorZoneAssist.Mode="PrimaryDark"
             Style="{StaticResource MaterialDesignTabControl}"
@@ -56,4 +59,4 @@
             </TabItem>
         </TabControl>
     </Grid>
-</Window>
+</mah:MetroWindow>

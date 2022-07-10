@@ -6,14 +6,15 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "CalcBinding/2.5.2": {
+      "ControlzEx/4.4.0": {
         "dependencies": {
-          "DynamicExpresso.Core": "2.3.1"
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.31",
+          "System.Text.Json": "5.0.0"
         },
         "runtime": {
-          "lib/netcoreapp3.0/CalcBinding.dll": {
-            "assemblyVersion": "2.5.2.0",
-            "fileVersion": "2.5.2.0"
+          "lib/netcoreapp3.1/ControlzEx.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.4.0.50"
           }
         }
       },
@@ -25,14 +26,6 @@
           }
         }
       },
-      "DynamicExpresso.Core/2.3.1": {
-        "runtime": {
-          "lib/netstandard2.0/DynamicExpresso.Core.dll": {
-            "assemblyVersion": "2.3.1.0",
-            "fileVersion": "2.3.1.0"
-          }
-        }
-      },
       "JsonSubTypes/1.9.0": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1"
@@ -41,6 +34,22 @@
           "lib/netstandard2.0/JsonSubTypes.dll": {
             "assemblyVersion": "1.9.0.0",
             "fileVersion": "1.9.0.0"
+          }
+        }
+      },
+      "MahApps.Metro/2.4.9": {
+        "dependencies": {
+          "ControlzEx": "4.4.0"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/MahApps.Metro.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.4.9.2"
+          }
+        },
+        "resources": {
+          "lib/netcoreapp3.1/de/MahApps.Metro.resources.dll": {
+            "locale": "de"
           }
         }
       },
@@ -362,12 +371,12 @@
     }
   },
   "libraries": {
-    "CalcBinding/2.5.2": {
+    "ControlzEx/4.4.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hbMnS12GUmWTFVROhKJMAQNv5Cqx+AjVGOGGjUOidEaRQ5oGr87PCZih5kfEA/8qlRMzpBsMPQ0fiOahPWwmXQ==",
-      "path": "calcbinding/2.5.2",
-      "hashPath": "calcbinding.2.5.2.nupkg.sha512"
+      "sha512": "sha512-pZ5z4hYWwE4R13UMCVs6vII//nL7hz+Nwn4oJlnsZJRGqJNy6Z9KnJiTZfly6lKFu0pMc1aWBZpx+VqFTQKP1Q==",
+      "path": "controlzex/4.4.0",
+      "hashPath": "controlzex.4.4.0.nupkg.sha512"
     },
     "DnsClient/1.4.0": {
       "type": "package",
@@ -376,19 +385,19 @@
       "path": "dnsclient/1.4.0",
       "hashPath": "dnsclient.1.4.0.nupkg.sha512"
     },
-    "DynamicExpresso.Core/2.3.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-gAoOdAA7KypwC2aEWbm72ZcNj9ERn0GBrFyFrLm9tRZGd+z1rgnKlh+BtWJi9X32ldzOwItY/Ty5ao6CqbG5ig==",
-      "path": "dynamicexpresso.core/2.3.1",
-      "hashPath": "dynamicexpresso.core.2.3.1.nupkg.sha512"
-    },
     "JsonSubTypes/1.9.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-b7BHm3Oo5mqcIUWogcUsjOya9PmkNyLmwWtRfeCHwgGGXMGEFiz95ZxqfZQPXqxJRFr+2IxoiIcDv10tWUmvTQ==",
       "path": "jsonsubtypes/1.9.0",
       "hashPath": "jsonsubtypes.1.9.0.nupkg.sha512"
+    },
+    "MahApps.Metro/2.4.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eMTkg6TBnCwHzszw7CP+pxsBeB4ZMsJFiTJJoifUVBysRyEenzzR+TKQJuMvvKK6KzvLxwHmJsFhi9o5p4vxhQ==",
+      "path": "mahapps.metro/2.4.9",
+      "hashPath": "mahapps.metro.2.4.9.nupkg.sha512"
     },
     "MailKit/3.2.0": {
       "type": "package",

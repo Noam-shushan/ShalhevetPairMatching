@@ -85,8 +85,6 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\NotesView.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Styles\OpenQuestionStyle.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\JsonSubTypes.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\CalcBinding.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\DynamicExpresso.Core.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\ModalControl.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\AddParticipantForm.g.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\AddParticipantForm.baml
@@ -94,3 +92,6 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\SendEmailView.g.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\SendEmailView.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\refint\GuiWpf.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\ControlzEx.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\MahApps.Metro.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\de\MahApps.Metro.resources.dll

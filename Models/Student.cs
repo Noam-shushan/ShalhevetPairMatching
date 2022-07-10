@@ -148,6 +148,10 @@ namespace PairMatching.Models
                     Country = Country,
                     DateOfRegistered = DateOfRegistered,
                     Email = Email,
+                    OldId = Id,
+                    WixIndex = 0,
+                    WixId = "",
+                    IsDeleted = IsDeleted,
                     Gender = Gender,
                     OtherLanguages = Languages.ToList(),
                     Name = Name,
@@ -166,15 +170,15 @@ namespace PairMatching.Models
                         LearningStyle = LearningStyle,
                         NumberOfMatchs = PrefferdNumberOfMatchs,
                         Tracks = PrefferdTracks,
-                        LearningTime = DesiredLearningTime
+                        LearningTime = DesiredLearningTime                      
                     },
                     OpenQuestions = new OpenQuestionsForIsrael
-                    {
+                    {                        
                         BiographHeb = OpenQuestions?.FirstOrDefault(o => o.Question == "Personal information").Answer,
                         PersonalTraits = OpenQuestions?.FirstOrDefault(o => o.Question == "Personality trates").Answer,
                         AdditionalInfo = OpenQuestions?.FirstOrDefault(o => o.Question == "Additional information").Answer,
                         WhoIntroduced = OpenQuestions?.FirstOrDefault(o => o.Question == "Who introduced you to this program").Answer,
-                        WhyJoinShalhevet = OpenQuestions?.FirstOrDefault(o => o.Question == "What are your hopes and expectations from this program").Answer,
+                        WhyJoinShalhevet = OpenQuestions?.FirstOrDefault(o => o.Question == "What are your hopes and expectations from this program").Answer                                             
                     },
                     DesiredSkillLevel = DesiredSkillLevel,
                     EnglishLevel = EnglishLevel
@@ -223,7 +227,9 @@ namespace PairMatching.Models
                         PersonalBackground = OpenQuestions?.FirstOrDefault(o => o.Question == "Personal information").Answer     
                     },
                     SkillLevel = SkillLevel,
-                    DesiredEnglishLevel = DesiredEnglishLevel
+                    DesiredEnglishLevel = DesiredEnglishLevel,
+                    IsDeleted = IsDeleted,
+                    Address = new()
                 };
             }
         }

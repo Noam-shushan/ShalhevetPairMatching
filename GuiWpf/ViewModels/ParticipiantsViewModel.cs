@@ -29,12 +29,11 @@ namespace GuiWpf.ViewModels
         private void SubscribeToEvents()
         {
             _ea.GetEvent<CloseDialogEvent>().Subscribe(CloseFormResived);
-            _ea.GetEvent<AddParticipantEvent>().Subscribe(NewParticipantResived);
-        }
-
-        private void NewParticipantResived(Participant part)
-        {
-            Participiants.Add(part);
+            _ea.GetEvent<AddParticipantEvent>().Subscribe( async (part) =>
+            {
+                Participiants.Add(part);
+                await _participantService.UpserteParticipant(part);
+            });
         }
 
         public ObservableCollection<Participant> Participiants { get; set; } = new();
@@ -60,8 +59,6 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _isToggleRow, value); 
         }
 
-
-
         private bool _isAddFormOpen = false;
         public bool IsAddFormOpen
         {
@@ -81,17 +78,13 @@ namespace GuiWpf.ViewModels
             IsAddFormOpen = isClose;
         }
 
-
         DelegateCommand _load;
         public DelegateCommand Load => _load ??= new(
-            async () =>
+               async () =>
             {
-                //var studList = await _participantService.GetAllStudents();
-                //var list = studList.Select(s => s.ToParticipant());
-                await _participantService.MoveOneToNewDatabaseTest();
-                //var list = await _participantService.GetParticipantsWix();
-                //Participiants.Clear();
-                //Participiants.AddRange(list);
+                var parts = await _participantService.GetParticipantsWix();
+                Participiants.Clear();
+                Participiants.AddRange(parts);
             });
 
         DelegateCommand _toggleRow;
@@ -115,10 +108,10 @@ namespace GuiWpf.ViewModels
 
         DelegateCommand _searchParticipiantsCommand;
         public DelegateCommand SearchParticipiantsCommand => _searchParticipiantsCommand ??= new(
-            async () =>
+             () =>
             {
                 var s = SearchParticipiantsWord;
-                await _participantService.UpdateParticipant(SelectedParticipant);
+                //await _participantService.UpdateParticipant(SelectedParticipant);
             });
     }
 }

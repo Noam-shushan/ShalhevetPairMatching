@@ -17,7 +17,11 @@ namespace PairMatching.WixApi
 
                 var content = new StringContent(data, Encoding.UTF8);
 
-                await client.PostAsync(uri, content);
+                var res = await client.PostAsync(uri, content);
+                if (!res.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException(res.StatusCode.ToString());
+                } 
             }
             catch (Exception)
             {

@@ -52,9 +52,9 @@ namespace PairMatching.Models
         {
             return new Pair
             {
+                OldId = Id,
                 DateOfCreate = DateOfCreate,
                 DateOfDelete = DateOfDelete,
-                DateOfUpdate = DateOfUpdate,
                 IsActive = IsActive,
                 IsDeleted = IsDeleted,
                 Notes = Notes.Select(n => new Note
@@ -64,8 +64,8 @@ namespace PairMatching.Models
                     Date = n.Date
                 }).ToList(),
                 Track = PrefferdTracks,
-                ParticipantFromIsrael = StudentFromIsrael.ToParticipant(),
-                ParticipantFromWorld = StudentFromWorld.ToParticipant()
+                //ParticipantFromIsrael = StudentFromIsrael.ToParticipant(),
+                //ParticipantFromWorld = StudentFromWorld.ToParticipant(),              
             };
         }
     }

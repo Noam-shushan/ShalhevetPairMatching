@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "evZRsakqvMuu/T4KgvwMN+nfMQHsNV/u+ufJ/wZj/zsZxeD2Hy0P8iftE4lc3OMV9w76zHOBbxjhFZSw6rdN9w==",
+  "dgSpecHash": "FUUOrjkiI+WOPXbBSuFETDWon6sw+2rHAMSgKiv5p1vo5VToeOA24KmGSqz8tJhOf+BPsQZ/c6Z3ahwxGh07XA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\GuiWpf\\GuiWpf.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\calcbinding\\2.5.2\\calcbinding.2.5.2.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\controlzex\\4.4.0\\controlzex.4.4.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\dnsclient\\1.4.0\\dnsclient.1.4.0.nupkg.sha512",
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\dynamicexpresso.core\\2.3.1\\dynamicexpresso.core.2.3.1.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\jsonsubtypes\\1.9.0\\jsonsubtypes.1.9.0.nupkg.sha512",
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\mahapps.metro\\2.4.9\\mahapps.metro.2.4.9.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\mailkit\\3.2.0\\mailkit.3.2.0.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\materialdesigncolors\\2.0.6\\materialdesigncolors.2.0.6.nupkg.sha512",
     "C:\\Users\\Asuspcc\\.nuget\\packages\\materialdesignthemes\\4.5.0\\materialdesignthemes.4.5.0.nupkg.sha512",

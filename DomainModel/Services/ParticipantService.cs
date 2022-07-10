@@ -1,17 +1,15 @@
-﻿using PairMatching.DataAccess.UnitOfWork;
+﻿using Newtonsoft.Json;
+using PairMatching.Configurations;
+using PairMatching.DataAccess.UnitOfWork;
 using PairMatching.DomainModel.DataAccessFactory;
 using PairMatching.Models;
 using PairMatching.Models.Dtos;
+using PairMatching.Tools;
+using PairMatching.WixApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using PairMatching.WixApi;
-using PairMatching.Configurations;
-using System.IO;
-using Newtonsoft.Json;
-using PairMatching.Tools;
 using static PairMatching.Tools.HelperFunction;
 
 namespace PairMatching.DomainModel.Services
@@ -29,17 +27,21 @@ namespace PairMatching.DomainModel.Services
             _wix = new WixDataReader(configuration);
         }
 
-        public async Task<IEnumerable<Participant>> GetAllParticipants()
+        public async Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael()
         {
-            await ReadNewFromWix();
-
             return await _unitOfWork
                 .IsraelParticipantsRepositry
-                .GetAllAsync();
-
+                .GetAllAsync(ip => !ip.IsDeleted);
         }
 
-        private async Task ReadNewFromWix()
+        public async Task<IEnumerable<WorldParticipant>> GetAllFromWorld()
+        {
+            return await _unitOfWork
+                .WorldParticipantsRepositry
+                .GetAllAsync(ip => !ip.IsDeleted);
+        }
+
+        public async Task SetNewParticipints()
         {
             var configColl = await _unitOfWork.ConfigRepositry
                                     .GetMaxIndexOfWixData();
@@ -71,20 +73,10 @@ namespace PairMatching.DomainModel.Services
             }
         }
 
-        public async Task UpdateParticipant(Participant participant)
+        public async Task UpserteParticipant(Participant part)
         {
-            await _wix.PostToWix(new UpdateParticipantOnWixDto
-            {
-                _id = participant.WixId,
-                email = participant.Email,
-                fullName = participant.Name,
-                chevrutaId = "",
-                preferredTrack = participant
-                .PairPreferences
-                .Tracks
-                .Select(t => t.GetDescriptionFromEnumValue()).ToList(),
-                tel = participant.PhoneNumber
-            });
+            UpsertParticipantOnWixDto partDto = part.ToUpsertWixDto();
+            await _wix.UpsertParticipaint(partDto);
         }
 
         public async Task<IEnumerable<Participant>> GetParticipantsWix()
@@ -92,98 +84,6 @@ namespace PairMatching.DomainModel.Services
             var parts = await _wix.GetNewParticipants();
             var list = parts.Select(p => p.ToParticipant());
             return list;
-        }
-
-        public async Task<IEnumerable<Student>> GetAllStudents()
-        {
-            var result = await _unitOfWork
-                     .StudentRepositry
-                .GetAllAsync(s => !s.IsDeleted);
-            return result
-                .Take(50);
-        }
-
-        // TODO : finish her
-        public async Task MoveToNewDatabaseTest()
-        {
-            var students = await _unitOfWork
-                .StudentRepositry
-                .GetAllAsync(s => !s.IsDeleted);
-
-            var toPartsList = students
-                .Select(s => s.ToParticipant())
-                .ToLookup(p => p.IsFromIsrael);
-            
-            var israelParts = toPartsList[true].Select(p => p as IsraelParticipant);
-            var worldParts = toPartsList[false].Select(p => p as WorldParticipant);
-            
-            var tasks = new List<Task>
-            {
-                _unitOfWork.IsraelParticipantsRepositry.Insert(israelParts),
-                _unitOfWork.WorldParticipantsRepositry.Insert(worldParts)
-            };
-            await Task.WhenAll(tasks);
-        }
-
-        // TODO : finish her
-        public async Task MoveToNewDatabaseWithMatching()
-        {
-            var students = await _unitOfWork
-                .StudentRepositry
-                .GetAllAsync(s => !s.IsDeleted);
-
-            var toPartsList = students
-                .Select(s => s.ToParticipant())
-                .ToLookup(p => p.IsFromIsrael);
-
-            var israelParts = toPartsList[true].Select(p => p as IsraelParticipant);
-            var worldParts = toPartsList[false].Select(p => p as WorldParticipant);
-            
-            var tasks = new List<Task>();
-            foreach (var p in israelParts)
-            {
-                var s = students.FirstOrDefault(s => s.Id == p.OldId);
-                if (s != null)
-                {
-                    p.MatchTo = from wp in worldParts
-                                where s.MatchTo.Contains(wp.OldId)
-                                select wp.Id;
-                }
-                tasks.Add(_unitOfWork.IsraelParticipantsRepositry.Update(p));
-            }
-            foreach (var p in worldParts)
-            {
-                var s = students.FirstOrDefault(s => s.Id == p.OldId);
-                if (s != null)
-                {
-                    p.MatchTo = from ip in israelParts
-                                where s.MatchTo.Contains(ip.OldId)
-                                select ip.Id;
-                }
-                tasks.Add(_unitOfWork.WorldParticipantsRepositry.Update(p));
-            }
-            await Task.WhenAll(tasks);
-        }
-
-        public async Task MoveOneToNewDatabaseTest()
-        {
-            //var student = await _unitOfWork
-            //    .StudentRepositry
-            //    .GetByIdAsync(4);
-
-            //var toPart = student.ToParticipant();
-            //if (toPart.IsFromIsrael)
-            //{
-            //    await _unitOfWork.IsraelParticipantsRepositry.Insert(toPart as IsraelParticipant);
-            //}
-            //else
-            //{
-            //    await _unitOfWork.WorldParticipantsRepositry.Insert(toPart as WorldParticipant);
-            //}
-
-            var p = await _unitOfWork
-                .WorldParticipantsRepositry
-                .GetByIdAsync("62c568ac83465d7fa9984c41");
         }
 
         public IEnumerable<CountryUtc> GetCountryUtcs()
@@ -196,8 +96,6 @@ namespace PairMatching.DomainModel.Services
             }
             return result;
         }
-
-        
     }
 
     public class CountryUtc

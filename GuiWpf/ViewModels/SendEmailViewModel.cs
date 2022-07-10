@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using PairMatching.DomainModel.Email;
 using Prism.Commands;
 using PairMatching.Models;
+using PairMatching.DomainModel.Services;
 using GuiWpf.Events;
 using Prism.Events;
 
@@ -16,11 +17,13 @@ namespace GuiWpf.ViewModels
     {
         readonly SendEmail _emailSender;
         readonly IEventAggregator _ea;
+        readonly IEmailService _emailService;
 
-        public SendEmailViewModel(SendEmail emailSender, IEventAggregator ea)
+        public SendEmailViewModel(SendEmail emailSender, IEventAggregator ea, IEmailService emailService)
         {
             _emailSender = emailSender;
             _ea = ea;
+            _emailService = emailService;
         }
 
 
@@ -45,14 +48,18 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _content, value);
         }
         
-
+        
 
         DelegateCommand _sendCommand;
         public DelegateCommand SendCommand => _sendCommand ??= new(
-        () =>
+        async () =>
         {
+            await _emailService.SendEmailTest(new List<string>
+           {
+               "596213a0-f3ee-47b7-a023-23ecac584674",
+               "687c432a-9a78-4096-a6b2-a2d356a15ed5"
+           }, Subject, Content);
            
-            
         });
 
         DelegateCommand _addAttachmentCommand;

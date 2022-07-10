@@ -9,13 +9,16 @@ namespace PairMatching.Models
 {
     public record Pair : BaseModel
     {
-        public string ParticipantFromIsraelId { get; set; }
+        [BsonIgnore]
+        public int OldId { get; set; }
+        
+        public string FromIsraelId { get; set; }
 
-        public string ParticipantFromWorldId { get; set; }
+        public string FromWorldId { get; set; }
 
         public DateTime DateOfCreate { get; set; }
 
-        public DateTime DateOfUpdate { get; set; }
+        public IEnumerable<TrackHistory> TrackHistories { get; set; }
 
         public DateTime DateOfDelete { get; set; }
 
@@ -27,9 +30,16 @@ namespace PairMatching.Models
         public PrefferdTracks Track { get; set; }
 
         [BsonIgnore]
-        public Participant ParticipantFromIsrael { get; set; }
+        public Participant FromIsrael { get; set; }
 
         [BsonIgnore]
-        public Participant ParticipantFromWorld { get; set; }
+        public Participant FromWorld { get; set; }
+    }
+
+    public class TrackHistory
+    {
+        public PrefferdTracks Track { get; set; }
+
+        public DateTime DateOfUpdate { get; set; }
     }
 }

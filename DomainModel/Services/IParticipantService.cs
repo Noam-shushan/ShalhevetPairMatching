@@ -9,15 +9,16 @@ namespace PairMatching.DomainModel.Services
 {
     public interface IParticipantService
     {
-        Task<IEnumerable<Participant>> GetAllParticipants();
-
-        Task<IEnumerable<Student>> GetAllStudents();
-
+        Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael();
+        
+        Task<IEnumerable<WorldParticipant>> GetAllFromWorld();
+        
         IEnumerable<CountryUtc> GetCountryUtcs();
 
         Task<IEnumerable<Participant>> GetParticipantsWix();
-        Task MoveOneToNewDatabaseTest();
-        Task MoveToNewDatabaseTest();
-        Task UpdateParticipant(Participant participant);
+        
+        Task SetNewParticipints();
+        
+        Task UpserteParticipant(Participant participant);
     }
 }

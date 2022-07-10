@@ -51,9 +51,7 @@ namespace PairMatching.Tools
 
             throw allTasks.Exception ?? throw new Exception("Bad");
         }
-
-
-
+        
         public static string ToDescriptionString<T>(this T enumVal, string engOrHeb) where T : Enum 
         {
             EnumDescriptionAttribute[] attributes = (EnumDescriptionAttribute[])enumVal
