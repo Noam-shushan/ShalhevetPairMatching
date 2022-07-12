@@ -11,10 +11,10 @@ false
 TRACE;DEBUG;NET;NET5_0;NETCOREAPP
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\App.xaml
 12-795705157
-3124249034
+2583349622
 26111166623
-222641365415
+208-1388368104
 Controlers\Field.xaml;Controlers\SearchTextBox.xaml;Styles\OpenQuestionStyle.xaml;Views\AddParticipantForm.xaml;Views\EmailsView.xaml;Views\MainWindow.xaml;Views\MatchingView.xaml;Views\NotesView.xaml;Views\OpenQuestionsView.xaml;Views\ParisView.xaml;Views\ParticipiantsView.xaml;Views\SendEmailView.xaml;
 
-True
+False
 

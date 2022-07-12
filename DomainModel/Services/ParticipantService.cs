@@ -27,6 +27,25 @@ namespace PairMatching.DomainModel.Services
             _wix = new WixDataReader(configuration);
         }
 
+        public async Task<IEnumerable<Participant>> GetAll()
+        {
+            var result = new List<Participant>();
+            var tasks = new List<Task>();
+            
+            var ips = GetAllFromIsrael();
+            //var wps = GetAllFromWorld();
+
+            tasks.Add(ips);
+            //tasks.Add(wps);
+            
+            await Task.WhenAll(tasks);
+
+            result.AddRange(ips.Result);
+            //result.AddRange(wps.Result);
+            
+            return result;
+        }
+
         public async Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael()
         {
             return await _unitOfWork

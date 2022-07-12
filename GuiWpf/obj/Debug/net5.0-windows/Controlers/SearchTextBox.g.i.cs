@@ -72,7 +72,7 @@ namespace GuiWpf.Controlers {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/GuiWpf;component/controlers/searchtextbox.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/GuiWpf;V1.0.0.0;component/controlers/searchtextbox.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Controlers\SearchTextBox.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

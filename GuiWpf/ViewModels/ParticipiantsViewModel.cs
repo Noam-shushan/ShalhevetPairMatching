@@ -10,6 +10,7 @@ using Prism.Commands;
 using PairMatching.DomainModel.Services;
 using Prism.Events;
 using GuiWpf.Events;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace GuiWpf.ViewModels
 {
@@ -17,13 +18,44 @@ namespace GuiWpf.ViewModels
     {
         readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
+        readonly IDialogCoordinator _dialog;
 
-        public ParticipiantsViewModel(IParticipantService participantService, IEventAggregator ea)
+        public ParticipiantsViewModel(IParticipantService participantService, IEventAggregator ea, IDialogCoordinator dialog)
         {
             _participantService = participantService;
             _ea = ea;
 
             SubscribeToEvents();
+            _dialog = dialog;
+        }
+
+        private bool _isInitialized = false;
+        public bool IsInitialized
+        {
+            get => _isInitialized ;
+            set => SetProperty(ref _isInitialized , value);
+        }
+
+        public async Task MetroProgressOnLoading()
+        {
+            // Show...
+            ProgressDialogController controller = await _dialog.ShowProgressAsync(this, "Wait", "Waiting for the Answer to the Ultimate Question of Life, The Universe, and Everything...");
+
+            controller.SetIndeterminate();
+
+            var parts = await _participantService.GetAll();
+            Participiants.Clear();
+            Participiants.AddRange(parts);
+
+            // Close...
+            await controller.CloseAsync();
+        }
+
+        private bool _isLoaded = false;
+        public bool IsLoaded
+        {
+            get => _isLoaded;
+            set => SetProperty(ref _isLoaded, value);
         }
 
         private void SubscribeToEvents()
@@ -36,6 +68,8 @@ namespace GuiWpf.ViewModels
             });
         }
 
+        public ObservableCollection<Participant> _participiants = new(); 
+
         public ObservableCollection<Participant> Participiants { get; set; } = new();
 
         private Participant _selectedParticipant = new();
@@ -46,8 +80,13 @@ namespace GuiWpf.ViewModels
             { 
                 if(SetProperty(ref _selectedParticipant, value))
                 {
-                    _ea.GetEvent<GetNotesListEvent>()
+                    if (_selectedParticipant is not null)
+                    {
+                        _ea.GetEvent<GetNotesListEvent>()
                         .Publish(SelectedParticipant.Notes);
+                        _ea.GetEvent<ModelEnterEvent>()
+                            .Publish(ModelType.Participant);
+                    }
                 }; 
             }
         }
@@ -82,9 +121,19 @@ namespace GuiWpf.ViewModels
         public DelegateCommand Load => _load ??= new(
                async () =>
             {
-                var parts = await _participantService.GetParticipantsWix();
+                //await MetroProgressOnLoading();
+                if (IsInitialized)
+                {
+                    return;
+                }
+                IsLoaded = true; 
+                var parts = await _participantService.GetAll();
+                _participiants.Clear();
+                _participiants.AddRange(parts);
                 Participiants.Clear();
                 Participiants.AddRange(parts);
+                IsInitialized = true;
+                IsLoaded = false;
             });
 
         DelegateCommand _toggleRow;
@@ -93,8 +142,6 @@ namespace GuiWpf.ViewModels
             {
                 IsToggleRow = !IsToggleRow;
             });
-
-
 
         private string _searchParticipiantsWord = "";
         public string SearchParticipiantsWord
@@ -110,8 +157,22 @@ namespace GuiWpf.ViewModels
         public DelegateCommand SearchParticipiantsCommand => _searchParticipiantsCommand ??= new(
              () =>
             {
-                var s = SearchParticipiantsWord;
-                //await _participantService.UpdateParticipant(SelectedParticipant);
-            });
+                if (string.IsNullOrEmpty(SearchParticipiantsWord))
+                {
+                    Participiants.Clear();
+                    Participiants.AddRange(_participiants);
+                    return;
+                }
+                var list = Participiants
+                .Where(p => p.Name
+                    .Contains(SearchParticipiantsWord, StringComparison.CurrentCultureIgnoreCase));
+                if (list.Any())
+                {
+                    Participiants.Clear();
+                    Participiants.AddRange(list);
+                }
+ 
+            },
+             () => !IsLoaded);
     }
 }

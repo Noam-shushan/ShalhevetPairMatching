@@ -11,7 +11,6 @@
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    FontSize="10"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style
@@ -35,13 +34,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <GroupBox
-            Margin="5"
-            materialDesign:ColorZoneAssist.Mode="Light"
-            BorderThickness="0">
-            <GroupBox.Header>
-                <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="שאלות פתוחות" />
-            </GroupBox.Header>
+        <GroupBox Margin="5" Header="שאלות פתוחות">
             <ContentPresenter Content="{Binding Path=OpenQuestions, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <ContentPresenter.Resources>
                     <DataTemplate DataType="{x:Type models:OpenQuestionsForIsrael}">

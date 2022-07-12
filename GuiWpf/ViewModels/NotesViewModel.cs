@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace GuiWpf.ViewModels
 {
+    
+    
     public class NotesViewModel : BindableBase
     {
         readonly IEventAggregator _ea;
@@ -21,11 +23,25 @@ namespace GuiWpf.ViewModels
             _ea = ea;
             _ea.GetEvent<GetNotesListEvent>()
                 .Subscribe(NewNotesListResivd);
+            _ea.GetEvent<ModelEnterEvent>()
+                .Subscribe((type) =>
+                {
+                    ModelType = type;
+                });
         }
+        
         private void NewNotesListResivd(IEnumerable<Note> notes)
         {
             Notes.Clear();
             Notes.AddRange(notes);
+        }
+
+
+        private ModelType _modelType;
+        public ModelType ModelType
+        {
+            get => _modelType;
+            set => SetProperty(ref _modelType, value);
         }
 
         public ObservableCollection<Note> Notes { get; set; } = new();
@@ -76,8 +92,18 @@ namespace GuiWpf.ViewModels
                 Date = DateTime.Now,
                 Subject = Subject
             };
+            
             Notes.Add(newNote);
-            _ea.GetEvent<NewNoteEvent>().Publish(newNote);
+            
+            switch (ModelType)
+            {
+                case ModelType.Participant:
+                    _ea.GetEvent<NewNoteForParticipaintEvent>().Publish(newNote);
+                    break;
+                case ModelType.Pair:
+                    _ea.GetEvent<NewNoteForPairEvent>().Publish(newNote);
+                    break;
+            }
             Reset();
             IsNewNoteFormOpen = !IsNewNoteFormOpen;
         });
@@ -89,12 +115,20 @@ namespace GuiWpf.ViewModels
             IsNewNoteFormOpen = !IsNewNoteFormOpen;
         });
 
-
         DelegateCommand _DeleteNoteCommand;
         public DelegateCommand DeleteNoteCommand => _DeleteNoteCommand ??= new(
         () =>
         {
-            _ea.GetEvent<DeleteNoteEvent>().Publish(SelectedNote);
+            switch (ModelType)
+            {
+                case ModelType.Participant:
+                    _ea.GetEvent<DeleteNoteFromParticipiantEvent>().Publish(SelectedNote);
+                    break;
+                case ModelType.Pair:
+                    _ea.GetEvent<DeleteNoteFromPairEvent>().Publish(SelectedNote);
+                    break;
+            }
+            Reset();
             Notes.Remove(SelectedNote);
         });
 

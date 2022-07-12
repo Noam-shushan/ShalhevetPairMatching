@@ -28,8 +28,8 @@ namespace GuiWpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            _ea.GetEvent<NewNoteEvent>().Subscribe(NewNoteResivd);
-            _ea.GetEvent<DeleteNoteEvent>().Subscribe(OnDeleteNote);
+            _ea.GetEvent<NewNoteForPairEvent>().Subscribe(NewNoteResivd);
+            _ea.GetEvent<DeleteNoteFromPairEvent>().Subscribe(OnDeleteNote);
         }
 
         private void OnDeleteNote(Note note)
@@ -52,6 +52,8 @@ namespace GuiWpf.ViewModels
                 {
                     _ea.GetEvent<GetNotesListEvent>()
                         .Publish(SelectedPair.Notes);
+                    _ea.GetEvent<ModelEnterEvent>()
+                        .Publish(ModelType.Participant);
                 } 
             }
         }

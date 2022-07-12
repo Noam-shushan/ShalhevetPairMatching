@@ -16,6 +16,15 @@
             TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
         </Style>
+
+        <Style
+            x:Key="ValueTextStyle"
+            BasedOn="{StaticResource TextStyle}"
+            TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+            <Setter Property="MaxWidth" Value="90" />
+
+        </Style>
     </UserControl.Resources>
     <materialDesign:Card Margin="5" UniformCornerRadius="5">
         <Grid>
@@ -62,7 +71,7 @@
                         </materialDesign:PackIcon>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type mscorlib:String}">
-                        <TextBlock Style="{StaticResource TextStyle}" Text="{Binding Path=.}" />
+                        <TextBlock Style="{StaticResource ValueTextStyle}" Text="{Binding Path=.}" />
                     </DataTemplate>
                 </ContentPresenter.Resources>
             </ContentPresenter>

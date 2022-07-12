@@ -14,9 +14,19 @@ namespace GuiWpf.Events
 
     public class GetNotesListEvent : PubSubEvent<IEnumerable<Note>> { }
 
-    public class NewNoteEvent : PubSubEvent<Note> { }
+    public class NewNoteForParticipaintEvent : PubSubEvent<Note> { }
+    
+    public class NewNoteForPairEvent : PubSubEvent<Note> { }
 
-    public class DeleteNoteEvent : PubSubEvent<Note> { }
+    public class DeleteNoteFromParticipiantEvent : PubSubEvent<Note> { }
+    
+    public class DeleteNoteFromPairEvent : PubSubEvent<Note> { }
 
+    public class ModelEnterEvent : PubSubEvent<ModelType> { }
 
+    public enum ModelType
+    {
+        Participant,
+        Pair
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using PairMatching.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PairMatching.DomainModel.MatchingCalculations
@@ -8,10 +9,13 @@ namespace PairMatching.DomainModel.MatchingCalculations
     {
         readonly IsraelParticipant _ip;
         readonly WorldParticipant _wp;
+        readonly PairSuggestion _result;
 
-        PairSuggestion _result;
-        
-        public PairSuggestionBulider(IsraelParticipant ip, WorldParticipant wp)
+        const int minHoursToLearn = 1;
+
+        readonly TimeIntervalFactory _intervalFactory;
+
+        public PairSuggestionBulider(IsraelParticipant ip, WorldParticipant wp, TimeIntervalFactory timeIntervalFactory)
         {
             _ip = ip;
             _wp = wp;
@@ -21,6 +25,8 @@ namespace PairMatching.DomainModel.MatchingCalculations
                 FromIsrael = _ip,
                 FromWorld = _wp
             };
+
+            _intervalFactory = timeIntervalFactory;
         }
         
         public PairSuggestion Build()
@@ -30,7 +36,8 @@ namespace PairMatching.DomainModel.MatchingCalculations
             _result.IsSkillLevelMatch = IsLerningSkillMatch();
             _result.IsLearningStyleMatch = IsLearningStyleMatch();
             _result.IsTrackMatch = IsTrackMatch();
-            
+            _result.MatchingTimes = GetMatchingTimes().ToList();
+
             if (_result.IsMinmunMatch)
             {
                 _result.MatchingScore = CalculateMatchingScore();
@@ -39,7 +46,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
             return null;
         }
 
-        private int CalculateMatchingScore()
+        int CalculateMatchingScore()
         {
             int score = 0;
             
@@ -65,6 +72,34 @@ namespace PairMatching.DomainModel.MatchingCalculations
             score += _result.MatchingTimes.Count;
 
             return score;
+        }
+
+        IEnumerable<MatchingTime> GetMatchingTimes()
+        {
+            var ipTimes = GetTimeIntervals(_ip.PairPreferences.LearningTime);
+            var wpTimes = GetTimeIntervals(_ip.PairPreferences.LearningTime);
+
+            return from it in ipTimes
+                   from wt in wpTimes
+                   let interI = it.Item3 // the israeli time interval
+                   let interW = wt.Item3 // the world time interval
+                   let total = interI.FitWith(interW, _wp.DiffFromIsrael)
+                   where total.Hours >= minHoursToLearn  // at least 1 hour to learn
+                   select new MatchingTime
+                   {
+                       HoursIsrael = it.Item1,
+                       HoursWorld = wt.Item1,
+                       IsraelDay = it.Item2,
+                       WorldDay = wt.Item2,
+                       TotalMatchTime = total
+                   };
+        }
+
+        IEnumerable<(TimesInDay, Days, TimeInterval)> GetTimeIntervals(IEnumerable<LearningTime> learningTimes)
+        {
+            return from lt in learningTimes
+                   from timeInDay in lt.TimeInDay
+                   select (timeInDay, lt.Day, _intervalFactory.FromTimeInDay(timeInDay, lt.Day));
         }
 
         bool IsGenderMatch()
