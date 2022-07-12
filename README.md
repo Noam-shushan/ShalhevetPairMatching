@@ -5,5 +5,5 @@ A new version of PairMatching
 * More organized and designed 
 * Better UI
 * Fix many bugs 
-* Moving from Framework to .NET 5
+* Moving from Framework to .NET 6
 
