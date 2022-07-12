@@ -15,9 +15,11 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <!--  Theme setting  -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Green.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Teal.xaml" />
 
                 <ResourceDictionary Source="Styles\OpenQuestionStyle.xaml" />
+
+
 
                 <materialDesign:CustomColorTheme
                     BaseTheme="Light"
@@ -25,6 +27,8 @@
                     SecondaryColor="Moccasin" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="MainColor" Color="CadetBlue" />
 
             <Style
                 x:Key="ButtonContentStyle"
@@ -54,6 +58,7 @@
             </Style>
 
             <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
+            <materialDesign:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

@@ -1,4 +1,5 @@
 ﻿using PairMatching.Models;
+using System;
 
 namespace PairMatching.DomainModel.MatchingCalculations
 {
@@ -12,6 +13,6 @@ namespace PairMatching.DomainModel.MatchingCalculations
         
         public TimesInDay HoursWorld { get; set; }
 
-        public bool IsHoursMatch { get; set; }
+        public TimeSpan TotalMatchTime { get; set; }
     }
 }

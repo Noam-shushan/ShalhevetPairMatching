@@ -30,11 +30,13 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public IEnumerable<PairSuggestion> BuildPairSuggestions()
         {
-            foreach(var ip in _israeliParticipants)
+            var TimeIntervalFactory = new TimeIntervalFactory();
+            foreach (var ip in _israeliParticipants)
             {
                 foreach(var wp in _worldParticipants)
                 {
-                    var pairSuggestion = new PairSuggestionBulider(ip, wp).Build();
+                    var pairSuggestion = new PairSuggestionBulider(ip, wp, TimeIntervalFactory)
+                        .Build();
                     if(pairSuggestion != null)
                     {
                         yield return pairSuggestion;

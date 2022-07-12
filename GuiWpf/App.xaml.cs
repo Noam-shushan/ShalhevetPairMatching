@@ -13,6 +13,7 @@ using PairMatching.DomainModel.Services;
 using static PairMatching.Tools.HelperFunction;
 using Prism.Mvvm;
 using GuiWpf.ViewModels;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace GuiWpf
 {
@@ -31,7 +32,7 @@ namespace GuiWpf
             containerRegistry.Register<IPairsService, PairService>();
             containerRegistry.Register<IEmailService, EmailService>();
 
-            containerRegistry.RegisterScoped<SendEmail>();
+            containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
         }
 
         private MyConfiguration GetConfigurations()

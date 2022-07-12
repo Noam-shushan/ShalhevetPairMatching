@@ -14,6 +14,10 @@ namespace GuiWpf.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if(value is null)
+            {
+                return "";
+            }
             var result = (value as Enum).GetDescriptionFromEnumValue();
             return result;
         }

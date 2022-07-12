@@ -14,7 +14,7 @@ namespace PairMatching.Models
         public TimeSpan UtcOffset { get; set; }
 
         [BsonIgnore]
-        public int DiffFromIsrael { get => GetDifferenceUtc(UtcOffset).Hours; }
+        public TimeSpan DiffFromIsrael { get => GetDifferenceUtc(UtcOffset); }
 
         /// <summary>
         /// level of skill 

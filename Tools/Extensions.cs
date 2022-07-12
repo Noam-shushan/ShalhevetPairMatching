@@ -67,7 +67,9 @@ namespace PairMatching.Tools
 
         public static string GetDescriptionFromEnumValue(this Enum value, string engOrHeb = "heb")
         {
-            EnumDescriptionAttribute attribute = value.GetType()
+            if (value == null)
+                return string.Empty;
+            var attribute = value.GetType()
                 .GetField(value.ToString())
                 .GetCustomAttributes(typeof(EnumDescriptionAttribute), false)
                 .SingleOrDefault() as EnumDescriptionAttribute;
