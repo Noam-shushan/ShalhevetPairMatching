@@ -10,8 +10,12 @@ namespace PairMatching.DomainModel.MatchingCalculations
         
         public TimeInterval FromTimeInDay(TimesInDay timeInDay, Days eDay)
         {
-            if (!_timeToInterval.ContainsKey((timeInDay, eDay)) && eDay != Days.Defulte && timeInDay != TimesInDay.Defulte)
+            if (!_timeToInterval.ContainsKey((timeInDay, eDay)))
             {
+                if (eDay == Days.Defulte || timeInDay == TimesInDay.Defulte || timeInDay == TimesInDay.Incapable)
+                {
+                    return null;
+                }
                 int day = (int)eDay;
                 switch (timeInDay)
                 {

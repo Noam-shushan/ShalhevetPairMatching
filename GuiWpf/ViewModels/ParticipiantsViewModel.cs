@@ -29,11 +29,37 @@ namespace GuiWpf.ViewModels
             _dialog = dialog;
         }
 
+        DelegateCommand _load;
+        public DelegateCommand Load => _load ??= new(
+               async () =>
+               {
+                   //await MetroProgressOnLoading();
+                   if (IsInitialized)
+                   {
+                       return;
+                   }
+                   IsLoaded = true;
+                   var parts = await _participantService.GetAll();                 
+                   _participiants.Clear();
+                   _participiants.AddRange(parts);
+                   Participiants.Clear();
+                   Participiants.AddRange(parts);
+                   IsInitialized = true;
+                   IsLoaded = false;
+               });
+
         private bool _isInitialized = false;
         public bool IsInitialized
         {
             get => _isInitialized ;
             set => SetProperty(ref _isInitialized , value);
+        }
+
+        private bool _isLoaded = false;
+        public bool IsLoaded
+        {
+            get => _isLoaded;
+            set => SetProperty(ref _isLoaded, value);
         }
 
         public async Task MetroProgressOnLoading()
@@ -49,13 +75,6 @@ namespace GuiWpf.ViewModels
 
             // Close...
             await controller.CloseAsync();
-        }
-
-        private bool _isLoaded = false;
-        public bool IsLoaded
-        {
-            get => _isLoaded;
-            set => SetProperty(ref _isLoaded, value);
         }
 
         private void SubscribeToEvents()
@@ -115,26 +134,7 @@ namespace GuiWpf.ViewModels
         private void CloseFormResived(bool isClose)
         {
             IsAddFormOpen = isClose;
-        }
-
-        DelegateCommand _load;
-        public DelegateCommand Load => _load ??= new(
-               async () =>
-            {
-                //await MetroProgressOnLoading();
-                if (IsInitialized)
-                {
-                    return;
-                }
-                IsLoaded = true; 
-                var parts = await _participantService.GetAll();
-                _participiants.Clear();
-                _participiants.AddRange(parts);
-                Participiants.Clear();
-                Participiants.AddRange(parts);
-                IsInitialized = true;
-                IsLoaded = false;
-            });
+        } 
 
         DelegateCommand _toggleRow;
         public DelegateCommand ToggleRow => _toggleRow ??= new(

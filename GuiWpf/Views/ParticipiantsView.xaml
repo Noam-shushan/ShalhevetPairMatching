@@ -414,13 +414,16 @@
                                     HorizontalAlignment="Left" />
 
 
-                                <local:OpenQuestionsView
+                                <GroupBox
                                     Grid.Row="0"
                                     Grid.RowSpan="2"
                                     Grid.Column="2"
-                                    MaxWidth="350"
-                                    MaxHeight="400"
-                                    OpenQuestions="{Binding OpenQuestions}" />
+                                    Header="שאלות פתוחות">
+                                    <local:OpenQuestionsView
+                                        MaxWidth="350"
+                                        MaxHeight="400"
+                                        OpenQuestions="{Binding OpenQuestions}" />
+                                </GroupBox>
 
                                 <!--<materialDesign:DialogHost
                                     Grid.Row="0"
