@@ -31,6 +31,7 @@ namespace GuiWpf
             containerRegistry.Register<IParticipantService, ParticipantService>();
             containerRegistry.Register<IPairsService, PairService>();
             containerRegistry.Register<IEmailService, EmailService>();
+            containerRegistry.Register<IMatchingService, MatchingService>();
 
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
         }

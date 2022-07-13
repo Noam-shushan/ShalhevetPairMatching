@@ -34,116 +34,115 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <GroupBox Margin="5" Header="שאלות פתוחות">
-            <ContentPresenter Content="{Binding Path=OpenQuestions, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                <ContentPresenter.Resources>
-                    <DataTemplate DataType="{x:Type models:OpenQuestionsForIsrael}">
-                        <ScrollViewer materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" CanContentScroll="True">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                </Grid.RowDefinitions>
+        <ContentPresenter Content="{Binding Path=OpenQuestions, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <ContentPresenter.Resources>
+                <DataTemplate DataType="{x:Type models:OpenQuestionsForIsrael}">
+                    <ScrollViewer materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" CanContentScroll="True">
 
-                                <Expander Grid.Row="0" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock
-                                            Style="{StaticResource OpenQuestionsHeaders}"
-                                            Text="פרטים ביוגרפיים (גיל, מה עושה בחיים, רקע לימודי, השתייכות חברתית)"
-                                            TextWrapping="WrapWithOverflow" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding BiographHeb}" />
-                                </Expander>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
 
-                                <Expander Grid.Row="1" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="תכונות אישיות, ערכים חשובים בשבילך, תחביבים ותחומי עניין" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding PersonalTraits}" />
-                                </Expander>
+                            <Expander Grid.Row="0" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock
+                                        Style="{StaticResource OpenQuestionsHeaders}"
+                                        Text="פרטים ביוגרפיים (גיל, מה עושה בחיים, רקע לימודי, השתייכות חברתית)"
+                                        TextWrapping="WrapWithOverflow" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding BiographHeb}" />
+                            </Expander>
 
-                                <Expander Grid.Row="2" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="מה מעניין אותך בהצטרפות לשלהבת?" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhyJoinShalhevet}" />
-                                </Expander>
+                            <Expander Grid.Row="1" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="תכונות אישיות, ערכים חשובים בשבילך, תחביבים ותחומי עניין" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding PersonalTraits}" />
+                            </Expander>
 
-                                <Expander Grid.Row="3" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דברים נוספים שהיית רוצה שנדע, או דברים שהיית רוצה לבקש מאיתנו?" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AdditionalInfo}" />
-                                </Expander>
+                            <Expander Grid.Row="2" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="מה מעניין אותך בהצטרפות לשלהבת?" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhyJoinShalhevet}" />
+                            </Expander>
 
-                                <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דרך מי (או דרך מה) הגעת לתכנית?" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhoIntroduced}" />
-                                </Expander>
-                            </Grid>
-                            <i:Interaction.Behaviors>
-                                <behaviors:IgnoreMouseWheelBehavior />
-                            </i:Interaction.Behaviors>
-                        </ScrollViewer>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type models:OpenQuestionsForWorld}">
-                        <ScrollViewer materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" CanContentScroll="True">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                </Grid.RowDefinitions>
+                            <Expander Grid.Row="3" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דברים נוספים שהיית רוצה שנדע, או דברים שהיית רוצה לבקש מאיתנו?" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AdditionalInfo}" />
+                            </Expander>
 
-                                <Expander Grid.Row="0" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="פרטים ביוגרפיים (גיל, מה עושה בחיים, רקע לימודי, השתייכות חברתית)" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding BiographHeb}" />
-                                </Expander>
+                            <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דרך מי (או דרך מה) הגעת לתכנית?" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhoIntroduced}" />
+                            </Expander>
+                        </Grid>
+                        <i:Interaction.Behaviors>
+                            <behaviors:IgnoreMouseWheelBehavior />
+                        </i:Interaction.Behaviors>
+                    </ScrollViewer>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type models:OpenQuestionsForWorld}">
+                    <ScrollViewer materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" CanContentScroll="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
 
-                                <Expander Grid.Row="1" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="תכונות אישיות, ערכים חשובים בשבילך, תחביבים ותחומי עניין" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding PersonalTraits}" />
-                                </Expander>
+                            <Expander Grid.Row="0" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="פרטים ביוגרפיים (גיל, מה עושה בחיים, רקע לימודי, השתייכות חברתית)" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding BiographHeb}" />
+                            </Expander>
 
-                                <Expander Grid.Row="2" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="מה מעניין אותך בהצטרפות לשלהבת?" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhyJoinShalhevet}" />
-                                </Expander>
+                            <Expander Grid.Row="1" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="תכונות אישיות, ערכים חשובים בשבילך, תחביבים ותחומי עניין" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding PersonalTraits}" />
+                            </Expander>
 
-                                <Expander Grid.Row="3" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דברים נוספים שהיית רוצה שנדע, או דברים שהיית רוצה לבקש מאיתנו?" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AdditionalInfo}" />
-                                </Expander>
+                            <Expander Grid.Row="2" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="מה מעניין אותך בהצטרפות לשלהבת?" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhyJoinShalhevet}" />
+                            </Expander>
 
-                                <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דרך מי (או דרך מה) הגעת לתכנית?" />
-                                    </Expander.Header>
-                                    <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhoIntroduced}" />
-                                </Expander>
-                            </Grid>
-                            <i:Interaction.Behaviors>
-                                <behaviors:IgnoreMouseWheelBehavior />
-                            </i:Interaction.Behaviors>
-                        </ScrollViewer>
-                    </DataTemplate>
-                </ContentPresenter.Resources>
-            </ContentPresenter>
-        </GroupBox>
+                            <Expander Grid.Row="3" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דברים נוספים שהיית רוצה שנדע, או דברים שהיית רוצה לבקש מאיתנו?" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AdditionalInfo}" />
+                            </Expander>
+
+                            <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="דרך מי (או דרך מה) הגעת לתכנית?" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding WhoIntroduced}" />
+                            </Expander>
+                        </Grid>
+                        <i:Interaction.Behaviors>
+                            <behaviors:IgnoreMouseWheelBehavior />
+                        </i:Interaction.Behaviors>
+                    </ScrollViewer>
+                </DataTemplate>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
     </Grid>
 </UserControl>

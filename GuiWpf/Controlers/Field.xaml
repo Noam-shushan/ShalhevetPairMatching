@@ -22,7 +22,6 @@
             BasedOn="{StaticResource TextStyle}"
             TargetType="TextBlock">
             <Setter Property="TextWrapping" Value="WrapWithOverflow" />
-            <Setter Property="MaxWidth" Value="90" />
 
         </Style>
     </UserControl.Resources>
@@ -71,6 +70,19 @@
                         </materialDesign:PackIcon>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type mscorlib:String}">
+                        <TextBlock Style="{StaticResource ValueTextStyle}" Text="{Binding Path=.}" />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type mscorlib:TimeSpan}">
+                        <TextBlock Style="{StaticResource ValueTextStyle}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0}:{1}">
+                                    <Binding Path="Hours" />
+                                    <Binding Path="Minutes" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type mscorlib:Int32}">
                         <TextBlock Style="{StaticResource ValueTextStyle}" Text="{Binding Path=.}" />
                     </DataTemplate>
                 </ContentPresenter.Resources>

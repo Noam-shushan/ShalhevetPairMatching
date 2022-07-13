@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace PairMatching.DomainModel.MatchingCalculations
 {
-    internal class BuildSuggestions
+    public class BuildSuggestions
     {
-        readonly List<IsraelParticipant> _israeliParticipants;
-        readonly List<WorldParticipant> _worldParticipants;
+        readonly IEnumerable<IsraelParticipant> _israeliParticipants;
+        readonly IEnumerable<WorldParticipant> _worldParticipants;
 
-        public BuildSuggestions(List<IsraelParticipant> israeliParticipants, List<WorldParticipant> worldParticipants)
+        public BuildSuggestions(IEnumerable<IsraelParticipant> israeliParticipants, IEnumerable<WorldParticipant> worldParticipants)
         {
             _israeliParticipants = israeliParticipants;
             _worldParticipants = worldParticipants;
@@ -30,12 +30,12 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public IEnumerable<PairSuggestion> BuildPairSuggestions()
         {
-            var TimeIntervalFactory = new TimeIntervalFactory();
+            var timeIntervalFactory = new TimeIntervalFactory();
             foreach (var ip in _israeliParticipants)
             {
                 foreach(var wp in _worldParticipants)
                 {
-                    var pairSuggestion = new PairSuggestionBulider(ip, wp, TimeIntervalFactory)
+                    var pairSuggestion = new PairSuggestionBulider(ip, wp, timeIntervalFactory)
                         .Build();
                     if(pairSuggestion != null)
                     {

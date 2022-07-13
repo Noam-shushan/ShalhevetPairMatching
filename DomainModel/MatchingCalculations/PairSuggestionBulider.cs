@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace PairMatching.DomainModel.MatchingCalculations
 {
-    class PairSuggestionBulider
+    public class PairSuggestionBulider
     {
         readonly IsraelParticipant _ip;
         readonly WorldParticipant _wp;
@@ -65,7 +65,8 @@ namespace PairMatching.DomainModel.MatchingCalculations
             
             if(_ip.PairPreferences.Tracks
                 .Where(t => t != PrefferdTracks.NoPrefrence)
-                .Intersect(_wp.PairPreferences.Tracks)
+                .Intersect(_wp.PairPreferences.Tracks
+                    .Where(t => t != PrefferdTracks.NoPrefrence))
                 .Any())
                 score++;
 
@@ -77,7 +78,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
         IEnumerable<MatchingTime> GetMatchingTimes()
         {
             var ipTimes = GetTimeIntervals(_ip.PairPreferences.LearningTime);
-            var wpTimes = GetTimeIntervals(_ip.PairPreferences.LearningTime);
+            var wpTimes = GetTimeIntervals(_wp.PairPreferences.LearningTime);
 
             return from it in ipTimes
                    from wt in wpTimes
@@ -99,7 +100,9 @@ namespace PairMatching.DomainModel.MatchingCalculations
         {
             return from lt in learningTimes
                    from timeInDay in lt.TimeInDay
-                   select (timeInDay, lt.Day, _intervalFactory.FromTimeInDay(timeInDay, lt.Day));
+                   let res = (timeInDay, lt.Day, _intervalFactory.FromTimeInDay(timeInDay, lt.Day))
+                   where res.Item3 != null
+                   select res;
         }
 
         bool IsGenderMatch()
@@ -116,7 +119,9 @@ namespace PairMatching.DomainModel.MatchingCalculations
         {
             return _ip.PairPreferences.Tracks
                 .Intersect(_wp.PairPreferences.Tracks)
-                .Any();
+                .Any() ||
+                _ip.PairPreferences.Tracks.Contains(PrefferdTracks.NoPrefrence) ||
+                _wp.PairPreferences.Tracks.Contains(PrefferdTracks.NoPrefrence);
         }
 
         private bool IsEnglishLevelMatch()

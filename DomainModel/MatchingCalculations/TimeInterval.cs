@@ -20,18 +20,21 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public TimeSpan FitWith(TimeInterval other, TimeSpan diffrence)
         {
-            AddTime(diffrence);
+            var temp = Reduce(diffrence);
             
-            var maxStart = TimeSpan.FromMinutes(Math.Max(Start.TotalMinutes, other.Start.TotalMinutes));
-            var  minEnd = TimeSpan.FromMinutes(Math.Min(End.TotalMinutes, other.End.TotalMinutes));
+            var maxStart = TimeSpan.FromMinutes(Math.Max(temp.Start.TotalMinutes, other.Start.TotalMinutes));
+            var  minEnd = TimeSpan.FromMinutes(Math.Min(temp.End.TotalMinutes, other.End.TotalMinutes));
 
             return minEnd - maxStart;
         }
 
-        public void AddTime(TimeSpan time)
+        public TimeInterval Reduce(TimeSpan time)
         {
-            Start += time;
-            End += time;
+            return new TimeInterval
+            {
+                Start = Start + time,
+                End = End + time
+            };
         }
         
         public override string ToString()
