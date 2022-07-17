@@ -10,6 +10,8 @@
         "dependencies": {
           "Configurations": "1.0.0",
           "DomainModel": "1.0.0",
+          "DropdownMenu.WPF": "1.0.0",
+          "MVVMEssentials.WPF": "1.0.3",
           "MahApps.Metro": "2.4.9",
           "MaterialDesignThemes": "4.5.0",
           "Models": "1.0.0",
@@ -38,6 +40,14 @@
           "lib/netstandard2.1/DnsClient.dll": {
             "assemblyVersion": "1.4.0.0",
             "fileVersion": "1.4.0.0"
+          }
+        }
+      },
+      "DropdownMenu.WPF/1.0.0": {
+        "runtime": {
+          "lib/netcoreapp3.1/DropdownMenuControl.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -217,6 +227,14 @@
             "rid": "win",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "MVVMEssentials.WPF/1.0.3": {
+        "runtime": {
+          "lib/netcoreapp3.1/MVVMEssentials.dll": {
+            "assemblyVersion": "1.0.3.0",
+            "fileVersion": "1.0.3.0"
           }
         }
       },
@@ -416,6 +434,13 @@
       "path": "dnsclient/1.4.0",
       "hashPath": "dnsclient.1.4.0.nupkg.sha512"
     },
+    "DropdownMenu.WPF/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7S90a70go9Cko9y5Ugs3YEev+EboKs8uicIw5clxa2uTho+/pAHAx7NRq0HbAsVAKAobAqL9goAlI/elRbNsxA==",
+      "path": "dropdownmenu.wpf/1.0.0",
+      "hashPath": "dropdownmenu.wpf.1.0.0.nupkg.sha512"
+    },
     "JsonSubTypes/1.9.0": {
       "type": "package",
       "serviceable": true,
@@ -499,6 +524,13 @@
       "sha512": "sha512-BAvqY/otOsmAGTsmzIYXRFysvpu8X7rYkDzEBX4iBlrF57SB+fD5px9sCPR6sETgfZ6k98qUNS6go5wtY9WOBA==",
       "path": "mongodb.libmongocrypt/1.3.0",
       "hashPath": "mongodb.libmongocrypt.1.3.0.nupkg.sha512"
+    },
+    "MVVMEssentials.WPF/1.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2ReLynLjh1w6Hmo3xztohYj4voVP1R3z4J/+t3vZwo9vh6J0W6kDsyiuLVlmooxNLYJj9RM+0JgNVq8nKKtj6Q==",
+      "path": "mvvmessentials.wpf/1.0.3",
+      "hashPath": "mvvmessentials.wpf.1.0.3.nupkg.sha512"
     },
     "Newtonsoft.Json/13.0.1": {
       "type": "package",

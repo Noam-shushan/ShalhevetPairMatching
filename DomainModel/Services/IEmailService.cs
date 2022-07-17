@@ -9,6 +9,7 @@ namespace PairMatching.DomainModel.Services
 {
     public interface IEmailService
     {
-        Task SendEmailTest(IEnumerable<string> to, string subject, string body);
+        Task<IEnumerable<EmailModel>> GetEmails();
+        Task SendEmail(EmailModel email);
     }
 }

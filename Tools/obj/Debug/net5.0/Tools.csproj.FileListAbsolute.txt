@@ -1,12 +1,12 @@
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\bin\Debug\net5.0\Tools.deps.json
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\bin\Debug\net5.0\Tools.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\bin\Debug\net5.0\Tools.pdb
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\Tools.csproj.AssemblyReference.cache
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\Tools.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\Tools.AssemblyInfoInputs.cache
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\Tools.AssemblyInfo.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\Tools.csproj.CoreCompileInputs.cache
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\Tools.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\refint\Tools.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\Tools.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\ref\Tools.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\Tools.csproj.AssemblyReference.cache
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\Tools\obj\Debug\net5.0\refint\Tools.dll

@@ -44,6 +44,7 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="5,0,0,0" />
+                <Setter Property="Cursor" Value="Hand" />
             </Style>
             <Style
                 x:Key="GroupBoxList"
@@ -58,6 +59,7 @@
             </Style>
 
             <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
+            <converters:VisbilityToBooleanConverter x:Key="VisbilityToBooleanConverter" />
             <materialDesign:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>

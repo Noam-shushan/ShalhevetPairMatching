@@ -20,17 +20,18 @@
             Grid.Column="0"
             MinWidth="200"
             HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
             materialDesign:HintAssist.Hint="חפש"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
             Text="{Binding Path=SearchWord, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
-            <TextBox.InputBindings>
+            <!--<TextBox.InputBindings>
                 <KeyBinding
                     Command="{Binding Path=SearchCommand, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}"
                     CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBox}}}"
                     Gesture="Return" />
-            </TextBox.InputBindings>
+            </TextBox.InputBindings>-->
         </TextBox>
-        <Button
+        <!--<Button
             Grid.Column="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
@@ -40,6 +41,6 @@
                 Width="18"
                 Height="18"
                 Kind="Search" />
-        </Button>
+        </Button>-->
     </Grid>
 </UserControl>

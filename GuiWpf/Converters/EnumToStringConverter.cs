@@ -8,6 +8,7 @@ using System.Windows.Data;
 using PairMatching.Models;
 using static PairMatching.Tools.Extensions;
 
+
 namespace GuiWpf.Converters
 {
     public class EnumToStringConverter : IValueConverter

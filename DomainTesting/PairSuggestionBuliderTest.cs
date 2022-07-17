@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.Models;
+using System;
+using System.Collections.Generic;
 
 namespace DomainTesting
 {

@@ -90,7 +90,12 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\GuiWpf.csproj.CoreCompileInputs.cache
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\GuiWpf.csproj.CopyComplete
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\GuiWpf.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\refint\GuiWpf.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\GuiWpf.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\GuiWpf.genruntimeconfig.cache
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\ref\GuiWpf.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\DropdownMenuControl.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net5.0-windows\MVVMEssentials.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\SingelParticipaintView.g.cs
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Controlers\Generic.baml
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\Views\SingelParticipaintView.baml
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net5.0-windows\refint\GuiWpf.dll

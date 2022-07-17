@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using PairMatching.Models.Dtos;
 using PairMatching.Configurations;
 using Newtonsoft.Json;
 using PairMatching.Tools;
+using PairMatching.Models;
 
 namespace PairMatching.WixApi
 {
@@ -39,13 +41,22 @@ namespace PairMatching.WixApi
             return data;
         }
 
-        public async Task SendEmail(EmailWixDto email)
+        public async Task<IEnumerable<EmailAddress>> SendEmail(EmailModel emailDto)
         {
             var query = _configuration.WixApi["sendEmails"];
+            
+            var email = new
+            {
+                to = emailDto.To.Select(i => i.ParticipantWixId),
+                subject = emailDto.Subject,
+                body = emailDto.Body
+            };        
 
             var body = JsonConvert.SerializeObject(email, Formatting.Indented);
 
             await _http.PostAsync(query, body);
+
+            return null;
         }
 
         public async Task<ParticipantWixDto> GetOneParticipant(int index)

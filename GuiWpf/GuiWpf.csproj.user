@@ -37,9 +37,15 @@
     <Compile Update="Views\SendEmailView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\SingelParticipaintView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controlers\Field.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controlers\Generic.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controlers\SearchTextBox.xaml">
@@ -73,6 +79,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SendEmailView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SingelParticipaintView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

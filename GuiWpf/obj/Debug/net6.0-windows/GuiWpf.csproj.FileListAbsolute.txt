@@ -8,6 +8,7 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\GuiWpf.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\ControlzEx.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\DnsClient.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\DropdownMenuControl.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\JsonSubTypes.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\MahApps.Metro.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\MailKit.dll
@@ -19,6 +20,7 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\MongoDB.Driver.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\MongoDB.Driver.Core.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\MongoDB.Libmongocrypt.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\MVVMEssentials.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\BouncyCastle.Crypto.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\bin\Debug\net6.0-windows\Prism.dll
@@ -65,6 +67,7 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\ParisView.g.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\ParticipiantsView.g.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\SendEmailView.g.cs
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\SingelParticipaintView.g.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\App.g.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\GuiWpf_Content.g.cs
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\GeneratedInternalTypeHelper.g.cs
@@ -72,6 +75,7 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\GuiWpf_MarkupCompile.lref
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\App.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Controlers\Field.baml
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Controlers\Generic.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Controlers\SearchTextBox.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\AddParticipantForm.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\EmailsView.baml
@@ -82,6 +86,7 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-wind
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\ParisView.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\ParticipiantsView.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\SendEmailView.baml
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\Views\SingelParticipaintView.baml
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\GuiWpf.g.resources
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\GuiWpf.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\obj\Debug\net6.0-windows\GuiWpf.AssemblyInfoInputs.cache

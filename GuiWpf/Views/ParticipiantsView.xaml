@@ -4,17 +4,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:controlers="clr-namespace:GuiWpf.Controlers"
-    xmlns:custom="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dropDown="clr-namespace:DropdownMenuControl;assembly=DropdownMenuControl"
+    xmlns:ex="clr-namespace:GuiWpf.Exstensions"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modelPopup="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:GuiWpf.ViewModels"
     Name="me"
-    Dialog:DialogParticipation.Register="{Binding}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -71,21 +73,22 @@
                         Grid.Column="1"
                         Margin="10,0,10,0"
                         materialDesign:HintAssist.Hint="שנה"
+                        ItemsSource="{Binding Years}"
+                        SelectedValue="{Binding YearsFilter}"
                         Style="{StaticResource FilterComboBox}">
-                        <ComboBoxItem Content="כל השנים" />
-                        <ComboBoxItem Content="2021" />
-                        <ComboBoxItem Content="2022" />
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=.}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
 
                     <ComboBox
                         Grid.Column="2"
                         materialDesign:HintAssist.Hint="סנן"
-                        Style="{StaticResource FilterComboBox}">
-                        <ComboBoxItem Content="כל המששתתפים" />
-                        <ComboBoxItem Content="משתתפים מישראל" />
-                        <ComboBoxItem Content="משתתפים מהתפוצות" />
-                        <ComboBoxItem Content="משתתפים ללא חבורתא" />
-                    </ComboBox>
+                        ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type vm:ParticipiantsKind}}}"
+                        SelectedValue="{Binding PartsKindFilter, Converter={StaticResource EnumToStringConverter}}"
+                        Style="{StaticResource FilterComboBox}" />
 
                     <Button
                         Grid.Column="3"
@@ -112,34 +115,33 @@
                     ItemsSource="{Binding Participiants}"
                     ScrollViewer.CanContentScroll="False"
                     SelectedItem="{Binding SelectedParticipant}">
-                    <DataGrid.Style>
-                        <Style BasedOn="{StaticResource MaterialDesignDataGrid}" TargetType="DataGrid">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsToggleRow}" Value="True">
-                                    <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsToggleRow}" Value="False">
-                                    <Setter Property="RowDetailsVisibilityMode" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.Style>
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding ToggleRow}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    <DataGrid.Resources>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Width" Value="auto" />
+                        </Style>
+                    </DataGrid.Resources>
 
                     <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ToggleButton
+                                        Cursor="Hand"
+                                        IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DetailsVisibility, Converter={StaticResource VisbilityToBooleanConverter}, Mode=TwoWay}"
+                                        Style="{StaticResource MaterialDesignExpandCollapseToggleStyle}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
-                                <CheckBox />
+                                <CheckBox Cursor="Hand" />
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox />
+                                    <CheckBox Cursor="Hand" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -147,7 +149,8 @@
                         <DataGridTextColumn
                             Binding="{Binding Name}"
                             Header="שם מלא"
-                            IsReadOnly="True" />
+                            IsReadOnly="True"
+                            TextBlock.FontWeight="DemiBold" />
 
                         <DataGridTextColumn
                             Binding="{Binding Country}"
@@ -157,12 +160,12 @@
                         <DataGridTemplateColumn Header="טלפון">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding PhoneNumber}" />
+                                    <TextBlock Cursor="Pen" Text="{Binding PhoneNumber}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <TextBox Text="{Binding PhoneNumber}" />
+                                    <TextBox Cursor="Pen" Text="{Binding PhoneNumber}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
@@ -170,61 +173,20 @@
                         <DataGridTemplateColumn Header="מייל">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Email}" />
+                                    <TextBlock Cursor="Pen" Text="{Binding Email}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <TextBox Text="{Binding Email}" />
+                                    <TextBox Cursor="Pen" Text="{Binding Email}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
 
                         <DataGridTextColumn
-                            Binding="{Binding Gender, Converter={StaticResource EnumToStringConverter}}"
-                            Header="מגדר"
-                            IsReadOnly="True" />
-
-                        <DataGridTextColumn
                             Binding="{Binding DateOfRegistered, StringFormat=d}"
                             Header="תאריך הרשמה"
-                            IsReadOnly="True">
-                            <!--<DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Text="תאריך הרשמה" />
-                                        <DatePicker
-                                            Grid.Column="1"
-                                            Margin="3,0,0,0"
-                                            Style="{StaticResource MaterialDesignDatePicker}" />
-                                    </Grid>
-
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>-->
-                        </DataGridTextColumn>
-
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.Header>
-                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק את כל הנבחרים">
-                                    <materialDesign:PackIcon Kind="Delete" />
-                                </Button>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק משתתף">
-                                        <materialDesign:PackIcon Kind="Delete" />
-                                    </Button>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                            IsReadOnly="True" />
 
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
@@ -241,21 +203,41 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="ארכיון">
+                        <DataGridTemplateColumn Header="">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח לארכיון">
-                                        <materialDesign:PackIcon Kind="Archive" />
-                                    </Button>
+                                    <dropDown:DropdownMenu Cursor="Hand">
+                                        <Border
+                                            Background="White"
+                                            BorderBrush="LightGray"
+                                            BorderThickness="1">
+                                            <StackPanel>
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="ערוך">
+                                                    <materialDesign:PackIcon Kind="Edit" />
+                                                </Button>
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח לארכיון">
+                                                    <materialDesign:PackIcon Kind="Archive" />
+                                                </Button>
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק משתתף">
+                                                    <materialDesign:PackIcon Kind="Delete" />
+                                                </Button>
+                                            </StackPanel>
+                                        </Border>
+                                    </dropDown:DropdownMenu>
+
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+
+
 
                     </DataGrid.Columns>
 
                     <!--#region Row detelis of participaint-->
                     <DataGrid.RowDetailsTemplate>
+
                         <DataTemplate>
+
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -268,6 +250,9 @@
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
+
+
+                                <!--#region Preference-->
 
                                 <GroupBox
                                     Grid.Row="0"
@@ -312,19 +297,23 @@
                                             Value="{Binding PairPreferences.NumberOfMatchs}" />
 
                                         <GroupBox Grid.Row="4" Header="מסלולי לימוד">
-                                            <ListBox ItemsSource="{Binding PairPreferences.Tracks}" Style="{StaticResource MaterialDesignChoiceChipListBox}">
-                                                <ListBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter}}" />
-                                                    </DataTemplate>
-                                                </ListBox.ItemTemplate>
-                                            </ListBox>
+                                            <ScrollViewer mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True">
+                                                <ListBox ItemsSource="{Binding PairPreferences.Tracks}" Style="{StaticResource MaterialDesignChoiceChipListBox}">
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter}}" />
+                                                        </DataTemplate>
+                                                    </ListBox.ItemTemplate>
+                                                </ListBox>
+                                            </ScrollViewer>
                                         </GroupBox>
 
                                     </Grid>
                                 </GroupBox>
 
+                                <!--#endregion
 
+                            #region Learning time-->
 
                                 <GroupBox
                                     Grid.Row="0"
@@ -332,45 +321,52 @@
                                     Margin="3"
                                     Header="זמני לימוד">
 
-                                    <ListBox ItemsSource="{Binding PairPreferences.LearningTime}" Style="{StaticResource MaterialDesignCardsListBox}">
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <UniformGrid Columns="5" />
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="auto" />
-                                                        <RowDefinition Height="*" />
-                                                    </Grid.RowDefinitions>
-                                                    <materialDesign:Card
-                                                        Grid.Row="0"
-                                                        Margin="3"
-                                                        Background="#fff5d9"
-                                                        UniformCornerRadius="10">
-                                                        <TextBlock
-                                                            Padding="3"
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Text="{Binding Day, Converter={StaticResource EnumToStringConverter}}" />
-                                                    </materialDesign:Card>
-                                                    <ListBox Grid.Row="1" ItemsSource="{Binding TimeInDay}">
-                                                        <ListBox.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding Path=., Converter={StaticResource EnumToStringConverter}}" />
-                                                            </DataTemplate>
-                                                        </ListBox.ItemTemplate>
-                                                    </ListBox>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
+                                    <ScrollViewer
+                                        mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Hidden">
+                                        <ListBox ItemsSource="{Binding PairPreferences.LearningTime}" Style="{StaticResource MaterialDesignCardsListBox}">
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <UniformGrid Columns="5" />
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <materialDesign:Card
+                                                            Grid.Row="0"
+                                                            Margin="3"
+                                                            Background="#fff5d9"
+                                                            UniformCornerRadius="10">
+                                                            <TextBlock
+                                                                Padding="3"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Text="{Binding Day, Converter={StaticResource EnumToStringConverter}}" />
+                                                        </materialDesign:Card>
+                                                        <ListBox Grid.Row="1" ItemsSource="{Binding TimeInDay}">
+                                                            <ListBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding Path=., Converter={StaticResource EnumToStringConverter}}" />
+                                                                </DataTemplate>
+                                                            </ListBox.ItemTemplate>
+                                                        </ListBox>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </ScrollViewer>
                                 </GroupBox>
 
+                                <!--#endregion
 
-                                <!--#region Adisional info template-->
+                            #region Adisional info template-->
+
 
                                 <GroupBox
                                     Grid.Row="1"
@@ -382,101 +378,115 @@
                                             <RowDefinition Height="auto" />
                                             <RowDefinition Height="auto" />
                                             <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
                                         </Grid.RowDefinitions>
 
                                         <controlers:Field
                                             Grid.Row="0"
+                                            FieldName="מגדר"
+                                            Value="{Binding Gender, Converter={StaticResource EnumToStringConverter}}" />
+
+                                        <controlers:Field
+                                            Grid.Row="1"
                                             FieldName="רמת אנגלית"
                                             Visibility="{Binding IsFromIsrael, Converter={StaticResource BooleanToVisibilityConverter}}"
                                             Value="{Binding EnglishLevel, Converter={StaticResource EnumToStringConverter}}" />
 
                                         <controlers:Field
-                                            Grid.Row="0"
+                                            Grid.Row="1"
                                             FieldName="רמת לימוד"
                                             Style="{StaticResource HideFieldOfWorldPartStyle}"
                                             Value="{Binding SkillLevel, Converter={StaticResource EnumToStringConverter}}" />
 
-                                        <ListBox
-                                            Grid.Row="1"
-                                            ItemsSource="{Binding Languages}"
-                                            Style="{StaticResource MaterialDesignChoiceChipAccentListBox}" />
+                                        <ScrollViewer
+                                            Grid.Row="2"
+                                            mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                                            HorizontalScrollBarVisibility="Hidden"
+                                            VerticalScrollBarVisibility="Hidden">
+                                            <ListBox ItemsSource="{Binding OtherLanguages}" Style="{StaticResource MaterialDesignChoiceChipAccentListBox}" />
+                                        </ScrollViewer>
+
+                                        <controlers:Field
+                                            Grid.Row="3"
+                                            FieldName="JewishAndComAff"
+                                            FlowDirection="LeftToRight"
+                                            Style="{StaticResource HideFieldOfWorldPartStyle}"
+                                            Value="{Binding JewishAndComAff}" />
+
+                                        <controlers:Field
+                                            Grid.Row="4"
+                                            FieldName="JewishAffiliation"
+                                            FlowDirection="LeftToRight"
+                                            Style="{StaticResource HideFieldOfWorldPartStyle}"
+                                            Value="{Binding JewishAffiliation}" />
+
+                                        <controlers:Field
+                                            Grid.Row="5"
+                                            FieldName="Profession"
+                                            FlowDirection="LeftToRight"
+                                            Style="{StaticResource HideFieldOfWorldPartStyle}"
+                                            Value="{Binding Profession}" />
+
+                                        <controlers:Field
+                                            Grid.Row="6"
+                                            FieldName="Age"
+                                            FlowDirection="LeftToRight"
+                                            Style="{StaticResource HideFieldOfWorldPartStyle}"
+                                            Value="{Binding Age}" />
+
+                                        <controlers:Field
+                                            Grid.Row="7"
+                                            FieldName="City"
+                                            FlowDirection="LeftToRight"
+                                            Style="{StaticResource HideFieldOfWorldPartStyle}"
+                                            Value="{Binding Address.City}" />
+
+                                        <controlers:Field
+                                            Grid.Row="8"
+                                            FieldName="State"
+                                            FlowDirection="LeftToRight"
+                                            Style="{StaticResource HideFieldOfWorldPartStyle}"
+                                            Value="{Binding Address.State}" />
+
 
                                     </Grid>
                                 </GroupBox>
+
                                 <!--#endregion-->
 
-                                <local:NotesView
+
+                                <ScrollViewer
                                     Grid.Row="0"
                                     Grid.RowSpan="2"
                                     Grid.Column="3"
-                                    MaxWidth="500"
                                     Margin="3"
-                                    HorizontalAlignment="Left" />
-
+                                    HorizontalAlignment="Left"
+                                    mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True">
+                                    <local:NotesView MaxWidth="500" />
+                                </ScrollViewer>
 
                                 <GroupBox
                                     Grid.Row="0"
                                     Grid.RowSpan="2"
                                     Grid.Column="2"
+                                    Margin="3"
                                     Header="שאלות פתוחות">
                                     <local:OpenQuestionsView
                                         MaxWidth="350"
-                                        MaxHeight="400"
+                                        MaxHeight="350"
                                         OpenQuestions="{Binding OpenQuestions}" />
                                 </GroupBox>
-
-                                <!--<materialDesign:DialogHost
-                                    Grid.Row="0"
-                                    Grid.Column="3"
-                                    Margin="3"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    CloseOnClickAway="True"
-                                    Placement="Relative">
-
-                                    <materialDesign:DialogHost.DialogContent>
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="auto" />
-                                                <RowDefinition Height="*" />
-                                            </Grid.RowDefinitions>
-
-                                            <Button
-                                                Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                                Style="{StaticResource MaterialDesignToolButton}">
-                                                <materialDesign:PackIcon Kind="Close" />
-                                            </Button>
-
-                                            <local:OpenQuestionsView
-                                                Grid.Row="1"
-                                                MaxWidth="350"
-                                                MaxHeight="450"
-                                                OpenQuestions="{Binding OpenQuestions}" />
-
-                                        </Grid>
-                                    </materialDesign:DialogHost.DialogContent>
-
-                                    <Button Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" Style="{StaticResource ButtonContentStyle}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock
-                                                Margin="3"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Text="שאלות פתוחות" />
-                                            <materialDesign:PackIcon Margin="3" Kind="QuestionAnswer" />
-                                        </StackPanel>
-                                    </Button>
-
-                                </materialDesign:DialogHost>-->
-
 
                             </Grid>
                         </DataTemplate>
                     </DataGrid.RowDetailsTemplate>
                     <!--#endregion-->
+
 
                 </DataGrid>
                 <!--#endregion-->
@@ -484,9 +494,9 @@
             </Grid>
         </materialDesign:Card>
 
-        <custom:Modal Panel.ZIndex="1" IsOpen="{Binding IsAddFormOpen}">
+        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsAddFormOpen}">
             <local:AddParticipantForm />
-        </custom:Modal>
+        </modelPopup:Modal>
 
 
         <mah:ProgressRing
