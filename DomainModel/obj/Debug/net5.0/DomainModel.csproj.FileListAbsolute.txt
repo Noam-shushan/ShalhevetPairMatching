@@ -21,6 +21,6 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0\DomainModel.csproj.CoreCompileInputs.cache
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0\DomainModel.csproj.CopyComplete
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0\DomainModel.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0\refint\DomainModel.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0\DomainModel.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0\ref\DomainModel.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\DomainModel\obj\Debug\net5.0\refint\DomainModel.dll

@@ -39,7 +39,7 @@ namespace PairMatching.DataAccess.UnitOfWork
 
             PairsRepositry = new ModelRepositroy<Pair>(dataAccess, newPairsCollection, _taskManeger);
 
-            EmailsRepositry = new ModelRepositroy<Email>(dataAccess, emailsCollection, _taskManeger);
+            EmailRepositry = new ModelRepositroy<EmailModel>(dataAccess, emailsCollection, _taskManeger);
 
             MatchingHistorisRepositry = new ModelRepositroy<MatchingHistory>(dataAccess, matchingHistoryCollection, _taskManeger);
         }
@@ -56,7 +56,7 @@ namespace PairMatching.DataAccess.UnitOfWork
 
         public IModelRepository<MatchingHistory> MatchingHistorisRepositry { get; init; }
 
-        public IModelRepository<Email> EmailsRepositry { get; init; }
+        public IModelRepository<EmailModel> EmailRepositry { get; init; }
 
         public ConfigRepositry ConfigRepositry { get; init; }
         

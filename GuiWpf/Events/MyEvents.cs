@@ -24,6 +24,8 @@ namespace GuiWpf.Events
 
     public class ModelEnterEvent : PubSubEvent<ModelType> { }
 
+    public class ParticipantEnterEvent : PubSubEvent<Participant> { }
+
     public enum ModelType
     {
         Participant,

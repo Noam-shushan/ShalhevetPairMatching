@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net5.0": {
       "Google.Apis/1.57.0": {
         "type": "package",
         "dependencies": {
@@ -98,7 +98,7 @@
       },
       "Configurations/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
           "MongoDB.Bson": "2.14.1"
         },
@@ -111,7 +111,7 @@
       },
       "Models/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
           "JsonSubTypes": "1.9.0",
           "MongoDB.Bson": "2.14.1",
@@ -127,7 +127,7 @@
       },
       "Tools/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v5.0",
         "compile": {
           "bin/placeholder/Tools.dll": {}
         },
@@ -354,7 +354,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
+    "net5.0": [
       "Configurations >= 1.0.0",
       "Google.Apis.Sheets.v4 >= 1.57.0.2657",
       "Models >= 1.0.0",
@@ -362,7 +362,8 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Asuspcc\\.nuget\\packages\\": {}
+    "C:\\Users\\Asuspcc\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -373,20 +374,24 @@
       "packagesPath": "C:\\Users\\Asuspcc\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\GoogleSheet\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
         "C:\\Users\\Asuspcc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net5.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net5.0": {
+          "targetAlias": "net5.0",
           "projectReferences": {
             "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\Configurations.csproj": {
               "projectPath": "C:\\Users\\Asuspcc\\source\\Repos\\ShalhevetPairMatching\\Configurations\\Configurations.csproj"
@@ -407,8 +412,8 @@
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net5.0": {
+        "targetAlias": "net5.0",
         "dependencies": {
           "Google.Apis.Sheets.v4": {
             "target": "Package",
@@ -430,7 +435,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

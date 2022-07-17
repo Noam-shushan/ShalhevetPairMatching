@@ -20,7 +20,7 @@ namespace PairMatching.DataAccess.UnitOfWork
 
         IModelRepository<MatchingHistory> MatchingHistorisRepositry { get; init; }
 
-        IModelRepository<Email> EmailsRepositry { get; init; }
+        IModelRepository<EmailModel> EmailRepositry { get; init; }
 
 
         Task Complete();

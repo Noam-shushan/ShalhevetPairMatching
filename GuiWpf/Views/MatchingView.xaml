@@ -189,6 +189,7 @@
                                                     <Style x:Key="DaysStyle" TargetType="TextBlock">
                                                         <Setter Property="HorizontalAlignment" Value="Center" />
                                                         <Setter Property="FontSize" Value="12" />
+                                                        <Setter Property="FontWeight" Value="DemiBold" />
                                                         <Setter Property="VerticalAlignment" Value="Center" />
                                                     </Style>
                                                     <Style x:Key="HoursStyle" TargetType="TextBlock">
@@ -263,6 +264,7 @@
                                                                         <controlers:Field
                                                                             Grid.Row="2"
                                                                             Grid.Column="0"
+                                                                            Grid.ColumnSpan="2"
                                                                             FieldName="זמן"
                                                                             Value="{Binding TotalMatchTime}" />
                                                                     </Grid>

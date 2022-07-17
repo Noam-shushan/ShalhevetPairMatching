@@ -14,6 +14,6 @@ C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\WixA
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\WixApi.csproj.CoreCompileInputs.cache
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\WixApi.csproj.CopyComplete
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\WixApi.dll
-C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\refint\WixApi.dll
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\WixApi.pdb
 C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\ref\WixApi.dll
+C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\WixApi\obj\Debug\net5.0\refint\WixApi.dll

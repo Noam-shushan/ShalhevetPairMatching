@@ -33,35 +33,15 @@ namespace PairMatching.DomainModel.Services
             var tasks = new List<Task>();
             
             var ips = GetAllFromIsrael();
-            //var wps = GetAllFromWorld();
+            var wps = GetAllFromWorld();
 
             tasks.Add(ips);
-            //tasks.Add(wps);
-            
-            await Task.WhenAll(tasks);
-            tasks.Clear();
-
+            tasks.Add(wps);
+                       
+            await Task.WhenAll(tasks);          
+           
             result.AddRange(ips.Result);
-
-            var removeLearningTime = from p in ips.Result
-                                     where !p.PairPreferences
-                                     .LearningTime
-                                     .Select(t => t.TimeInDay)
-                                     .Any()
-                                     select p;
-            foreach (var p in removeLearningTime)
-            {
-                p.PairPreferences.LearningTime = p.PairPreferences.LearningTime.Where(t => t.TimeInDay.Any());
-                if (p.PairPreferences.LearningTime.Any())
-                {
-                    tasks.Add(_unitOfWork.IsraelParticipantsRepositry
-    .                           Update(p));
-                }
-
-            }
-            await Task.WhenAll(tasks);            
-
-            //result.AddRange(wps.Result);
+            result.AddRange(wps.Result);
 
             return result;
         }
