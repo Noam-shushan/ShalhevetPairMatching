@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+appsetting.json
+pairmatching.json
+.git.bfg-report/
+bfg.jar
+GuiWpf\bin\Debug\net5.0-windows\localDB/*
+
 # User-specific files
 *.rsuser
 *.suo

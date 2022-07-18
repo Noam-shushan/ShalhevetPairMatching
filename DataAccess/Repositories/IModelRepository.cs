@@ -9,7 +9,8 @@ namespace PairMatching.DataAccess.Repositories
 {
     public interface IModelRepository<TModel> where TModel : class
     {
-        Task SaveToDrive();
+        //Task SaveToDrive();
+        
         /// <summary>
         /// Get all records of this model
         /// </summary>
@@ -53,5 +54,8 @@ namespace PairMatching.DataAccess.Repositories
         /// <param name="id">The id of the record to delete</param>
         /// <returns></returns>
         Task Delete(int id);
+        
+        
+        Task SaveToDrive<U>(IEnumerable<U> itemsToSave, string docName);
     }
 }
