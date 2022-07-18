@@ -25,9 +25,11 @@ namespace PairMatching.DataAccess.Repositories
             _taskManeger = taskManeger;
         }       
 
-        public Task SaveToDrive()
+        public async Task SaveToDrive<U>(IEnumerable<U>  itemsToSave, string docName)
         {
-            throw new NotImplementedException();
+            var jr = new JsonDataAccess();
+
+            await jr.InsertMany(docName, itemsToSave);
         }
 
         public async Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>> predicate = null)

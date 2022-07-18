@@ -31,20 +31,47 @@ namespace PairMatching.DomainModel.Services
         {
             var result = new List<Participant>();
             var tasks = new List<Task>();
-            
+
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();
 
             tasks.Add(ips);
             tasks.Add(wps);
-                       
-            await Task.WhenAll(tasks);          
-           
+
+            await Task.WhenAll(tasks);
+
             result.AddRange(ips.Result);
             result.AddRange(wps.Result);
 
+            
+
             return result;
         }
+
+        private async Task ExportDataToDrive()
+        {
+            var students = await _unitOfWork.StudentRepositry.GetAllAsync();
+
+            var l =
+                    from s in students
+                    select new
+                    {
+                        Name = s.Name,
+                        Country = s.Country,
+                        LearningStyle = s.LearningStyle.GetDescriptionFromEnumValue(),
+                        Track = string.Join(", ", s.PrefferdTracks.Select(t => t.GetDescriptionFromEnumValue())),
+                        Gender = s.Gender.GetDescriptionFromEnumValue(),
+                        PreliminaryLevelOfKnowledge = s.SkillLevel.GetDescriptionFromEnumValue(),
+                        OpenQuestions = s.OpenQuestions?.ToDictionary(q => q.Question, a => a.Answer),
+                    };
+            await _unitOfWork.IsraelParticipantsRepositry.SaveToDrive(l, "Shalhevet data");
+        }
+
+//        appsetting.json
+//pairmatching.json
+//.git.bfg-report/
+//bfg.jar/*
+//GuiWpf\bin\Debug\net5.0-windows\localDB/*
 
         public async Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael()
         {
