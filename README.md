@@ -1,6 +1,6 @@
 A new version of PairMatching
 
-(Still in progress..:)
+(Still in process..:)
 
 * More organized and designed 
 * Better UI
