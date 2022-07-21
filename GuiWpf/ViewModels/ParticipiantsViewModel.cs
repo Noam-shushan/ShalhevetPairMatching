@@ -75,7 +75,7 @@ namespace GuiWpf.ViewModels
 
                    var parts = await _participantService.GetAll();
                    _participiants.Clear();
-                   _participiants.AddRange(parts);
+                   _participiants.AddRange(parts.Take(15));
 
                    Years.Clear();
                    Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());

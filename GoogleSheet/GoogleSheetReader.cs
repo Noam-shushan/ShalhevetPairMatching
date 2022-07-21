@@ -28,7 +28,7 @@ namespace PairMatching.GoogleSheet
         public GoogleSheetReader()
         {
             GoogleCredential credential;
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pairmatching.json");
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources/pairmatching.json");
             try
             {
                 using (var stream = new FileStream(path, FileMode.Open))

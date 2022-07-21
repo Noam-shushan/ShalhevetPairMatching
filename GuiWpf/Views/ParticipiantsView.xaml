@@ -113,6 +113,7 @@
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
                     ItemsSource="{Binding Participiants}"
+                    RowDetailsVisibilityMode="Collapsed"
                     ScrollViewer.CanContentScroll="False"
                     SelectedItem="{Binding SelectedParticipant}">
 
@@ -120,6 +121,17 @@
                         <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
                             <Setter Property="BorderThickness" Value="0" />
                             <Setter Property="Width" Value="auto" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="Black" />
+                                    <Setter Property="BorderThickness" Value="1" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+
+                        <Style x:Key="TestColumnStyle" TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
                         </Style>
                     </DataGrid.Resources>
 
@@ -128,7 +140,10 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ToggleButton
+                                        Width="23"
+                                        Height="23"
                                         Cursor="Hand"
+                                        Foreground="{StaticResource MainColor}"
                                         IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DetailsVisibility, Converter={StaticResource VisbilityToBooleanConverter}, Mode=TwoWay}"
                                         Style="{StaticResource MaterialDesignExpandCollapseToggleStyle}" />
                                 </DataTemplate>
@@ -146,21 +161,33 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTextColumn
-                            Binding="{Binding Name}"
-                            Header="שם מלא"
-                            IsReadOnly="True"
-                            TextBlock.FontWeight="DemiBold" />
 
-                        <DataGridTextColumn
-                            Binding="{Binding Country}"
-                            Header="ארץ"
-                            IsReadOnly="True" />
+                        <DataGridTemplateColumn Header="שם מלא" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+                                        FontWeight="DemiBold"
+                                        Style="{StaticResource TestColumnStyle}"
+                                        Text="{Binding Name}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="ארץ" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TestColumnStyle}" Text="{Binding Country}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Header="טלפון">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Cursor="Pen" Text="{Binding PhoneNumber}" />
+                                    <TextBlock
+                                        Cursor="Pen"
+                                        Style="{StaticResource TestColumnStyle}"
+                                        Text="{Binding PhoneNumber}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>
@@ -173,7 +200,10 @@
                         <DataGridTemplateColumn Header="מייל">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Cursor="Pen" Text="{Binding Email}" />
+                                    <TextBlock
+                                        Cursor="Pen"
+                                        Style="{StaticResource TestColumnStyle}"
+                                        Text="{Binding Email}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>
@@ -183,10 +213,13 @@
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTextColumn
-                            Binding="{Binding DateOfRegistered, StringFormat=d}"
-                            Header="תאריך הרשמה"
-                            IsReadOnly="True" />
+                        <DataGridTemplateColumn Header="תאריך הרשמה" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TestColumnStyle}" Text="{Binding DateOfRegistered, StringFormat=d}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
@@ -206,7 +239,7 @@
                         <DataGridTemplateColumn Header="">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <dropDown:DropdownMenu Cursor="Hand">
+                                    <dropDown:DropdownMenu Padding="15" Cursor="Hand">
                                         <Border
                                             Background="White"
                                             BorderBrush="LightGray"
@@ -224,7 +257,6 @@
                                             </StackPanel>
                                         </Border>
                                     </dropDown:DropdownMenu>
-
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

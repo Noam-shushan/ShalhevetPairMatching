@@ -5,25 +5,27 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>shalhevet_logo.ico</ApplicationIcon>
+    <ApplicationIcon>bin\Debug\net5.0-windows\Resources\shalhevet_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="appsetting.json" />
     <None Remove="pairmatching.json" />
-    <None Remove="shalhevet_logo.ico" />
+    <None Remove="Resources\appsetting.json" />
+    <None Remove="Resources\pairmatching.json" />
+    <None Remove="Resources\shalhevet_logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsetting.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="pairmatching.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="shalhevet_logo.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <Content Include="bin\Debug\net5.0-windows\Resources\shalhevet_logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\pairmatching.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\appsetting.json" />
   </ItemGroup>
 
   <ItemGroup>
