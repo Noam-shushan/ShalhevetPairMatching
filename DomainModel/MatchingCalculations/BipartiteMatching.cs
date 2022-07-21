@@ -8,6 +8,8 @@ namespace PairMatching.DomainModel.MatchingCalculations
     public class BipartiteMatching
     {
         int[,] _matrix;
+        
+        bool[,] _adjMatrix;
 
         HashSet<Edge> _edges;
 
@@ -104,6 +106,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
             queue.Enqueue(_source);
 
             var edges = ResidualNetwork();
+            
             var path = new List<Edge>();
 
             while (queue.Count > 0) // while the queue is not empty
@@ -152,15 +155,89 @@ namespace PairMatching.DomainModel.MatchingCalculations
                         V2 = edge.V2,
                         Weight = edge.Capacity - edge.Flow
                     });
-                    residualNetwork.Add(new Edge
+                    if (edge.Flow > 0)
                     {
-                        V1 = edge.V2,
-                        V2 = edge.V1,
-                        Weight = edge.Flow
-                    });
+                        residualNetwork.Add(new Edge
+                        {
+                            V1 = edge.V2,
+                            V2 = edge.V1,
+                            Weight = edge.Flow
+                        });
+                    }                   
                 }
             }
             return residualNetwork;
+        }
+
+        // A DFS based recursive function
+        // that returns true if a matching
+        // for vertex u is possible
+        bool Bpm(int u,
+                 bool[] seen, int[] matchR)
+        {
+            // Try every job one by one
+            for (int v = 0; v < _adjMatrix.GetLength(0); v++)
+            {
+                // If applicant u is interested
+                // in job v and v is not visited
+                if (_adjMatrix[u, v] && !seen[v])
+                {
+                    // Mark v as visited
+                    seen[v] = true;
+
+                    // If job 'v' is not assigned to
+                    // an applicant OR previously assigned
+                    // applicant for job v (which is matchR[v])
+                    // has an alternate job available.
+                    // Since v is marked as visited in the above
+                    // line, matchR[v] in the following recursive
+                    // call will not get job 'v' again
+                    if (matchR[v] < 0 || Bpm(matchR[v],
+                                             seen, matchR))
+                    {
+                        matchR[v] = u;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Returns maximum number of
+        // matching from M to N
+        public int MaxBPM()
+        {
+            InitializeMatrix();
+            // An array to keep track of the
+            // applicants assigned to jobs.
+            // The value of matchR[i] is the
+            // applicant number assigned to job i,
+            // the value -1 indicates nobody is assigned.
+            int len = _adjMatrix.GetLength(0);
+
+
+            int[] matchR = new int[len];
+
+            // Initially all jobs are available
+            for (int i = 0; i < len; ++i)
+                matchR[i] = -1;
+
+            // Count of jobs assigned to applicants
+            int result = 0;
+            for (int u = 0; u < len; u++)
+            {
+                // Mark all jobs as not
+                // seen for next applicant.
+                bool[] seen = new bool[len];
+                for (int i = 0; i < len; ++i)
+                    seen[i] = false;
+
+                // Find if the applicant
+                // 'u' can get a job
+                if (Bpm(u, seen, matchR))
+                    result++;
+            }
+            return result;
         }
 
         public IEnumerable<Edge> HungarianAlgorithm()
@@ -212,7 +289,9 @@ namespace PairMatching.DomainModel.MatchingCalculations
         private void InitializeMatrix()
         {
             _matrix = new int[_vertices.Count, _vertices.Count];
-            
+
+            _adjMatrix = new bool[_vertices.Count, _vertices.Count];
+
             var edges = _edges.Where(e => e.V1 != _source || e.V2 != _targert);
 
             foreach (var v in _vertices)
@@ -223,6 +302,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
                     if (v_u != null)
                     {
                         _matrix[v.Index, u.Index] = v_u.Weight;
+                        _adjMatrix[v.Index, u.Index] = true;
                     }
                 }
             }

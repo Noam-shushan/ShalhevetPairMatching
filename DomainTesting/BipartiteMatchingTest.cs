@@ -1,17 +1,16 @@
-﻿using PairMatching.DomainModel.MatchingCalculations;
+﻿using NUnit.Framework;
+using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Testing
+namespace DomainTesting
 {
-    internal class BipartiteMatchingTesting
+    [TestFixture]
+    public class BipartiteMatchingTest
     {
-        // Create test for BipartiteMatching class
-        public void BipartiteMatchingTest()
+        [Test]
+        public void MaxMatchingTestEdmoudnsKarp()
         {
             // Create test data
             List<PairSuggestion> pairSuggestions = CreatePairSuggestionData();
@@ -19,11 +18,28 @@ namespace Testing
             List<Participant> participants = CreateParticipaintData();
             // Create BipartiteMatching object
             var bipartiteMatching = new BipartiteMatching(pairSuggestions, participants);
-            
+
             var result = bipartiteMatching.EdmoudnsKarp();
-            // Print result 
-            Console.WriteLine(string.Join("\n", result));
+            
+            
+            Assert.AreEqual("A1->B2\nA2->B4\nA3->B1\nA4->B3\nA5->B5", string.Join("\n", result));
         }
+
+        [Test]
+        public void MaxMatchingTest()
+        {
+            // Create test data
+            List<PairSuggestion> pairSuggestions = CreatePairSuggestionData();
+            // Create Participants data
+            List<Participant> participants = CreateParticipaintData();
+            // Create BipartiteMatching object
+            var bipartiteMatching = new BipartiteMatching(pairSuggestions, participants);
+
+            var result = bipartiteMatching.MaxBPM();
+
+
+            Assert.AreEqual(5, result);
+        }        
 
         private static List<Participant> CreateParticipaintData()
         {

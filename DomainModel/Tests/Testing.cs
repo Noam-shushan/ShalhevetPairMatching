@@ -1,5 +1,4 @@
 ﻿using PairMatching.Configurations;
-using PairMatching.DataAccess.Repositories;
 using PairMatching.DataAccess.UnitOfWork;
 using PairMatching.DomainModel.DataAccessFactory;
 using PairMatching.DomainModel.Email;
@@ -13,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PairMatching.DomainModel.Domains
+namespace PairMatching.DomainModel.Tests
 {
     public class Testing
     {

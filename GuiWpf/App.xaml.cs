@@ -38,7 +38,7 @@ namespace GuiWpf
 
         private MyConfiguration GetConfigurations()
         {
-            var jsonString = ReadJson(@"appsetting.json");
+            var jsonString = ReadJson(@"Resources/appsetting.json");
             var configurations = JsonConvert.DeserializeObject<MyConfiguration>(jsonString);
             return configurations ?? throw new Exception("No Configurations");
         }
