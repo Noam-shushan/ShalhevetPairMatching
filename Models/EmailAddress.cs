@@ -9,5 +9,7 @@
         public string Address { get; set; }
 
         public bool IsValid { get; set; }
+
+        public string Name { get; set; }
     }
 }

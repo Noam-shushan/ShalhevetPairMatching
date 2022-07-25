@@ -32,4 +32,17 @@ namespace GuiWpf.ViewModels
 
         
     }
+
+    public class SelectableItem<T> : BindableBase
+    {
+
+        private string _isSelected;
+        public string IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }      
+        
+        public T Item { get; set; }
+    }
 }

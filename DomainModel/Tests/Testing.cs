@@ -50,10 +50,8 @@ namespace PairMatching.DomainModel.Tests
             await _emailSender.To(emails.ToArray())
                 .Subject("Test many: subject")
                 .Body("Test many: body")
-                .SendOpenMailAsync(new List<string>
-                {
-                    @"C:\Users\Asuspcc\Desktop\מכון לב\מסמכים\appendix11702.pdf"
-                });
+                .Attachments(@"C:\Users\Asuspcc\Desktop\מכון לב\מסמכים\appendix11702.pdf")
+                .SendOpenMailAsync();
         }
 
         public async Task NewPairToWixTest()

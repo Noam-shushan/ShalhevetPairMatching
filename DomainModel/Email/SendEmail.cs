@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MailKit.Net.Smtp;
 using MimeKit;
-using MailKit.Net.Smtp;
-using System.IO;
 using PairMatching.Configurations;
+using PairMatching.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PairMatching.DomainModel.Email
 {
@@ -18,7 +18,7 @@ namespace PairMatching.DomainModel.Email
     {
         readonly MailSettings _mailSettings;
 
-        const int CHUNK_SIZE = 15;
+        const int CHUNK_SIZE = 1;
 
         public SendEmail(MyConfiguration configurations)
         {
@@ -40,6 +40,8 @@ namespace PairMatching.DomainModel.Email
         /// </summary>
         private string _body = "";
 
+        List<string> _attachments = new();
+
         /// <summary>
         /// Set the destination address of the email
         /// </summary>
@@ -50,9 +52,23 @@ namespace PairMatching.DomainModel.Email
             var validAdrress = new List<string>();
             foreach (var addr in to)
             {
-                if(EmailValidator.Validate(addr) == EmailAddressStatus.Valid)
+                if (EmailValidator.Validate(addr) == EmailAddressStatus.Valid)
                 {
                     validAdrress.Add(addr.Trim());
+                }
+            }
+            _to = validAdrress;
+            return this;
+        }
+
+        public SendEmail To(params EmailAddress[] to)
+        {
+            var validAdrress = new List<string>();
+            foreach (var addr in to)
+            {
+                if (EmailValidator.Validate(addr.Address) == EmailAddressStatus.Valid)
+                {
+                    validAdrress.Add(addr.Address.Trim());
                 }
             }
             _to = validAdrress;
@@ -81,12 +97,17 @@ namespace PairMatching.DomainModel.Email
             return this;
         }
 
+        public SendEmail Attachments(params string[] attachments)
+        {
+            _attachments = attachments.ToList();
+            return this;
+        }
+
         /// <summary>
         /// Send an open email with the option to add a file attachment
         /// </summary>
-        /// <param name="fileAttachment">file name to attach to the email</param>
         /// <returns></returns>
-        public async Task SendOpenMailAsync(IEnumerable<string> fileAttachments = null)
+        public async Task SendOpenMailAsync()
         {
             if (_to?.Count == 0)
             {
@@ -98,8 +119,8 @@ namespace PairMatching.DomainModel.Email
                 using var client = await GetSmtpClienet();
 
                 IEnumerable<MailboxAddress> listOfAddress = GetAddresses();
-                
-                var message = GetMailMessage(fileAttachments);
+
+                var message = GetMailMessage();
 
                 while (listOfAddress.Any())
                 {
@@ -116,7 +137,7 @@ namespace PairMatching.DomainModel.Email
             }
         }
 
-        private MimeMessage GetMailMessage(IEnumerable<string> fileAttachments)
+        private MimeMessage GetMailMessage()
         {
             var message = new MimeMessage();
 
@@ -127,7 +148,11 @@ namespace PairMatching.DomainModel.Email
             {
                 TextBody = _body,
             };
-            SetAttachments(bodyBuilder, fileAttachments);
+            if (_attachments.Any())
+            {
+                SetAttachments(bodyBuilder);
+            }
+
 
             message.Body = bodyBuilder.ToMessageBody();
             message.Subject = _subject;
@@ -153,21 +178,18 @@ namespace PairMatching.DomainModel.Email
             return listOfAddress;
         }
 
-        private void SetAttachments(BodyBuilder bodyBuilder, IEnumerable<string> fileAttachments)
+        private void SetAttachments(BodyBuilder bodyBuilder)
         {
-            if (fileAttachments != null)
+            foreach (var f in _attachments)
             {
-                foreach (var f in fileAttachments)
+                if (!File.Exists(f))
                 {
-                    if (!File.Exists(f))
-                    {
-                        throw new FileNotFoundException($"{f} File not found");
-                    }
+                    throw new FileNotFoundException($"{f} File not found");
                 }
-                foreach (var f in fileAttachments)
-                {
-                    bodyBuilder.Attachments.Add(f);
-                }
+            }
+            foreach (var f in _attachments)
+            {
+                bodyBuilder.Attachments.Add(f);
             }
         }
 

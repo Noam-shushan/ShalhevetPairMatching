@@ -7,9 +7,10 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Data;
 
 namespace GuiWpf.ViewModels
@@ -25,12 +26,12 @@ namespace GuiWpf.ViewModels
         {
             _participantService = participantService;
             _ea = ea;
-
+            
             Participiants = CollectionViewSource.GetDefaultView(_participiants);
             Participiants.Filter = ParticipiantsFilter;
             Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
             Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
-
+            
             SubscribeToEvents();
             _dialog = dialog;
         }
@@ -39,7 +40,7 @@ namespace GuiWpf.ViewModels
         {
             var partKind = false;
             var year = false;
-            if (obj is Participant participant)
+            if (obj is Participant  participant)
             {
                 partKind = PartsKindFilter switch
                 {
@@ -52,10 +53,10 @@ namespace GuiWpf.ViewModels
                     ParticipiantsKind.FromWorldWithoutPair => !participant.IsFromIsrael && !participant.MatchTo.Any(),
                     _ => true,
                 };
-                
+
                 year = participant.DateOfRegistered.Year.ToString() == YearsFilter || YearsFilter == allYears;
-                
-                return participant.Name.Contains(SearchParticipiantsWord, StringComparison.InvariantCultureIgnoreCase) 
+
+                return participant.Name.Contains(SearchParticipiantsWord, StringComparison.InvariantCultureIgnoreCase)
                     && partKind
                     && year;
             }
@@ -75,12 +76,12 @@ namespace GuiWpf.ViewModels
 
                    var parts = await _participantService.GetAll();
                    _participiants.Clear();
-                   _participiants.AddRange(parts.Take(15));
+                   _participiants.AddRange(parts.Take(20));
 
                    Years.Clear();
                    Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
                    Years.Insert(0, allYears);
-                   
+
                    IsInitialized = true;
                    IsLoaded = false;
                });
@@ -88,7 +89,7 @@ namespace GuiWpf.ViewModels
         private bool _isInitialized = false;
 
         public ObservableCollection<string> Years { get; private set; } = new();
-        
+
         public bool IsInitialized
         {
             get => _isInitialized;
@@ -102,6 +103,22 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _isLoaded, value);
         }
 
+        private bool _isAllSelected;
+        public bool IsAllSelected
+        {
+            get => _isAllSelected;
+            set 
+            { 
+                if(SetProperty(ref _isAllSelected, value))
+                {
+                    Participiants.OfType<Participant>()
+                        .ToList()
+                        .ForEach(p => p.IsSelected = value);
+                    Participiants.Refresh();
+                } 
+            }
+        }
+
         private void SubscribeToEvents()
         {
             _ea.GetEvent<CloseDialogEvent>().Subscribe(CloseFormResived);
@@ -110,8 +127,12 @@ namespace GuiWpf.ViewModels
                 _participiants.Add(part);
                 await _participantService.UpserteParticipant(part);
             });
+            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
+            {
+                IsSendEmailOpen = isClose;
+            });
         }
-
+        
         public ObservableCollection<Participant> _participiants = new();
 
         public ICollectionView Participiants { get; }
@@ -175,7 +196,7 @@ namespace GuiWpf.ViewModels
             get => _yearsFilter;
             set
             {
-                if(SetProperty(ref _yearsFilter, value))
+                if (SetProperty(ref _yearsFilter, value))
                 {
                     Participiants.Refresh();
                 }
@@ -194,25 +215,51 @@ namespace GuiWpf.ViewModels
                 }
             }
         }
+
+        private bool _isSendEmailOpen = false;
+        public bool IsSendEmailOpen
+        {
+            get => _isSendEmailOpen;
+            set => SetProperty(ref _isSendEmailOpen, value);
+        }
+
+        DelegateCommand _sendEmailToManyCommand;
+        public DelegateCommand SendEmailToManyCommand => _sendEmailToManyCommand ??= new(
+        () =>
+        {
+            IsSendEmailOpen = !IsSendEmailOpen;
+            if (IsSendEmailOpen)
+            {
+                var address = from p in Participiants.OfType<Participant>()
+                              where p.IsSelected
+                              select new EmailAddress
+                              {
+                                  Address = p.Email,
+                                  Name = p.Name
+                              };
+                _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
+                .Publish(address);
+            }
+        });
     }
 
     public enum ParticipiantsKind
     {
         [EnumDescription("כל המשתתפים")]
         All,
-        
+
         [EnumDescription("עם חברותא")]
         WithPair,
-        
+
         [EnumDescription("בלי חברותא")]
         WithoutPair,
 
         [EnumDescription("מישראל")]
         FromIsrael,
 
-        [EnumDescription("מהתפוצות")]       
+        [EnumDescription("מהתפוצות")]
         FromWorld,
-        
+
         [EnumDescription("מישראל בלי חברותא")]
 
         FromIsraelWithoutPair,

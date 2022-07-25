@@ -18,6 +18,9 @@ namespace PairMatching.Models
 
         public List<Note> Notes { get; set; } = new();
 
+        [BsonIgnore]
+        public bool IsSelected { get; set; }
+
 
         //public bool Equals(BaseModel other)
         //{

@@ -27,7 +27,8 @@ namespace GuiWpf
         {
             containerRegistry.RegisterInstance(GetConfigurations());
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
-            
+
+            containerRegistry.Register<SendEmail>();
             containerRegistry.Register<IParticipantService, ParticipantService>();
             containerRegistry.Register<IPairsService, PairService>();
             containerRegistry.Register<IEmailService, EmailService>();

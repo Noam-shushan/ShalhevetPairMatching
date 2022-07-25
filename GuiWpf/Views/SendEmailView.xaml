@@ -7,6 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    Name="me"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -19,7 +20,7 @@
             </Grid.RowDefinitions>
             <Border
                 Grid.Row="0"
-                Background="CadetBlue"
+                Background="{StaticResource MainColor}"
                 CornerRadius="0 20 0 0">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -80,11 +81,24 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
-                <ListBox
-                    Grid.Row="0"
-                    materialDesign:HintAssist.Hint="נמענים"
-                    ItemsSource="{Binding To}" />
-
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Margin="0,0,10,0" Text="נמענים:" />
+                    <ListBox ItemsSource="{Binding To}" Style="{StaticResource MaterialDesignFilterChipListBox}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel
+                                    MaxWidth="600"
+                                    IsItemsHost="True"
+                                    Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" ToolTip="{Binding Address}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
                 <TextBox
                     Grid.Row="1"
                     Margin="0,2"
@@ -100,7 +114,7 @@
                     FontSize="16"
                     SpellCheck.IsEnabled="True"
                     Style="{StaticResource EmailTextBoxStyle}"
-                    Text="{Binding Content}"
+                    Text="{Binding Body}"
                     TextWrapping="WrapWithOverflow" />
 
                 <Grid Grid.Row="3">
@@ -112,7 +126,7 @@
 
                     <Button
                         Grid.Column="0"
-                        Command="{Binding SendCommand}"
+                        Command="{Binding SendEmailCommand}"
                         Content="שליחה"
                         Foreground="#F5F5F5" />
 
@@ -124,7 +138,40 @@
                         <materialDesign:PackIcon Kind="AttachFile" />
                     </Button>
 
-                    <ListBox Grid.Column="2" />
+                    <ListBox
+                        Grid.Column="2"
+                        Width="400"
+                        ItemsSource="{Binding Attachments}"
+                        SelectedItem="{Binding SelectedFile}"
+                        SelectionMode="Single"
+                        Style="{StaticResource MaterialDesignChoiceChipAccentListBox}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button
+                                        Margin="0,0,8,0"
+                                        Command="{Binding ElementName=me, Path=DataContext.RemoveAttachmentCommand}"
+                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                        ToolTip="הסר קובץ">
+                                        <materialDesign:PackIcon
+                                            Width="15"
+                                            Height="15"
+                                            Kind="CloseBoxesOutline" />
+                                    </Button>
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding FileName}" />
+                                </StackPanel>
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
                 </Grid>
             </Grid>
