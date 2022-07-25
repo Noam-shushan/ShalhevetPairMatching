@@ -26,6 +26,8 @@ namespace GuiWpf.Events
 
     public class ParticipantEnterEvent : PubSubEvent<Participant> { }
 
+    public class GetEmailAddressToParticipaintsEvent : PubSubEvent<IEnumerable<EmailAddress>> { }
+
     public enum ModelType
     {
         Participant,

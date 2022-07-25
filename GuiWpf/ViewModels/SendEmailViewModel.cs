@@ -10,6 +10,8 @@ using PairMatching.Models;
 using PairMatching.DomainModel.Services;
 using GuiWpf.Events;
 using Prism.Events;
+using Microsoft.Win32;
+using System.Collections.ObjectModel;
 
 namespace GuiWpf.ViewModels
 {
@@ -17,13 +19,19 @@ namespace GuiWpf.ViewModels
     {
         readonly IEventAggregator _ea;
         readonly IEmailService _emailService;
+        private SendEmail _emailSender;
 
-        public SendEmailViewModel(IEventAggregator ea, IEmailService emailService)
+        public SendEmailViewModel(IEventAggregator ea, IEmailService emailService, SendEmail sendEmail)
         {
             _ea = ea;
             _emailService = emailService;
-        }
+            _emailSender = sendEmail;
 
+            _ea.GetEvent<GetEmailAddressToParticipaintsEvent>().Subscribe((to) =>
+            {
+                To = to.ToList();
+            });
+        }
 
         private List<EmailAddress> _to;
         public List<EmailAddress> To
@@ -39,12 +47,21 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _subject, value);
         }
 
-        private string _content;
-        public string Content
+        private string _body;
+        public string Body
         {
-            get => _content;
-            set => SetProperty(ref _content, value);
+            get => _body;
+            set => SetProperty(ref _body, value);
         }
+
+        private File _selectedFile;
+        public File SelectedFile
+        {
+            get => _selectedFile;
+            set => SetProperty(ref _selectedFile, value);
+        }
+
+        public ObservableCollection<File> Attachments { get; } = new();
 
         DelegateCommand _sendCommand;
         public DelegateCommand SendCommand => _sendCommand ??= new(
@@ -54,10 +71,38 @@ namespace GuiWpf.ViewModels
         });
 
         DelegateCommand _addAttachmentCommand;
-        public DelegateCommand addAttachmentCommand => _addAttachmentCommand ??= new(
+        public DelegateCommand AddAttachmentCommand => _addAttachmentCommand ??= new(
         () =>
         {
-            
+            var openFileDialog = new OpenFileDialog()
+            {
+                Multiselect = true
+            };
+
+            var response = openFileDialog.ShowDialog();
+            if (!openFileDialog.CheckPathExists)
+            {
+                //Messages.MessageBoxError("קובץ לא קיים");
+            }
+            if (response == true)
+            {
+                var temp = openFileDialog.SafeFileNames
+                .Zip(openFileDialog.FileNames,
+                    (fn, fp) => new File
+                    {
+                        FileName = fn,
+                        FilePath = fp
+                    });
+                Attachments.AddRange(temp);
+            }
+        });
+       
+
+        DelegateCommand _removeAttachmentsCommand;
+        public DelegateCommand RemoveAttachmentCommand => _removeAttachmentsCommand ??= new(
+        () =>
+        {
+            Attachments.Remove(SelectedFile);
         });
 
         DelegateCommand _cloesCommand;
@@ -67,6 +112,33 @@ namespace GuiWpf.ViewModels
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
         });
 
+        DelegateCommand _sendEmailCommand;
+        public DelegateCommand SendEmailCommand => _sendEmailCommand ??= new(
+        async () =>
+        {
+            try
+            {
+                await _emailSender
+                   .To(To.ToArray())
+                   .Subject(Subject)
+                   .Body(Body)
+                   .Attachments(Attachments.Select(f => f.FilePath).ToArray())
+                   .SendOpenMailAsync();
+                _ea.GetEvent<CloseDialogEvent>().Publish(false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        });
 
+
+    }
+
+    public record File
+    {
+        public string FileName { get; set; }
+
+        public string FilePath { get; set; }
     }
 }

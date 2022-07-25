@@ -152,11 +152,11 @@
 
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
-                                <CheckBox Cursor="Hand" />
+                                <CheckBox Cursor="Hand" IsChecked="{Binding ElementName=me, Path=DataContext.IsAllSelected}" />
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox Cursor="Hand" />
+                                    <CheckBox Cursor="Hand" IsChecked="{Binding IsSelected}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -223,7 +223,10 @@
 
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
-                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל לכל הנבחרים">
+                                <Button
+                                    Command="{Binding ElementName=me, Path=DataContext.SendEmailToManyCommand}"
+                                    Style="{StaticResource MaterialDesignIconButton}"
+                                    ToolTip="שלח מייל לכל הנבחרים">
                                     <materialDesign:PackIcon Kind="Email" />
                                 </Button>
                             </DataGridTemplateColumn.Header>
@@ -261,8 +264,6 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-
-
                     </DataGrid.Columns>
 
                     <!--#region Row detelis of participaint-->
@@ -283,9 +284,7 @@
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
 
-
                                 <!--#region Preference-->
-
                                 <GroupBox
                                     Grid.Row="0"
                                     Grid.RowSpan="2"
@@ -329,7 +328,10 @@
                                             Value="{Binding PairPreferences.NumberOfMatchs}" />
 
                                         <GroupBox Grid.Row="4" Header="מסלולי לימוד">
-                                            <ScrollViewer mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True">
+                                            <ScrollViewer
+                                                mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                                 <ListBox ItemsSource="{Binding PairPreferences.Tracks}" Style="{StaticResource MaterialDesignChoiceChipListBox}">
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
@@ -342,11 +344,9 @@
 
                                     </Grid>
                                 </GroupBox>
+                                <!--#endregion-->
 
-                                <!--#endregion
-
-                            #region Learning time-->
-
+                                <!--#region Learning time-->
                                 <GroupBox
                                     Grid.Row="0"
                                     Grid.Column="1"
@@ -394,12 +394,9 @@
                                         </ListBox>
                                     </ScrollViewer>
                                 </GroupBox>
+                                <!--#endregion-->
 
-                                <!--#endregion
-
-                            #region Adisional info template-->
-
-
+                                <!--#region Adisional info template-->
                                 <GroupBox
                                     Grid.Row="1"
                                     Grid.Column="1"
@@ -488,7 +485,6 @@
 
                                     </Grid>
                                 </GroupBox>
-
                                 <!--#endregion-->
 
 
@@ -528,6 +524,10 @@
 
         <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsAddFormOpen}">
             <local:AddParticipantForm />
+        </modelPopup:Modal>
+
+        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsSendEmailOpen}">
+            <local:SendEmailView />
         </modelPopup:Modal>
 
 

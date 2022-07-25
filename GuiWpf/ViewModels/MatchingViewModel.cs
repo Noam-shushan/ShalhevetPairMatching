@@ -34,7 +34,7 @@ namespace GuiWpf.ViewModels
                    var suggestions = await _matchingService.GetAllPairSuggestions();
                    PairSuggestions.Clear();
                    PairSuggestions.AddRange(suggestions.OrderBy(s => s.MatchingScore));
-                   StageSuggestion = PairSuggestions.FirstOrDefault();
+                   StageSuggestion = PairSuggestions.FirstOrDefault()!;
                    
                    IsInitialized = true;
                    IsLoaded = false;

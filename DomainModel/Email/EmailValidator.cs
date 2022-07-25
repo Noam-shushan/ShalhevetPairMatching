@@ -16,7 +16,7 @@ namespace PairMatching.DomainModel.Email
             }
             try
             {
-                new MailMessage(testFromAddress, address);
+                _ = new MailMessage(testFromAddress, address);
             }
             catch (FormatException)
             {

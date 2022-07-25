@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GuiWpf.Events;
 using PairMatching.DomainModel.Services;
+using PairMatching.DomainModel.Email;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -16,11 +17,14 @@ namespace GuiWpf.ViewModels
         readonly IEventAggregator _ea;
 
         private IEmailService _emailService;
+        
+        private SendEmail _emailSender;
 
-        public EmailsViewModel(IEmailService emailService, IEventAggregator ea)
+        public EmailsViewModel(IEmailService emailService, IEventAggregator ea, SendEmail sendEmail)
         {
             _emailService = emailService;
             _ea = ea;
+            _emailSender = sendEmail;
 
             _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
             {
@@ -41,5 +45,8 @@ namespace GuiWpf.ViewModels
         {
             IsSendEmailOpen = !IsSendEmailOpen;
         });
+
+
+
     }
 }
