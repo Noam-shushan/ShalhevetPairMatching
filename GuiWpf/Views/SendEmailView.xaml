@@ -126,7 +126,7 @@
 
                     <Button
                         Grid.Column="0"
-                        Command="{Binding SendEmailCommand}"
+                        Command="{Binding SendCommand}"
                         Content="שליחה"
                         Foreground="#F5F5F5" />
 

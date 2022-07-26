@@ -80,20 +80,34 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public IEnumerable<Edge> EdmoudnsKarp()
         {
-            var path = FindTarget();
+            var path = FindTarget(); // First BFS
             while(path != null)
             {
-                var pathToFlow = _edges.Intersect(path);
-                
+                var pathToFlow = _edges.Intersect(path); // The path in the original graph
+
                 int flow = pathToFlow.Min(e => e.Capacity - e.Flow);
-                
+
                 foreach (var e in pathToFlow)
                 {
                     e.Flow += flow;
                 }
-                path = FindTarget();
+
+                // get edges from the residual network that are not in the original graph
+                var edgesFromResidualNetwork = path.Except(pathToFlow);
+                // Reduce the flow from the reverse edges
+                foreach (var e in edgesFromResidualNetwork)
+                {
+                    var reverseEdges = _edges.Where(e2 => e2.V1.Equals(e.V2) && e2.V2.Equals(e.V1));
+                    foreach (var e2 in reverseEdges)
+                    {
+                        e2.Flow -= flow;
+                    }
+                }
+                
+                path = FindTarget(); // BFS agine
             }
-            return _edges.Where(e => e.Flow == e.Capacity && (e.V1 != _source || e.V2 != _targert));
+            // return the final matching
+            return _edges.Where(e => e.Flow == e.Capacity && !e.V1.Equals(_source) && !e.V2.Equals(_targert));
         }
 
         /// <summary>
@@ -102,26 +116,29 @@ namespace PairMatching.DomainModel.MatchingCalculations
         /// <returns></returns>
         private List<Edge> FindTarget()
         {
+            var residualNetwork = ResidualNetwork();            
+            
+            var visited = new HashSet<Verterx>();
+            
             var queue = new Queue<Verterx>();
-            queue.Enqueue(_source);
-
-            var edges = ResidualNetwork();
+            queue.Enqueue(_source);           
             
             var path = new List<Edge>();
 
             while (queue.Count > 0) // while the queue is not empty
             {
                 var vertex = queue.Dequeue();
+                visited.Add(vertex);
 
                 // Loop for the adjustments of this vertex
-                foreach (var edge in edges.Where(e => e.V1.Equals(vertex)))
+                foreach (var edge in residualNetwork.Where(e => e.V1.Equals(vertex)))
                 {
-                    if (edge.Weight == 0)
+                    if (visited.Contains(edge.V2))
                     {
                         continue;
                     }
                     // Target is found
-                    if (edge.V2 == _targert)
+                    if (edge.V2.Equals(_targert))
                     {   // Build the path to the target
                         path.Add(edge);
                         var pred = edge.V1;
@@ -132,7 +149,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
                         }
                         return path;
                     }
-                    if (!queue.Contains(edge.V2)) // If the 
+                    if (!queue.Contains(edge.V2)) 
                     {
                         edge.V2.Pred = new(edge.V1, edge);
                         queue.Enqueue(edge.V2);
@@ -154,16 +171,16 @@ namespace PairMatching.DomainModel.MatchingCalculations
                         V1 = edge.V1,
                         V2 = edge.V2,
                         Weight = edge.Capacity - edge.Flow
-                    });
-                    if (edge.Flow > 0)
+                    });             
+                }
+                else if (edge.Capacity == edge.Flow && edge.Flow > 0)
+                {
+                    residualNetwork.Add(new Edge
                     {
-                        residualNetwork.Add(new Edge
-                        {
-                            V1 = edge.V2,
-                            V2 = edge.V1,
-                            Weight = edge.Flow
-                        });
-                    }                   
+                        V1 = edge.V2,
+                        V2 = edge.V1,
+                        Weight = edge.Flow
+                    });
                 }
             }
             return residualNetwork;
@@ -205,7 +222,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         // Returns maximum number of
         // matching from M to N
-        public int MaxBPM()
+        public int MaxMatching()
         {
             InitializeMatrix();
             // An array to keep track of the

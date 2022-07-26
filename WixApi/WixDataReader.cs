@@ -52,9 +52,7 @@ namespace PairMatching.WixApi
                 body = emailDto.Body
             };        
 
-            var body = JsonConvert.SerializeObject(email, Formatting.Indented);
-
-            await _http.PostAsync(query, body);
+            await _http.PostAsync(query, email);
 
             return null;
         }
@@ -76,28 +74,20 @@ namespace PairMatching.WixApi
         {
             var query = _configuration.WixApi["sendMembers"];
 
-            var body = JsonConvert.SerializeObject(pairDto, Formatting.Indented);
-
-            await _http.PostAsync(query, body);
+            await _http.PostAsync(query, pairDto);
         }
 
         public async Task UpsertParticipaint(UpsertParticipantOnWixDto participantDto)
         {
             var query = _configuration.WixApi["updateMember"];
             var dto = new UpsertParticipantOnWixDtoNoId();
-            string body;
             if (participantDto._id == "")
             {
                 participantDto.isNew = true;
-                participantDto.CopyPropertiesTo(dto);
-                body = JsonConvert.SerializeObject(dto, Formatting.Indented);
-            }
-            else
-            {
-                body = JsonConvert.SerializeObject(participantDto, Formatting.Indented);
+                participantDto.CopyPropertiesTo(dto);                
             }
            
-            await _http.PostAsync(query, body);
+            await _http.PostAsync(query, participantDto);
         }
 
     }

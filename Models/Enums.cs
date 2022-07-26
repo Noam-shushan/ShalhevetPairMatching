@@ -57,27 +57,28 @@ namespace PairMatching.Models
         Incapable 
     }
 
-    public enum PrefferdTracks 
-    { 
-        [EnumDescription("תניא", "Tanya")]
+    public enum PrefferdTracks
+    {
+        [EnumDescription("תניא", "Chassidic Thought", "df6ce1e8-1839-4749-bd4f-495295d75657")]
+        //[EnumDescription(DescriptionId = "e9a52d6e-5510-4259-a157-c661e9ff95e9", HebDescription = "חסידות", EngDescriptions = { "Chassidic Thought"})]
         Tanya,
         
-        [EnumDescription("גמרא", "Talmud")]
+        [EnumDescription("גמרא", "Talmud", "e9a52d6e-5510-4259-a157-c661e9ff95e9")]
         Talmud,
         
-        [EnumDescription("פרשה", "Parsha")]
+        [EnumDescription("פרשה", "Weekly Parsha", "c44f84d4-a7b3-4125-9e1d-2000f9afb76e")]
         Parsha,
         
-        [EnumDescription("תפילה", "Payer")]
+        [EnumDescription("תפילה", "Prayer", "c01b5f93-3797-473e-9eff-17bd7bddf736")]
         Payer,
         
-        [EnumDescription("פרקי אבות", "Pirkei Avot (Ethics of the Fathers)")]
+        [EnumDescription("פרקי אבות", "Pirkei Avot", "8fc9e767-d4bf-4093-ad17-bb366ca31adf")]
         PirkeiAvot,
 
         [EnumDescription("לא משנה", "Dont Prefferd")]
         NoPrefrence,
         
-        [EnumDescription("עצמאי" ,"Independent learning subject")]
+        [EnumDescription("עצמאי" , "Independent", "788830c2-45f4-471d-aa0d-8c7412826562")]
         IndependentLearning
     }
     
