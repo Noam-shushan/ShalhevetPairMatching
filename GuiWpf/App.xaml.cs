@@ -22,6 +22,10 @@ namespace GuiWpf
     /// </summary>
     public partial class App : PrismApplication
     {
+        public App() : base()
+        {
+            //AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
+        }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {

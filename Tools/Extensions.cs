@@ -51,19 +51,6 @@ namespace PairMatching.Tools
 
             throw allTasks.Exception ?? throw new Exception("Bad");
         }
-        
-        public static string ToDescriptionString<T>(this T enumVal, string engOrHeb) where T : Enum 
-        {
-            EnumDescriptionAttribute[] attributes = (EnumDescriptionAttribute[])enumVal
-               .GetType()
-               .GetField(enumVal.ToString())
-               .GetCustomAttributes(typeof(EnumDescriptionAttribute), false);
-            if(attributes.Length > 0)
-            {
-                return engOrHeb == "eng" ? attributes[0].DisplyEngDescription : attributes[0].HebDescription;
-            }
-            return string.Empty;
-        }
 
         public static string GetDescriptionFromEnumValue(this Enum value, string engOrHeb = "heb")
         {
@@ -76,6 +63,21 @@ namespace PairMatching.Tools
             if(attribute != null)
             {
                 return engOrHeb == "eng" ? attribute.DisplyEngDescription : attribute.HebDescription;
+            }
+            return string.Empty;
+        }
+
+        public static string GetDescriptionIdFromEnum(this Enum value)
+        {
+            if (value == null)
+                return string.Empty;
+            var attribute = value.GetType()
+                .GetField(value.ToString())
+                .GetCustomAttributes(typeof(EnumDescriptionAttribute), false)
+                .SingleOrDefault() as EnumDescriptionAttribute;
+            if (attribute != null)
+            {
+                return attribute.DescriptionId;
             }
             return string.Empty;
         }

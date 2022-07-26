@@ -14,8 +14,10 @@ namespace DomainTesting
         {
             // Create test data
             List<PairSuggestion> pairSuggestions = CreatePairSuggestionData();
+            
             // Create Participants data
             List<Participant> participants = CreateParticipaintData();
+            
             // Create BipartiteMatching object
             var bipartiteMatching = new BipartiteMatching(pairSuggestions, participants);
 
@@ -35,7 +37,7 @@ namespace DomainTesting
             // Create BipartiteMatching object
             var bipartiteMatching = new BipartiteMatching(pairSuggestions, participants);
 
-            var result = bipartiteMatching.MaxBPM();
+            var result = bipartiteMatching.MaxMatching();
 
 
             Assert.AreEqual(5, result);

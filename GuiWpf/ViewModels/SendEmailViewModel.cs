@@ -29,16 +29,16 @@ namespace GuiWpf.ViewModels
 
             _ea.GetEvent<GetEmailAddressToParticipaintsEvent>().Subscribe((to) =>
             {
-                To = to.ToList();
+                if (to == null)
+                {
+                    return;
+                }
+                To.Clear();
+                To.AddRange(to);
             });
         }
-
-        private List<EmailAddress> _to;
-        public List<EmailAddress> To
-        {
-            get => _to;
-            set => SetProperty(ref _to, value);
-        }
+        
+        public ObservableCollection<EmailAddress> To { get; } = new();
 
         private string _subject;
         public string Subject
@@ -67,7 +67,6 @@ namespace GuiWpf.ViewModels
         public DelegateCommand SendCommand => _sendCommand ??= new(
          () =>
         {
-           
         });
 
         DelegateCommand _addAttachmentCommand;

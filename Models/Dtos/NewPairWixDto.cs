@@ -10,7 +10,7 @@ namespace PairMatching.Models.Dtos
     {
         public string chevrutaIdFirst { get; set; }
         public string chevrutaIdSecond { get; set; }
-        public string track { get; set; }
+        public string trackId { get; set; }
         public DateTime date { get; set; }
     }
 }

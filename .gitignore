@@ -8,6 +8,7 @@ pairmatching.json
 .git.bfg-report/
 bfg.jar
 GuiWpf\bin\Debug\net5.0-windows\localDB/*
+ConstantsValuesAndId.json
 
 # User-specific files
 *.rsuser

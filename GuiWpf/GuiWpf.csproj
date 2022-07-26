@@ -18,14 +18,11 @@
 
   <ItemGroup>
     <Content Include="bin\Debug\net5.0-windows\Resources\shalhevet_logo.ico" />
+    <Resource Include="Resources\appsetting.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\pairmatching.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\appsetting.json" />
   </ItemGroup>
 
   <ItemGroup>

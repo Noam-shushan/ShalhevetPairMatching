@@ -24,7 +24,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public override string ToString()
         {
-            return $"{V1.PartId} -> {V2.PartId}, F = {Flow}";
+            return $"{V1.PartId}->{V2.PartId}";
         }
 
         public override bool Equals(object obj)
