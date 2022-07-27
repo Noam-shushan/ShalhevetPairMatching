@@ -14,6 +14,7 @@ using static PairMatching.Tools.HelperFunction;
 using Prism.Mvvm;
 using GuiWpf.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
+using Root;
 
 namespace GuiWpf
 {
@@ -22,14 +23,17 @@ namespace GuiWpf
     /// </summary>
     public partial class App : PrismApplication
     {
+        private readonly Startup _startup;
+
         public App() : base()
         {
             //AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
+            _startup = new Startup();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance(GetConfigurations());
+            containerRegistry.RegisterInstance(_startup.GetConfigurations());
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
 
             containerRegistry.Register<SendEmail>();
@@ -41,12 +45,7 @@ namespace GuiWpf
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
         }
 
-        private MyConfiguration GetConfigurations()
-        {
-            var jsonString = ReadJson(@"Resources/appsetting.json");
-            var configurations = JsonConvert.DeserializeObject<MyConfiguration>(jsonString);
-            return configurations ?? throw new Exception("No Configurations");
-        }
+
 
         protected override Window CreateShell()
         {
@@ -57,6 +56,7 @@ namespace GuiWpf
         {
             base.ConfigureViewModelLocator();
 
+            ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
             ViewModelLocationProvider.Register<ParticipiantsView, ParticipiantsViewModel>();
             ViewModelLocationProvider.Register<MatchingView, MatchingViewModel>();
             ViewModelLocationProvider.Register<AddParticipantForm, AddParticipantFormViewModel>();

@@ -128,7 +128,14 @@ namespace PairMatching.DomainModel.Email
                     var temp = listOfAddress.Take(CHUNK_SIZE);
                     message.To.AddRange(temp);
                     listOfAddress = listOfAddress.Skip(CHUNK_SIZE);
-                    await client.SendAsync(message);
+                    try
+                    {
+                        await client.SendAsync(message);
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
                 }
             }
             catch (Exception ex)

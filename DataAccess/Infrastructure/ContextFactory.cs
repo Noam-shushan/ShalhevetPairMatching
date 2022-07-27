@@ -1,5 +1,4 @@
 ﻿using System;
-using PairMatching.Models;
 using PairMatching.Configurations;
 
 namespace PairMatching.DataAccess.Infrastructure
@@ -15,15 +14,16 @@ namespace PairMatching.DataAccess.Infrastructure
 
         public IDataAccess GetContext()
         {
-            if(_configurations.IsTest)
-            {
-                return new JsonDataAccess();
-            }
-            else
-            {
-                return new MongoDataAccess(_configurations.ConnctionsStrings);
-            }
-            throw new Exception("No Data Access implementation");
+            return new MongoDataAccess(_configurations.ConnctionsStrings);
+            //if (_configurations.IsTest)
+            //{
+            //    return new JsonDataAccess();
+            //}
+            //else
+            //{
+            //    return new MongoDataAccess(_configurations.ConnctionsStrings);
+            //}
+            //throw new Exception("No Data Access implementation");
         }
     }
 }

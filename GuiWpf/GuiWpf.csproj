@@ -5,7 +5,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>bin\Debug\net5.0-windows\Resources\shalhevet_logo.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\shalhevet_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,12 +17,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="bin\Debug\net5.0-windows\Resources\shalhevet_logo.ico" />
-    <Resource Include="Resources\appsetting.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\pairmatching.json" />
+    <Content Include="Resources\appsetting.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\pairmatching.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\shalhevet_logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +41,12 @@
     <ProjectReference Include="..\Configurations\Configurations.csproj" />
     <ProjectReference Include="..\DomainModel\DomainModel.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Root\Root.csproj" />
     <ProjectReference Include="..\Tools\Tools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bin\Debug\net5.0-windows\Resources\" />
   </ItemGroup>
 
 </Project>
