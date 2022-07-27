@@ -28,6 +28,8 @@ namespace GuiWpf.Events
 
     public class GetEmailAddressToParticipaintsEvent : PubSubEvent<IEnumerable<EmailAddress>> { }
 
+    public class IsSendEmailEvent : PubSubEvent<bool> { }
+
     public enum ModelType
     {
         Participant,

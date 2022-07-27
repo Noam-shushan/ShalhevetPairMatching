@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleSheet", "GoogleSheet\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainTesting", "DomainTesting\DomainTesting.csproj", "{BA848756-8D21-4973-9290-0454D1AA8BC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSystem", "EmailSystem\EmailSystem.csproj", "{A13625E4-043F-4420-A83E-0D9953013E59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Root", "Root\Root.csproj", "{1AAFBC2E-70CF-46F8-B180-67C273598C8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{BA848756-8D21-4973-9290-0454D1AA8BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA848756-8D21-4973-9290-0454D1AA8BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA848756-8D21-4973-9290-0454D1AA8BC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A13625E4-043F-4420-A83E-0D9953013E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A13625E4-043F-4420-A83E-0D9953013E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A13625E4-043F-4420-A83E-0D9953013E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A13625E4-043F-4420-A83E-0D9953013E59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AAFBC2E-70CF-46F8-B180-67C273598C8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AAFBC2E-70CF-46F8-B180-67C273598C8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AAFBC2E-70CF-46F8-B180-67C273598C8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AAFBC2E-70CF-46F8-B180-67C273598C8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

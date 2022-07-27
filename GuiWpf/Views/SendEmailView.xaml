@@ -108,9 +108,11 @@
                 <TextBox
                     Grid.Row="2"
                     Height="300"
+                    MaxWidth="600"
                     Margin="0,2"
                     materialDesign:HintAssist.Hint="תוכן"
                     AcceptsReturn="True"
+                    FlowDirection="LeftToRight"
                     FontSize="16"
                     SpellCheck.IsEnabled="True"
                     Style="{StaticResource EmailTextBoxStyle}"
@@ -126,7 +128,7 @@
 
                     <Button
                         Grid.Column="0"
-                        Command="{Binding SendCommand}"
+                        Command="{Binding SendEmailCommand}"
                         Content="שליחה"
                         Foreground="#F5F5F5" />
 

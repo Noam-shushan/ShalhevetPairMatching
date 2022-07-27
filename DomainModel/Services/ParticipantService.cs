@@ -67,12 +67,6 @@ namespace PairMatching.DomainModel.Services
             await _unitOfWork.IsraelParticipantsRepositry.SaveToDrive(l, "Shalhevet data");
         }
 
-//        appsetting.json
-//pairmatching.json
-//.git.bfg-report/
-//bfg.jar/*
-//GuiWpf\bin\Debug\net5.0-windows\localDB/*
-
         public async Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael()
         {
             return await _unitOfWork

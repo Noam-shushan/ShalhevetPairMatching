@@ -10,6 +10,7 @@
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     BorderThickness="0"
     FlowDirection="RightToLeft"
@@ -43,6 +44,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="28px" />
         </Grid.RowDefinitions>
 
         <TabControl
@@ -62,5 +64,17 @@
                 <local:EmailsView />
             </TabItem>
         </TabControl>
+
+        <StatusBar Grid.Row="1">
+            <StatusBarItem Visibility="{Binding IsSendEmail, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="שולח מיילים..." />
+                    <ProgressBar
+                        Foreground="{StaticResource AttentionToActionBrush}"
+                        IsIndeterminate="True"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}" />
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </mah:MetroWindow>
