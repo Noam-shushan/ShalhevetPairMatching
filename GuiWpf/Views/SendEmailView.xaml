@@ -82,12 +82,16 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <TextBlock Margin="0,0,10,0" Text="נמענים:" />
+                    <TextBlock
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="נמענים:" />
                     <ListBox ItemsSource="{Binding To}" Style="{StaticResource MaterialDesignFilterChipListBox}">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel
-                                    MaxWidth="600"
+                                    MaxWidth="590"
                                     IsItemsHost="True"
                                     Orientation="Horizontal" />
                             </ItemsPanelTemplate>
@@ -98,6 +102,11 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                        Text="..." />
                 </StackPanel>
                 <TextBox
                     Grid.Row="1"
@@ -112,7 +121,6 @@
                     Margin="0,2"
                     materialDesign:HintAssist.Hint="תוכן"
                     AcceptsReturn="True"
-                    FlowDirection="LeftToRight"
                     FontSize="16"
                     SpellCheck.IsEnabled="True"
                     Style="{StaticResource EmailTextBoxStyle}"

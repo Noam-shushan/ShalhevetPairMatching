@@ -40,15 +40,12 @@ namespace DomainTesting.WixApi
         }
 
         [Test]
-        public void NewPairToWixTest()
-        {         
-            //await _wix.NewPair(new NewPairWixDto
-            //{
-            //    chevrutaIdFirst = "8f60532a-de89-427a-b628-ede463dcf093",
-            //    chevrutaIdSecond = "e1bc6d5e-9913-4e2b-9fae-26e42bfcc556",
-            //    date = DateTime.Now,
-            //    trackId = PrefferdTracks.Payer.GetDescriptionIdFromEnum(),
-            //});
+        public async Task NewPairToWixTest()
+        {
+            var parts = await _wix.GetNewParticipants();
+            var max = parts.Max(p => p.index);
+            var a = parts.OrderByDescending(p => p.index).FirstOrDefault();
+            var b = parts.OrderByDescending(p => p.index).FirstOrDefault(p => p.index == max - 1);
         }
     }
 }
