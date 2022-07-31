@@ -26,19 +26,47 @@ namespace GuiWpf.ViewModels
                async () =>
                {
                    //await MetroProgressOnLoading();
-                   if (IsInitialized)
-                   {
-                       return;
-                   }
                    IsLoaded = true;
                    var suggestions = await _matchingService.GetAllPairSuggestions();
                    PairSuggestions.Clear();
                    PairSuggestions.AddRange(suggestions.OrderBy(s => s.MatchingScore));
                    StageSuggestion = PairSuggestions.FirstOrDefault()!;
-                   
+
+                   Participants.Clear();
+                   Participants.AddRange(from p in suggestions                                        
+                                         let ip = p.FromIsrael
+                                         group new { p.MatchingScore, p.FromWorld} by new {ip.Id, ip } into ps
+                                         select new ParticipaintWithSuggestions
+                                         {
+                                             Participant = ps.Key.ip,
+                                             Suggestions = ps.Select(i => new ParticipantSuggestion 
+                                             {
+                                                Country = i.FromWorld.Country,
+                                                Id = i.FromWorld.Id,
+                                                Name = i.FromWorld.Name,
+                                                MatchingPercent = Math.Round((double)(100 * i.MatchingScore) / 26)
+                                             })
+                                         })
+                                        .Union(from p in suggestions
+                                               let wp = p.FromWorld
+                                               group new { p.MatchingScore, p.FromIsrael } by new { wp.Id, wp } into ps
+                                               select new ParticipaintWithSuggestions
+                                               {
+                                                   Participant = ps.Key.wp,
+                                                   Suggestions = ps.Select(i => new ParticipantSuggestion
+                                                   {
+                                                       Country = i.FromIsrael.Country,
+                                                       Id = i.FromIsrael.Id,
+                                                       Name = i.FromIsrael.Name,
+                                                       MatchingPercent = Math.Round((double)(100 * i.MatchingScore) / 26)
+                                                   })
+                                               });
+               
                    IsInitialized = true;
                    IsLoaded = false;
-               });
+
+               },
+               () => !IsInitialized || IsLoaded);
 
         private bool _isLoaded = false;
         public bool IsLoaded
@@ -66,6 +94,14 @@ namespace GuiWpf.ViewModels
             {
                 SetProperty(ref _stageSuggestion, value);
             }
+        }
+
+
+        private ParticipaintWithSuggestions _selectedParticipaint;
+        public ParticipaintWithSuggestions SelectedParticipaint
+        {
+            get => _selectedParticipaint;
+            set => SetProperty(ref _selectedParticipaint, value);
         }
 
         DelegateCommand _stageNext;
@@ -98,6 +134,17 @@ namespace GuiWpf.ViewModels
     public class ParticipaintWithSuggestions
     {
         public Participant Participant { get; set; }
-        public List<PairSuggestion> Suggestions { get; set; }
+        public IEnumerable<ParticipantSuggestion> Suggestions { get; set; }
+    }
+    
+    public class ParticipantSuggestion
+    {
+        public string Id { get; set; }
+
+        public string Country { get; set; }
+
+        public string Name { get; set; }
+
+        public double MatchingPercent { get; set; }
     }
 }

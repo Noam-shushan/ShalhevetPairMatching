@@ -68,15 +68,12 @@ namespace GuiWpf.ViewModels
                async () =>
                {
                    //await MetroProgressOnLoading();
-                   if (IsInitialized || IsLoaded)
-                   {
-                       return;
-                   }
                    IsLoaded = true;
 
-                   var parts = await _participantService.GetAll();
+                   //var parts = await _participantService.GetAll();
+                   var parts = await _participantService.GetParticipantsWix(); //await _participantService.GetAll();
                    _participiants.Clear();
-                   _participiants.AddRange(parts.Take(20));
+                   _participiants.AddRange(parts);
 
                    Years.Clear();
                    Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
@@ -84,7 +81,8 @@ namespace GuiWpf.ViewModels
 
                    IsInitialized = true;
                    IsLoaded = false;
-               });
+               },
+               () => !IsInitialized || IsLoaded);
 
         private bool _isInitialized = false;
 

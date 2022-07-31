@@ -27,6 +27,6 @@ namespace PairMatching.DomainModel.Services
             var suggestionsBuilder = new BuildSuggestions(israelParticipants, worldParticipants);
 
             return suggestionsBuilder.BuildPairSuggestions();
-        }
+        } 
     }
 }

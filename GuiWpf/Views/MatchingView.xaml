@@ -361,16 +361,20 @@
                             </GroupBox.Header>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
                                 <materialDesign:Card Grid.Column="0" Margin="5">
-                                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding PairSuggestions}">
+                                    <DataGrid
+                                        AutoGenerateColumns="False"
+                                        IsReadOnly="True"
+                                        ItemsSource="{Binding Participants}"
+                                        SelectedItem="{Binding SelectedParticipaint}">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Binding="{Binding FromIsreal.Name}" Header="שם" />
-                                            <DataGridTextColumn Binding="{Binding FromIsreal.Country}" Header="ארץ" />
+                                            <DataGridTextColumn Binding="{Binding Participant.Name}" Header="שם" />
+                                            <DataGridTextColumn Binding="{Binding Participant.Country}" Header="ארץ" />
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </materialDesign:Card>
@@ -379,11 +383,14 @@
                                     Margin="5"
                                     Header="הצעות להתאמה"
                                     Style="{StaticResource GroupBoxList}">
-                                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding}">
+                                    <DataGrid
+                                        AutoGenerateColumns="False"
+                                        IsReadOnly="True"
+                                        ItemsSource="{Binding Path=SelectedParticipaint.Suggestions}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Name}" Header="שם" />
                                             <DataGridTextColumn Binding="{Binding Country}" Header="ארץ" />
-                                            <DataGridTextColumn Binding="{Binding MatchPresent}" Header="אחוז התאמה" />
+                                            <DataGridTextColumn Binding="{Binding MatchingPercent}" Header="אחוז התאמה" />
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </GroupBox>
