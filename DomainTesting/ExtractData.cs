@@ -16,6 +16,7 @@ using PairMatching.GoogleSheet;
 using PairMatching.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using PairMatching.Root;
 
 namespace DomainTesting
 {
@@ -42,17 +43,11 @@ namespace DomainTesting
         readonly MyConfiguration _config;
         public ExtractData()
         {
-            _config = GetConfigurations();
+            _config = new Startup()
+                .GetConfigurations();
             var db = new DataAccessFactory(_config);
             _unitOfWork = db.GetDataAccess();
             _wix = new WixDataReader(_config);
-        }
-
-        private MyConfiguration GetConfigurations()
-        {
-            var jsonString = ReadJson(@"C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\Resources\appsetting.json");
-            var configurations = JsonConvert.DeserializeObject<MyConfiguration>(jsonString);
-            return configurations ?? throw new Exception("No Configurations");
         }
         
         [Test]

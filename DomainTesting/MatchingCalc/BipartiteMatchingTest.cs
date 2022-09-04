@@ -9,6 +9,7 @@ using PairMatching.Configurations;
 using PairMatching.DataAccess.UnitOfWork;
 using Newtonsoft.Json;
 using System.Linq;
+using PairMatching.Root;
 
 namespace DomainTesting.MatchingCalc
 {
@@ -19,18 +20,11 @@ namespace DomainTesting.MatchingCalc
 
         public BipartiteMatchingTest()
         {
-            var conf = GetConfigurations();
+            var conf = new Startup()
+                .GetConfigurations();
             _db = new UnitOfWork(conf);
 
         }
-
-        private MyConfiguration GetConfigurations()
-        {
-            var jsonString = ReadJson(@"C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\Resources\appsetting.json");
-            var configurations = JsonConvert.DeserializeObject<MyConfiguration>(jsonString);
-            return configurations ?? throw new Exception("No Configurations");
-        }
-
 
         [Test]
         public void MaxMatchingTestEdmoudnsKarp()

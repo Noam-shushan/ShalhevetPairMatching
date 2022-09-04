@@ -14,6 +14,7 @@ using PairMatching.Tools;
 using PairMatching.WixApi;
 using System.Security.Cryptography;
 using System.Xml.Linq;
+using PairMatching.Root;
 
 namespace DomainTesting.DataAccess
 {
@@ -25,17 +26,11 @@ namespace DomainTesting.DataAccess
 
         public DbTests()
         {
-            var conf = GetConfigurations();
+            var conf = new Startup()
+                .GetConfigurations();
             _db = new UnitOfWork(conf);
             _wix = new WixDataReader(conf);
-        }
-
-        private MyConfiguration GetConfigurations()
-        {
-            var jsonString = ReadJson(@"C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\Resources\appsetting.json");
-            var configurations = JsonConvert.DeserializeObject<MyConfiguration>(jsonString);
-            return configurations ?? throw new Exception("No Configurations");
-        }        
+        }  
 
         [Test]
         public async Task InsertNewItemToMongo()
