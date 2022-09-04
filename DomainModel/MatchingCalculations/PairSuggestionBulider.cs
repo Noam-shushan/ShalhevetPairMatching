@@ -41,9 +41,17 @@ namespace PairMatching.DomainModel.MatchingCalculations
             if (_result.IsMinmunMatch)
             {
                 _result.MatchingScore = CalculateMatchingScore();
+                _result.PrefferdTrack = FindPrefferdTrack();
                 return _result;
             }
             return null;
+        }
+
+        private PrefferdTracks FindPrefferdTrack()
+        {
+            return _ip.PairPreferences.Tracks
+                .Intersect(_wp.PairPreferences.Tracks)
+                .FirstOrDefault();
         }
 
         int CalculateMatchingScore()

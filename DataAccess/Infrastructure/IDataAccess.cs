@@ -18,8 +18,8 @@ namespace PairMatching.DataAccess.Infrastructure
 
         Task InsertMany<T>(string collectionName, IEnumerable<T> records);
 
-        Task InsertOne<T>(string collectionName, T record);
+        Task<T> InsertOne<T>(string collectionName, T record);
 
-        Task UpdateOne<T>(string collectionName, T record, string id);
+        Task UpdateOne<T>(string collectionName, T record, dynamic id);
     }
 }

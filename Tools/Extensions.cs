@@ -10,6 +10,28 @@ using System.Threading.Tasks;
 
 namespace PairMatching.Tools
 {
+    public static class ObjectExtensions
+    {
+        public static IDictionary<string, object> AddProperty(this object obj, string name, object value)
+        {
+            var dictionary = obj.ToDictionary();
+            dictionary.Add(name, value);
+            return dictionary;
+        }
+
+        // helper
+        public static IDictionary<string, object> ToDictionary(this object obj)
+        {
+            IDictionary<string, object> result = new Dictionary<string, object>();
+            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(obj);
+            foreach (PropertyDescriptor property in properties)
+            {
+                result.Add(property.Name, property.GetValue(obj));
+            }
+            return result;
+        }
+    }
+
     public static class Extensions
     {
         /// <summary>
@@ -123,6 +145,15 @@ namespace PairMatching.Tools
                             .SingleOrDefault();
             var result = field == null ? default : field.Field.GetRawConstantValue();
             return Enum.Parse(type, result.ToString());
+        }
+
+        public static Dictionary<string, int> GetIndexes<T>(this IEnumerable<T> items, Func<T, string> selctor)
+        {
+            return items.Select(selctor)
+                .GroupBy((id) => id)
+                .Select((p) => p.Key)
+                .Select((id, i) => new { Id = id, Index = i })
+                .ToDictionary(p => p.Id, p => p.Index);
         }
     }
 

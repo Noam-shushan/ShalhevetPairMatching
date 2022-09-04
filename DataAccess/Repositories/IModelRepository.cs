@@ -32,14 +32,14 @@ namespace PairMatching.DataAccess.Repositories
         /// </summary>
         /// <param name="model">The new record</param>
         /// <returns></returns>
-        Task Insert(TModel model);
+        Task<TModel> Insert(TModel model);
 
         /// <summary>
         /// Insert many record of this model to the database
         /// </summary>
         /// <param name="models">The new records to insert</param>
         /// <returns></returns>
-        Task Insert(IEnumerable<TModel> models);
+        Task InsertMany(IEnumerable<TModel> models);
 
         /// <summary>
         /// Update one record of this model

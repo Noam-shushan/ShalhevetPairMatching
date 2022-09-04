@@ -22,12 +22,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="3.2.0" />
+    <PackageReference Include="HungarianAlgorithm" Version="2.2.9" />
+    <PackageReference Include="MailKit" Version="3.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Configurations\Configurations.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\ExcelGenerator\ExcelTools.csproj" />
+    <ProjectReference Include="..\Tools\UtilTools.csproj" />
     <ProjectReference Include="..\WixApi\WixApi.csproj" />
   </ItemGroup>
   <ItemGroup>

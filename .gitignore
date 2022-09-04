@@ -5,9 +5,12 @@
 
 appsetting.json
 pairmatching.json
+gs_secrets.json
 .git.bfg-report/
 bfg.jar
 GuiWpf\bin\Debug\net5.0-windows\localDB/*
+DomainTesting\bin\Debug\net5.0\Excels/*
+DomainTesting\bin\Debug\net5.0\localDB/*
 ConstantsValuesAndId.json
 
 # User-specific files

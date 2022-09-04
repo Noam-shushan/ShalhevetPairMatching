@@ -17,8 +17,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Configurations\Configurations.csproj" />
     <ProjectReference Include="..\DomainModel\DomainModel.csproj" />
+    <ProjectReference Include="..\ExcelGenerator\ExcelTools.csproj" />
+    <ProjectReference Include="..\GoogleSheet\GoogleSheet.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\Tools\Tools.csproj" />
+    <ProjectReference Include="..\Root\Root.csproj" />
+    <ProjectReference Include="..\Tools\UtilTools.csproj" />
     <ProjectReference Include="..\WixApi\WixApi.csproj" />
   </ItemGroup>
 

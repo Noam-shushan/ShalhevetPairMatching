@@ -14,7 +14,7 @@ using static PairMatching.Tools.HelperFunction;
 using Prism.Mvvm;
 using GuiWpf.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
-using Root;
+using PairMatching.Root;
 
 namespace GuiWpf
 {
@@ -37,6 +37,7 @@ namespace GuiWpf
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
 
             containerRegistry.Register<SendEmail>();
+            containerRegistry.Register<MatchCommand>();
             containerRegistry.Register<IParticipantService, ParticipantService>();
             containerRegistry.Register<IPairsService, PairService>();
             containerRegistry.Register<IEmailService, EmailService>();
@@ -64,6 +65,8 @@ namespace GuiWpf
             ViewModelLocationProvider.Register<ParisView, PairsViewModel>();
             ViewModelLocationProvider.Register<NotesView, NotesViewModel>();
             ViewModelLocationProvider.Register<SendEmailView, SendEmailViewModel>();
+            ViewModelLocationProvider.Register<AutoMatchingView, AutoMatchingViewModel>();
+            
         }
     }
 }

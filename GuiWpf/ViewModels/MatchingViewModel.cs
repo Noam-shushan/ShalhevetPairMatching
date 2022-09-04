@@ -4,98 +4,107 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.DomainModel.Services;
 using PairMatching.Models;
 using Prism.Commands;
-using Prism.Mvvm;
+using Prism.Events;
+using GuiWpf.Events;
+using GuiWpf.UIModels;
 
 namespace GuiWpf.ViewModels
 {
-    public class MatchingViewModel : BindableBase
+    public class MatchingViewModel : ViewModelBase
     {
         readonly IMatchingService _matchingService;
 
-        public MatchingViewModel(IMatchingService matchingService)
+        readonly IEventAggregator _ea;
+
+        public MatchingViewModel(IMatchingService matchingService, IEventAggregator ea, MatchCommand matchCommand)
         {
             _matchingService = matchingService;
+            _ea = ea;
+            Match = matchCommand;
+            
+            _ea.GetEvent<NewMatchEvent>()
+                .Subscribe(async ps =>
+                {
+                    await Refresh();
+                });
         }
+
+        List<PairSuggestion> _pairSuggestions = new();
 
         DelegateCommand _load;
         public DelegateCommand Load => _load ??= new(
                async () =>
                {
                    //await MetroProgressOnLoading();
-                   IsLoaded = true;
-                   var suggestions = await _matchingService.GetAllPairSuggestions();
-                   PairSuggestions.Clear();
-                   PairSuggestions.AddRange(suggestions.OrderBy(s => s.MatchingScore));
-                   StageSuggestion = PairSuggestions.FirstOrDefault()!;
-
-                   Participants.Clear();
-                   Participants.AddRange(from p in suggestions                                        
-                                         let ip = p.FromIsrael
-                                         group new { p.MatchingScore, p.FromWorld} by new {ip.Id, ip } into ps
-                                         select new ParticipaintWithSuggestions
-                                         {
-                                             Participant = ps.Key.ip,
-                                             Suggestions = ps.Select(i => new ParticipantSuggestion 
-                                             {
-                                                Country = i.FromWorld.Country,
-                                                Id = i.FromWorld.Id,
-                                                Name = i.FromWorld.Name,
-                                                MatchingPercent = Math.Round((double)(100 * i.MatchingScore) / 26)
-                                             })
-                                         })
-                                        .Union(from p in suggestions
-                                               let wp = p.FromWorld
-                                               group new { p.MatchingScore, p.FromIsrael } by new { wp.Id, wp } into ps
-                                               select new ParticipaintWithSuggestions
-                                               {
-                                                   Participant = ps.Key.wp,
-                                                   Suggestions = ps.Select(i => new ParticipantSuggestion
-                                                   {
-                                                       Country = i.FromIsrael.Country,
-                                                       Id = i.FromIsrael.Id,
-                                                       Name = i.FromIsrael.Name,
-                                                       MatchingPercent = Math.Round((double)(100 * i.MatchingScore) / 26)
-                                                   })
-                                               });
-               
+                   await Refresh();
                    IsInitialized = true;
-                   IsLoaded = false;
-
                },
                () => !IsInitialized || IsLoaded);
 
-        private bool _isLoaded = false;
-        public bool IsLoaded
+        private async Task Refresh()
         {
-            get => _isLoaded;
-            set => SetProperty(ref _isLoaded, value);
+            IsLoaded = true;
+
+            var suggestions = await _matchingService.GetAllPairSuggestions();
+
+            _pairSuggestions.Clear();
+            _pairSuggestions.AddRange(suggestions);
+
+            Participants.Clear();
+            Participants.AddRange(GroupPartBySuggestion(suggestions));            
+            
+            IsLoaded = false;
         }
 
-        private bool _isInitialized = false;
-        public bool IsInitialized
+        private IEnumerable<ParticipaintWithSuggestions> GroupPartBySuggestion(IEnumerable<PairSuggestion> suggestions)
         {
-            get => _isInitialized;
-            set => SetProperty(ref _isInitialized, value);
+            return (from p in suggestions
+                    let ip = p.FromIsrael
+                    group new { p.MatchingScore, p.FromWorld, p.MatchingPercent, Original = p } 
+                    by new { ip.Id, ip } into ps
+                    select new ParticipaintWithSuggestions
+                    {
+                        Participant = ps.Key.ip,
+                        Suggestions = ps.Select(i => new ParticipantSuggestion
+                        {
+                            Country = i.FromWorld.Country,
+                            Id = i.FromWorld.Id,
+                            Name = i.FromWorld.Name,
+                            MatchingPercent = i.MatchingPercent,
+                            Original = i.Original
+                        }).ToList()
+                    })
+                    .Union(from p in suggestions
+                            let wp = p.FromWorld
+                            group new { p.MatchingScore, p.FromIsrael, p.MatchingPercent, Original = p } 
+                            by new { wp.Id, wp } into ps
+                            select new ParticipaintWithSuggestions
+                            {
+                                Participant = ps.Key.wp,
+                                Suggestions = ps.Select(i => new ParticipantSuggestion
+                                {
+                                    Country = i.FromIsrael.Country,
+                                    Id = i.FromIsrael.Id,
+                                    Name = i.FromIsrael.Name,
+                                    MatchingPercent = i.MatchingPercent,
+                                    Original = i.Original                                    
+                                }).ToList()
+                            });
         }
 
-        public ObservableCollection<PairSuggestion> PairSuggestions { get; set; } = new();
+        private bool _isFullComparisonOpen;
+        public bool IsFullComparisonOpen
+        {
+            get => _isFullComparisonOpen;
+            set => SetProperty(ref _isFullComparisonOpen, value);
+        }
+        
         public ObservableCollection<ParticipaintWithSuggestions> Participants { get; set; } = new();
-
-
-        PairSuggestion _stageSuggestion;
-        public PairSuggestion StageSuggestion
-        {
-            get => _stageSuggestion;
-            set
-            {
-                SetProperty(ref _stageSuggestion, value);
-            }
-        }
-
 
         private ParticipaintWithSuggestions _selectedParticipaint;
         public ParticipaintWithSuggestions SelectedParticipaint
@@ -103,48 +112,82 @@ namespace GuiWpf.ViewModels
             get => _selectedParticipaint;
             set => SetProperty(ref _selectedParticipaint, value);
         }
+        
+        private ParticipantSuggestion _selectedSuggestion;
+        public ParticipantSuggestion SelectedSuggestion
+        {
+            get => _selectedSuggestion;
+            set => SetProperty(ref _selectedSuggestion, value);
+        }
 
-        DelegateCommand _stageNext;
-        public DelegateCommand StageNext => _stageNext ??= new(
-               () =>
-               {
-                   if (StageSuggestion == null)
-                   {
-                       return;
-                   }
-                   var index = PairSuggestions.IndexOf(StageSuggestion);
-                   index = index + 1 < PairSuggestions.Count ? index + 1 : 0;
-                   StageSuggestion = PairSuggestions[index + 1];
-               });
+        DelegateCommand _OpenFullComparisonCommand;
+        public DelegateCommand OpenFullComparisonCommand => _OpenFullComparisonCommand ??= new(
+        () =>
+        {
+            var list = from ps in _pairSuggestions
+                       where ps.FromIsrael.Id == SelectedParticipaint.Participant.Id
+                       || ps.FromWorld.Id == SelectedParticipaint.Participant.Id
+                       select ps;
+            _ea.GetEvent<ShowFullComparisonEvent>()
+            .Publish((list, SelectedSuggestion.Id));
+            IsFullComparisonOpen = true;
+        });
 
-        DelegateCommand _stagePrevious;
-        public DelegateCommand StagePrevious => _stagePrevious ??= new(
-               () =>
-               {
-                   if (StageSuggestion == null)
-                   {
-                       return;
-                   }
-                   var index = PairSuggestions.IndexOf(StageSuggestion);
-                   index = index - 1 > 0 ? index - 1 : PairSuggestions.Count - 1;
-                   StageSuggestion = PairSuggestions[index];
-               });
-    }
 
-    public class ParticipaintWithSuggestions
-    {
-        public Participant Participant { get; set; }
-        public IEnumerable<ParticipantSuggestion> Suggestions { get; set; }
+        DelegateCommand _CloseFullComparisonCommand;
+        public DelegateCommand CloseFullComparisonCommand => _CloseFullComparisonCommand ??= new(
+        () =>
+        {
+            IsFullComparisonOpen = false;
+        });
+
+        public MatchCommand Match { get; }
     }
     
-    public class ParticipantSuggestion
+    public class MatchCommand : ICommand
     {
-        public string Id { get; set; }
+        IEventAggregator _ea;
 
-        public string Country { get; set; }
+        IPairsService _pairsService;
+        
+        IMatchingService _matchingService;
 
-        public string Name { get; set; }
+        public MatchCommand(IEventAggregator ea, IPairsService pairsService, IMatchingService matchingService)
+        {
+            _ea = ea;
+            _pairsService = pairsService;
+            _matchingService = matchingService;
+        }
+        async Task Match(PairSuggestion pairSuggestion)
+        {
+            var newPair = await _pairsService.AddNewPair(pairSuggestion);
 
-        public double MatchingPercent { get; set; }
+            await _matchingService.Refresh();
+
+            _ea.GetEvent<NewMatchEvent>()
+                    .Publish(pairSuggestion);
+            _ea.GetEvent<NewPairEvent>()
+                .Publish(newPair);
+
+        }
+
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
+        
+        public async void Execute(object? parameter)
+        {
+            if(parameter is PairSuggestion pair)
+            {
+                await Match(pair);            
+            }
+        }
+
+        public event EventHandler CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
     }
 }

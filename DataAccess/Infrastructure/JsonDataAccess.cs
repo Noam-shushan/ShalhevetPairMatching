@@ -35,7 +35,7 @@ namespace PairMatching.DataAccess.Infrastructure
                     var jsonString = await File.ReadAllTextAsync(filePath);
                     var list = JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
                     return (from m in list
-                            where (int)GetCurrentId(m) == id
+                            where m.GetCurrentId() == id
                             select m)
                             .FirstOrDefault();
 
@@ -61,7 +61,7 @@ namespace PairMatching.DataAccess.Infrastructure
                     var jsonString = await File.ReadAllTextAsync(filePath);
                     var list = JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
                     return (from m in list
-                            where GetCurrentId(m) == id
+                            where m.GetCurrentId() == id
                             select m)
                             .FirstOrDefault();
 
@@ -120,9 +120,9 @@ namespace PairMatching.DataAccess.Infrastructure
             }
         }
 
-        public async Task InsertOne<T>(string collectionName, T record)
+        public async Task<T> InsertOne<T>(string collectionName, T record)
         {
-            var curId = GetCurrentId(record);
+            var curId = record.GetCurrentId();
             if (string.IsNullOrEmpty(curId) || curId == 0)
             {
                 record.GetType().GetProperty("Id").SetValue(record, GetNewId());
@@ -143,21 +143,17 @@ namespace PairMatching.DataAccess.Infrastructure
             {
                 throw new Exception(ex.Message);
             }
-        }
-
-        public Task UpdateOne<T>(string collectionName, T record, int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateOne<T>(string collectionName, T record, string id)
-        {
-            throw new NotImplementedException();
+            return default;
         }        
 
         private string GetNewId()
         {
             return Guid.NewGuid().ToString();
+        }
+
+        public Task UpdateOne<T>(string collectionName, T record, dynamic id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

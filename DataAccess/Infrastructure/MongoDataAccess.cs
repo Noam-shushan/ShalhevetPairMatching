@@ -97,16 +97,16 @@ namespace PairMatching.DataAccess.Infrastructure
             return task;
         }
 
-        public Task InsertOne<T>(string collectionName, T record)
+        public async Task<T> InsertOne<T>(string collectionName, T record)
         {
             var collection = ConnectToMongo<T>(collectionName);
 
-            var task = collection.InsertOneAsync(record);
+            await collection.InsertOneAsync(record);
 
-            return task;
+            return record;
         }
 
-        public Task UpdateOne<T>(string collectionName, T record, string id)
+        public Task UpdateOne<T>(string collectionName, T record, dynamic id)
         {
             var collection = ConnectToMongo<T>(collectionName);
 

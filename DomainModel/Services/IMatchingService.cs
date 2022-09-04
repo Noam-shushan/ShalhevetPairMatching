@@ -10,5 +10,8 @@ namespace PairMatching.DomainModel.Services
     public interface IMatchingService
     {
         Task<IEnumerable<PairSuggestion>> GetAllPairSuggestions();
+        Task<IEnumerable<PairSuggestion>> GetMaxMatching();
+        Task<IEnumerable<PairSuggestion>> GetMaxOptMatching();
+        Task Refresh();
     }
 }

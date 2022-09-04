@@ -118,7 +118,11 @@ namespace PairMatching.GoogleSheet
         public TimeSpan GetStudentOffset(string value)
         {
             string timeFormat = Regex.Replace(value, "[^0-9.:-]", "");
-            return TimeSpan.Parse(timeFormat);
+            if (TimeSpan.TryParse(timeFormat, out TimeSpan result))
+            {
+                return result;
+            }
+            return TimeSpan.Zero;
         }
 
         public IEnumerable<TimesInDay> GetTimesInDey(string value)

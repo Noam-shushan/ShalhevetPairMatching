@@ -5,7 +5,9 @@
     xmlns:controlers="clr-namespace:GuiWpf.Controlers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ex="clr-namespace:GuiWpf.Exstensions"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:GuiWpf.Views"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
@@ -14,6 +16,13 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Load}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -22,6 +31,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
+
         <GroupBox Grid.Row="0" Style="{StaticResource GroupBoxList}">
             <GroupBox.Header>
                 <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
@@ -46,6 +56,7 @@
                         <ComboBoxItem Content="2021" />
                         <ComboBoxItem Content="2022" />
                     </ComboBox>
+
                     <ComboBox
                         Grid.Column="2"
                         Margin="0,0,10,0"
@@ -55,6 +66,7 @@
                         <ComboBoxItem Content="פעילות" />
                         <ComboBoxItem Content="לא פעילות" />
                     </ComboBox>
+
                     <ComboBox
                         Grid.Column="3"
                         materialDesign:HintAssist.Hint="מסלול"
@@ -64,116 +76,144 @@
                     </ComboBox>
                 </Grid>
             </GroupBox.Header>
-            <DataGrid
-                materialDesign:DataGridAssist.CornerRadius="10"
-                AutoGenerateColumns="False"
-                ItemsSource="{Binding Pairs}"
-                ScrollViewer.CanContentScroll="False"
-                SelectedItem="{Binding SelectedPair}">
-                <DataGrid.Resources>
-                    <DataTemplate x:Key="pairDetails" DataType="{x:Type DataGridTemplateColumn}">
-                        <StackPanel DataContext="{Binding}">
-                            <controlers:Field FieldName="שם" Value="{Binding Path=Name}" />
-                            <controlers:Field FieldName="אימייל" Value="{Binding Path=Email}" />
-                            <controlers:Field FieldName="טלפון" Value="{Binding Path=PhoneNumber}" />
-                            <controlers:Field FieldName="ארץ" Value="{Binding Path=Country}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.Header>
-                            <CheckBox />
-                        </DataGridTemplateColumn.Header>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <DataGrid
+                    Grid.Row="0"
+                    materialDesign:DataGridAssist.CornerRadius="10"
+                    AutoGenerateColumns="False"
+                    ItemsSource="{Binding Path=Pairs.Items}"
+                    SelectedItem="{Binding SelectedPair}">
+                    <DataGrid.Resources>
+
+                        <DataTemplate x:Key="pairDetails" DataType="{x:Type DataGridTemplateColumn}">
+                            <StackPanel DataContext="{Binding}">
+                                <controlers:Field FieldName="שם" Value="{Binding Path=Name}" />
+                                <controlers:Field FieldName="אימייל" Value="{Binding Path=Email}" />
+                                <controlers:Field FieldName="טלפון" Value="{Binding Path=PhoneNumber}" />
+                                <controlers:Field FieldName="ארץ" Value="{Binding Path=Country}" />
+                            </StackPanel>
+                        </DataTemplate>
+
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
                                 <CheckBox />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn
-                        Binding="{Binding ParticipantFromIsrael.Name}"
-                        Header="משתתף מישראל"
-                        IsReadOnly="True" />
-                    <DataGridTextColumn
-                        Binding="{Binding ParticipantFromWorld.Name}"
-                        Header="משתתף מהתפוצות"
-                        IsReadOnly="True" />
-                    <DataGridTemplateColumn Header="מסלול">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Track, Converter={StaticResource EnumToStringConverter}}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                        <DataGridTemplateColumn.CellEditingTemplate>
-                            <DataTemplate>
-                                <ComboBox
-                                    materialDesign:HintAssist.Hint="מסלול"
-                                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}"
-                                    SelectedValue="{Binding Track, Converter={StaticResource EnumToStringConverter}}"
-                                    Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellEditingTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.Header>
-                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק את כל הנבחרים">
-                                <materialDesign:PackIcon Kind="Delete" />
-                            </Button>
-                        </DataGridTemplateColumn.Header>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק משתתף">
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn
+                            Binding="{Binding FromIsrael.Name}"
+                            Header="משתתף מישראל"
+                            IsReadOnly="True" />
+
+                        <DataGridTextColumn
+                            Binding="{Binding FromWorld.Name}"
+                            Header="משתתף מהתפוצות"
+                            IsReadOnly="True" />
+
+                        <DataGridTemplateColumn Header="מסלול">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Track, Converter={StaticResource EnumToStringConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <ComboBox
+                                        materialDesign:HintAssist.Hint="מסלול"
+                                        ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}"
+                                        SelectedValue="{Binding Track, Converter={StaticResource EnumToStringConverter}}"
+                                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק את כל הנבחרים">
                                     <materialDesign:PackIcon Kind="Delete" />
                                 </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.Header>
-                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל לכל הנבחרים">
-                                <materialDesign:PackIcon Kind="Email" />
-                            </Button>
-                        </DataGridTemplateColumn.Header>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל למשתתף">
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק משתתף">
+                                        <materialDesign:PackIcon Kind="Delete" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל לכל הנבחרים">
                                     <materialDesign:PackIcon Kind="Email" />
                                 </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-                <DataGrid.RowDetailsTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <GroupBox
-                                Grid.Column="0"
-                                Margin="5"
-                                Header="מישראל">
-                                <ContentPresenter Content="{Binding ParticipantFromIsrael}" ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
-                            </GroupBox>
-                            <GroupBox
-                                Grid.Column="1"
-                                Margin="5"
-                                Header="מהתפוצות">
-                                <ContentPresenter Content="{Binding ParticipantFromWorld}" ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
-                            </GroupBox>
-                            <local:NotesView Grid.Column="2" Margin="5" />
-                        </Grid>
-                    </DataTemplate>
-                </DataGrid.RowDetailsTemplate>
-            </DataGrid>
+                            </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל למשתתף">
+                                        <materialDesign:PackIcon Kind="Email" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <GroupBox
+                                    Grid.Column="0"
+                                    Margin="5"
+                                    Header="מישראל">
+                                    <ContentPresenter Content="{Binding FromIsrael}" ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
+                                </GroupBox>
+                                <GroupBox
+                                    Grid.Column="1"
+                                    Margin="5"
+                                    Header="מהתפוצות">
+                                    <ContentPresenter Content="{Binding FromWorld}" ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
+                                </GroupBox>
+                                <local:NotesView Grid.Column="2" Margin="5" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
+                </DataGrid>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button
+                        Command="{Binding NextPageCommand}"
+                        Content="הבא"
+                        Style="{StaticResource MaterialDesignRaisedButton}" />
+                    <Button
+                        Command="{Binding PrevPageCommand}"
+                        Content="הקודם"
+                        Style="{StaticResource MaterialDesignRaisedButton}" />
+                </StackPanel>
+            </Grid>
         </GroupBox>
-        <Button
+
+        <mah:ProgressRing
             Grid.Row="1"
-            Command="{Binding LoadCommand}"
-            Content="טען"
-            Visibility="Collapsed" />
+            Foreground="{StaticResource MainColor}"
+            IsLarge="True"
+            Visibility="{Binding IsLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
     </Grid>
 </UserControl>

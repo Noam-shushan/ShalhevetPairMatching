@@ -24,7 +24,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public override string ToString()
         {
-            return $"{V1.PartId}->{V2.PartId}";
+            return $"{V1?.PartId}->{V2?.PartId}";
         }
 
         public override bool Equals(object obj)
@@ -34,7 +34,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public override int GetHashCode()
         {
-            return V1.GetHashCode() ^ V2.GetHashCode();
+            return (V1,  V2).GetHashCode();
         }
     }
 }

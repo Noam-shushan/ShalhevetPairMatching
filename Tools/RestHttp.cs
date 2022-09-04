@@ -9,7 +9,7 @@ namespace PairMatching.Tools
 {
     public class RestHttp
     {
-        public async Task PostAsync(string url, object body)
+        public async Task<string> PostAsync(string url, object body)
         {
             try
             {
@@ -18,13 +18,16 @@ namespace PairMatching.Tools
                 var request = new RestRequest();
 
                 request.AddJsonBody(body);
-
+                
                 var response = await client.PostAsync(request);
+                
 
                 if (!response.IsSuccessful)
                 {
                     throw new Exception(response.ErrorMessage);
                 }
+
+                return response.Content;
             }
             catch (Exception)
             {

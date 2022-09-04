@@ -17,10 +17,12 @@ namespace PairMatching.Tools
         /// <returns></returns>
         public static TimeSpan GetDifferenceUtc(TimeSpan offset)
         {
-            return offset - TimeZoneInfo.Local.BaseUtcOffset;
+            var timeInIsrael = TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time")
+                .BaseUtcOffset;
+            return offset - timeInIsrael;
         }
 
-        public static dynamic GetCurrentId<T>(T record)
+        public static dynamic GetCurrentId<T>(this T record)
         {
             return record.GetType()
                 .GetProperty("Id")

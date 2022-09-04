@@ -29,11 +29,15 @@ namespace PairMatching.Models
         /// </summary>
         public PrefferdTracks Track { get; set; }
 
+        public PairStatus Status { get; set; }
+
         [BsonIgnore]
         public Participant FromIsrael { get; set; }
 
         [BsonIgnore]
         public Participant FromWorld { get; set; }
+
+        
     }
 
     public class TrackHistory

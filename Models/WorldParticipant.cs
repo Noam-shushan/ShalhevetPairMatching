@@ -35,6 +35,8 @@ namespace PairMatching.Models
         public int Age { get; set; }
 
         public Address Address { get; set; } = new();
+
+        public string FullCountryName { get; set; } = "";
     }
 
     public class Address

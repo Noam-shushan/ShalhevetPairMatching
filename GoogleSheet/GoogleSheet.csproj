@@ -6,13 +6,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\gs_secrets.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\gs_secrets.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.57.0.2657" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Configurations\Configurations.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\Tools\Tools.csproj" />
+    <ProjectReference Include="..\Tools\UtilTools.csproj" />
   </ItemGroup>
 
 </Project>

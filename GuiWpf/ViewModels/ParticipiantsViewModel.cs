@@ -1,4 +1,5 @@
 ﻿using GuiWpf.Events;
+using GuiWpf.UIModels;
 using MahApps.Metro.Controls.Dialogs;
 using PairMatching.DomainModel.Services;
 using PairMatching.Models;
@@ -7,6 +8,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,7 +17,7 @@ using System.Windows.Data;
 
 namespace GuiWpf.ViewModels
 {
-    public class ParticipiantsViewModel : BindableBase
+    public class ParticipiantsViewModel : ViewModelBase
     {
         private const string allYears = "כל השנים";
         readonly IParticipantService _participantService;
@@ -26,21 +28,48 @@ namespace GuiWpf.ViewModels
         {
             _participantService = participantService;
             _ea = ea;
-            
-            Participiants = CollectionViewSource.GetDefaultView(_participiants);
-            Participiants.Filter = ParticipiantsFilter;
-            Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
-            Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
-            
+
+            //Participiants = new PaginCollctionView(_participiants, 20);//CollectionViewSource.GetDefaultView(_participiants);
+            //Participiants.Filter = ParticipiantsFilter;
+            //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
+            //Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
+
+
             SubscribeToEvents();
             _dialog = dialog;
         }
+
+        DelegateCommand _load;
+        public DelegateCommand Load => _load ??= new(
+               async () =>
+               {
+                   //await MetroProgressOnLoading();
+                   IsLoaded = true;
+
+
+                   var parts = await _participantService.GetAll();
+                   _participiants.Clear();
+                   _participiants.AddRange(parts);
+
+                   Participiants.Init(_participiants, 10);//CollectionViewSource.GetDefaultView(_participiants);
+                   Participiants.Filter = ParticipiantsFilter;
+                   Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
+                   Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
+
+                   Years.Clear();
+                   Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
+                   Years.Insert(0, allYears);
+
+                   IsInitialized = true;
+                   IsLoaded = false;
+               },
+               () => !IsInitialized || IsLoaded);
 
         private bool ParticipiantsFilter(object obj)
         {
             var partKind = false;
             var year = false;
-            if (obj is Participant  participant)
+            if (obj is Participant participant)
             {
                 partKind = PartsKindFilter switch
                 {
@@ -63,57 +92,21 @@ namespace GuiWpf.ViewModels
             return false;
         }
 
-        DelegateCommand _load;
-        public DelegateCommand Load => _load ??= new(
-               async () =>
-               {
-                   //await MetroProgressOnLoading();
-                   IsLoaded = true;
-
-                   //var parts = await _participantService.GetAll();
-                   var parts = await _participantService.GetParticipantsWix(); //await _participantService.GetAll();
-                   _participiants.Clear();
-                   _participiants.AddRange(parts);
-
-                   Years.Clear();
-                   Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
-                   Years.Insert(0, allYears);
-
-                   IsInitialized = true;
-                   IsLoaded = false;
-               },
-               () => !IsInitialized || IsLoaded);
-
-        private bool _isInitialized = false;
-
         public ObservableCollection<string> Years { get; private set; } = new();
-
-        public bool IsInitialized
-        {
-            get => _isInitialized;
-            set => SetProperty(ref _isInitialized, value);
-        }
-
-        private bool _isLoaded = false;
-        public bool IsLoaded
-        {
-            get => _isLoaded;
-            set => SetProperty(ref _isLoaded, value);
-        }
 
         private bool _isAllSelected;
         public bool IsAllSelected
         {
             get => _isAllSelected;
-            set 
-            { 
-                if(SetProperty(ref _isAllSelected, value))
+            set
+            {
+                if (SetProperty(ref _isAllSelected, value))
                 {
-                    Participiants.OfType<Participant>()
+                    Participiants.Items.OfType<Participant>()
                         .ToList()
                         .ForEach(p => p.IsSelected = value);
                     Participiants.Refresh();
-                } 
+                }
             }
         }
 
@@ -130,10 +123,10 @@ namespace GuiWpf.ViewModels
                 IsSendEmailOpen = isClose;
             });
         }
-        
+
         public ObservableCollection<Participant> _participiants = new();
 
-        public ICollectionView Participiants { get; }
+        public PaginCollectionView<Participant> Participiants { get; set; } = new();
 
         private Participant _selectedParticipant = new();
         public Participant SelectedParticipant
@@ -228,7 +221,7 @@ namespace GuiWpf.ViewModels
             IsSendEmailOpen = !IsSendEmailOpen;
             if (IsSendEmailOpen)
             {
-                var address = from p in Participiants.OfType<Participant>()
+                var address = from p in Participiants.Items.OfType<Participant>()
                               where p.IsSelected
                               select new EmailAddress
                               {
@@ -239,30 +232,29 @@ namespace GuiWpf.ViewModels
                 .Publish(address);
             }
         });
-    }
 
-    public enum ParticipiantsKind
-    {
-        [EnumDescription("כל המשתתפים")]
-        All,
+        private List<int> _maxRecordsInPage;
+        public List<int> MaxRecordsInPage
+        {
+            get => _maxRecordsInPage ??= Enumerable
+                .Range(5, 30)
+                .Where(x => x % 5 == 0)
+                .ToList();
+            set => SetProperty(ref _maxRecordsInPage, value);
+        }
 
-        [EnumDescription("עם חברותא")]
-        WithPair,
+        DelegateCommand _nextPageCommand;
+        public DelegateCommand NextPageCommand => _nextPageCommand ??= new(
+        () =>
+        {
+            Participiants.MoveToNextPage();
+        });
 
-        [EnumDescription("בלי חברותא")]
-        WithoutPair,
-
-        [EnumDescription("מישראל")]
-        FromIsrael,
-
-        [EnumDescription("מהתפוצות")]
-        FromWorld,
-
-        [EnumDescription("מישראל בלי חברותא")]
-
-        FromIsraelWithoutPair,
-
-        [EnumDescription("מהתפוצות בלי חברותא")]
-        FromWorldWithoutPair,
+        DelegateCommand _prevPageCommand;
+        public DelegateCommand PrevPageCommand => _prevPageCommand ??= new(
+        () =>
+        {
+            Participiants.MoveToPreviousPage();
+        });
     }
 }

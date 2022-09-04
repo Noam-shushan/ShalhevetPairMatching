@@ -44,7 +44,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="28px" />
+            <RowDefinition Height="20px" />
         </Grid.RowDefinitions>
 
         <TabControl

@@ -5,7 +5,7 @@ using Prism.Ioc;
 using System;
 using Newtonsoft.Json;
 
-namespace Root
+namespace PairMatching.Root
 {
     public class Startup
     {
