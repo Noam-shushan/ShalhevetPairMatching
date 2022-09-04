@@ -70,7 +70,7 @@ namespace GuiWpf.ViewModels
             }
         }
 
-        public int PageCount => (int)Math.Ceiling((double) _items.Count / _itemsPerPage);
+        public int PageCount => _items is null ? 0 : (int)Math.Ceiling((double) _items.Count / _itemsPerPage);
 
         private int EndIndex
         {
@@ -81,7 +81,7 @@ namespace GuiWpf.ViewModels
             }
         }
 
-        private int StartIndex => CurrentPage * _itemsPerPage;
+        private int StartIndex => (CurrentPage * _itemsPerPage) % ItemsSource.Count;
 
         public void MoveToNextPage()
         {

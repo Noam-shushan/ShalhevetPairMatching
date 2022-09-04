@@ -11,14 +11,10 @@
   <ItemGroup>
     <None Remove="appsetting.json" />
     <None Remove="pairmatching.json" />
-    <None Remove="Resources\appsetting.json" />
     <None Remove="Resources\shalhevet_logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\appsetting.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\shalhevet_logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

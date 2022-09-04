@@ -11,6 +11,7 @@ using PairMatching.Configurations;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PairMatching.Models.Dtos;
+using PairMatching.Root;
 
 namespace DomainTesting.WixApi
 {
@@ -21,16 +22,10 @@ namespace DomainTesting.WixApi
         
         public WixTests()
         {
-            var conf = GetConfigurations();
+            var conf = new Startup() 
+                .GetConfigurations();
             _wix = new WixDataReader(conf);
-            AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
-        }
-
-        private MyConfiguration GetConfigurations()
-        {
-            var jsonString = ReadJson(@"C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\Resources\appsetting.json");
-            var configurations = JsonConvert.DeserializeObject<MyConfiguration>(jsonString);
-            return configurations ?? throw new Exception("No Configurations");
+            //AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
         [Test]

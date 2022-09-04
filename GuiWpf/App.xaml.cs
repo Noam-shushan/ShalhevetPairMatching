@@ -46,8 +46,6 @@ namespace GuiWpf
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
         }
 
-
-
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();

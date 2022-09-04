@@ -5,6 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\appsetting.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\appsetting.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Prism.Core" Version="8.1.97" />
   </ItemGroup>
 
