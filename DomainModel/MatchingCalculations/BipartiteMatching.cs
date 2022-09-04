@@ -1,10 +1,14 @@
 ﻿using PairMatching.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using PairMatching.Tools;
+using HungarianAlgorithm;
+
 
 namespace PairMatching.DomainModel.MatchingCalculations
-{
+{   
     public class BipartiteMatching
     {
         int[,] _matrix;
@@ -13,35 +17,50 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         HashSet<Edge> _edges;
 
-        List<Verterx> _vertices;
+        HashSet<Verterx> _vertices;
 
         Verterx _source;
         
         Verterx _targert;
 
-        public BipartiteMatching(IEnumerable<PairSuggestion> pairSuggestions, IEnumerable<Participant> participants)
+        readonly IEnumerable<PairSuggestion> _pairSuggestions;
+
+        Dictionary<(int, int), PairSuggestion> _indexSuggestions;
+
+        public BipartiteMatching(IEnumerable<PairSuggestion> pairSuggestions)
         {
-            InitializeVertices(participants);
-            InitializeEdges(pairSuggestions);
+            _pairSuggestions = pairSuggestions;
+            InitializeGraph();
+            InitializeMatrix();
         }
 
-        private void InitializeVertices(IEnumerable<Participant> participants)
+        #region Initialize
+
+        private void InitializeGraph()
         {
             _source = new Verterx { Kind = Kind.Source, PartId = "0" };
             _targert = new Verterx { Kind = Kind.Target, PartId = "-1" };
-
+            
+            _vertices = new HashSet<Verterx>();
+            _edges = new HashSet<Edge>();
+            
             int ind = 0;
-            _vertices = participants.Select(p => new Verterx
+            foreach (var sp in _pairSuggestions)
             {
-                PartId = p.Id,
-                Index = ind++,
-                Kind = p.IsFromIsrael ? Kind.FromIsrael : Kind.FromWorld
-            }).ToList();
-        }
-
-        private void InitializeEdges(IEnumerable<PairSuggestion> pairSuggestions)
-        {
-            _edges = (from v in _vertices
+                var v = new Verterx { PartId = sp.FromIsrael.Id, Index = ind++, Kind = Kind.FromIsrael };
+                var u = new Verterx { PartId = sp.FromWorld.Id, Index = ind++, Kind = Kind.FromWorld };
+                _vertices.Add(u);
+                _vertices.Add(v);
+                _edges.Add(new Edge
+                {
+                    Weight = 1,
+                    Capacity = 1,
+                    Flow = 0,
+                    V1 = v,
+                    V2 = u
+                });    
+            }
+            _edges.UnionWith(from v in _vertices
                       where v.Kind == Kind.FromIsrael
                       select new Edge
                       {
@@ -50,7 +69,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
                           Capacity = 1,
                           Flow = 0,
                           Weight = 1
-                      }).ToHashSet();
+                      });
 
             _edges.UnionWith(from v in _vertices
                              where v.Kind == Kind.FromWorld
@@ -62,20 +81,62 @@ namespace PairMatching.DomainModel.MatchingCalculations
                                  Flow = 0,
                                  Weight = 1
                              });
-            var realEdges = from v in _vertices
-                            from u in _vertices
-                            where pairSuggestions.Any(p =>
-                                p.FromIsrael.Id == v.PartId
-                                && p.FromWorld.Id == u.PartId)
-                            select new Edge
-                            {
-                                Weight = 1,
-                                Capacity = 1,
-                                Flow = 0,
-                                V1 = v,
-                                V2 = u
-                            };
-            _edges.UnionWith(realEdges);
+        }
+
+        private void InitializeMatrix()
+        {
+            var israelIndexs = _pairSuggestions.GetIndexes(p => p.FromIsrael.Id);
+
+            var worldIndexs = _pairSuggestions.GetIndexes(p => p.FromWorld.Id);
+                
+            var maxMatching = Math.Max(israelIndexs.Count, worldIndexs.Count);
+
+            _matrix = new int[maxMatching, maxMatching];
+
+            _indexSuggestions = new Dictionary<(int, int), PairSuggestion>();
+
+            //foreach pair set the cell to match score 
+            foreach (var p in _pairSuggestions)
+            {
+                var i = israelIndexs[p.FromIsrael.Id];
+                var j = worldIndexs[p.FromWorld.Id];
+                _matrix[i, j] = p.MatchingScore;
+                _indexSuggestions.Add((i, j), p);
+            }
+
+            //for maximum problam
+            var max = int.MinValue;
+            for (int k = 0; k < maxMatching; k++)
+                for (int l = 0; l < maxMatching; l++)
+                    if (max < _matrix[k, l])
+                    {
+                        max = _matrix[k, l];
+                    }
+
+            //foreach cell in metrix do max - cell
+            for (int k = 0; k < maxMatching; k++)
+                for (int l = 0; l < maxMatching; l++)
+                    _matrix[k, l] = max - _matrix[k, l];
+        } 
+        #endregion
+
+        public IEnumerable<PairSuggestion> HungarianAlgo()
+        {
+            int[] assignments = _matrix.FindAssignments();
+
+            var result = new List<PairSuggestion>();
+
+            for (int i = 0; i < assignments.Length; i++)
+            {
+                if (assignments[i] == -1)
+                    continue;
+
+                if (_indexSuggestions.TryGetValue((i, assignments[i]), out PairSuggestion p))
+                {
+                    result.Add(p);
+                }
+            }
+            return result;
         }
 
         public IEnumerable<Edge> EdmoudnsKarp()
@@ -116,13 +177,13 @@ namespace PairMatching.DomainModel.MatchingCalculations
         /// <returns></returns>
         private List<Edge> FindTarget()
         {
-            var residualNetwork = ResidualNetwork();            
-            
+            var residualNetwork = ResidualNetwork();
+
             var visited = new HashSet<Verterx>();
-            
+
             var queue = new Queue<Verterx>();
-            queue.Enqueue(_source);           
-            
+            queue.Enqueue(_source);
+
             var path = new List<Edge>();
 
             while (queue.Count > 0) // while the queue is not empty
@@ -149,16 +210,16 @@ namespace PairMatching.DomainModel.MatchingCalculations
                         }
                         return path;
                     }
-                    if (!queue.Contains(edge.V2)) 
+                    if (!queue.Contains(edge.V2))
                     {
                         edge.V2.Pred = new(edge.V1, edge);
                         queue.Enqueue(edge.V2);
-                    }         
+                    }
                 }
             }
             return null;
         }
-        
+
         HashSet<Edge> ResidualNetwork()
         {
             var residualNetwork = new HashSet<Edge>();
@@ -222,9 +283,9 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         // Returns maximum number of
         // matching from M to N
-        public int MaxMatching()
+        public int MaxMatchingAsNumber()
         {
-            InitializeMatrix();
+            InitializeMatrixForBpm();
             // An array to keep track of the
             // applicants assigned to jobs.
             // The value of matchR[i] is the
@@ -257,56 +318,8 @@ namespace PairMatching.DomainModel.MatchingCalculations
             return result;
         }
 
-        public IEnumerable<Edge> HungarianAlgorithm()
+        private void InitializeMatrixForBpm()
         {
-            InitializeMatrix();
-            ReduceRows();
-            ReduceColomns();
-            return null; // TODO need to be done
-        }
-
-        private void ReduceColomns()
-        {
-            for (int i = 0; i < _matrix.GetLength(1); i++)
-            {
-                int maxCol = _matrix[0, i];
-                for (int j = 1; j < _matrix.GetLength(0); j++)
-                {
-                    if (_matrix[j, i] > maxCol)
-                    {
-                        maxCol = _matrix[j, i];
-                    }
-                }
-                for (int j = 0; j < _matrix.GetLength(0); j++)
-                {
-                    _matrix[j, i] -= maxCol;
-                }
-            }
-        }
-
-        private void ReduceRows()
-        {
-            for (int i = 0; i < _matrix.GetLength(0); i++)
-            {
-                int maxRow = _matrix[i, 0];
-                for (int j = 1; j < _matrix.GetLength(1); j++)
-                {
-                    if (_matrix[i, j] > maxRow)
-                    {
-                        maxRow = _matrix[i, j];
-                    }
-                }
-                for (int j = 0; j < _matrix.GetLength(1); j++)
-                {
-                    _matrix[i, j] -= maxRow;
-                }
-            }
-        }
-
-        private void InitializeMatrix()
-        {
-            _matrix = new int[_vertices.Count, _vertices.Count];
-
             _adjMatrix = new bool[_vertices.Count, _vertices.Count];
 
             var edges = _edges.Where(e => e.V1 != _source || e.V2 != _targert);
@@ -318,7 +331,6 @@ namespace PairMatching.DomainModel.MatchingCalculations
                     var v_u = edges.FirstOrDefault(e => e.V1.Equals(v) && e.V2.Equals(u));
                     if (v_u != null)
                     {
-                        _matrix[v.Index, u.Index] = v_u.Weight;
                         _adjMatrix[v.Index, u.Index] = true;
                     }
                 }

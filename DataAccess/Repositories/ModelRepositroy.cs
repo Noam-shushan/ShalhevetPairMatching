@@ -46,14 +46,15 @@ namespace PairMatching.DataAccess.Repositories
             return model ?? throw new KeyNotFoundException($"Model with id = '{id}' not found");
         }
 
-        public Task Insert(TModel model)
+        public async Task<TModel> Insert(TModel model)
         {
-            var task = _dataAccess.InsertOne(_collectionName, model);
+            var result = await _dataAccess.InsertOne(_collectionName, model);
+            
             //_taskManeger.Add(task);
-            return task;
+            return result;
         }
 
-        public Task Insert(IEnumerable<TModel> models)
+        public Task InsertMany(IEnumerable<TModel> models)
         {
             var task = _dataAccess.InsertMany(_collectionName, models);
             //_taskManeger.Add(task);
@@ -62,7 +63,7 @@ namespace PairMatching.DataAccess.Repositories
 
         public Task Update(TModel model)
         {
-            var id = GetCurrentId(model);
+            var id = model.GetCurrentId();
             var task = _dataAccess.UpdateOne(_collectionName, model, id);
             //_taskManeger.Add(task);
             return task;

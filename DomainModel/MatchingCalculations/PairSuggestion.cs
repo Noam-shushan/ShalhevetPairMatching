@@ -24,6 +24,10 @@ namespace PairMatching.DomainModel.MatchingCalculations
         public bool IsGenderMatch { get; set; }
 
         public int MatchingScore { get; set; }
+
+        public double MatchingPercent => Math.Round((double)(100 * MatchingScore) / 26);
+
+        public PrefferdTracks PrefferdTrack { get; set; }
         
         public bool IsTrackMatch { get; internal set; }
 

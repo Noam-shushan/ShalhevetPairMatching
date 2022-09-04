@@ -15,6 +15,7 @@
     xmlns:modelPopup="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:uiModels="clr-namespace:GuiWpf.UIModels"
     xmlns:vm="clr-namespace:GuiWpf.ViewModels"
     Name="me"
     d:DesignHeight="450"
@@ -50,6 +51,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
                 <!--#region Header-->
@@ -86,7 +88,7 @@
                     <ComboBox
                         Grid.Column="2"
                         materialDesign:HintAssist.Hint="סנן"
-                        ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type vm:ParticipiantsKind}}}"
+                        ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type uiModels:ParticipiantsKind}}}"
                         SelectedValue="{Binding PartsKindFilter, Converter={StaticResource EnumToStringConverter}}"
                         Style="{StaticResource FilterComboBox}" />
 
@@ -112,7 +114,7 @@
                     Height="auto"
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
-                    ItemsSource="{Binding Participiants}"
+                    ItemsSource="{Binding Path=Participiants.Items}"
                     RowDetailsVisibilityMode="Collapsed"
                     ScrollViewer.CanContentScroll="False"
                     SelectedItem="{Binding SelectedParticipant}">
@@ -167,7 +169,7 @@
                                 <DataTemplate>
                                     <TextBlock
                                         FontWeight="DemiBold"
-                                        Style="{StaticResource TestColumnStyle}"
+                                        Foreground="Black"
                                         Text="{Binding Name}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -355,7 +357,7 @@
 
                                     <ScrollViewer
                                         mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
-                                        HorizontalScrollBarVisibility="Hidden"
+                                        HorizontalScrollBarVisibility="Disabled"
                                         VerticalScrollBarVisibility="Hidden">
                                         <ListBox ItemsSource="{Binding PairPreferences.LearningTime}" Style="{StaticResource MaterialDesignCardsListBox}">
                                             <ListBox.ItemsPanel>
@@ -494,7 +496,8 @@
                                     Grid.Column="3"
                                     Margin="3"
                                     HorizontalAlignment="Left"
-                                    mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True">
+                                    mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                                    HorizontalScrollBarVisibility="Disabled">
                                     <local:NotesView MaxWidth="500" />
                                 </ScrollViewer>
 
@@ -518,6 +521,35 @@
 
                 </DataGrid>
                 <!--#endregion-->
+
+                <StackPanel
+                    Grid.Row="2"
+                    HorizontalAlignment="Left"
+                    FlowDirection="LeftToRight"
+                    Orientation="Horizontal">
+                    <ComboBox
+                        Margin="5"
+                        ItemsSource="{Binding MaxRecordsInPage}"
+                        SelectedValue="{Binding SelectedMaxRecordsInPage}"
+                        Style="{StaticResource MahApps.Styles.ComboBox}" />
+
+                    <Button Margin="5" Command="{Binding PrevPageCommand}">
+                        <materialDesign:PackIcon Kind="ArrowLeft" />
+                    </Button>
+
+                    <TextBlock Margin="5">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{} {0} of {1}">
+                                <Binding Path="Participiants.CurrentPage" />
+                                <Binding Path="Participiants.PageCount" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+
+                    <Button Margin="5" Command="{Binding NextPageCommand}">
+                        <materialDesign:PackIcon Kind="ArrowRight" />
+                    </Button>
+                </StackPanel>
 
             </Grid>
         </materialDesign:Card>

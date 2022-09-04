@@ -3,27 +3,50 @@ using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using static PairMatching.Tools.HelperFunction;
+using PairMatching.Configurations;
+using PairMatching.DataAccess.UnitOfWork;
+using Newtonsoft.Json;
+using System.Linq;
 
-namespace DomainTesting
+namespace DomainTesting.MatchingCalc
 {
     [TestFixture]
     public class BipartiteMatchingTest
     {
+        readonly IUnitOfWork _db;
+
+        public BipartiteMatchingTest()
+        {
+            var conf = GetConfigurations();
+            _db = new UnitOfWork(conf);
+
+        }
+
+        private MyConfiguration GetConfigurations()
+        {
+            var jsonString = ReadJson(@"C:\Users\Asuspcc\source\Repos\ShalhevetPairMatching\GuiWpf\Resources\appsetting.json");
+            var configurations = JsonConvert.DeserializeObject<MyConfiguration>(jsonString);
+            return configurations ?? throw new Exception("No Configurations");
+        }
+
+
         [Test]
         public void MaxMatchingTestEdmoudnsKarp()
         {
             // Create test data
             List<PairSuggestion> pairSuggestions = CreatePairSuggestionData();
-            
+
             // Create Participants data
             List<Participant> participants = CreateParticipaintData();
-            
+
             // Create BipartiteMatching object
-            var bipartiteMatching = new BipartiteMatching(pairSuggestions, participants);
+            var bipartiteMatching = new BipartiteMatching(pairSuggestions);
 
             var result = bipartiteMatching.EdmoudnsKarp();
-            
-            
+
+
             Assert.AreEqual("A1->B2\nA2->B4\nA3->B1\nA4->B3\nA5->B5", string.Join("\n", result));
         }
 
@@ -35,13 +58,30 @@ namespace DomainTesting
             // Create Participants data
             List<Participant> participants = CreateParticipaintData();
             // Create BipartiteMatching object
-            var bipartiteMatching = new BipartiteMatching(pairSuggestions, participants);
+            var bipartiteMatching = new BipartiteMatching(pairSuggestions);
 
-            var result = bipartiteMatching.MaxMatching();
+            var result = bipartiteMatching.MaxMatchingAsNumber();
 
 
             Assert.AreEqual(5, result);
-        }        
+        }
+
+        [Test]
+        public async Task Hung()
+        {
+            var israelParticipants = await _db
+                 .IsraelParticipantsRepositry
+                 .GetAllAsync();
+            var worldParticipants = await _db
+                .WorldParticipantsRepositry
+                .GetAllAsync();
+
+            var sb = new BuildSuggestions(israelParticipants.Where(i => i.IsOpenToMatch),
+                worldParticipants.Where(i => i.IsOpenToMatch));
+
+            var res = sb.FindMaxOptPairs();
+            Assert.AreEqual(12, res.Count());
+        }
 
         private static List<Participant> CreateParticipaintData()
         {

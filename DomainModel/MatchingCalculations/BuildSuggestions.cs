@@ -8,41 +8,57 @@ namespace PairMatching.DomainModel.MatchingCalculations
     public class BuildSuggestions
     {
         readonly IEnumerable<IsraelParticipant> _israeliParticipants;
+        
         readonly IEnumerable<WorldParticipant> _worldParticipants;
+
+        readonly IEnumerable<PairSuggestion> _pairSuggestions;
+
+        readonly BipartiteMatching _bipartiteMatching;
 
         public BuildSuggestions(IEnumerable<IsraelParticipant> israeliParticipants, IEnumerable<WorldParticipant> worldParticipants)
         {
             _israeliParticipants = israeliParticipants;
             _worldParticipants = worldParticipants;
+            
+            _pairSuggestions = BuildPairSuggestions();          
+
+            _bipartiteMatching = new BipartiteMatching(_pairSuggestions);
         }
         
         public IEnumerable<PairSuggestion> FindMaxPairs()
-        {
-            var pairSugges = BuildPairSuggestions();
-            
-            var allParts = _worldParticipants.Select(p => p as Participant)
-                .Union(_israeliParticipants.Select(p => p as Participant));
-            
-            var bm = new BipartiteMatching(pairSugges, allParts);
-            
-            return null;
+        {         
+            var edges = _bipartiteMatching.EdmoudnsKarp();
+
+            return from p in _pairSuggestions
+                   where edges.Any(e => e.V1.PartId == p.FromIsrael.Id && e.V2.PartId == p.FromWorld.Id)
+                   select p;
         }
 
-        public IEnumerable<PairSuggestion> BuildPairSuggestions()
+        public IEnumerable<PairSuggestion> FindMaxOptPairs()
+        {
+            return _bipartiteMatching.HungarianAlgo();
+        }
+
+        public IEnumerable<PairSuggestion> GetPairSuggestions()
+        {
+            return _pairSuggestions;
+        }
+
+        IEnumerable<PairSuggestion> BuildPairSuggestions()
         {
             var timeIntervalFactory = new TimeIntervalFactory();
             foreach (var ip in _israeliParticipants)
             {
-                foreach(var wp in _worldParticipants)
+                foreach (var wp in _worldParticipants)
                 {
                     var pairSuggestion = new PairSuggestionBulider(ip, wp, timeIntervalFactory)
                         .Build();
-                    if(pairSuggestion != null)
+                    if (pairSuggestion != null)
                     {
                         yield return pairSuggestion;
                     }
                 }
             }
-        }     
+        }
     }
 }

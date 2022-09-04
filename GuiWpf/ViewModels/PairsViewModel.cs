@@ -13,7 +13,7 @@ using GuiWpf.Events;
 
 namespace GuiWpf.ViewModels
 {
-    public class PairsViewModel : BindableBase
+    public class PairsViewModel : ViewModelBase
     {
         readonly IPairsService _pairsService;
         readonly IEventAggregator _ea;
@@ -24,12 +24,41 @@ namespace GuiWpf.ViewModels
             _ea = ea;
 
             SubscribeToEvents();
+            
         }
+
+        public PaginCollectionView<Pair> Pairs { get; set; } = new();
+
+        //public ObservableCollection<Pair> Pairs { get; set; } = new();
+
+
+        DelegateCommand _load;
+        public DelegateCommand Load => _load ??= new(
+        async () =>
+        {
+            IsLoaded = true;
+            var list = await _pairsService.GetAllPairs();
+            //Pairs.Clear();
+            //Pairs.AddRange(list);
+            Pairs.Init(list, 5);
+            Pairs.Refresh();
+            IsLoaded = false;
+            IsInitialized = true;
+        }, () => !IsInitialized && !IsLoaded);
 
         private void SubscribeToEvents()
         {
             _ea.GetEvent<NewNoteForPairEvent>().Subscribe(NewNoteResivd);
             _ea.GetEvent<DeleteNoteFromPairEvent>().Subscribe(OnDeleteNote);
+            _ea.GetEvent<NewPairEvent>().Subscribe(NewPairResivd);
+        }
+
+        private void NewPairResivd(Pair pair)
+        {
+            if(pair is not null)
+            {
+                Pairs.ItemsSource.Add(pair);
+            }      
         }
 
         private void OnDeleteNote(Note note)
@@ -58,16 +87,20 @@ namespace GuiWpf.ViewModels
             }
         }
 
-        public ObservableCollection<Pair> Pairs { get; set; } = new();
 
-
-        DelegateCommand _LoadCommand;
-        public DelegateCommand LoadCommand => _LoadCommand ??= new(
-        async () =>
+        DelegateCommand _NextPageCommand;
+        public DelegateCommand NextPageCommand => _NextPageCommand ??= new(
+        () =>
         {
-            var list = await _pairsService.GetAllPairs();
-            Pairs.Clear();
-            Pairs.AddRange(list);
+            Pairs.MoveToNextPage();
+        });
+
+
+        DelegateCommand _PrevPageCommand;
+        public DelegateCommand PrevPageCommand => _PrevPageCommand ??= new(
+        () =>
+        {
+            Pairs.MoveToPreviousPage();
         });
     }
 }

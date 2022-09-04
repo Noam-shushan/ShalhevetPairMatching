@@ -140,5 +140,13 @@ namespace PairMatching.Models
         [EnumDescription("איני יודע/ת אנגלית אך אני יכול/ה ללמוד בשפות אחרות", "I don't know English but I can learn in other languages")]
         NotEnglish 
     }
+
+    public enum PairStatus
+    {
+        Defulte,
+        Standby,
+        Active,
+        Learning
+    }
     
 }

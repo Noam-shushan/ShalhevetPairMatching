@@ -12,15 +12,11 @@
     <None Remove="appsetting.json" />
     <None Remove="pairmatching.json" />
     <None Remove="Resources\appsetting.json" />
-    <None Remove="Resources\pairmatching.json" />
     <None Remove="Resources\shalhevet_logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Resources\appsetting.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\pairmatching.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\shalhevet_logo.ico">
@@ -42,7 +38,7 @@
     <ProjectReference Include="..\DomainModel\DomainModel.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\Root\Root.csproj" />
-    <ProjectReference Include="..\Tools\Tools.csproj" />
+    <ProjectReference Include="..\Tools\UtilTools.csproj" />
   </ItemGroup>
 
   <ItemGroup>

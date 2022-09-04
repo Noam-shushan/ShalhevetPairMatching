@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PairMatching.Models;
+using PairMatching.DomainModel.MatchingCalculations;
+using GuiWpf.UIModels;
 
 namespace GuiWpf.Events
 {
@@ -29,6 +31,11 @@ namespace GuiWpf.Events
     public class GetEmailAddressToParticipaintsEvent : PubSubEvent<IEnumerable<EmailAddress>> { }
 
     public class IsSendEmailEvent : PubSubEvent<bool> { }
+
+    public class NewMatchEvent : PubSubEvent<PairSuggestion> { }
+    public class NewPairEvent : PubSubEvent<Pair> { }
+
+    public class ShowFullComparisonEvent : PubSubEvent<(IEnumerable<PairSuggestion>, string)> { }
 
     public enum ModelType
     {

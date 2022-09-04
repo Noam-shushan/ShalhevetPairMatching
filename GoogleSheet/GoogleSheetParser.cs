@@ -12,7 +12,7 @@ namespace PairMatching.GoogleSheet
     /// Google Sheet parser that descript the values in the spreadsheet table.<br/>
     /// Save the description objects to the database.
     /// </summary>
-    internal class GoogleSheetParser
+    public class GoogleSheetParser
     {
         const int TIME_COLUMN_START = 2;
         const int TIME_COLUMN_END = 7;

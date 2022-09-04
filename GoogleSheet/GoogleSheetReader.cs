@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PairMatching.Tools;
 
 namespace PairMatching.GoogleSheet
 {
@@ -28,15 +29,20 @@ namespace PairMatching.GoogleSheet
         public GoogleSheetReader()
         {
             GoogleCredential credential;
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources/pairmatching.json");
+            //var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources/pairmatching.json");
+            var json = HelperFunction.ReadJson(@"Resources\gs_secrets.json");
             try
             {
-                using (var stream = new FileStream(path, FileMode.Open))
-                {
-                    credential = GoogleCredential
-                        .FromStream(stream)
+                //using (var stream = new FileStream(path, FileMode.Open))
+                //{
+                //    credential = GoogleCredential
+                //        .FromJson(json)
+                //        .FromStream(stream)
+                //        .CreateScoped(scopes);
+                //}
+                credential = GoogleCredential
+                        .FromJson(json)
                         .CreateScoped(scopes);
-                }
 
                 service = new SheetsService(new BaseClientService.Initializer()
                 {

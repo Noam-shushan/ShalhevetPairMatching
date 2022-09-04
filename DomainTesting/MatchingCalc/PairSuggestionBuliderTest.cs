@@ -4,7 +4,7 @@ using PairMatching.Models;
 using System;
 using System.Collections.Generic;
 
-namespace DomainTesting
+namespace DomainTesting.MatchingCalc
 {
     [TestFixture]
     internal class PairSuggestionBuliderTest
@@ -273,13 +273,13 @@ namespace DomainTesting
                     {
                         new LearningTime
                         {
-                            Day = Days.Sunday, 
+                            Day = Days.Sunday,
                             TimeInDay = new List<TimesInDay>
                             {
                                 TimesInDay.Night,
                             }
                         },
-                        new LearningTime 
+                        new LearningTime
                         {
                             Day = Days.Monday,
                             TimeInDay = new List<TimesInDay>
@@ -287,7 +287,7 @@ namespace DomainTesting
                                 TimesInDay.Morning,
                             }
                         },
-                        new LearningTime 
+                        new LearningTime
                         {
                             Day = Days.Tuesday,
                             TimeInDay = new List<TimesInDay>
@@ -295,7 +295,7 @@ namespace DomainTesting
                                 TimesInDay.Morning,
                             }
                         },
-                        new LearningTime 
+                        new LearningTime
                         {
                             Day = Days.Wednesday,
                             TimeInDay = new List<TimesInDay>
@@ -303,7 +303,7 @@ namespace DomainTesting
                                 TimesInDay.Noon
                             }
                         },
-                        new LearningTime 
+                        new LearningTime
                         {
                             Day = Days.Thursday,
                             TimeInDay = new List<TimesInDay>

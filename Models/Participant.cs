@@ -17,7 +17,7 @@ namespace PairMatching.Models
 
         public Preferences PairPreferences { get; set; }
 
-        public IEnumerable<string> MatchTo { get; set; } = new List<string>();
+        public List<string> MatchTo { get; set; } = new List<string>();
 
         /// <summary>
         /// the name of the student
@@ -57,5 +57,10 @@ namespace PairMatching.Models
 
         [BsonIgnore]
         public bool IsFromIsrael => Country == "Israel";
+
+        [BsonIgnore]
+        public bool IsOpenToMatch => !IsDeleted 
+            && !IsInArchive 
+            && MatchTo?.Count() < PairPreferences?.NumberOfMatchs;
     }
 }

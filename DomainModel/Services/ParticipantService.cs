@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static PairMatching.Tools.HelperFunction;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -42,8 +41,6 @@ namespace PairMatching.DomainModel.Services
 
             result.AddRange(ips.Result);
             result.AddRange(wps.Result);
-
-            
 
             return result;
         }
@@ -89,8 +86,8 @@ namespace PairMatching.DomainModel.Services
             var config = configColl.FirstOrDefault();
 
             var max = config?.WixIndex;
-            int temp = max ?? 100;
-            int index = temp < 100 ? 100 : temp;
+            int temp = max ?? WixDataReader.MinIndex;
+            int index = temp < WixDataReader.MinIndex ? WixDataReader.MinIndex : temp;
 
             var partsDtos = await _wix.GetNewParticipants(index);
 
@@ -101,12 +98,12 @@ namespace PairMatching.DomainModel.Services
                     .ToLookup(p => p.IsFromIsrael);
 
                 await _unitOfWork.IsraelParticipantsRepositry
-                    .Insert(list[true]
-                    .Select(p => p as IsraelParticipant));
+                    .InsertMany(list[true]
+                        .Select(p => p as IsraelParticipant));
 
                 await _unitOfWork.WorldParticipantsRepositry
-                        .Insert(list[false]
-                        .Select(p => p as WorldParticipant));
+                        .InsertMany(list[false]
+                            .Select(p => p as WorldParticipant));
 
                 config.WixIndex = partsDtos.Max(p => p.index);
                 await _unitOfWork.ConfigRepositry.UpdateDbConfig(config);
@@ -128,7 +125,7 @@ namespace PairMatching.DomainModel.Services
 
         public IEnumerable<CountryUtc> GetCountryUtcs()
         {
-            var jsonString = ReadJson(@"Resources\Countries.json");
+            var jsonString = HelperFunction.ReadJson(@"Resources\Countries.json");
             var result = JsonConvert.DeserializeObject<IEnumerable<CountryUtc>>(jsonString);
             foreach (var country in result)
             {

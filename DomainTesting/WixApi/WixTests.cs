@@ -43,9 +43,25 @@ namespace DomainTesting.WixApi
         public async Task NewPairToWixTest()
         {
             var parts = await _wix.GetNewParticipants();
+            
             var max = parts.Max(p => p.index);
-            var a = parts.OrderByDescending(p => p.index).FirstOrDefault();
-            var b = parts.OrderByDescending(p => p.index).FirstOrDefault(p => p.index == max - 1);
+            var orderd = parts.OrderByDescending(p => p.index);
+            
+            var a = orderd.FirstOrDefault();
+            var b = orderd.FirstOrDefault(p => p.index == max - 1);
         }
+
+        public async Task SendEmailFromWix()
+        {
+            var email = new
+            {
+                to = "",
+                subject = "Subject",
+                body = "Body"
+            };
+            await _wix.SendEmail(email);
+        }
+
+        
     }
 }

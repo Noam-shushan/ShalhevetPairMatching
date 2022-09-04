@@ -67,8 +67,7 @@ namespace GuiWpf.Controlers
 
         public override void OnApplyTemplate()
         {
-            _displayTextBlock = Template.FindName(TEXT_DISPLAY_PART_NAME, this) as TextBlock;
-            UpdateHighlightDisplay();
+            _displayTextBlock = (Template.FindName(TEXT_DISPLAY_PART_NAME, this) as TextBlock)!;
 
             base.OnApplyTemplate();
         }

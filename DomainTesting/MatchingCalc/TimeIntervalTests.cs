@@ -6,14 +6,15 @@ using NUnit.Framework;
 using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.Models;
 using System.Threading.Tasks;
+using static PairMatching.Tools.HelperFunction;
 
-namespace DomainTesting
+namespace DomainTesting.MatchingCalc
 {
     [TestFixture]
     public class TimeIntervalTests
     {
         TimeIntervalFactory _intervalFactory = new();
-        
+
         [Test]
         public void NegativeDiffrence_SameDay()
         {
@@ -53,6 +54,5 @@ namespace DomainTesting
 
             Assert.AreEqual(TimeSpan.FromHours(4), i.FitWith(w, TimeSpan.FromHours(7)));
         }
-
     }
 }

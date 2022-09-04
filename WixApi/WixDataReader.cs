@@ -16,11 +16,13 @@ namespace PairMatching.WixApi
     {
         readonly RestHttp _http = new();
 
+        public static int MinIndex = 100;
+
         readonly MyConfiguration _configuration;
 
         public WixDataReader(MyConfiguration configuration)
         {
-            _configuration = configuration;
+            _configuration = configuration;            
         }
 
         public async Task<IEnumerable<ParticipantWixDto>> GetNewParticipants(int index = 100)
@@ -51,6 +53,15 @@ namespace PairMatching.WixApi
                 subject = emailDto.Subject,
                 body = emailDto.Body
             };        
+
+            await _http.PostAsync(query, email);
+
+            return null;
+        }
+
+        public async Task<IEnumerable<EmailAddress>> SendEmail(dynamic email)
+        {
+            var query = _configuration.WixApi["sendEmails"];
 
             await _http.PostAsync(query, email);
 
@@ -88,6 +99,13 @@ namespace PairMatching.WixApi
             }
            
             await _http.PostAsync(query, participantDto);
+        }
+
+        public async Task NewPart(dynamic participantWixDto)
+        {
+            var query = _configuration.WixApi["newMember"];
+
+            await _http.PostAsync(query, participantWixDto);
         }
 
     }
