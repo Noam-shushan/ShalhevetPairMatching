@@ -27,7 +27,7 @@ namespace GuiWpf.ViewModels
             
         }
 
-        public PaginCollectionView<Pair> Pairs { get; set; } = new();
+        public PaginCollectionView<Pair> Pairs { get; set; } 
 
         //public ObservableCollection<Pair> Pairs { get; set; } = new();
 
@@ -40,8 +40,8 @@ namespace GuiWpf.ViewModels
             var list = await _pairsService.GetAllPairs();
             //Pairs.Clear();
             //Pairs.AddRange(list);
-            Pairs.Init(list, 5);
-            Pairs.Refresh();
+            list.Max(s => s.DateOfCreate);
+            //Pairs.Init(list, 5, _ => true);
             IsLoaded = false;
             IsInitialized = true;
         }, () => !IsInitialized && !IsLoaded);
@@ -86,21 +86,5 @@ namespace GuiWpf.ViewModels
                 } 
             }
         }
-
-
-        DelegateCommand _NextPageCommand;
-        public DelegateCommand NextPageCommand => _NextPageCommand ??= new(
-        () =>
-        {
-            Pairs.MoveToNextPage();
-        });
-
-
-        DelegateCommand _PrevPageCommand;
-        public DelegateCommand PrevPageCommand => _PrevPageCommand ??= new(
-        () =>
-        {
-            Pairs.MoveToPreviousPage();
-        });
     }
 }

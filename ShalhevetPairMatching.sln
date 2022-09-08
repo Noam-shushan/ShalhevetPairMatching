@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apis", "Apis", "{86F62739-B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{425203E3-0A0C-46DD-A1E6-02366914CDC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelTools", "ExcelGenerator\ExcelTools.csproj", "{14A66DD6-1D7B-4DD7-8D49-8E54C3101C7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelTools", "ExcelGenerator\ExcelTools.csproj", "{14A66DD6-1D7B-4DD7-8D49-8E54C3101C7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

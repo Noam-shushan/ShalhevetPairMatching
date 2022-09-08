@@ -1,104 +1,260 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
+using GuiWpf.Events;
+using PairMatching.Tools;
 
 namespace GuiWpf.ViewModels
 {
-    public class PaginCollectionView<T> : BindableBase
-    {   
-        List<T> _items;
-        public List<T> ItemsSource { get => _items; }
+    public class PaginCollectionView<T> : BindableBase where T : class
+    {
+        private IEventAggregator _ea;
 
-        ObservableCollection<T> ShowItems = new(); 
-        
-        public ICollectionView Items { get; set; }
-
-        public PaginCollectionView(IEnumerable<T> items, int itemsPerPage)
+        public PaginCollectionView(IEventAggregator ea)
         {
-            Init(items, itemsPerPage);
+            _ea = ea;
+            _ea.GetEvent<RefreshItemsEvnet>()
+                .Subscribe(needRefreshing =>
+                {
+                    if (needRefreshing)
+                    {
+                        Refresh();
+                    }
+                });
+            FilterdItems.CollectionChanged += FilterdItems_CollectionChanged;
         }
 
-        public PaginCollectionView() { }
-
-        public void Init(IEnumerable<T> items, int itemsPerPage)
+        private void FilterdItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            _items = items.ToList();
-            _itemsPerPage = itemsPerPage;
-           
-            Refresh(true);
+            if (e.NewItems != null && e.OldItems != null)
+            {
+                var inter = (from T i1 in e.NewItems
+                             from T i2 in e.OldItems
+                             where i1.Equals(i2)
+                             group i1 by i1.GetCurrentId() into t
+                             select t.Key)
+                            .Count();
+                if (inter == e.NewItems.Count && inter == e.OldItems.Count)
+                {
+                    CurrentPage = 0;
+                }
+            }
         }
 
-        public void Refresh(bool init = false)
+        #region Ptoperties
+
+        #region Collections
+
+        ObservableCollection<T> _itemsSource = new();
+        public ObservableCollection<T> ItemsSource
         {
-            ShowItems.Clear();
-            ShowItems.AddRange(_items.Skip(StartIndex).Take(_itemsPerPage));
-            if (init)
+            // Show only the items that pass the filter
+            get
             {
-                Items = CollectionViewSource.GetDefaultView(ShowItems);
+                return _itemsSource;
             }
-            else
+            set => SetProperty(ref _itemsSource, value);
+        }
+
+        ObservableCollection<T> _showItems = new();
+        public ObservableCollection<T> FilterdItems
+        {
+            get => _showItems;
+            private set
             {
-                Items.Refresh();
+                if (SetProperty(ref _showItems, value))
+                {
+                    CurrentPage = 0;
+                }
             }
-        }        
+        }
 
-        public Predicate<object> Filter { get => Items.Filter; set => Items.Filter = value; }
-        
-        public SortDescriptionCollection SortDescriptions { get => Items.SortDescriptions; }
+        public int Count { get => FilterdItems.Count; }
 
-        public ObservableCollection<GroupDescription> GroupDescriptions { get => Items.GroupDescriptions; }
+        ObservableCollection<T> _items = new();
+        public ObservableCollection<T> Items
+        {
+            get => _items;
+            set => SetProperty(ref _items, value);
+        }
 
+        const int initItemsPerPage = 5;
 
-        int _itemsPerPage;        
-        public int ItemsPerPage { get => _itemsPerPage; set => SetProperty(ref _itemsPerPage, value); }
+        private List<int> _maxRecordsInPage;
+        public List<int> MaxRecordsInPage
+        {
+            get => _maxRecordsInPage ??= Enumerable
+                .Range(initItemsPerPage, 30)
+                .Where(x => x % initItemsPerPage == 0)
+                .ToList();
+            //   set => SetProperty(ref _maxRecordsInPage, value);
+        }
+        #endregion
+
+        int _itemsPerPage = initItemsPerPage;
+        public int ItemsPerPage
+        {
+            get => _itemsPerPage;
+            set
+            {
+                if (SetProperty(ref _itemsPerPage, value))
+                {
+                    Refresh();
+                }
+            }
+        }
 
         private int _currentPage = 0;
         public int CurrentPage
         {
             get => _currentPage;
-            set 
-            { 
-                if(SetProperty(ref _currentPage, value))
-                {
-                    
-                } 
-            }
+            set => SetProperty(ref _currentPage, value);
         }
 
-        public int PageCount => _items is null ? 0 : (int)Math.Ceiling((double) _items.Count / _itemsPerPage);
+        int _pageCount = 0;
+        public int PageCount
+        {
+            get
+            {
+                PageCount = GetPageCount();
+                return _pageCount;
+            }
+            set
+            {
+                SetProperty(ref _pageCount, value);
+            }
+        }
 
         private int EndIndex
         {
             get
             {
-                var end = CurrentPage * _itemsPerPage;
-                return (end > _items.Count) ? _items.Count : end;
+                var end = StartIndex + ItemsPerPage;
+                return (end > FilterdItems.Count) ? FilterdItems.Count : end;
             }
         }
 
-        private int StartIndex => (CurrentPage * _itemsPerPage) % ItemsSource.Count;
-
-        public void MoveToNextPage()
+        private int _startIndex = 0;
+        private int StartIndex
         {
-            if (CurrentPage < PageCount)
+            get
             {
-                CurrentPage += 1;
+                if (FilterdItems.Any())
+                {
+                    int temp = CurrentPage * ItemsPerPage;
+                    _startIndex = temp > FilterdItems.Count ? _startIndex : temp;
+                }
+                return _startIndex;
             }
+        }
+        
+        private bool _canGoNext;
+        public bool CanGoNext
+        {
+            get => _canGoNext;
+            set
+            {
+                SetProperty(ref _canGoNext, value);
+                NextPageCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private bool _canGoPrev;
+        public bool CanGoPrev
+        {
+            get => _canGoPrev;
+            set
+            {
+                SetProperty(ref _canGoPrev, value);
+                PrevPageCommand.RaiseCanExecuteChanged();
+            }         
+        }
+
+        Predicate<T> _filter;
+        public Predicate<T> Filter { get => _filter; set => SetProperty(ref _filter, value); }
+        #endregion
+
+        #region Commands
+
+        DelegateCommand _nextPageCommand;
+        public DelegateCommand NextPageCommand => _nextPageCommand ??= new(
+        () =>
+        {
+            CurrentPage += 1;
+            Refresh();
+        },
+        () =>
+        {
+            return CanGoNext;
+        });
+
+        DelegateCommand _prevPageCommand;
+        public DelegateCommand PrevPageCommand => _prevPageCommand ??= new(
+        () =>
+        {
+            CurrentPage -= 1;
+            Refresh();
+        }, 
+        () => 
+        {
+            return CanGoPrev;
+        });
+        #endregion
+
+        #region Methods
+        public void Init(IEnumerable<T> items, int itemsPerPage, Predicate<T> filter = null)
+        {
+            ItemsSource = new(items);
+
+            ItemsPerPage = itemsPerPage;
+            
+            Filter = filter ?? new Predicate<T>(_ => true);
+            
             Refresh();
         }
-
-        public void MoveToPreviousPage()
+        
+        public void Refresh()
         {
-            if (CurrentPage > 0)
+            var temp = FilterdItems.ToList();
+            FilterdItems.Clear();
+            var filter = Filter is null ? _ => true : Filter;
+            FilterdItems.AddRange(ItemsSource.Where(item => filter.Invoke(item)));
+            
+            if (!temp.SequenceEqual(FilterdItems))
             {
-                CurrentPage -= 1;
+                CurrentPage = 0;
             }
-            Refresh();
+
+            CanGoNext = CurrentPage + 1 < PageCount;
+            CanGoPrev = CurrentPage > 0;
+
+            Items.Clear();
+            Items.AddRange(FilterdItems.Where(item => PagingFilter(item)));
+            
+            PageCount = GetPageCount();
         }
+
+        bool PagingFilter(T record)
+        {
+            var index = FilterdItems.IndexOf(record);
+            return index < EndIndex && index >= StartIndex;
+        }
+
+        private int GetPageCount()
+        {
+            return FilterdItems is null ?
+                                    0 : (int)Math.Ceiling((double)FilterdItems.Count / ItemsPerPage);
+        } 
+        #endregion
+
+
     }
 }

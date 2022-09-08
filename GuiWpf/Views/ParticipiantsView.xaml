@@ -64,6 +64,7 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
 
                     <controlers:SearchTextBox
@@ -92,8 +93,24 @@
                         SelectedValue="{Binding PartsKindFilter, Converter={StaticResource EnumToStringConverter}}"
                         Style="{StaticResource FilterComboBox}" />
 
-                    <Button
+                    <StackPanel
                         Grid.Column="3"
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Participiants.Items.Count}" />
+                        <TextBlock
+                            Margin="5,0,5,0"
+                            Style="{StaticResource MaterialDesignBody2TextBlock}"
+                            Text="מתוך:" />
+                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Participiants.FilterdItems.Count}" />
+                    </StackPanel>
+
+
+
+                    <Button
+                        Grid.Column="4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Command="{Binding AddParticipantCommand}"
@@ -105,6 +122,7 @@
                             Kind="PlusCircle" />
                     </Button>
 
+
                 </Grid>
                 <!--#endregion-->
 
@@ -114,6 +132,7 @@
                     Height="auto"
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
+                    CanUserAddRows="False"
                     ItemsSource="{Binding Path=Participiants.Items}"
                     RowDetailsVisibilityMode="Collapsed"
                     ScrollViewer.CanContentScroll="False"
@@ -529,24 +548,24 @@
                     Orientation="Horizontal">
                     <ComboBox
                         Margin="5"
-                        ItemsSource="{Binding MaxRecordsInPage}"
-                        SelectedValue="{Binding SelectedMaxRecordsInPage}"
+                        ItemsSource="{Binding Participiants.MaxRecordsInPage}"
+                        SelectedValue="{Binding Participiants.ItemsPerPage}"
                         Style="{StaticResource MahApps.Styles.ComboBox}" />
 
-                    <Button Margin="5" Command="{Binding PrevPageCommand}">
+                    <Button Margin="5" Command="{Binding Participiants.PrevPageCommand}">
                         <materialDesign:PackIcon Kind="ArrowLeft" />
                     </Button>
 
                     <TextBlock Margin="5">
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{} {0} of {1}">
-                                <Binding Path="Participiants.CurrentPage" />
+                                <Binding Converter="{StaticResource AddOneConverter}" Path="Participiants.CurrentPage" />
                                 <Binding Path="Participiants.PageCount" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
 
-                    <Button Margin="5" Command="{Binding NextPageCommand}">
+                    <Button Margin="5" Command="{Binding Participiants.NextPageCommand}">
                         <materialDesign:PackIcon Kind="ArrowRight" />
                     </Button>
                 </StackPanel>
