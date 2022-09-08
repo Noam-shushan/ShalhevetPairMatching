@@ -37,6 +37,8 @@ namespace GuiWpf.Events
 
     public class ShowFullComparisonEvent : PubSubEvent<(IEnumerable<PairSuggestion>, string)> { }
 
+    public class RefreshItemsEvnet : PubSubEvent<bool> { }
+
     public enum ModelType
     {
         Participant,

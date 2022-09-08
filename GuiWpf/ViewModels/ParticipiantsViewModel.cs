@@ -13,13 +13,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace GuiWpf.ViewModels
 {
     public class ParticipiantsViewModel : ViewModelBase
     {
-        private const string allYears = "כל השנים";
         readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
         readonly IDialogCoordinator _dialog;
@@ -29,105 +29,30 @@ namespace GuiWpf.ViewModels
             _participantService = participantService;
             _ea = ea;
 
-            //Participiants = new PaginCollctionView(_participiants, 20);//CollectionViewSource.GetDefaultView(_participiants);
+            Participiants = new(_ea);
+            //Participiants = new PCV<Participant>(_participiants, 20);//CollectionViewSource.GetDefaultView(_participiants);
             //Participiants.Filter = ParticipiantsFilter;
             //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
             //Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
 
-
             SubscribeToEvents();
+
+            //Participiants = new(_participiants, 10, ParticipiantsFilter);
             _dialog = dialog;
         }
+        
 
-        DelegateCommand _load;
-        public DelegateCommand Load => _load ??= new(
-               async () =>
-               {
-                   //await MetroProgressOnLoading();
-                   IsLoaded = true;
+        #region Properties:
 
-
-                   var parts = await _participantService.GetAll();
-                   _participiants.Clear();
-                   _participiants.AddRange(parts);
-
-                   Participiants.Init(_participiants, 10);//CollectionViewSource.GetDefaultView(_participiants);
-                   Participiants.Filter = ParticipiantsFilter;
-                   Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
-                   Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
-
-                   Years.Clear();
-                   Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
-                   Years.Insert(0, allYears);
-
-                   IsInitialized = true;
-                   IsLoaded = false;
-               },
-               () => !IsInitialized || IsLoaded);
-
-        private bool ParticipiantsFilter(object obj)
-        {
-            var partKind = false;
-            var year = false;
-            if (obj is Participant participant)
-            {
-                partKind = PartsKindFilter switch
-                {
-                    ParticipiantsKind.All => true,
-                    ParticipiantsKind.WithPair => participant.MatchTo.Any(),
-                    ParticipiantsKind.WithoutPair => !participant.MatchTo.Any(),
-                    ParticipiantsKind.FromIsrael => participant.IsFromIsrael,
-                    ParticipiantsKind.FromWorld => !participant.IsFromIsrael,
-                    ParticipiantsKind.FromIsraelWithoutPair => participant.IsFromIsrael && !participant.MatchTo.Any(),
-                    ParticipiantsKind.FromWorldWithoutPair => !participant.IsFromIsrael && !participant.MatchTo.Any(),
-                    _ => true,
-                };
-
-                year = participant.DateOfRegistered.Year.ToString() == YearsFilter || YearsFilter == allYears;
-
-                return participant.Name.Contains(SearchParticipiantsWord, StringComparison.InvariantCultureIgnoreCase)
-                    && partKind
-                    && year;
-            }
-            return false;
-        }
+        #region Collections
+        public ObservableCollection<Participant> _participiants = new();
+        
+        public PaginCollectionView<Participant> Participiants { get; set; }
 
         public ObservableCollection<string> Years { get; private set; } = new();
+        #endregion
 
-        private bool _isAllSelected;
-        public bool IsAllSelected
-        {
-            get => _isAllSelected;
-            set
-            {
-                if (SetProperty(ref _isAllSelected, value))
-                {
-                    Participiants.Items.OfType<Participant>()
-                        .ToList()
-                        .ForEach(p => p.IsSelected = value);
-                    Participiants.Refresh();
-                }
-            }
-        }
-
-        private void SubscribeToEvents()
-        {
-            _ea.GetEvent<CloseDialogEvent>().Subscribe(CloseFormResived);
-            _ea.GetEvent<AddParticipantEvent>().Subscribe(async (part) =>
-            {
-                _participiants.Add(part);
-                await _participantService.UpserteParticipant(part);
-            });
-            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
-            {
-                IsSendEmailOpen = isClose;
-            });
-        }
-
-        public ObservableCollection<Participant> _participiants = new();
-
-        public PaginCollectionView<Participant> Participiants { get; set; } = new();
-
+        #region Selctions
         private Participant _selectedParticipant = new();
         public Participant SelectedParticipant
         {
@@ -146,7 +71,9 @@ namespace GuiWpf.ViewModels
                 };
             }
         }
-
+        #endregion
+        
+        #region Navigation Properties
         private bool _isAddFormOpen = false;
         public bool IsAddFormOpen
         {
@@ -154,33 +81,15 @@ namespace GuiWpf.ViewModels
             set { SetProperty(ref _isAddFormOpen, value); }
         }
 
-        DelegateCommand _addParticipantCommand;
-        public DelegateCommand AddParticipantCommand => _addParticipantCommand ??= new(
-            () =>
-            {
-                IsAddFormOpen = !IsAddFormOpen;
-            });
-
-        private void CloseFormResived(bool isClose)
+        private bool _isSendEmailOpen = false;
+        public bool IsSendEmailOpen
         {
-            IsAddFormOpen = isClose;
+            get => _isSendEmailOpen;
+            set => SetProperty(ref _isSendEmailOpen, value);
         }
+        #endregion
 
-
-        private string _searchParticipiantsWord = "";
-        public string SearchParticipiantsWord
-        {
-            get { return _searchParticipiantsWord; }
-            set
-            {
-                if (SetProperty(ref _searchParticipiantsWord, value))
-                {
-                    Participiants.Refresh();
-                }
-            }
-        }
-
-
+        #region Filtering
         private string _yearsFilter = allYears;
         public string YearsFilter
         {
@@ -189,6 +98,24 @@ namespace GuiWpf.ViewModels
             {
                 if (SetProperty(ref _yearsFilter, value))
                 {
+                    //_ea.GetEvent<RefreshItemsEvnet>()
+                    //    .Publish(true);
+                    Participiants.Refresh();
+                }
+            }
+        }
+
+        private bool _isAllSelected;
+        public bool IsAllSelected
+        {
+            get => _isAllSelected;
+            set
+            {
+                if (SetProperty(ref _isAllSelected, value))
+                {
+                    Participiants.Items.OfType<Participant>()
+                        .ToList()
+                        .ForEach(p => p.IsSelected = value);
                     Participiants.Refresh();
                 }
             }
@@ -207,12 +134,32 @@ namespace GuiWpf.ViewModels
             }
         }
 
-        private bool _isSendEmailOpen = false;
-        public bool IsSendEmailOpen
+        private string _searchParticipiantsWord = "";
+        public string SearchParticipiantsWord
         {
-            get => _isSendEmailOpen;
-            set => SetProperty(ref _isSendEmailOpen, value);
+            get { return _searchParticipiantsWord; }
+            set
+            {
+                if (SetProperty(ref _searchParticipiantsWord, value))
+                {
+                    Participiants.Refresh();
+                }
+            }
         }
+        #endregion
+
+        #endregion
+
+        #region Commands
+        DelegateCommand _load;
+        public DelegateCommand Load => _load ??= new(
+               async () =>
+               {
+                   //await MetroProgressOnLoading();
+                   await Refresh();
+                   IsInitialized = true;
+               },
+               () => !IsInitialized || IsLoaded);
 
         DelegateCommand _sendEmailToManyCommand;
         public DelegateCommand SendEmailToManyCommand => _sendEmailToManyCommand ??= new(
@@ -233,28 +180,80 @@ namespace GuiWpf.ViewModels
             }
         });
 
-        private List<int> _maxRecordsInPage;
-        public List<int> MaxRecordsInPage
+        DelegateCommand _addParticipantCommand;
+        public DelegateCommand AddParticipantCommand => _addParticipantCommand ??= new(
+            () =>
+            {
+                IsAddFormOpen = !IsAddFormOpen;
+            });
+        #endregion
+
+        #region Methods
+        
+        private const string allYears = "כל השנים";
+
+        private async Task Refresh()
         {
-            get => _maxRecordsInPage ??= Enumerable
-                .Range(5, 30)
-                .Where(x => x % 5 == 0)
-                .ToList();
-            set => SetProperty(ref _maxRecordsInPage, value);
+            IsLoaded = true;
+
+            var parts = await _participantService.GetAll();
+            _participiants.Clear();
+            _participiants.AddRange(parts);
+
+            Participiants.Init(_participiants, 10, ParticipiantsFilter);
+            
+            //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
+            //Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
+
+            Years.Clear();
+            Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
+            Years.Insert(0, allYears);
+
+            IsLoaded = false;
         }
 
-        DelegateCommand _nextPageCommand;
-        public DelegateCommand NextPageCommand => _nextPageCommand ??= new(
-        () =>
+        private void SubscribeToEvents()
         {
-            Participiants.MoveToNextPage();
-        });
+            _ea.GetEvent<CloseDialogEvent>().Subscribe(CloseFormResived);
+            _ea.GetEvent<AddParticipantEvent>().Subscribe(async (part) =>
+            {
+                _participiants.Add(part);
+                await _participantService.UpserteParticipant(part);
+            });
+            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
+            {
+                IsSendEmailOpen = isClose;
+            });
+        }
 
-        DelegateCommand _prevPageCommand;
-        public DelegateCommand PrevPageCommand => _prevPageCommand ??= new(
-        () =>
+        private bool ParticipiantsFilter(Participant participant)
         {
-            Participiants.MoveToPreviousPage();
-        });
+            var partKind = false;
+            var year = false;
+
+            partKind = PartsKindFilter switch
+            {
+                ParticipiantsKind.All => true,
+                ParticipiantsKind.WithPair => participant.MatchTo.Any(),
+                ParticipiantsKind.WithoutPair => !participant.MatchTo.Any(),
+                ParticipiantsKind.FromIsrael => participant.IsFromIsrael,
+                ParticipiantsKind.FromWorld => !participant.IsFromIsrael,
+                ParticipiantsKind.FromIsraelWithoutPair => participant.IsFromIsrael && !participant.MatchTo.Any(),
+                ParticipiantsKind.FromWorldWithoutPair => !participant.IsFromIsrael && !participant.MatchTo.Any(),
+                _ => true,
+            };
+
+            year = participant.DateOfRegistered.Year.ToString() == YearsFilter || YearsFilter == allYears;
+
+            return participant.Name.Contains(SearchParticipiantsWord, StringComparison.InvariantCultureIgnoreCase)
+                && partKind
+                && year;
+        }
+
+        private void CloseFormResived(bool isClose)
+        {
+            IsAddFormOpen = isClose;
+        } 
+        #endregion
     }
 }

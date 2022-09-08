@@ -60,6 +60,7 @@
 
             <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
             <converters:VisbilityToBooleanConverter x:Key="VisbilityToBooleanConverter" />
+            <converters:AddOneConverter x:Key="AddOneConverter" />
             <materialDesign:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
