@@ -1,4 +1,4 @@
-﻿using PairMatching.DataAccess.UnitOfWork;
+﻿using PairMatching.DataAccess.UnitOfWorks;
 using PairMatching.Models;
 using PairMatching.WixApi;
 using System;
@@ -11,6 +11,9 @@ using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.Tools;
 using PairMatching.Models.Dtos;
 using PairMatching.DomainModel.BLModels;
+using PairMatching.DataAccess.Repositories;
+using System.ComponentModel.DataAnnotations;
+using Org.BouncyCastle.Crypto;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -42,20 +45,83 @@ namespace PairMatching.DomainModel.Services
         {
             var pairs = await _unitOfWork
                 .PairsRepositry
-                .GetAllAsync();
+                .GetAllAsync(p => p.Status > PairStatus.Standby);
 
-            await SetParticipaintsToEachPair(pairs);
+            await SetParticipaintsForEachPair(pairs);
 
+            //await _unitOfWork.PairsRepositry.SaveToDrive();
+            
             return pairs;
         }
 
-        public async Task<Pair> AddNewPair(PairSuggestion pairSuggestion)
+        public async Task<Pair> AddNewPair(PairSuggestion pairSuggestion, PrefferdTracks track = PrefferdTracks.NoPrefrence)
         {
-            var pair = new Pair
+            var pair = CreateNewPair(pairSuggestion, track);
+
+            pair.FromIsrael.MatchTo.Add(pair.FromWorldId);
+            pair.FromWorld.MatchTo.Add(pair.FromIsraelId);
+
+            await Task.WhenAll(
+                _unitOfWork
+                .IsraelParticipantsRepositry
+                // Update the israeli participaint
+                .Update(pair.FromIsrael as IsraelParticipant),
+                
+                _unitOfWork
+                .WorldParticipantsRepositry
+                // Update the world participaint
+                .Update(pair.FromWorld as WorldParticipant));
+
+            var newPair = await _unitOfWork.PairsRepositry.Insert(pair);
+            
+            return newPair;
+        }
+
+        public async Task DeletePair(Pair pair)
+        {
+            pair.IsDeleted = true;
+            await UpdateParticipantsOnDelete(pair);
+            await _unitOfWork.PairsRepositry.Update(pair);
+        }
+
+        public async Task<Pair> ActivePair(Pair pair)
+        {
+            pair.IsActive = true;
+            pair.Status = PairStatus.Active;
+
+            await SendNewPairToWix(pair);
+
+            await _unitOfWork.PairsRepositry.Update(pair);
+
+            return pair;
+        }
+
+        public async Task CancelPair(Pair pair)
+        {
+            await UpdateParticipantsOnDelete(pair);
+            await _unitOfWork.PairsRepositry.Delete(pair.Id);
+        }
+
+        async Task UpdateParticipantsOnDelete(Pair pair)
+        {
+            pair.FromIsrael.MatchTo.Remove(pair.FromWorldId);
+            pair.FromWorld.MatchTo.Remove(pair.FromIsraelId);
+            
+            await Task.WhenAll(
+            _unitOfWork.IsraelParticipantsRepositry.Update(pair.FromIsrael as IsraelParticipant),
+            _unitOfWork.WorldParticipantsRepositry.Update(pair.FromWorld as WorldParticipant));
+        }
+
+        public Pair CreateNewPair(PairSuggestion pairSuggestion, PrefferdTracks track = PrefferdTracks.NoPrefrence)
+        {
+            var finalTrack = track != PrefferdTracks.NoPrefrence ? track : pairSuggestion.ChosenTrack;
+            return new Pair
             {
-                Track = pairSuggestion.PrefferdTrack,
+                Track = finalTrack,
                 FromIsraelId = pairSuggestion.FromIsrael.Id,
                 FromWorldId = pairSuggestion.FromWorld.Id,
+                FromIsrael = pairSuggestion.FromIsrael,
+                FromWorld = pairSuggestion.FromWorld,
                 Status = PairStatus.Standby,
                 DateOfCreate = DateTime.Now,
                 IsDeleted = false,
@@ -64,36 +130,20 @@ namespace PairMatching.DomainModel.Services
                     new TrackHistory()
                     {
                         DateOfUpdate = DateTime.Now,
-                        Track = pairSuggestion.PrefferdTrack
+                        Track = finalTrack
                     }
                 }
             };
-            
-            pairSuggestion.FromIsrael.MatchTo.Add(pair.FromWorldId);
-            pairSuggestion.FromWorld.MatchTo.Add(pair.FromIsraelId);
-
-            await Task.WhenAll(_unitOfWork
-                .IsraelParticipantsRepositry
-                .Update(pairSuggestion.FromIsrael as IsraelParticipant), 
-                _unitOfWork
-                .WorldParticipantsRepositry
-                .Update(pairSuggestion.FromWorld as WorldParticipant));
-            
-            var newPair = await _unitOfWork.PairsRepositry.Insert(pair);
-
-            //await SendNewPairToWix(pairSuggestion);
-            // "630c879ff16774f4658c916a"
-            return newPair;
         }
-
-        private async Task SendNewPairToWix(PairSuggestion pairSuggestion)
+        
+        private async Task SendNewPairToWix(Pair pair)
         {
             await _wix.NewPair(new NewPairWixDto
             {
-                chevrutaIdFirst = pairSuggestion.FromIsrael.WixId,
-                chevrutaIdSecond = pairSuggestion.FromWorld.WixId,
+                chevrutaIdFirst = pair.FromIsrael.WixId,
+                chevrutaIdSecond = pair.FromWorld.WixId,
                 date = DateTime.Now,
-                trackId = pairSuggestion.PrefferdTrack.GetDescriptionIdFromEnum()
+                trackId = pair.Track.GetDescriptionIdFromEnum()
             });
         }
 
@@ -103,11 +153,11 @@ namespace PairMatching.DomainModel.Services
                 .PairsRepositry
                 .GetAllAsync(p => p.Status == PairStatus.Standby);
             
-            await SetParticipaintsToEachPair(pairs);
+            await SetParticipaintsForEachPair(pairs);
 
             var fly = new TimeIntervalFactory();
 
-            return from p in pairs
+            var result = from p in pairs
                    select new StandbyPair
                    {
                        Pair = p,
@@ -116,9 +166,10 @@ namespace PairMatching.DomainModel.Services
                        .Build()
                    };
 
+            return result;
         }
 
-        private async Task SetParticipaintsToEachPair(IEnumerable<Pair> pairs)
+        private async Task SetParticipaintsForEachPair(IEnumerable<Pair> pairs)
         {
             if (!pairs.Any())
                 return;

@@ -27,13 +27,13 @@ namespace GuiWpf.ViewModels
             _matchingService = matchingService;
             _ea = ea;
             _pairsService = pairsService;
+            
             _ea.GetEvent<NewMatchEvent>()
-                .Subscribe(async ps =>
+                .Subscribe(standbyPair =>
                 {
-                    await Refresh();
+                    StandbyPairs.Add(standbyPair);
                 });
         }
-
 
         DelegateCommand _Load;
         public DelegateCommand Load => _Load ??= new(
@@ -56,11 +56,38 @@ namespace GuiWpf.ViewModels
 
         public ObservableCollection<StandbyPair> StandbyPairs { get; set; } = new();
 
-        private Pair _selectedStandbyPair;
-        public Pair SelectedStandbyPair
+        private StandbyPair _selectedStandbyPair;
+        public StandbyPair SelectedStandbyPair
         {
             get => _selectedStandbyPair;
             set => SetProperty(ref _selectedStandbyPair, value);
         }
+
+        DelegateCommand _ActivePairCommand;
+        public DelegateCommand ActivePairCommand => _ActivePairCommand ??= new(
+        async () =>
+        {
+            var pair = SelectedStandbyPair.Pair;
+            
+            StandbyPairs.Remove(SelectedStandbyPair);
+            
+            var activePair = await _pairsService.ActivePair(pair);
+            
+            _ea.GetEvent<NewPairEvent>().Publish(activePair);
+        });
+
+        DelegateCommand _CancelStandbyPairCommand;
+        public DelegateCommand CancelStandbyPairCommand => _CancelStandbyPairCommand ??= new(
+        async () =>
+        {
+            var pair = SelectedStandbyPair.Pair;
+
+            StandbyPairs.Remove(SelectedStandbyPair);
+            
+            await _pairsService.CancelPair(pair);
+
+            await _matchingService.Refresh();
+            _ea.GetEvent<RefreshMatchingEvent>().Publish();
+        });
     }
 }

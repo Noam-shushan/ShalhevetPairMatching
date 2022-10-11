@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using PairMatching.Tools;
 
-namespace PairMatching.DataAccess.UnitOfWork
+namespace PairMatching.DataAccess.UnitOfWorks
 {
     public class TaskManeger
     {

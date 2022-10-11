@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using PairMatching.DomainModel.MatchingCalculations;
 using Prism.Commands;
 using System.Collections.ObjectModel;
+using GuiWpf.Commands;
+using PairMatching.Models;
 
 namespace GuiWpf.ViewModels
 {
@@ -43,6 +45,18 @@ namespace GuiWpf.ViewModels
         {
             get => _stageSuggestion;
             set => SetProperty(ref _stageSuggestion, value);
+        }
+
+        private PrefferdTracks _selectedTrack;
+        public PrefferdTracks SelectedTrack
+        {
+            get => _selectedTrack;
+            set => SetProperty(ref _selectedTrack, value);
+        }
+
+        public (PairSuggestion, PrefferdTracks) MatchParameter
+        {
+            get => (StageSuggestion, SelectedTrack);
         }
 
         DelegateCommand _stageNext;

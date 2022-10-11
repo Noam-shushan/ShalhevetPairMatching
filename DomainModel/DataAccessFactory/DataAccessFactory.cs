@@ -1,4 +1,4 @@
-﻿using PairMatching.DataAccess.UnitOfWork;
+﻿using PairMatching.DataAccess.UnitOfWorks;
 using System;
 using System.Collections.Generic;
 using System.Linq;

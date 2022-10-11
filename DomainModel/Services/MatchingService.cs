@@ -1,10 +1,11 @@
-﻿using PairMatching.DataAccess.UnitOfWork;
+﻿using PairMatching.DataAccess.UnitOfWorks;
 using PairMatching.DomainModel.DataAccessFactory;
 using PairMatching.DomainModel.MatchingCalculations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using PairMatching.Models;
+using Microsoft.VisualBasic;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -45,17 +46,18 @@ namespace PairMatching.DomainModel.Services
             _suggestionsBuilder = new BuildSuggestions(israeliParticipants, worldParticipants);
         }
 
+        //bool isLock = false;
         public async Task Refresh()
         {
             var israelParticipants = await _unitOfWork
-                 .IsraelParticipantsRepositry
-                 .GetAllAsync();
+                .IsraelParticipantsRepositry
+                .GetAllAsync();
             var worldParticipants = await _unitOfWork
                 .WorldParticipantsRepositry
                 .GetAllAsync();
-
+            
             _suggestionsBuilder = new BuildSuggestions(israelParticipants.Where(i => i.IsOpenToMatch),
-                worldParticipants.Where(i => i.IsOpenToMatch));
+                    worldParticipants.Where(i => i.IsOpenToMatch));
         }
 
         async Task<BuildSuggestions> GetSuggestionsBuilder()

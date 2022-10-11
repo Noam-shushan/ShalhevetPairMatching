@@ -14,16 +14,16 @@ namespace PairMatching.DataAccess.Infrastructure
 
         public IDataAccess GetContext()
         {
-            return new MongoDataAccess(_configurations.ConnctionsStrings);
-            //if (_configurations.IsTest)
-            //{
-            //    return new JsonDataAccess();
-            //}
-            //else
-            //{
-            //    return new MongoDataAccess(_configurations.ConnctionsStrings);
-            //}
-            //throw new Exception("No Data Access implementation");
+            //return new MongoDataAccess(_configurations.ConnctionsStrings);
+            if (_configurations.IsTest)
+            {
+                return new JsonDataAccess();
+            }
+            else
+            {
+                return new MongoDataAccess(_configurations.ConnctionsStrings);
+            }
+            throw new Exception("No Data Access implementation");
         }
     }
 }

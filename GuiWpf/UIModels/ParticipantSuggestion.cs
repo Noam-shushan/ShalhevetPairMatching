@@ -1,4 +1,6 @@
 ﻿using PairMatching.DomainModel.MatchingCalculations;
+using PairMatching.Models;
+using System.Collections.Generic;
 
 namespace GuiWpf.UIModels
 {

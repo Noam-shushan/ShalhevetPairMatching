@@ -12,6 +12,7 @@ using Prism.Commands;
 using Prism.Events;
 using GuiWpf.Events;
 using GuiWpf.UIModels;
+using GuiWpf.Commands;
 
 namespace GuiWpf.ViewModels
 {
@@ -27,8 +28,8 @@ namespace GuiWpf.ViewModels
             _ea = ea;
             Match = matchCommand;
             
-            _ea.GetEvent<NewMatchEvent>()
-                .Subscribe(async ps =>
+            _ea.GetEvent<RefreshMatchingEvent>()
+                .Subscribe(async () =>
                 {
                     await Refresh();
                 });
@@ -49,16 +50,24 @@ namespace GuiWpf.ViewModels
         private async Task Refresh()
         {
             IsLoaded = true;
+            
+            IsFullComparisonOpen = false;
 
             var suggestions = await _matchingService.GetAllPairSuggestions();
 
             _pairSuggestions.Clear();
             _pairSuggestions.AddRange(suggestions);
-
-            Participants.Clear();
-            Participants.AddRange(GroupPartBySuggestion(suggestions));            
+            
+            var items = GroupPartBySuggestion(suggestions);
+            Participants.Init(items, 20, ItemsFilter);          
+            
             
             IsLoaded = false;
+        }
+
+        private bool ItemsFilter(ParticipaintWithSuggestions p)
+        {
+            return p.Participant.Name.Contains(SearchParticipiantsWord, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private IEnumerable<ParticipaintWithSuggestions> GroupPartBySuggestion(IEnumerable<PairSuggestion> suggestions)
@@ -75,7 +84,7 @@ namespace GuiWpf.ViewModels
                             Country = i.FromWorld.Country,
                             Id = i.FromWorld.Id,
                             Name = i.FromWorld.Name,
-                            MatchingPercent = i.MatchingPercent,
+                            MatchingPercent = i.MatchingPercent, 
                             Original = i.Original
                         }).ToList()
                     })
@@ -97,14 +106,39 @@ namespace GuiWpf.ViewModels
                             });
         }
 
+        private string _searchParticipiantsWord = "";
+        public string SearchParticipiantsWord
+        {
+            get { return _searchParticipiantsWord; }
+            set
+            {
+                if (SetProperty(ref _searchParticipiantsWord, value))
+                {
+                    Participants.Refresh();
+                }
+            }
+        }
+
         private bool _isFullComparisonOpen;
         public bool IsFullComparisonOpen
         {
             get => _isFullComparisonOpen;
             set => SetProperty(ref _isFullComparisonOpen, value);
         }
-        
-        public ObservableCollection<ParticipaintWithSuggestions> Participants { get; set; } = new();
+
+        private PrefferdTracks _selectedTrack;
+        public PrefferdTracks SelectedTrack
+        {
+            get => _selectedTrack;
+            set => SetProperty(ref _selectedTrack, value);
+        }
+
+        public (PairSuggestion, PrefferdTracks) MatchParameter
+        {
+            get => (SelectedSuggestion?.Original, SelectedTrack);
+        }
+
+        public PaginCollectionViewModel<ParticipaintWithSuggestions> Participants { get; set; } = new();
 
         private ParticipaintWithSuggestions _selectedParticipaint;
         public ParticipaintWithSuggestions SelectedParticipaint
@@ -142,52 +176,5 @@ namespace GuiWpf.ViewModels
         });
 
         public MatchCommand Match { get; }
-    }
-    
-    public class MatchCommand : ICommand
-    {
-        IEventAggregator _ea;
-
-        IPairsService _pairsService;
-        
-        IMatchingService _matchingService;
-
-        public MatchCommand(IEventAggregator ea, IPairsService pairsService, IMatchingService matchingService)
-        {
-            _ea = ea;
-            _pairsService = pairsService;
-            _matchingService = matchingService;
-        }
-        async Task Match(PairSuggestion pairSuggestion)
-        {
-            var newPair = await _pairsService.AddNewPair(pairSuggestion);
-
-            await _matchingService.Refresh();
-
-            _ea.GetEvent<NewMatchEvent>()
-                    .Publish(pairSuggestion);
-            _ea.GetEvent<NewPairEvent>()
-                .Publish(newPair);
-
-        }
-
-        public bool CanExecute(object? parameter)
-        {
-            return true;
-        }
-        
-        public async void Execute(object? parameter)
-        {
-            if(parameter is PairSuggestion pair)
-            {
-                await Match(pair);            
-            }
-        }
-
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
     }
 }

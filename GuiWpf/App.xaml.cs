@@ -15,6 +15,7 @@ using Prism.Mvvm;
 using GuiWpf.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
 using PairMatching.Root;
+using GuiWpf.Commands;
 
 namespace GuiWpf
 {
@@ -37,11 +38,11 @@ namespace GuiWpf
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
 
             containerRegistry.Register<SendEmail>();
-            containerRegistry.Register<MatchCommand>();
+            containerRegistry.RegisterSingleton<MatchCommand>();
             containerRegistry.Register<IParticipantService, ParticipantService>();
             containerRegistry.Register<IPairsService, PairService>();
             containerRegistry.Register<IEmailService, EmailService>();
-            containerRegistry.Register<IMatchingService, MatchingService>();
+            containerRegistry.RegisterSingleton<IMatchingService, MatchingService>();
 
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
         }

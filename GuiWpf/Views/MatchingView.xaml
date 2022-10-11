@@ -27,129 +27,147 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <TabControl materialDesign:ColorZoneAssist.Mode="PrimaryLight" TabStripPlacement="Left">
-            <TabItem Header="הצעות להתאמה">
-                <TabControl
-                    Margin="5"
-                    materialDesign:ColorZoneAssist.Mode="Light"
-                    Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
-                    TabStripPlacement="Top">
+        <materialDesign:Card Margin="5" UniformCornerRadius="5">
+            <TabControl
+                mah:TabControlHelper.UnderlinePlacement="Top"
+                materialDesign:ColorZoneAssist.Mode="Standard"
+                Style="{StaticResource MahApps.Styles.TabControl.Animated}"
+                TabStripPlacement="Left">
+                <TabItem Header="הצעות להתאמה">
+                    <TabControl
+                        Margin="5"
+                        materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+                        Style="{StaticResource MahApps.Styles.TabControl.Animated}"
+                        TabStripPlacement="Top">
 
-                    <TabItem
-                        Width="200"
-                        Height="50"
-                        Header="הצעות">
-                        <GroupBox Style="{StaticResource GroupBoxList}">
-                            <GroupBox.Header>
-                                <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
+                        <TabItem Header="הצעות">
+                            <GroupBox Style="{StaticResource GroupBoxList}">
+                                <GroupBox.Header>
+                                    <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <controlers:SearchTextBox Grid.Column="0" SearchWord="{Binding SearchParticipiantsWord}" />
+                                    </Grid>
+                                </GroupBox.Header>
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <controlers:SearchTextBox
-                                        Grid.Column="0"
-                                        SearchCommand="{Binding SearchSuggestionsCommand}"
-                                        SearchWord="{Binding SearchSuggestionsWord}" />
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <materialDesign:Card Grid.Column="0" Margin="5">
+                                        <DataGrid
+                                            AutoGenerateColumns="False"
+                                            IsReadOnly="True"
+                                            ItemsSource="{Binding Participants.Items}"
+                                            SelectedItem="{Binding SelectedParticipaint}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Binding="{Binding Participant.Name}" Header="שם" />
+                                                <DataGridTextColumn Binding="{Binding Participant.Country}" Header="ארץ" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </materialDesign:Card>
+
+                                    <GroupBox
+                                        Grid.Column="1"
+                                        Margin="5"
+                                        Header="הצעות להתאמה"
+                                        Style="{StaticResource GroupBoxList}">
+                                        <DataGrid
+                                            AutoGenerateColumns="False"
+                                            IsReadOnly="True"
+                                            ItemsSource="{Binding Path=SelectedParticipaint.Suggestions}"
+                                            SelectedItem="{Binding SelectedSuggestion}">
+
+                                            <DataGrid.RowStyle>
+                                                <Style TargetType="DataGridRow">
+                                                    <Setter Property="ToolTip">
+                                                        <Setter.Value>
+                                                            <TextBlock Text="לחץ פעמיים להשוואה מלאה" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DataGrid.RowStyle>
+
+                                            <DataGrid.InputBindings>
+                                                <MouseBinding Command="{Binding OpenFullComparisonCommand}" Gesture="LeftDoubleClick" />
+                                            </DataGrid.InputBindings>
+
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Binding="{Binding Name}" Header="שם" />
+                                                <DataGridTextColumn Binding="{Binding Country}" Header="ארץ" />
+                                                <DataGridTextColumn Binding="{Binding MatchingPercent}" Header="אחוז התאמה" />
+                                                <DataGridTemplateColumn Header="מסלולים">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <ComboBox ItemsSource="{Binding Original.PrefferdTrack, Converter={StaticResource EnumToStringConverter}}" SelectedValue="{Binding ElementName=me, Path=DataContext.SelectedTrack}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+
+                                                <DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Button
+                                                                Command="{Binding ElementName=me, Path=DataContext.Match}"
+                                                                CommandParameter="{Binding ElementName=me, Path=DataContext.MatchParameter}"
+                                                                Content="התאם" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </GroupBox>
+
+                                    <local:PaginCollectionView
+                                        Grid.Row="1"
+                                        Grid.ColumnSpan="2"
+                                        DataContext="{Binding Participants}" />
+
                                 </Grid>
-                            </GroupBox.Header>
-                            <Grid>
+                            </GroupBox>
+                        </TabItem>
+                        <TabItem Header="התאמות בהמתנה">
+                            <local:StandbyMatchingView />
+                        </TabItem>
+                        <TabItem Header="אוטומטי">
+                            <local:AutoMatchingView />
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+                <TabItem Header="היסטוריית התאמות">
+                    <GroupBox Style="{StaticResource GroupBoxList}">
+                        <GroupBox.Header>
+                            <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-
-                                <materialDesign:Card Grid.Column="0" Margin="5">
-                                    <DataGrid
-                                        AutoGenerateColumns="False"
-                                        IsReadOnly="True"
-                                        ItemsSource="{Binding Participants}"
-                                        SelectedItem="{Binding SelectedParticipaint}">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Binding="{Binding Participant.Name}" Header="שם" />
-                                            <DataGridTextColumn Binding="{Binding Participant.Country}" Header="ארץ" />
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </materialDesign:Card>
-                                <GroupBox
-                                    Grid.Column="1"
-                                    Margin="5"
-                                    Header="הצעות להתאמה"
-                                    Style="{StaticResource GroupBoxList}">
-                                    <DataGrid
-                                        AutoGenerateColumns="False"
-                                        IsReadOnly="True"
-                                        ItemsSource="{Binding Path=SelectedParticipaint.Suggestions}"
-                                        SelectedItem="{Binding SelectedSuggestion}">
-
-                                        <DataGrid.RowStyle>
-                                            <Style TargetType="DataGridRow">
-                                                <Setter Property="ToolTip">
-                                                    <Setter.Value>
-                                                        <TextBlock Text="לחץ פעמיים להשוואה מלאה" />
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </DataGrid.RowStyle>
-
-                                        <DataGrid.InputBindings>
-                                            <MouseBinding Command="{Binding OpenFullComparisonCommand}" Gesture="LeftDoubleClick" />
-                                        </DataGrid.InputBindings>
-
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Binding="{Binding Name}" Header="שם" />
-                                            <DataGridTextColumn Binding="{Binding Country}" Header="ארץ" />
-                                            <DataGridTextColumn Binding="{Binding MatchingPercent}" Header="אחוז התאמה" />
-                                            <DataGridTemplateColumn>
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Button
-                                                            Command="{Binding ElementName=me, Path=DataContext.Match}"
-                                                            CommandParameter="{Binding ElementName=me, Path=DataContext.SelectedSuggestion.Original}"
-                                                            Content="התאם" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </GroupBox>
+                                <controlers:SearchTextBox
+                                    Grid.Column="0"
+                                    SearchCommand="{Binding SearchHistoriesCommand}"
+                                    SearchWord="{Binding SearchHistoriesWord}" />
                             </Grid>
-                        </GroupBox>
-                    </TabItem>
-                    <TabItem
-                        Width="200"
-                        Height="50"
-                        Header="התאמות בהמתנה">
-                        <local:StandbyMatchingView />
-                    </TabItem>
-                    <TabItem Header="אוטומטי">
-                        <local:AutoMatchingView />
-                    </TabItem>
-                </TabControl>
-            </TabItem>
-            <TabItem Header="היסטוריית התאמות">
-                <GroupBox Style="{StaticResource GroupBoxList}">
-                    <GroupBox.Header>
-                        <Grid Style="{StaticResource GroupBoxHeadersGridForDataGrid}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <controlers:SearchTextBox
-                                Grid.Column="0"
-                                SearchCommand="{Binding SearchHistoriesCommand}"
-                                SearchWord="{Binding SearchHistoriesWord}" />
-                        </Grid>
-                    </GroupBox.Header>
-                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Histories}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="משתתף מישראל" />
-                            <DataGridTextColumn Header="משתתף מהתפוצות" />
-                            <DataGridTextColumn Header="תאריך התאמה" />
-                            <DataGridCheckBoxColumn Header="פעילה?" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </GroupBox>
-            </TabItem>
-        </TabControl>
+                        </GroupBox.Header>
+
+                        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Histories}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="משתתף מישראל" />
+                                <DataGridTextColumn Header="משתתף מהתפוצות" />
+                                <DataGridTextColumn Header="תאריך התאמה" />
+                                <DataGridCheckBoxColumn Header="פעילה?" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                </TabItem>
+            </TabControl>
+        </materialDesign:Card>
 
         <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsFullComparisonOpen}">
             <DockPanel>

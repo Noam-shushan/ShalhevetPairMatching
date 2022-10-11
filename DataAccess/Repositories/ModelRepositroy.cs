@@ -1,5 +1,5 @@
 ﻿using PairMatching.DataAccess.Infrastructure;
-using PairMatching.DataAccess.UnitOfWork;
+using PairMatching.DataAccess.UnitOfWorks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,13 +23,14 @@ namespace PairMatching.DataAccess.Repositories
             _dataAccess = dal;
             _collectionName = collectionName;
             _taskManeger = taskManeger;
-        }       
+        }
 
-        public async Task SaveToDrive<U>(IEnumerable<U>  itemsToSave, string docName)
+        public async Task SaveToDrive()
         {
+            var recods = await GetAllAsync();
             var jr = new JsonDataAccess();
 
-            await jr.InsertMany(docName, itemsToSave);
+            await jr.InsertMany(_collectionName, recods);
         }
 
         public async Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>> predicate = null)
@@ -69,9 +70,11 @@ namespace PairMatching.DataAccess.Repositories
             return task;
         }
 
-        public Task Delete(int id)
+        public Task Delete(dynamic id)
         {
-            throw new NotImplementedException();
+            var task = _dataAccess.Delete<TModel>(_collectionName, id);
+
+            return task;
         }
          
         public async Task<TModel> GetByIdAsync(string id)

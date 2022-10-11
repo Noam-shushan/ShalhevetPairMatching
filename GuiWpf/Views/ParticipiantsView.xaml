@@ -54,6 +54,10 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
                 <!--#region Header-->
                 <Grid
                     Grid.Row="0"
@@ -64,13 +68,9 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
 
-                    <controlers:SearchTextBox
-                        Grid.Column="0"
-                        SearchCommand="{Binding SearchParticipiantsCommand}"
-                        SearchWord="{Binding SearchParticipiantsWord}" />
+                    <controlers:SearchTextBox Grid.Column="0" SearchWord="{Binding SearchParticipiantsWord}" />
 
                     <ComboBox
                         Grid.Column="1"
@@ -93,24 +93,8 @@
                         SelectedValue="{Binding PartsKindFilter, Converter={StaticResource EnumToStringConverter}}"
                         Style="{StaticResource FilterComboBox}" />
 
-                    <StackPanel
-                        Grid.Column="3"
-                        Margin="0,0,10,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Participiants.Items.Count}" />
-                        <TextBlock
-                            Margin="5,0,5,0"
-                            Style="{StaticResource MaterialDesignBody2TextBlock}"
-                            Text="מתוך:" />
-                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Participiants.FilterdItems.Count}" />
-                    </StackPanel>
-
-
-
                     <Button
-                        Grid.Column="4"
+                        Grid.Column="3"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Command="{Binding AddParticipantCommand}"
@@ -166,7 +150,8 @@
                                         Cursor="Hand"
                                         Foreground="{StaticResource MainColor}"
                                         IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DetailsVisibility, Converter={StaticResource VisbilityToBooleanConverter}, Mode=TwoWay}"
-                                        Style="{StaticResource MaterialDesignExpandCollapseToggleStyle}" />
+                                        Style="{StaticResource MaterialDesignExpandCollapseToggleStyle}"
+                                        ToolTip="הרחב" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -181,7 +166,6 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
 
                         <DataGridTemplateColumn Header="שם מלא" IsReadOnly="True">
                             <DataGridTemplateColumn.CellTemplate>
@@ -237,7 +221,7 @@
                         <DataGridTemplateColumn Header="תאריך הרשמה" IsReadOnly="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Style="{StaticResource TestColumnStyle}" Text="{Binding DateOfRegistered, StringFormat=d}" />
+                                    <TextBlock Style="{StaticResource TestColumnStyle}" Text="{Binding DateOfRegistered, StringFormat=dd/MM/yyyy}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -541,35 +525,7 @@
                 </DataGrid>
                 <!--#endregion-->
 
-                <StackPanel
-                    Grid.Row="2"
-                    HorizontalAlignment="Left"
-                    FlowDirection="LeftToRight"
-                    Orientation="Horizontal">
-                    <ComboBox
-                        Margin="5"
-                        ItemsSource="{Binding Participiants.MaxRecordsInPage}"
-                        SelectedValue="{Binding Participiants.ItemsPerPage}"
-                        Style="{StaticResource MahApps.Styles.ComboBox}" />
-
-                    <Button Margin="5" Command="{Binding Participiants.PrevPageCommand}">
-                        <materialDesign:PackIcon Kind="ArrowLeft" />
-                    </Button>
-
-                    <TextBlock Margin="5">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{} {0} of {1}">
-                                <Binding Converter="{StaticResource AddOneConverter}" Path="Participiants.CurrentPage" />
-                                <Binding Path="Participiants.PageCount" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-
-                    <Button Margin="5" Command="{Binding Participiants.NextPageCommand}">
-                        <materialDesign:PackIcon Kind="ArrowRight" />
-                    </Button>
-                </StackPanel>
-
+                <local:PaginCollectionView Grid.Row="2" DataContext="{Binding Participiants}" />
             </Grid>
         </materialDesign:Card>
 

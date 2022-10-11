@@ -10,6 +10,7 @@ namespace PairMatching.DomainModel.Services
     public interface IParticipantService
     {
         Task<IEnumerable<Participant>> GetAll();
+        
         Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael();
         
         Task<IEnumerable<WorldParticipant>> GetAllFromWorld();
@@ -20,6 +21,6 @@ namespace PairMatching.DomainModel.Services
         
         Task SetNewParticipints();
         
-        Task UpserteParticipant(Participant participant);
+        Task<Participant> UpserteParticipant(Participant participant);
     }
 }

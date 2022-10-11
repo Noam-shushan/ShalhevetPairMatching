@@ -117,5 +117,16 @@ namespace PairMatching.DataAccess.Infrastructure
 
             return task;
         }
+
+        public Task Delete<T>(string collectionName, dynamic id)
+        {
+            var collection = ConnectToMongo<T>(collectionName);
+
+            var filter = Builders<T>.Filter.Eq("Id", id);
+
+            var task = collection.DeleteOneAsync(filter);
+
+            return task;
+        }
     }
 }
