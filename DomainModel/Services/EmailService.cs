@@ -1,5 +1,5 @@
 ﻿using PairMatching.Configurations;
-using PairMatching.DataAccess.UnitOfWork;
+using PairMatching.DataAccess.UnitOfWorks;
 using PairMatching.DomainModel.DataAccessFactory;
 using PairMatching.WixApi;
 using System;

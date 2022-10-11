@@ -27,8 +27,10 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public double MatchingPercent => Math.Round((double)(100 * MatchingScore) / 26);
 
-        public PrefferdTracks PrefferdTrack { get; set; }
-        
+        public IEnumerable<PrefferdTracks> PrefferdTrack { get; set; }
+
+        public PrefferdTracks ChosenTrack { get; set; }
+
         public bool IsTrackMatch { get; internal set; }
 
         public bool IsMinmunMatch 

@@ -53,9 +53,9 @@ namespace PairMatching.DataAccess.Repositories
         /// </summary>
         /// <param name="id">The id of the record to delete</param>
         /// <returns></returns>
-        Task Delete(int id);
-        
-        
-        Task SaveToDrive<U>(IEnumerable<U> itemsToSave, string docName);
+        Task Delete(dynamic id);
+
+
+        Task SaveToDrive();
     }
 }

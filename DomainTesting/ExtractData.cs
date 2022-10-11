@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using PairMatching.DomainModel.DataAccessFactory;
-using PairMatching.DataAccess.UnitOfWork;
+using PairMatching.DataAccess.UnitOfWorks;
 using PairMatching.Configurations;
 using static PairMatching.Tools.HelperFunction;
 using PairMatching.Tools;
@@ -78,7 +78,6 @@ namespace DomainTesting
                         OpenQuestions = s.OpenQuestions?.ToDictionary(q => q.Question, a => a.Answer),
                         
                     };
-            await _unitOfWork.StudentRepositry.SaveToDrive(l, "Shalhevet data");
         }
 
         [Test]
@@ -154,7 +153,31 @@ namespace DomainTesting
         [Test]
         public async Task GetFromGoogleSheetTest()
         {
-            var s = await GetStudentsFromGoogleSheetTest();
+            var students = await GetStudentsFromGoogleSheetTest();
+            
+            var ips = await _unitOfWork.IsraelParticipantsRepositry
+                .GetAllAsync();
+            var ipsEmails = ips.Select(i => i.Email).ToList();
+            
+            var wps = await _unitOfWork.WorldParticipantsRepositry
+                .GetAllAsync();
+            var wpsEmails = wps.Select(i => i.Email).ToList();
+
+            var parts = students.Select(s => s.ToParticipant());
+
+            var newFromGoogleSheets = from p in parts
+                                      where !ipsEmails.Contains(p.Email) && !wpsEmails.Contains(p.Email)
+                                      select p;
+
+            var partsIW = newFromGoogleSheets.ToLookup(p => p.IsFromIsrael);
+
+            var newIsraelis = partsIW[true].Select(p => p as IsraelParticipant);
+
+            await _unitOfWork.IsraelParticipantsRepositry.InsertMany(newIsraelis);
+
+            var newWorlds = partsIW[false].Select(p => p as WorldParticipant);
+
+            await _unitOfWork.WorldParticipantsRepositry.InsertMany(newWorlds);
         }
     }
 }

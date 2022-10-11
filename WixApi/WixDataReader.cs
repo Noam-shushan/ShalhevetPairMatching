@@ -9,6 +9,7 @@ using PairMatching.Configurations;
 using Newtonsoft.Json;
 using PairMatching.Tools;
 using PairMatching.Models;
+using System.Net.Http.Json;
 
 namespace PairMatching.WixApi
 {
@@ -63,7 +64,7 @@ namespace PairMatching.WixApi
         {
             var query = _configuration.WixApi["sendEmails"];
 
-            await _http.PostAsync(query, email);
+            var howGetTheEmail = await _http.PostAsync(query, email);
 
             return null;
         }
@@ -101,11 +102,18 @@ namespace PairMatching.WixApi
             await _http.PostAsync(query, participantDto);
         }
 
-        public async Task NewPart(dynamic participantWixDto)
+        public async Task<string> NewParticipant(dynamic participantWixDto)
         {
             var query = _configuration.WixApi["newMember"];
+            
+            // "inserted" : {}
+            var jsonContent = await _http.PostAsync(query, participantWixDto);
 
-            await _http.PostAsync(query, participantWixDto);
+            var parsedObject = JObject.Parse(jsonContent);
+
+            var id = parsedObject["inserted"]["contactId"];
+
+            return id?.ToString();
         }
 
     }

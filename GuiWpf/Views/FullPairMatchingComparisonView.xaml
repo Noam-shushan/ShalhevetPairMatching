@@ -120,6 +120,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
@@ -154,8 +155,27 @@
                     FieldName="סגנון לימוד"
                     Value="{Binding StageSuggestion.IsLearningStyleMatch}" />
 
+
+                <GroupBox Grid.Row="5" Header="מסלולי לימוד">
+                    <ScrollViewer
+                        mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                        <ListBox
+                            ItemsSource="{Binding StageSuggestion.PrefferdTrack}"
+                            SelectedItem="{Binding SelectedTrack}"
+                            Style="{StaticResource MaterialDesignChoiceChipListBox}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter}}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                </GroupBox>
+
                 <GroupBox
-                    Grid.Row="5"
+                    Grid.Row="6"
                     Margin="5"
                     materialDesign:ColorZoneAssist.Mode="PrimaryLight">
                     <GroupBox.Header>
@@ -261,7 +281,7 @@
                 </GroupBox>
 
                 <controlers:Field
-                    Grid.Row="6"
+                    Grid.Row="7"
                     FieldName="הפרש זמן מישראל"
                     Value="{Binding StageSuggestion.FromWorld.DiffFromIsrael.Hours}" />
             </Grid>
@@ -322,14 +342,14 @@
             Orientation="Horizontal">
             <Button
                 Margin="5"
-                Command="{Binding MatchCommand}"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Command="{Binding Match}"
+                CommandParameter="{Binding MatchParameter}"
                 Content="התאם"
                 FontSize="20"
                 Style="{StaticResource MaterialDesignOutlinedDarkButton}" />
-            <Button
-                Margin="5"
-                Content="שלח מייל הצעה"
-                Style="{StaticResource ButtonContentStyle}" />
         </StackPanel>
 
     </Grid>

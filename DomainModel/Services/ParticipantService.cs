@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using PairMatching.Configurations;
-using PairMatching.DataAccess.UnitOfWork;
+using PairMatching.DataAccess.UnitOfWorks;
 using PairMatching.DomainModel.DataAccessFactory;
 using PairMatching.Models;
 using PairMatching.Models.Dtos;
@@ -31,8 +31,13 @@ namespace PairMatching.DomainModel.Services
             var result = new List<Participant>();
             var tasks = new List<Task>();
 
+            //await SetNewParticipints();
+
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();
+
+            //await _unitOfWork.IsraelParticipantsRepositry.SaveToDrive();
+            //await _unitOfWork.WorldParticipantsRepositry.SaveToDrive();
 
             tasks.Add(ips);
             tasks.Add(wps);
@@ -43,25 +48,6 @@ namespace PairMatching.DomainModel.Services
             result.AddRange(wps.Result);
 
             return result;
-        }
-
-        private async Task ExportDataToDrive()
-        {
-            var students = await _unitOfWork.StudentRepositry.GetAllAsync();
-
-            var l =
-                    from s in students
-                    select new
-                    {
-                        Name = s.Name,
-                        Country = s.Country,
-                        LearningStyle = s.LearningStyle.GetDescriptionFromEnumValue(),
-                        Track = string.Join(", ", s.PrefferdTracks.Select(t => t.GetDescriptionFromEnumValue())),
-                        Gender = s.Gender.GetDescriptionFromEnumValue(),
-                        PreliminaryLevelOfKnowledge = s.SkillLevel.GetDescriptionFromEnumValue(),
-                        OpenQuestions = s.OpenQuestions?.ToDictionary(q => q.Question, a => a.Answer),
-                    };
-            await _unitOfWork.IsraelParticipantsRepositry.SaveToDrive(l, "Shalhevet data");
         }
 
         public async Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael()
@@ -110,10 +96,42 @@ namespace PairMatching.DomainModel.Services
             }
         }
 
-        public async Task UpserteParticipant(Participant part)
+        public async Task<Participant> UpserteParticipant(Participant part)
         {
-            UpsertParticipantOnWixDto partDto = part.ToUpsertWixDto();
-            await _wix.UpsertParticipaint(partDto);
+            dynamic wixId = await GetWixId(part);
+            
+            part.WixId = wixId;
+
+            if (part is IsraelParticipant ip)
+            {
+                return await _unitOfWork
+                .IsraelParticipantsRepositry
+                .Insert(ip);
+            }
+            else if (part is WorldParticipant wp)
+            {
+                return await _unitOfWork
+                .WorldParticipantsRepositry
+                .Insert(wp);
+            }
+
+            return null;   
+        }
+
+        private async Task<dynamic> GetWixId(Participant part)
+        {
+            dynamic partDto = new { };
+            if (part is IsraelParticipant ip)
+            {
+                partDto = ip.ToIsraelParticipantWixDto();
+            }
+            else if (part is WorldParticipant wp)
+            {
+                partDto = wp.ToWorldParticipantWixDto();
+            }
+
+            var wixId = await _wix.NewParticipant(partDto);
+            return wixId;
         }
 
         public async Task<IEnumerable<Participant>> GetParticipantsWix()

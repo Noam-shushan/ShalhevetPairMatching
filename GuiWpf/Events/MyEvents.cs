@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using PairMatching.Models;
 using PairMatching.DomainModel.MatchingCalculations;
 using GuiWpf.UIModels;
+using PairMatching.DomainModel.BLModels;
 
 namespace GuiWpf.Events
 {
@@ -32,7 +33,10 @@ namespace GuiWpf.Events
 
     public class IsSendEmailEvent : PubSubEvent<bool> { }
 
-    public class NewMatchEvent : PubSubEvent<PairSuggestion> { }
+    public class NewMatchEvent : PubSubEvent<StandbyPair> { }
+    
+    public class RefreshMatchingEvent : PubSubEvent { }
+
     public class NewPairEvent : PubSubEvent<Pair> { }
 
     public class ShowFullComparisonEvent : PubSubEvent<(IEnumerable<PairSuggestion>, string)> { }

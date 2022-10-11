@@ -21,5 +21,7 @@ namespace PairMatching.DataAccess.Infrastructure
         Task<T> InsertOne<T>(string collectionName, T record);
 
         Task UpdateOne<T>(string collectionName, T record, dynamic id);
+
+        Task Delete<T>(string collectionName, dynamic id);
     }
 }

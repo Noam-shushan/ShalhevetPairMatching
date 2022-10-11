@@ -36,8 +36,6 @@ namespace PairMatching.Models
 
         [BsonIgnore]
         public Participant FromWorld { get; set; }
-
-        
     }
 
     public class TrackHistory

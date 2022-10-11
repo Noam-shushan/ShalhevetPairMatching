@@ -26,4 +26,19 @@ namespace GuiWpf.UIModels
         [EnumDescription("מהתפוצות בלי חברותא")]
         FromWorldWithoutPair,
     }
+
+    public enum PairKind
+    {
+        [EnumDescription("כל החברותות")]
+        All,
+
+        [EnumDescription("חברותות פעילות")]
+        Active,
+
+        [EnumDescription("חברותות לא פעילות")]
+        Inactive,
+
+        [EnumDescription("לומדות בפועל")]
+        Learning
+    }
 }

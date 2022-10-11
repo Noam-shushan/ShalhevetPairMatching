@@ -2,7 +2,7 @@
 using PairMatching.Models;
 using System.Threading.Tasks;
 
-namespace PairMatching.DataAccess.UnitOfWork
+namespace PairMatching.DataAccess.UnitOfWorks
 {
     public interface IUnitOfWork
     {

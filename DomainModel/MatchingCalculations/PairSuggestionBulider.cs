@@ -47,11 +47,22 @@ namespace PairMatching.DomainModel.MatchingCalculations
             return null;
         }
 
-        private PrefferdTracks FindPrefferdTrack()
+        private IEnumerable<PrefferdTracks> FindPrefferdTrack()
         {
-            return _ip.PairPreferences.Tracks
-                .Intersect(_wp.PairPreferences.Tracks)
-                .FirstOrDefault();
+            var tracks = _ip.PairPreferences.Tracks
+                .Intersect(_wp.PairPreferences.Tracks);
+            if (!tracks.Any())
+            {
+                if(_ip.PairPreferences.Tracks.Any(t => t == PrefferdTracks.NoPrefrence))
+                {
+                    return _wp.PairPreferences.Tracks;
+                }
+                else if(_wp.PairPreferences.Tracks.Any(t => t == PrefferdTracks.NoPrefrence))
+                {
+                    return _ip.PairPreferences.Tracks;
+                }     
+            }
+            return tracks;
         }
 
         int CalculateMatchingScore()

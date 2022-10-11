@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static PairMatching.Tools.HelperFunction;
 
@@ -16,7 +17,7 @@ namespace PairMatching.DataAccess.Infrastructure
         const string dir = @"localDB\";
 
         const string suffixFile = ".json";
-
+        
         public JsonDataAccess()
         {
             if (!Directory.Exists(dir))
@@ -85,8 +86,13 @@ namespace PairMatching.DataAccess.Infrastructure
                 if (File.Exists(filePath))
                 {
                     var jsonString = await File.ReadAllTextAsync(filePath);
+
+                    //// To semulate the acushal time 
+                    //await Task.Run(() => Thread.Sleep( 3000));
+
                     var list = JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
-                    return predicate is null ? list : list.AsQueryable().Where(predicate);
+                    var result = predicate is null ? list : list.AsQueryable().Where(predicate);
+                    return result;
                 }
                 else
                 {
@@ -111,6 +117,9 @@ namespace PairMatching.DataAccess.Infrastructure
                         Formatting = Formatting.Indented
                     };
                     await Task.Run(() => serializer.Serialize(file, records));
+
+                    //// To semulate the acushal time 
+                    //await Task.Run(() => Thread.Sleep(3000));
                 }
             }
             catch (Exception ex)
@@ -122,28 +131,28 @@ namespace PairMatching.DataAccess.Infrastructure
 
         public async Task<T> InsertOne<T>(string collectionName, T record)
         {
-            var curId = record.GetCurrentId();
-            if (string.IsNullOrEmpty(curId) || curId == 0)
-            {
-                record.GetType().GetProperty("Id").SetValue(record, GetNewId());
-            }
-            var filePath = dir + collectionName + suffixFile;
             try
             {
-                using (StreamWriter file = File.CreateText(filePath))
+                var curId = record.GetCurrentId();
+                if (string.IsNullOrEmpty(curId) || curId == 0)
                 {
-                    var serializer = new JsonSerializer
-                    {
-                        Formatting = Formatting.Indented
-                    };
-                    await Task.Run(() => serializer.Serialize(file, record));
+                    record.GetType().GetProperty("Id").SetValue(record, GetNewId());
                 }
+
+                var items = await LoadManyAsync<T>(collectionName);
+
+                var list = items.ToList();
+                
+                list.Add(record);
+                
+                await InsertMany(collectionName, list);
+
+                return record;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return default;
         }        
 
         private string GetNewId()
@@ -151,9 +160,39 @@ namespace PairMatching.DataAccess.Infrastructure
             return Guid.NewGuid().ToString();
         }
 
-        public Task UpdateOne<T>(string collectionName, T record, dynamic id)
+        public async Task UpdateOne<T>(string collectionName, T record, dynamic id)
+        { 
+            var items = await LoadManyAsync<T>(collectionName);
+
+            var list = items.ToList();
+            
+            var found = list.Find(x => x.GetCurrentId() == id);
+            if(found == null)
+            {
+                throw new Exception($"Can not find item with id: {id}");
+            }
+            
+            list.Remove(found);
+            list.Add(record);
+            
+            await InsertMany(collectionName, list);
+        }
+        
+        public async Task Delete<T>(string collectionName, dynamic id)
         {
-            throw new NotImplementedException();
+            var items = await LoadManyAsync<T>(collectionName);
+            
+            var list = items.ToList();
+            
+            var found = list.Find(x => x.GetCurrentId() == id);
+            if (found == null)
+            {
+                throw new Exception($"Can not find item with id: {id}");
+            }
+            
+            list.Remove(found);
+            
+            await InsertMany(collectionName, list);
         }
     }
 }

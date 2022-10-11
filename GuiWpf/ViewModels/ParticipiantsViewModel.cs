@@ -28,8 +28,6 @@ namespace GuiWpf.ViewModels
         {
             _participantService = participantService;
             _ea = ea;
-
-            Participiants = new(_ea);
             //Participiants = new PCV<Participant>(_participiants, 20);//CollectionViewSource.GetDefaultView(_participiants);
             //Participiants.Filter = ParticipiantsFilter;
             //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
@@ -46,8 +44,8 @@ namespace GuiWpf.ViewModels
 
         #region Collections
         public ObservableCollection<Participant> _participiants = new();
-        
-        public PaginCollectionView<Participant> Participiants { get; set; }
+
+        public PaginCollectionViewModel<Participant> Participiants { get; set; } = new();
 
         public ObservableCollection<string> Years { get; private set; } = new();
         #endregion
@@ -61,7 +59,7 @@ namespace GuiWpf.ViewModels
             {
                 if (SetProperty(ref _selectedParticipant, value))
                 {
-                    if (_selectedParticipant is not null)
+                    if (_selectedParticipant != null)
                     {
                         _ea.GetEvent<GetNotesListEvent>()
                         .Publish(SelectedParticipant.Notes);
@@ -90,6 +88,8 @@ namespace GuiWpf.ViewModels
         #endregion
 
         #region Filtering
+        private const string allYears = "כל השנים";
+
         private string _yearsFilter = allYears;
         public string YearsFilter
         {
@@ -157,6 +157,7 @@ namespace GuiWpf.ViewModels
                {
                    //await MetroProgressOnLoading();
                    await Refresh();
+                   
                    IsInitialized = true;
                },
                () => !IsInitialized || IsLoaded);
@@ -189,8 +190,6 @@ namespace GuiWpf.ViewModels
         #endregion
 
         #region Methods
-        
-        private const string allYears = "כל השנים";
 
         private async Task Refresh()
         {
@@ -201,7 +200,7 @@ namespace GuiWpf.ViewModels
             _participiants.AddRange(parts);
 
             Participiants.Init(_participiants, 10, ParticipiantsFilter);
-            
+
             //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
             //Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
 
@@ -215,10 +214,10 @@ namespace GuiWpf.ViewModels
         private void SubscribeToEvents()
         {
             _ea.GetEvent<CloseDialogEvent>().Subscribe(CloseFormResived);
-            _ea.GetEvent<AddParticipantEvent>().Subscribe(async (part) =>
+            _ea.GetEvent<AddParticipantEvent>().Subscribe( (part) =>
             {
-                _participiants.Add(part);
-                await _participantService.UpserteParticipant(part);
+                Participiants.Add(part);
+                //await _participantService.UpserteParticipant(part);
             });
             _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
             {
@@ -240,7 +239,7 @@ namespace GuiWpf.ViewModels
                 ParticipiantsKind.FromWorld => !participant.IsFromIsrael,
                 ParticipiantsKind.FromIsraelWithoutPair => participant.IsFromIsrael && !participant.MatchTo.Any(),
                 ParticipiantsKind.FromWorldWithoutPair => !participant.IsFromIsrael && !participant.MatchTo.Any(),
-                _ => true,
+                _ => true
             };
 
             year = participant.DateOfRegistered.Year.ToString() == YearsFilter || YearsFilter == allYears;

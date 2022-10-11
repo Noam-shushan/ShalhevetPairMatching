@@ -23,10 +23,13 @@ namespace GuiWpf.ViewModels
         {
             _matchingService = matchingService;
             _ea = ea;
-            _ea.GetEvent<NewMatchEvent>().Subscribe(async ps =>
-            {
-                await Refresh();
-            });
+            
+            _ea.GetEvent<RefreshMatchingEvent>()
+                .Subscribe(async () =>
+                {
+                    IsFullComparisonOpen = false;
+                    await Refresh();
+                });
         }
         
         DelegateCommand _load;
@@ -64,9 +67,10 @@ namespace GuiWpf.ViewModels
         () =>
         {
             _ea.GetEvent<ShowFullComparisonEvent>().Publish((AutoSuggestions
-                .Where(ps => 
-                ps.FromIsrael.Id == SelectedSuggestions.FromIsrael.Id
-                && ps.FromWorld.Id == SelectedSuggestions.FromWorld.Id), SelectedSuggestions.FromIsrael.Id));
+                //.Where(ps => 
+                //ps.FromIsrael.Id == SelectedSuggestions.FromIsrael.Id
+                //&& ps.FromWorld.Id == SelectedSuggestions.FromWorld.Id)
+                , SelectedSuggestions.FromIsrael.Id));
             IsFullComparisonOpen = true;
         });
 

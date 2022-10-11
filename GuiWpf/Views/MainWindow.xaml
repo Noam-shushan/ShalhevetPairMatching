@@ -49,7 +49,7 @@
 
         <TabControl
             materialDesign:ColorZoneAssist.Mode="PrimaryDark"
-            Style="{StaticResource MaterialDesignTabControl}"
+            Style="{StaticResource MahApps.Styles.TabControl.Animated}"
             TabStripPlacement="Top">
             <TabItem Header="משתתפים">
                 <local:ParticipiantsView />

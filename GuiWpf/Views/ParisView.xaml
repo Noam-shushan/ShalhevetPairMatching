@@ -12,6 +12,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:uiModels="clr-namespace:GuiWpf.UIModels"
+    x:Name="me"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -40,40 +42,43 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
                     <controlers:SearchTextBox
                         Grid.Column="0"
-                        SearchCommand="{Binding SearchPairsCommand}"
+                        Margin="0,0,10,0"
                         SearchWord="{Binding SearchPairsWord}" />
 
                     <ComboBox
                         Grid.Column="1"
-                        Margin="0,0,10,0"
+                        Margin="10,0,10,0"
                         materialDesign:HintAssist.Hint="שנה"
+                        ItemsSource="{Binding Years}"
+                        SelectedValue="{Binding YearsFilter}"
                         Style="{StaticResource FilterComboBox}">
-                        <ComboBoxItem Content="כל השנים" />
-                        <ComboBoxItem Content="2021" />
-                        <ComboBoxItem Content="2022" />
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=.}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
 
                     <ComboBox
                         Grid.Column="2"
-                        Margin="0,0,10,0"
+                        Margin="10,0,10,0"
                         materialDesign:HintAssist.Hint="סנן"
-                        Style="{StaticResource FilterComboBox}">
-                        <ComboBoxItem Content="כל החברותות" />
-                        <ComboBoxItem Content="פעילות" />
-                        <ComboBoxItem Content="לא פעילות" />
-                    </ComboBox>
+                        ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type uiModels:PairKind}}}"
+                        SelectedValue="{Binding PairKindFilter, Converter={StaticResource EnumToStringConverter}}"
+                        Style="{StaticResource FilterComboBox}" />
 
                     <ComboBox
                         Grid.Column="3"
+                        Margin="10,0,10,0"
                         materialDesign:HintAssist.Hint="מסלול"
-                        Style="{StaticResource FilterComboBox}">
-                        <ComboBoxItem Content="גמרא" />
-                        <ComboBoxItem Content="תפילה" />
-                    </ComboBox>
+                        ItemsSource="{Binding Tracks}"
+                        SelectedValue="{Binding TrackFilter}"
+                        Style="{StaticResource FilterComboBox}" />
                 </Grid>
             </GroupBox.Header>
             <Grid>
@@ -85,7 +90,10 @@
                     Grid.Row="0"
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
+                    CanUserAddRows="False"
                     ItemsSource="{Binding Path=Pairs.Items}"
+                    RowDetailsVisibilityMode="Collapsed"
+                    ScrollViewer.CanContentScroll="False"
                     SelectedItem="{Binding SelectedPair}">
                     <DataGrid.Resources>
 
@@ -101,13 +109,28 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Header="">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ToggleButton
+                                        Width="23"
+                                        Height="23"
+                                        Cursor="Hand"
+                                        Foreground="{StaticResource MainColor}"
+                                        IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DetailsVisibility, Converter={StaticResource VisbilityToBooleanConverter}, Mode=TwoWay}"
+                                        Style="{StaticResource MaterialDesignExpandCollapseToggleStyle}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
-                                <CheckBox />
+                                <CheckBox Cursor="Hand" IsChecked="{Binding ElementName=me, Path=DataContext.IsAllSelected}" />
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox />
+                                    <CheckBox Cursor="Hand" IsChecked="{Binding IsSelected}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -138,6 +161,14 @@
                                         Style="{StaticResource MaterialDesignOutlinedComboBox}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="תאריך יצירה">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DateOfCreate, StringFormat=dd/MM/yyyy}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn>
@@ -197,16 +228,8 @@
                         </DataTemplate>
                     </DataGrid.RowDetailsTemplate>
                 </DataGrid>
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button
-                        Command="{Binding Pairs.NextPageCommand}"
-                        Content="הבא"
-                        Style="{StaticResource MaterialDesignRaisedButton}" />
-                    <Button
-                        Command="{Binding Pairs.PrevPageCommand}"
-                        Content="הקודם"
-                        Style="{StaticResource MaterialDesignRaisedButton}" />
-                </StackPanel>
+
+                <local:PaginCollectionView Grid.Row="1" DataContext="{Binding Pairs}" />
             </Grid>
         </GroupBox>
 

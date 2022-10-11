@@ -4,14 +4,25 @@ using PairMatching.Models;
 using System.Threading.Tasks;
 using PairMatching.Configurations;
 
-namespace PairMatching.DataAccess.UnitOfWork
+namespace PairMatching.DataAccess.UnitOfWorks
 {
+    public class UnitOfWorkTest : UnitOfWork
+    {
+        public UnitOfWorkTest(MyConfiguration config) : base(config)
+        {
+            //ParticipantsRepositry = new ParticipantsRepositoryTest(config);
+            //PairsRepositry = new PairsRepositoryTest(config);
+        }
+    }
+
+
     public class UnitOfWork : IUnitOfWork
     {
+        #region Colletion Names
         const string studentsCollection = "Students";
-        
+
         const string israelParticipantsCollection = "IsraelParticipants";
-        
+
         const string worldparticipantsCollection = "WorldParticipants";
 
         const string emailsCollection = "Emails";
@@ -19,8 +30,9 @@ namespace PairMatching.DataAccess.UnitOfWork
         const string matchingHistoryCollection = "MatchingHistory";
 
         const string pairsCollection = "Pairs";
-        
-        const string newPairsCollection = "NewPairs";
+
+        const string newPairsCollection = "NewPairs"; 
+        #endregion
 
         public UnitOfWork(MyConfiguration configurations)
         {

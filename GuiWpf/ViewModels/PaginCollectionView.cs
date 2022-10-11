@@ -14,41 +14,8 @@ using PairMatching.Tools;
 
 namespace GuiWpf.ViewModels
 {
-    public class PaginCollectionView<T> : BindableBase where T : class
+    public class PaginCollectionViewModel<T> : BindableBase where T : class
     {
-        private IEventAggregator _ea;
-
-        public PaginCollectionView(IEventAggregator ea)
-        {
-            _ea = ea;
-            _ea.GetEvent<RefreshItemsEvnet>()
-                .Subscribe(needRefreshing =>
-                {
-                    if (needRefreshing)
-                    {
-                        Refresh();
-                    }
-                });
-            FilterdItems.CollectionChanged += FilterdItems_CollectionChanged;
-        }
-
-        private void FilterdItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null && e.OldItems != null)
-            {
-                var inter = (from T i1 in e.NewItems
-                             from T i2 in e.OldItems
-                             where i1.Equals(i2)
-                             group i1 by i1.GetCurrentId() into t
-                             select t.Key)
-                            .Count();
-                if (inter == e.NewItems.Count && inter == e.OldItems.Count)
-                {
-                    CurrentPage = 0;
-                }
-            }
-        }
-
         #region Ptoperties
 
         #region Collections
@@ -92,7 +59,7 @@ namespace GuiWpf.ViewModels
         public List<int> MaxRecordsInPage
         {
             get => _maxRecordsInPage ??= Enumerable
-                .Range(initItemsPerPage, 30)
+                .Range(initItemsPerPage, 80)
                 .Where(x => x % initItemsPerPage == 0)
                 .ToList();
             //   set => SetProperty(ref _maxRecordsInPage, value);
@@ -221,15 +188,15 @@ namespace GuiWpf.ViewModels
             Refresh();
         }
         
-        public void Refresh()
+        public void Refresh(bool add = false)
         {
             var temp = FilterdItems.ToList();
             FilterdItems.Clear();
             var filter = Filter is null ? _ => true : Filter;
             FilterdItems.AddRange(ItemsSource.Where(item => filter.Invoke(item)));
             
-            if (!temp.SequenceEqual(FilterdItems))
-            {
+            if (!add && !temp.SequenceEqual(FilterdItems))
+            {   // return to the first page if there is a change by the filter
                 CurrentPage = 0;
             }
 
@@ -242,9 +209,15 @@ namespace GuiWpf.ViewModels
             PageCount = GetPageCount();
         }
 
-        bool PagingFilter(T record)
+        public void Add(T item)
         {
-            var index = FilterdItems.IndexOf(record);
+            ItemsSource.Insert(0, item);
+            Refresh(true);
+        }
+
+        bool PagingFilter(T item)
+        {
+            var index = FilterdItems.IndexOf(item);
             return index < EndIndex && index >= StartIndex;
         }
 
@@ -254,7 +227,5 @@ namespace GuiWpf.ViewModels
                                     0 : (int)Math.Ceiling((double)FilterdItems.Count / ItemsPerPage);
         } 
         #endregion
-
-
     }
 }

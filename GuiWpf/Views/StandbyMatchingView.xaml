@@ -8,6 +8,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    x:Name="me"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -49,7 +50,7 @@
                         <DataTemplate>
                             <Button
                                 Background="Red"
-                                Command="{Binding CancelStandbyPairCommand}"
+                                Command="{Binding ElementName=me, Path=DataContext.CancelStandbyPairCommand}"
                                 Content="בטל" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -58,7 +59,7 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Command="{Binding ActivePairCommand}" Content="הפעל" />
+                            <Button Command="{Binding ElementName=me, Path=DataContext.ActivePairCommand}" Content="הפעל" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

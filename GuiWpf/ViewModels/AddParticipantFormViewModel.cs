@@ -25,6 +25,7 @@ namespace GuiWpf.ViewModels
             CountryUtcs = _participantService.GetCountryUtcs();
         }
 
+        #region Properties
         private bool _isEdit;
         public bool IsEdit
         {
@@ -144,14 +145,15 @@ namespace GuiWpf.ViewModels
         {
             get => _isFromIsrael;
             set => SetProperty(ref _isFromIsrael, value);
-        }
+        } 
+        #endregion
 
         DelegateCommand _addCommand;
         public DelegateCommand AddCommand => _addCommand ??= new(
         () =>
         {
-            Participant newPart;
-            var pref = new Preferences
+            Participant newParticipant;
+            var preferences = new Preferences
             {
                 Tracks = new[] { PrefferdTrack },
                 Gender = PrefferdGender,
@@ -160,7 +162,7 @@ namespace GuiWpf.ViewModels
             };
             if(IsFromIsrael)
             {
-                newPart = new IsraelParticipant
+                newParticipant = new IsraelParticipant
                 {
                     Country = "Israel",
                     DateOfRegistered = DateTime.Now,
@@ -170,14 +172,14 @@ namespace GuiWpf.ViewModels
                     IsInArchive = false,
                     Name = Name,
                     PhoneNumber = PhoneNumber,
-                    PairPreferences = pref,
+                    PairPreferences = preferences,
                     DesiredSkillLevel = DesiredSkillLevel,
                     EnglishLevel = EnglishLevel,  
                 };
             }
             else
             {
-                newPart = new WorldParticipant
+                newParticipant = new WorldParticipant
                 {
                     DateOfRegistered = DateTime.Now,
                     Email = Email,
@@ -189,11 +191,11 @@ namespace GuiWpf.ViewModels
                     IsInArchive = false,
                     Name = Name,
                     PhoneNumber = PhoneNumber,
-                    PairPreferences = pref,
+                    PairPreferences = preferences,
                     DesiredEnglishLevel = DesiredEnglishLevel
                 };
             }
-            _ea.GetEvent<AddParticipantEvent>().Publish(newPart);
+            _ea.GetEvent<AddParticipantEvent>().Publish(newParticipant);
             Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
         });
