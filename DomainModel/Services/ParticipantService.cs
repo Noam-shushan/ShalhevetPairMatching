@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson;
+using Newtonsoft.Json;
 using PairMatching.Configurations;
 using PairMatching.DataAccess.UnitOfWorks;
 using PairMatching.DomainModel.DataAccessFactory;
@@ -8,6 +9,7 @@ using PairMatching.Tools;
 using PairMatching.WixApi;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,11 +21,15 @@ namespace PairMatching.DomainModel.Services
 
         readonly WixDataReader _wix;
 
+        readonly string _configId;
+
         public ParticipantService(IDataAccessFactory dataAccessFactory, MyConfiguration configuration)
         {
             _unitOfWork = dataAccessFactory.GetDataAccess();
 
             _wix = new WixDataReader(configuration);
+
+            _configId = configuration.ConfigIdInMongo;
         }
 
         public async Task<IEnumerable<Participant>> GetAll()
@@ -31,7 +37,7 @@ namespace PairMatching.DomainModel.Services
             var result = new List<Participant>();
             var tasks = new List<Task>();
 
-            //await SetNewParticipints();
+            //await SetNewParticipintsFromWix();
 
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();
@@ -64,12 +70,10 @@ namespace PairMatching.DomainModel.Services
                 .GetAllAsync(ip => !ip.IsDeleted);
         }
 
-        public async Task SetNewParticipints()
+        public async Task SetNewParticipintsFromWix()
         {
-            var configColl = await _unitOfWork.ConfigRepositry
-                                    .GetMaxIndexOfWixData();
-
-            var config = configColl.FirstOrDefault();
+            var config = await _unitOfWork.ConfigRepositry
+            .GetDbConfig(_configId);
 
             var max = config?.WixIndex;
             int temp = max ?? WixDataReader.MinIndex;
@@ -79,17 +83,27 @@ namespace PairMatching.DomainModel.Services
 
             if (partsDtos.Any())
             {
-                var list = partsDtos
-                    .Select(p => p.ToParticipant())
-                    .ToLookup(p => p.IsFromIsrael);
+                var list = partsDtos.ToLookup(p => p is IsraelParticipantWixDto);
+                
+                var ips = list[true]
+                        .Select(p => (p as IsraelParticipantWixDto).ToIsraelParticipant());
+
+                var wps = list[false]
+                        .Select(p => (p as WorldParticipantWixDto).ToWorldParticipant());
+
+                var countryUts = GetCountryUtcs()
+                    .ToDictionary(c => c.Country, c => c.UtcOffset);
+
+                foreach (var wp in wps)
+                {
+                    wp.UtcOffset = countryUts[wp.Country];
+                }
 
                 await _unitOfWork.IsraelParticipantsRepositry
-                    .InsertMany(list[true]
-                        .Select(p => p as IsraelParticipant));
+                    .InsertMany(ips);
 
                 await _unitOfWork.WorldParticipantsRepositry
-                        .InsertMany(list[false]
-                            .Select(p => p as WorldParticipant));
+                        .InsertMany(wps);
 
                 config.WixIndex = partsDtos.Max(p => p.index);
                 await _unitOfWork.ConfigRepositry.UpdateDbConfig(config);
@@ -134,31 +148,26 @@ namespace PairMatching.DomainModel.Services
             return wixId;
         }
 
-        public async Task<IEnumerable<Participant>> GetParticipantsWix()
-        {
-            var parts = await _wix.GetNewParticipants();
-            var list = parts.Select(p => p.ToParticipant());
-            return list;
-        }
 
+        IEnumerable<CountryUtc> _countryUtcs;
         public IEnumerable<CountryUtc> GetCountryUtcs()
         {
-            var jsonString = HelperFunction.ReadJson(@"Resources\Countries.json");
-            var result = JsonConvert.DeserializeObject<IEnumerable<CountryUtc>>(jsonString);
-            foreach (var country in result)
+            if(_countryUtcs is null)
             {
-                country.UtcOffset = country.UtcTimeOffset.ToTimeSpan();
+                _countryUtcs = Init();
             }
-            return result;
+            return _countryUtcs;
+
+            static IEnumerable<CountryUtc> Init()
+            {
+                var jsonString = HelperFunction.ReadJson(@"Resources\Countries.json");
+                var result = JsonConvert.DeserializeObject<IEnumerable<CountryUtc>>(jsonString);
+                foreach (var country in result)
+                {
+                    country.UtcOffset = country.UtcTimeOffset.ToTimeSpan();
+                }
+                return result;
+            }
         }
-    }
-
-    public class CountryUtc
-    {
-        public string Country { get; set; }
-
-        public string UtcTimeOffset { get; set; }
-
-        public TimeSpan UtcOffset { get; set; }
     }
 }

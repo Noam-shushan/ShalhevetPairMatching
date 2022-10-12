@@ -11,5 +11,6 @@ namespace PairMatching.DomainModel.Services
     {
         Task<IEnumerable<EmailModel>> GetEmails();
         Task SendEmail(EmailModel email);
+        Task VerifieyEmails();
     }
 }

@@ -17,5 +17,7 @@ namespace PairMatching.Configurations
         public Dictionary<string, string> WixApi { get; set; }
 
         public Dictionary<string, string> Mailerlite { get; set; }
+
+        public string ConfigIdInMongo { get; set; }
     }
 }

@@ -16,10 +16,6 @@ namespace PairMatching.DomainModel.Services
         Task<IEnumerable<WorldParticipant>> GetAllFromWorld();
         
         IEnumerable<CountryUtc> GetCountryUtcs();
-
-        Task<IEnumerable<Participant>> GetParticipantsWix();
-        
-        Task SetNewParticipints();
         
         Task<Participant> UpserteParticipant(Participant participant);
     }

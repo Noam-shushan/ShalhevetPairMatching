@@ -28,22 +28,17 @@ namespace GuiWpf.ViewModels
         {
             _participantService = participantService;
             _ea = ea;
-            //Participiants = new PCV<Participant>(_participiants, 20);//CollectionViewSource.GetDefaultView(_participiants);
-            //Participiants.Filter = ParticipiantsFilter;
+
             //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
             //Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
 
             SubscribeToEvents();
-
-            //Participiants = new(_participiants, 10, ParticipiantsFilter);
             _dialog = dialog;
         }
         
-
         #region Properties:
 
         #region Collections
-        public ObservableCollection<Participant> _participiants = new();
 
         public PaginCollectionViewModel<Participant> Participiants { get; set; } = new();
 
@@ -196,10 +191,8 @@ namespace GuiWpf.ViewModels
             IsLoaded = true;
 
             var parts = await _participantService.GetAll();
-            _participiants.Clear();
-            _participiants.AddRange(parts);
 
-            Participiants.Init(_participiants, 10, ParticipiantsFilter);
+            Participiants.Init(parts, 10, ParticipiantsFilter);
 
             //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
             //Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));

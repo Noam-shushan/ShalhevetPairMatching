@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using PairMatching.Tools;
 using PairMatching.Models;
 using System.Net.Http.Json;
+using System.IO;
 
 namespace PairMatching.WixApi
 {
@@ -60,13 +61,17 @@ namespace PairMatching.WixApi
             return null;
         }
 
-        public async Task<IEnumerable<EmailAddress>> SendEmail(dynamic email)
+        public async Task<string> SendEmail(dynamic email)
         {
             var query = _configuration.WixApi["sendEmails"];
 
-            var howGetTheEmail = await _http.PostAsync(query, email);
+            var jsonContent = await _http.PostAsync(query, email);
 
-            return null;
+            var parsedObject = JObject.Parse(jsonContent);
+
+            var id = parsedObject["inserted"]["_id"];
+
+            return id?.ToString();
         }
 
         public async Task<ParticipantWixDto> GetOneParticipant(int index)
@@ -116,5 +121,16 @@ namespace PairMatching.WixApi
             return id?.ToString();
         }
 
+        public async Task<IEnumerable<EmailRecipientsWixDto>> VerifieyEmail(string emailId)
+        {
+            var query = _configuration.WixApi["verifieyEmail"]
+                .Replace("{Email Id}", emailId);
+
+            var content = await _http.GetAsync(query);
+
+            var data = JsonConvert.DeserializeObject<IEnumerable<EmailRecipientsWixDto>>(content);
+
+            return data;
+        }
     }
 }

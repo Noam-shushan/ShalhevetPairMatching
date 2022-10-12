@@ -34,14 +34,14 @@ namespace PairMatching.DataAccess.Repositories
             return _dataAccess.InsertOne(countersAndSpredsheetLastRange, spredsheetLastRange);
         }
 
-        public Task<IEnumerable<DbConfig>> GetMaxIndexOfWixData()
+        public Task<DbConfig> GetDbConfig(string id)
         {
-            return _dataAccess.LoadManyAsync<DbConfig>(configTableName);
+            return _dataAccess.LoadOneAsync<DbConfig>(configTableName, id);
         }
 
         public Task UpdateDbConfig(DbConfig dbConfig)
         {
-            return _dataAccess.InsertOne(configTableName, dbConfig);
+            return _dataAccess.UpdateOne(configTableName, dbConfig, dbConfig.Id);
         }
     }
 }
