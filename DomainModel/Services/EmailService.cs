@@ -27,29 +27,55 @@ namespace PairMatching.DomainModel.Services
         {
             var emails = await _unitOfWork
                 .EmailRepositry
-                .GetAllAsync();
+                .GetAllAsync(e => e.IsVerified);
+            
             return emails;
         }
 
-        public async Task SendEmail(EmailModel email)
+        public async Task SendEmail(EmailModel emailModel)
         {
-            var sendTo = await _wix.SendEmail(email);
-            if(!sendTo.Any())
+            var email = new
             {
-                return;
-            }
-            email.SendTo = sendTo;
+                to = emailModel.To.Select(e => e.ParticipantWixId),
+                subject = emailModel.Subject,
+                body = emailModel.Body,
+                htmlBody = emailModel.HtmlBody,
+                hasHtmlBody = emailModel.HasHtmlBody,
+                link = emailModel.Links,
+                language = emailModel.Language
+            };
+
+            var emailWixId = await _wix.SendEmail(email);
+
+            emailModel.WixId = emailWixId;
+            
             await _unitOfWork
                 .EmailRepositry
-                .Insert(email);           
+                .Insert(emailModel);           
         }
 
-        public async Task<IEnumerable<NotValidAddress>> GetNotValidAddress()
+        public async Task VerifieyEmails()
         {
             var emails = await _unitOfWork
                 .EmailRepositry
-                .GetAllAsync();
-            return null;
+                .GetAllAsync(e => !e.IsVerified);
+
+            var tasks = new List<Task>();
+
+            foreach (var email in emails)
+            {
+                var emailRecipents = await _wix.VerifieyEmail(email.WixId);
+                if(emailRecipents.Any())
+                {
+                    email.SendTo = from e in emailRecipents
+                                   where e.IsSent
+                                   select e.WixId;
+                    email.IsVerified = true;
+                    tasks.Add(_unitOfWork.EmailRepositry.Update(email));
+                }
+            }
+
+            await Task.WhenAll(tasks);
         }
     }
 

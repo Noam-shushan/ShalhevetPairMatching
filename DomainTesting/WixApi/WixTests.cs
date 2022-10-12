@@ -40,6 +40,13 @@ namespace DomainTesting.WixApi
         }
 
         [Test]
+        public async Task GetAll()
+        {
+            var parts = await _wix.GetNewParticipants(122);
+            
+        }
+
+        [Test]
         public async Task NewPairToWixTest()
         {
             var parts = await _wix.GetNewParticipants();
@@ -49,17 +56,36 @@ namespace DomainTesting.WixApi
             
             var a = orderd.FirstOrDefault();
             var b = orderd.FirstOrDefault(p => p.index == max - 1);
+
+            await _wix.NewPair(new NewPairWixDto
+            {
+                chevrutaIdFirst = a.contactId,
+                chevrutaIdSecond = b.contactId,
+                date = DateTime.Now,
+                trackId = "df6ce1e8-1839-4749-bd4f-495295d75657"
+            });
         }
 
         [Test]
         public async Task SendEmailFromWix()
         {
+            var parts = await _wix.GetNewParticipants();
+
+            var max = parts.Max(p => p.index);
+            var orderd = parts.OrderByDescending(p => p.index);
+
+            var a = orderd.FirstOrDefault();
+            var b = orderd.FirstOrDefault(p => p.index == max - 1);
+
             var email = new
             {
-                to = new string[] { "494c66f2-7329-4b1d-aebf-3afac3662148", "bc55f01b-c32d-487c-bde8-0fe84992c394" },
-                subject = "Subject",
-                body = "Body",
-                link = ""
+                to = new string[] { a.contactId, b.contactId },
+                subject = "נושא",
+                body = "תוכן",
+                htmlBody = "",
+                hasHtmlBody = false,
+                link = "https://www.ynet.co.il/PicServer4/2016/10/27/7346289/734627233624799801423yes2130.jpg",
+                language = "he"
             };
             await _wix.SendEmail(email);
         }
@@ -85,21 +111,32 @@ namespace DomainTesting.WixApi
         public async Task SetWixIdForIsraelParticipaints()
         {
             var ips = await _db.IsraelParticipantsRepositry
-                .GetAllAsync(p => string.IsNullOrEmpty(p.WixId));
+                .GetAllAsync(p => string.IsNullOrEmpty(p.WixId) && p.Email != "אין" && p.Email != "@" && p.Email != "");
 
+            var tasks = new List<Task>();
+            
             int partsCount = ips.Count();
             int idCount = 0;
             foreach (var ip in ips)
             {
-                var id = await GetWixId(ip);
+                dynamic id = "";
+                try
+                {
+                    id = await GetWixId(ip);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
                 if (id is string i)
                 {
                     idCount++;
                     ip.WixId = i;
-                    await _db.IsraelParticipantsRepositry
-                    .Update(ip);
+                    tasks.Add(_db.IsraelParticipantsRepositry
+                    .Update(ip));
                 }
             }
+            await Task.WhenAll(tasks);
             Assert.AreEqual(idCount, partsCount);
         }
 
@@ -109,19 +146,30 @@ namespace DomainTesting.WixApi
             var wps = await _db.WorldParticipantsRepositry
                 .GetAllAsync(p => string.IsNullOrEmpty(p.WixId));
 
+            var tasks = new List<Task>();
+
             int partsCount = wps.Count();
             int idCount = 0;
             foreach (var wp in wps)
             {
-                var id = await GetWixId(wp);
-                if(id is string i)
+                dynamic id = "";
+                try
+                {
+                    id = await GetWixId(wp);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+                if (id is string i)
                 {
                     idCount++;
                     wp.WixId = i;
-                    await _db.WorldParticipantsRepositry
-                    .Update(wp);
+                    tasks.Add(_db.WorldParticipantsRepositry
+                    .Update(wp));
                 }
             }
+            await Task.WhenAll(tasks);
             Assert.AreEqual(idCount, partsCount);
         }
 

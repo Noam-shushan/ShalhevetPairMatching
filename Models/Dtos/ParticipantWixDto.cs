@@ -45,43 +45,44 @@ namespace PairMatching.Models.Dtos
         public string specifyLang { get; set; }
         public string tel { get; set; }
         public string moreThanOneChevruta { get; set; }
+        public string contactId { get; set; }
 
-        public virtual Participant ToParticipant()
-        {
-            var result = new Participant
-            {
-                Name = fullName,
-                WixId = _id,
-                DateOfRegistered = _createdDate,
-                Email = email,
-                WixIndex = index,
-                PhoneNumber = tel,
-                OtherLanguages = otherLan,
-                MoreLanguages = GetValueFromDescription<MoreLanguages>(otherLang),
-                Gender = GetValueFromDescription<Genders>(gender),
-                PairPreferences = new Preferences
-                {
-                    Gender = GetValueFromDescription<Genders>(menOrWomen),
-                    LearningStyle = GetValueFromDescription<LearningStyles>(learningStyle),
-                    NumberOfMatchs = int.Parse(moreThanOneChevruta),
-                    LearningTime = from day in Enum.GetValues(typeof(Days))
-                                   .Cast<Days>()
-                                   .Zip(new[] { sunday, monday, tuseday, wednesday, thurseday, })
-                                   where day.Second.Any()
-                                   select new LearningTime
-                                   {
-                                       Day = day.First,
-                                       TimeInDay = day.Second.Select(t => GetValueFromDescription<TimesInDay>(t))
-                                   }
-                }
-            };
-            if(result.OtherLanguages.Contains("Other") && !string.IsNullOrEmpty(specifyLang))
-            {
-                result.OtherLanguages.Remove("Other");
-                result.OtherLanguages.Add(specifyLang);
-            }
-            return result; 
-        }
+        //public virtual Participant ToParticipant()
+        //{
+        //    var result = new Participant
+        //    {
+        //        Name = fullName,
+        //        WixId = contactId,
+        //        DateOfRegistered = _createdDate,
+        //        Email = email,
+        //        WixIndex = index,
+        //        PhoneNumber = tel,
+        //        OtherLanguages = otherLan,
+        //        MoreLanguages = GetValueFromDescription<MoreLanguages>(otherLang),
+        //        Gender = GetValueFromDescription<Genders>(gender),
+        //        PairPreferences = new Preferences
+        //        {
+        //            Gender = GetValueFromDescription<Genders>(menOrWomen),
+        //            LearningStyle = GetValueFromDescription<LearningStyles>(learningStyle),
+        //            NumberOfMatchs = int.Parse(moreThanOneChevruta),
+        //            LearningTime = from day in Enum.GetValues(typeof(Days))
+        //                           .Cast<Days>()
+        //                           .Zip(new[] { sunday, monday, tuseday, wednesday, thurseday, })
+        //                           where day.Second.Any()
+        //                           select new LearningTime
+        //                           {
+        //                               Day = day.First,
+        //                               TimeInDay = day.Second.Select(t => GetValueFromDescription<TimesInDay>(t))
+        //                           }
+        //        }
+        //    };
+        //    if(result.OtherLanguages.Contains("Other") && !string.IsNullOrEmpty(specifyLang))
+        //    {
+        //        result.OtherLanguages.Remove("Other");
+        //        result.OtherLanguages.Add(specifyLang);
+        //    }
+        //    return result; 
+        //}
     }
 
     public class IsraelParticipantWixDto : ParticipantWixDto
@@ -92,24 +93,24 @@ namespace PairMatching.Models.Dtos
         public List<string> preferredTrack { get; set; }
         public string chevrotaSkills { get; set; }
 
-        public override Participant ToParticipant()
-        {
-            var part = base.ToParticipant()
-                .CopyPropertiesToNew(typeof(IsraelParticipant)) as IsraelParticipant;
-            part.OpenQuestions = new OpenQuestionsForIsrael
-            {
-                AdditionalInfo = additionalInfo,
-                BiographHeb = biographHeb,
-                PersonalTraits = personalTraits,
-                WhoIntroduced = whoIntroduced,
-                WhyJoinShalhevet = whyJoinShalhevet
-            };
-            part.Country = "Israel";
-            part.EnglishLevel = GetValueFromDescription<EnglishLevels>(levOfEn);
-            part.PairPreferences.Tracks = preferredTrack.Select(t => GetValueFromDescription<PrefferdTracks>(t));
-            part.DesiredSkillLevel = GetValueFromDescription<SkillLevels>(chevrotaSkills);
-            return part;
-        }
+        //public override Participant ToParticipant()
+        //{
+        //    var part = base.ToParticipant()
+        //        .CopyPropertiesToNew(typeof(IsraelParticipant)) as IsraelParticipant;
+        //    part.OpenQuestions = new OpenQuestionsForIsrael
+        //    {
+        //        AdditionalInfo = additionalInfo,
+        //        BiographHeb = biographHeb,
+        //        PersonalTraits = personalTraits,
+        //        WhoIntroduced = whoIntroduced,
+        //        WhyJoinShalhevet = whyJoinShalhevet
+        //    };
+        //    part.Country = "Israel";
+        //    part.EnglishLevel = GetValueFromDescription<EnglishLevels>(levOfEn);
+        //    part.PairPreferences.Tracks = preferredTrack.Select(t => GetValueFromDescription<PrefferdTracks>(t));
+        //    part.DesiredSkillLevel = GetValueFromDescription<SkillLevels>(chevrotaSkills);
+        //    return part;
+        //}
     }
 
     public class WorldParticipantWixDto : ParticipantWixDto
@@ -135,44 +136,43 @@ namespace PairMatching.Models.Dtos
 
         public int timeOffset { get; set; }
 
-        public override Participant ToParticipant()
-        {
-            var part =  base.ToParticipant()
-                .CopyPropertiesToNew(typeof(WorldParticipant)) as WorldParticipant;
-            part.Address = new Address
-            {
-                City = city,
-                State = state,
-            };
-            part.Age = age;
-            part.OpenQuestions = new OpenQuestionsForWorld
-            {
-                AdditionalInfo = additionalInfo,
-                AnythingElse = anythingElse,
-                ConversionRabi = conversionRabi,
-                HopesExpectations = hopesExpectations,
-                WhoIntroduced = whoIntroduced,
-                RequestsFromPair = requests,
-                PersonalBackground = background,
-                Experience = experience
-            };
-            if (part.OpenQuestions.HopesExpectations.Contains("Other") 
-                && !string.IsNullOrEmpty(otherHopesAndExpectations))
-            {
-                part.OpenQuestions.HopesExpectations.Remove("Other");
-                part.OpenQuestions.HopesExpectations.Add(otherHopesAndExpectations);
-            }
-            part.Profession = profession;
-            part.JewishAndComAff = jewishAndComAff == "Other" ? otherJewishAndComAff : jewishAndComAff;
-            part.DesiredEnglishLevel = GetValueFromDescription<EnglishLevels>(levOfEn);
-            part.SkillLevel = GetValueFromDescription<SkillLevels>(learningSkill);
-            part.Country = utc;
-            part.UtcOffset = TimeSpan.FromHours(timeOffset);
-            part.JewishAffiliation = jewishAffiliation;
-            part.PairPreferences.Tracks = prefTra.Select(t => GetValueFromDescription<PrefferdTracks>(t));
+        //public override Participant ToParticipant()
+        //{
+        //    var part =  base.ToParticipant()
+        //        .CopyPropertiesToNew(typeof(WorldParticipant)) as WorldParticipant;
+        //    part.Address = new Address
+        //    {
+        //        City = city,
+        //        State = state,
+        //    };
+        //    part.Age = age;
+        //    part.OpenQuestions = new OpenQuestionsForWorld
+        //    {
+        //        AdditionalInfo = additionalInfo,
+        //        AnythingElse = anythingElse,
+        //        ConversionRabi = conversionRabi,
+        //        HopesExpectations = hopesExpectations,
+        //        WhoIntroduced = whoIntroduced,
+        //        RequestsFromPair = requests,
+        //        PersonalBackground = background,
+        //        Experience = experience
+        //    };
+        //    if (part.OpenQuestions.HopesExpectations.Contains("Other") 
+        //        && !string.IsNullOrEmpty(otherHopesAndExpectations))
+        //    {
+        //        part.OpenQuestions.HopesExpectations.Remove("Other");
+        //        part.OpenQuestions.HopesExpectations.Add(otherHopesAndExpectations);
+        //    }
+        //    part.Profession = profession;
+        //    part.JewishAndComAff = jewishAndComAff == "Other" ? otherJewishAndComAff : jewishAndComAff;
+        //    part.DesiredEnglishLevel = GetValueFromDescription<EnglishLevels>(levOfEn);
+        //    part.SkillLevel = GetValueFromDescription<SkillLevels>(learningSkill);
+        //    part.Country = utc;
+        //    part.UtcOffset = TimeSpan.FromHours(timeOffset);
+        //    part.JewishAffiliation = jewishAffiliation;
+        //    part.PairPreferences.Tracks = prefTra.Select(t => GetValueFromDescription<PrefferdTracks>(t));
 
-            return part;
-
-        }
+        //    return part;
+        //}
     }
 }

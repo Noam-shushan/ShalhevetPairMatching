@@ -59,7 +59,7 @@ namespace PairMatching.Models
 
     public enum PrefferdTracks
     {
-        [EnumDescription("תניא", "Chassidic Thought", "df6ce1e8-1839-4749-bd4f-495295d75657")]
+        [EnumDescription("חסידות", "Chassidic Thought", "df6ce1e8-1839-4749-bd4f-495295d75657")]
         //[EnumDescription(DescriptionId = "e9a52d6e-5510-4259-a157-c661e9ff95e9", HebDescription = "חסידות", EngDescriptions = { "Chassidic Thought"})]
         Tanya,
         

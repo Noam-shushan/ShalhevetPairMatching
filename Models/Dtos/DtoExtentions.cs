@@ -1,9 +1,12 @@
-﻿using PairMatching.Tools;
+﻿using Newtonsoft.Json;
+using PairMatching.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static PairMatching.Tools.Extensions;
 
 namespace PairMatching.Models.Dtos
 {
@@ -129,6 +132,107 @@ namespace PairMatching.Models.Dtos
                     from t in l.TimeInDay
                     select t.GetDescriptionFromEnumValue(engOrHeb))
                    .ToList();
+        }
+        
+        public static Participant ToParticipant(this ParticipantWixDto wixDto)
+        {
+            var result = new Participant
+            {
+                Name = wixDto.fullName,
+                WixId = wixDto.contactId,
+                DateOfRegistered = wixDto._createdDate,
+                Email = wixDto.email,
+                WixIndex = wixDto.index,
+                PhoneNumber = wixDto.tel,
+                OtherLanguages = wixDto.otherLan,
+                MoreLanguages = GetValueFromDescription<MoreLanguages>(wixDto.otherLang),
+                Gender = GetValueFromDescription<Genders>(wixDto.gender),
+                PairPreferences = new Preferences
+                {
+                    Gender = GetValueFromDescription<Genders>(wixDto.menOrWomen),
+                    LearningStyle = GetValueFromDescription<LearningStyles>(wixDto.learningStyle),
+                    NumberOfMatchs = int.Parse(wixDto.moreThanOneChevruta),
+                    LearningTime = from day in Enum.GetValues(typeof(Days))
+                                   .Cast<Days>()
+                                   .Zip(new[] { wixDto.sunday, wixDto.monday, wixDto.tuseday, wixDto.wednesday, wixDto.thurseday, })
+                                   where day.Second.Any()
+                                   select new LearningTime
+                                   {
+                                       Day = day.First,
+                                       TimeInDay = day.Second.Select(t => GetValueFromDescription<TimesInDay>(t))
+                                   }
+                }
+            };
+            if (result.OtherLanguages.Contains("Other") && !string.IsNullOrEmpty(wixDto.specifyLang))
+            {
+                result.OtherLanguages.Remove("Other");
+                result.OtherLanguages.Add(wixDto.specifyLang);
+            }
+            return result;
+        }
+
+        public static IsraelParticipant ToIsraelParticipant(this IsraelParticipantWixDto wixDto)
+        {
+            var part = wixDto.ToParticipant()
+                .CopyPropertiesToNew(typeof(IsraelParticipant)) as IsraelParticipant;
+            
+            part.OpenQuestions = new OpenQuestionsForIsrael
+            {
+                AdditionalInfo = wixDto.additionalInfo,
+                BiographHeb = wixDto.biographHeb,
+                PersonalTraits = wixDto.personalTraits,
+                WhoIntroduced = wixDto.whoIntroduced,
+                WhyJoinShalhevet = wixDto.whyJoinShalhevet
+            };
+            
+            part.Country = "Israel";
+            part.EnglishLevel = GetValueFromDescription<EnglishLevels>(wixDto.levOfEn);
+            part.PairPreferences.Tracks = wixDto.preferredTrack.Select(t => GetValueFromDescription<PrefferdTracks>(t));
+            part.DesiredSkillLevel = GetValueFromDescription<SkillLevels>(wixDto.chevrotaSkills);
+            
+            return part;
+        }
+
+        public static WorldParticipant ToWorldParticipant(this WorldParticipantWixDto wixDto)
+        {
+            var part = wixDto.ToParticipant()
+                .CopyPropertiesToNew(typeof(WorldParticipant)) as WorldParticipant;
+            
+            part.Address = new Address
+            {
+                City = wixDto.city,
+                State = wixDto.state,
+            };
+            
+            part.OpenQuestions = new OpenQuestionsForWorld
+            {
+                AdditionalInfo = wixDto.additionalInfo,
+                AnythingElse = wixDto.anythingElse,
+                ConversionRabi = wixDto.conversionRabi,
+                HopesExpectations = wixDto.hopesExpectations,
+                WhoIntroduced = wixDto.whoIntroduced,
+                RequestsFromPair = wixDto.requests,
+                PersonalBackground = wixDto.background,
+                Experience = wixDto.experience
+            };
+            if (part.OpenQuestions.HopesExpectations.Contains("Other")
+                && !string.IsNullOrEmpty(wixDto.otherHopesAndExpectations))
+            {
+                part.OpenQuestions.HopesExpectations.Remove("Other");
+                part.OpenQuestions.HopesExpectations.Add(wixDto.otherHopesAndExpectations);
+            }
+
+            part.Age = wixDto.age;
+            part.Profession = wixDto.profession;
+            part.JewishAndComAff = wixDto.jewishAndComAff == "Other" ? wixDto.otherJewishAndComAff : wixDto.jewishAndComAff;
+            part.DesiredEnglishLevel = GetValueFromDescription<EnglishLevels>(wixDto.levOfEn);
+            part.SkillLevel = GetValueFromDescription<SkillLevels>(wixDto.learningSkill);
+            part.Country = wixDto.utc;
+            part.UtcOffset = TimeSpan.FromHours(wixDto.timeOffset);
+            part.JewishAffiliation = wixDto.jewishAffiliation;
+            part.PairPreferences.Tracks = wixDto.prefTra.Select(t => GetValueFromDescription<PrefferdTracks>(t));
+
+            return part;
         }
     }
 }
