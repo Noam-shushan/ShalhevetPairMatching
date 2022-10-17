@@ -7,6 +7,7 @@
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modelPopup="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -76,5 +77,19 @@
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
+
+        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsFullComparisonOpen}">
+            <DockPanel Margin="10">
+                <Button
+                    HorizontalAlignment="Left"
+                    Command="{Binding CloseFullComparisonCommand}"
+                    DockPanel.Dock="Top"
+                    Style="{StaticResource MaterialDesignIconButton}">
+                    <materialDesign:PackIcon Kind="Close" />
+                </Button>
+                <local:FullPairMatchingComparisonView />
+            </DockPanel>
+
+        </modelPopup:Modal>
     </Grid>
 </mah:MetroWindow>

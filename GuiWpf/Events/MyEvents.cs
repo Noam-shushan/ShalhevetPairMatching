@@ -43,6 +43,8 @@ namespace GuiWpf.Events
 
     public class RefreshItemsEvnet : PubSubEvent<bool> { }
 
+    public class NewEmailSendEvent : PubSubEvent<EmailModel> { }
+
     public enum ModelType
     {
         Participant,

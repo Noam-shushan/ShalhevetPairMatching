@@ -89,7 +89,6 @@
                     Grid.Row="2"
                     FieldName="אימייל"
                     Value="{Binding StageSuggestion.FromIsrael.Email}" />
-                <controlers:Field Grid.Row="3" FieldName="מספר הצעות מתאימות" />
 
                 <GroupBox
                     Grid.Row="4"
@@ -122,7 +121,6 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock
@@ -155,8 +153,11 @@
                     FieldName="סגנון לימוד"
                     Value="{Binding StageSuggestion.IsLearningStyleMatch}" />
 
-
-                <GroupBox Grid.Row="5" Header="מסלולי לימוד">
+                <GroupBox
+                    Grid.Row="5"
+                    materialDesign:ColorZoneAssist.Mode="PrimaryLight"
+                    Header="מסלולי לימוד"
+                    Style="{StaticResource MaterialDesignGroupBox}">
                     <ScrollViewer
                         mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -179,7 +180,24 @@
                     Margin="5"
                     materialDesign:ColorZoneAssist.Mode="PrimaryLight">
                     <GroupBox.Header>
-                        <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="שעות מקבילות" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="שעות מקבילות" />
+
+                            <materialDesign:Card
+                                Grid.Column="1"
+                                Margin="30,0,0,0"
+                                Padding="2"
+                                HorizontalAlignment="Right">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="הפרש זמן מישראל : " />
+                                    <TextBlock FlowDirection="LeftToRight" Text="{Binding StageSuggestion.FromWorld.DiffFromIsrael.Hours}" />
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </Grid>
                     </GroupBox.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -279,11 +297,6 @@
                         </ListBox>
                     </Grid>
                 </GroupBox>
-
-                <controlers:Field
-                    Grid.Row="7"
-                    FieldName="הפרש זמן מישראל"
-                    Value="{Binding StageSuggestion.FromWorld.DiffFromIsrael.Hours}" />
             </Grid>
 
         </materialDesign:Card>
@@ -299,7 +312,6 @@
             Style="{StaticResource SuggustionChards}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -319,7 +331,6 @@
                     Grid.Row="2"
                     FieldName="ארץ"
                     Value="{Binding StageSuggestion.FromWorld.Country}" />
-                <controlers:Field Grid.Row="3" FieldName="מספר הצעות מתאימות" />
 
                 <GroupBox
                     Grid.Row="4"
@@ -346,7 +357,7 @@
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 Command="{Binding Match}"
-                CommandParameter="{Binding MatchParameter}"
+                CommandParameter="{Binding StageSuggestion}"
                 Content="התאם"
                 FontSize="20"
                 Style="{StaticResource MaterialDesignOutlinedDarkButton}" />

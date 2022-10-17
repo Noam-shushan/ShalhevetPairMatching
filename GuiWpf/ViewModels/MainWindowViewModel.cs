@@ -18,6 +18,13 @@ namespace GuiWpf.ViewModels
         {
             _ea = ea;
             _ea.GetEvent<IsSendEmailEvent>().Subscribe((val) => IsSendEmail = val);
+            _ea.GetEvent<ShowFullComparisonEvent>()
+                .Subscribe(
+                (val) => 
+                {
+                    IsFullComparisonOpen = true;
+                });
+
         }
 
         private bool _isSendEmail;
@@ -26,6 +33,20 @@ namespace GuiWpf.ViewModels
             get => _isSendEmail;
             set => SetProperty(ref _isSendEmail, value);
         }
+
+        private bool _isFullComparisonOpen;
+        public bool IsFullComparisonOpen
+        {
+            get => _isFullComparisonOpen;
+            set => SetProperty(ref _isFullComparisonOpen, value);
+        }
+
+        DelegateCommand _CloseFullComparisonCommand;
+        public DelegateCommand CloseFullComparisonCommand => _CloseFullComparisonCommand ??= new(
+        () =>
+        {
+            IsFullComparisonOpen = false;
+        });
 
 
     }

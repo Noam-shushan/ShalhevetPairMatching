@@ -20,64 +20,51 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <DataGrid
-            Grid.RowSpan="2"
-            AutoGenerateColumns="False"
-            IsReadOnly="True"
-            ItemsSource="{Binding AutoSuggestions}"
-            SelectedItem="{Binding SelectedSuggestions}">
+            <DataGrid
+                Grid.RowSpan="2"
+                AutoGenerateColumns="False"
+                IsReadOnly="True"
+                ItemsSource="{Binding AutoSuggestions}"
+                SelectedItem="{Binding SelectedSuggestions}">
 
-            <DataGrid.InputBindings>
-                <MouseBinding Command="{Binding OpenFullComparisonCommand}" Gesture="LeftDoubleClick" />
-            </DataGrid.InputBindings>
+                <DataGrid.InputBindings>
+                    <MouseBinding Command="{Binding OpenFullComparisonCommand}" Gesture="LeftDoubleClick" />
+                </DataGrid.InputBindings>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding FromIsrael.Name}" Header="משתתף מישראל" />
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding FromIsrael.Name}" Header="משתתף מישראל" />
 
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <materialDesign:PackIcon Kind="ArrowLeftRight" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <materialDesign:PackIcon Kind="ArrowLeftRight" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
-                <DataGridTextColumn Binding="{Binding FromWorld.Name}" Header="משתתף מהתפוצות" />
+                    <DataGridTextColumn Binding="{Binding FromWorld.Name}" Header="משתתף מהתפוצות" />
 
-                <DataGridTextColumn Binding="{Binding MatchingPercent}" Header="אחוז התאמה" />
+                    <DataGridTextColumn Binding="{Binding MatchingPercent}" Header="אחוז התאמה" />
 
-            </DataGrid.Columns>
-        </DataGrid>
+                </DataGrid.Columns>
+            </DataGrid>
 
-        <controlers:Field
-            Grid.Row="0"
-            Grid.Column="1"
-            FieldName="מספר התאמות"
-            Value="{Binding AutoSuggestions.Count}" />
-
-        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsFullComparisonOpen}">
-            <DockPanel>
-                <Button
-                    HorizontalAlignment="Left"
-                    Command="{Binding CloseFullComparisonCommand}"
-                    DockPanel.Dock="Top"
-                    Style="{StaticResource MaterialDesignIconButton}">
-                    <materialDesign:PackIcon Kind="Close" />
-                </Button>
-                <local:FullPairMatchingComparisonView />
-            </DockPanel>
-
-        </modelPopup:Modal>
-
+            <controlers:Field
+                Grid.Row="0"
+                Grid.Column="1"
+                FieldName="מספר התאמות"
+                Value="{Binding AutoSuggestions.Count}" />
+        </Grid>
     </Grid>
 </UserControl>

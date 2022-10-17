@@ -16,6 +16,7 @@ using GuiWpf.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
 using PairMatching.Root;
 using GuiWpf.Commands;
+using DnsClient.Internal;
 
 namespace GuiWpf
 {
@@ -34,11 +35,13 @@ namespace GuiWpf
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+
             containerRegistry.RegisterInstance(_startup.GetConfigurations());
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
 
             containerRegistry.Register<SendEmail>();
             containerRegistry.RegisterSingleton<MatchCommand>();
+            
             containerRegistry.Register<IParticipantService, ParticipantService>();
             containerRegistry.Register<IPairsService, PairService>();
             containerRegistry.Register<IEmailService, EmailService>();

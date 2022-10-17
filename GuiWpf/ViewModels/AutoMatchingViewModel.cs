@@ -10,6 +10,7 @@ using PairMatching.DomainModel.MatchingCalculations;
 using System.Collections.ObjectModel;
 using GuiWpf.Events;
 using Prism.Events;
+using GuiWpf.Commands;
 
 namespace GuiWpf.ViewModels
 {
@@ -27,7 +28,6 @@ namespace GuiWpf.ViewModels
             _ea.GetEvent<RefreshMatchingEvent>()
                 .Subscribe(async () =>
                 {
-                    IsFullComparisonOpen = false;
                     await Refresh();
                 });
         }
@@ -54,7 +54,6 @@ namespace GuiWpf.ViewModels
 
         public ObservableCollection<PairSuggestion> AutoSuggestions { get; } = new();
 
-
         private PairSuggestion _selectedSuggestions;
         public PairSuggestion SelectedSuggestions
         {
@@ -66,26 +65,7 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenFullComparisonCommand => _OpenFullComparisonCommand ??= new(
         () =>
         {
-            _ea.GetEvent<ShowFullComparisonEvent>().Publish((AutoSuggestions
-                //.Where(ps => 
-                //ps.FromIsrael.Id == SelectedSuggestions.FromIsrael.Id
-                //&& ps.FromWorld.Id == SelectedSuggestions.FromWorld.Id)
-                , SelectedSuggestions.FromIsrael.Id));
-            IsFullComparisonOpen = true;
-        });
-
-        private bool _isFullComparisonOpen;
-        public bool IsFullComparisonOpen
-        {
-            get => _isFullComparisonOpen;
-            set => SetProperty(ref _isFullComparisonOpen, value);
-        }
-
-        DelegateCommand _CloseFullComparisonCommand;
-        public DelegateCommand CloseFullComparisonCommand => _CloseFullComparisonCommand ??= new(
-        () =>
-        {
-            IsFullComparisonOpen = false;
+            _ea.GetEvent<ShowFullComparisonEvent>().Publish((AutoSuggestions, SelectedSuggestions.FromIsrael.Id));
         });
     }
 }

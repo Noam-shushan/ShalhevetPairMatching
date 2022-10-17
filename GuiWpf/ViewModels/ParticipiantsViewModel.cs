@@ -164,16 +164,56 @@ namespace GuiWpf.ViewModels
             IsSendEmailOpen = !IsSendEmailOpen;
             if (IsSendEmailOpen)
             {
-                var address = from p in Participiants.Items.OfType<Participant>()
+                var address = from p in Participiants.Items
                               where p.IsSelected
                               select new EmailAddress
                               {
                                   Address = p.Email,
-                                  Name = p.Name
+                                  Name = p.Name,
+                                  ParticipantId = p.Id,
+                                  ParticipantWixId = p.WixId
                               };
                 _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
                 .Publish(address);
             }
+        });
+
+        DelegateCommand _sendEmailToOneCommand;
+        public DelegateCommand SendEmailToOneCommand => _sendEmailToOneCommand ??= new(
+        () =>
+        {
+            IsSendEmailOpen = !IsSendEmailOpen;
+            if (IsSendEmailOpen)
+            {
+                var address = new EmailAddress[]
+                {
+                    new EmailAddress
+                    {
+                        Address = SelectedParticipant.Email,
+                        Name = SelectedParticipant.Name,
+                        ParticipantId = SelectedParticipant.Id,
+                        ParticipantWixId = SelectedParticipant.WixId
+                    }
+                };
+                _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
+                .Publish(address);
+            }
+        });
+
+
+        DelegateCommand _SendToArchivCommand;
+        public DelegateCommand SendToArchivCommand => _SendToArchivCommand ??= new(
+        async () =>
+        {
+            await _participantService.SendToArcive(SelectedParticipant);
+        });
+
+
+        DelegateCommand _DeleteCommand;
+        public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
+        async () =>
+        {
+            await _participantService.DeleteParticipaint(SelectedParticipant);
         });
 
         DelegateCommand _addParticipantCommand;

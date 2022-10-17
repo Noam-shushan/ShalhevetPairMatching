@@ -133,11 +133,6 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _selectedTrack, value);
         }
 
-        public (PairSuggestion, PrefferdTracks) MatchParameter
-        {
-            get => (SelectedSuggestion?.Original, SelectedTrack);
-        }
-
         public PaginCollectionViewModel<ParticipaintWithSuggestions> Participants { get; set; } = new();
 
         private ParticipaintWithSuggestions _selectedParticipaint;
@@ -164,17 +159,10 @@ namespace GuiWpf.ViewModels
                        select ps;
             _ea.GetEvent<ShowFullComparisonEvent>()
             .Publish((list, SelectedSuggestion.Id));
-            IsFullComparisonOpen = true;
         });
 
-
-        DelegateCommand _CloseFullComparisonCommand;
-        public DelegateCommand CloseFullComparisonCommand => _CloseFullComparisonCommand ??= new(
-        () =>
-        {
-            IsFullComparisonOpen = false;
-        });
 
         public MatchCommand Match { get; }
     }
+    
 }

@@ -49,10 +49,9 @@ namespace GuiWpf.Commands
 
         public async void Execute(object? parameter)
         {
-            if (parameter is Tuple<PairSuggestion, PrefferdTracks> pair)
+            if (parameter is PairSuggestion pair)
             {
-                pair.Item1.ChosenTrack = pair.Item2;
-                await Match(pair.Item1);
+                await Match(pair);
             }
         }
 

@@ -9,6 +9,7 @@ namespace PairMatching.DomainModel.Services
 {
     public interface IParticipantService
     {
+        Task DeleteParticipaint(Participant participant);
         Task<IEnumerable<Participant>> GetAll();
         
         Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael();
@@ -16,7 +17,7 @@ namespace PairMatching.DomainModel.Services
         Task<IEnumerable<WorldParticipant>> GetAllFromWorld();
         
         IEnumerable<CountryUtc> GetCountryUtcs();
-        
+        Task SendToArcive(Participant participant);
         Task<Participant> UpserteParticipant(Participant participant);
     }
 }

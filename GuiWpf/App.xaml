@@ -19,8 +19,6 @@
 
                 <ResourceDictionary Source="Styles\OpenQuestionStyle.xaml" />
 
-
-
                 <materialDesign:CustomColorTheme
                     BaseTheme="Light"
                     PrimaryColor="CadetBlue"
@@ -29,6 +27,19 @@
             </ResourceDictionary.MergedDictionaries>
 
             <SolidColorBrush x:Key="MainColor" Color="CadetBlue" />
+
+            <Style x:Key="TextColumnStyle" TargetType="TextBlock">
+                <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                <Setter Property="MaxWidth" Value="80" />
+            </Style>
+
+            <Style x:Key="SearchTextBoxStyle" TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <Setter Property="MinWidth" Value="200"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="materialDesign:HintAssist.Hint" Value="חפש"/>
+           
+            </Style>
 
             <Style
                 x:Key="ButtonContentStyle"
