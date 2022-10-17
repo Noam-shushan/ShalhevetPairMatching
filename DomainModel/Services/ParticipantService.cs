@@ -131,6 +131,75 @@ namespace PairMatching.DomainModel.Services
 
             return null;   
         }
+        
+        public async Task DeleteParticipaint(Participant participant)
+        {
+            await RemoveMatchParticipaints(participant);
+
+            participant.IsDeleted = true;
+
+            if (participant is IsraelParticipant ip)
+            {
+                await _unitOfWork.IsraelParticipantsRepositry.Update(ip);
+            }
+            else if (participant is WorldParticipant wp)
+            {
+                await _unitOfWork.WorldParticipantsRepositry.Update(wp);
+            }
+        }
+
+        public async Task SendToArcive(Participant participant)
+        {
+            await RemoveMatchParticipaints(participant);
+            
+            participant.IsInArchive = true;
+            participant.MatchTo = new();
+            
+            if (participant is IsraelParticipant ip)
+            {
+                await _unitOfWork.IsraelParticipantsRepositry.Update(ip);
+            }
+            else if (participant is WorldParticipant wp)
+            {
+                await _unitOfWork.WorldParticipantsRepositry.Update(wp);
+            }
+        }
+
+        private async Task RemoveMatchParticipaints(Participant participant)
+        {
+            var matchParticipants = new List<Participant>();
+            foreach (var matchParticipant in participant.MatchTo)
+            {
+                Participant p;
+                if (participant.IsFromIsrael)
+                {
+                    p = await _unitOfWork.WorldParticipantsRepositry
+                        .GetByIdAsync(matchParticipant);
+                }
+                else
+                {
+                    p = await _unitOfWork.IsraelParticipantsRepositry
+                     .GetByIdAsync(matchParticipant);
+                }
+                matchParticipants.Add(p);
+            }
+            var tasks = new List<Task>();
+            foreach (var p in matchParticipants)
+            {
+                p.MatchTo.Remove(participant.Id);
+                if (participant.IsFromIsrael)
+                {
+                    tasks.Add(_unitOfWork.WorldParticipantsRepositry
+                        .Update(p as WorldParticipant));
+                }
+                else
+                {
+                    tasks.Add(_unitOfWork.IsraelParticipantsRepositry
+                        .Update(p as IsraelParticipant));
+                }
+            }
+            await Task.WhenAll(tasks);
+        }
 
         private async Task<dynamic> GetWixId(Participant part)
         {
@@ -152,10 +221,7 @@ namespace PairMatching.DomainModel.Services
         IEnumerable<CountryUtc> _countryUtcs;
         public IEnumerable<CountryUtc> GetCountryUtcs()
         {
-            if(_countryUtcs is null)
-            {
-                _countryUtcs = Init();
-            }
+            _countryUtcs ??= Init();
             return _countryUtcs;
 
             static IEnumerable<CountryUtc> Init()

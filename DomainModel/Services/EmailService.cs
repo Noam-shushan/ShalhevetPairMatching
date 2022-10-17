@@ -32,7 +32,7 @@ namespace PairMatching.DomainModel.Services
             return emails;
         }
 
-        public async Task SendEmail(EmailModel emailModel)
+        public async Task<EmailModel> SendEmail(EmailModel emailModel)
         {
             var email = new
             {
@@ -49,7 +49,7 @@ namespace PairMatching.DomainModel.Services
 
             emailModel.WixId = emailWixId;
             
-            await _unitOfWork
+            return await _unitOfWork
                 .EmailRepositry
                 .Insert(emailModel);           
         }

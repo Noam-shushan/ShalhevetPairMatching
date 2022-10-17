@@ -61,6 +61,9 @@ namespace PairMatching.Models
         [BsonIgnore]
         public bool IsOpenToMatch => !IsDeleted 
             && !IsInArchive 
-            && MatchTo?.Count() < PairPreferences?.NumberOfMatchs;
+            && MatchTo.Count < PairPreferences?.NumberOfMatchs;
+
+        [BsonIgnore]
+        public bool IsMatch => MatchTo.Count > 0;
     }
 }

@@ -54,11 +54,6 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _selectedTrack, value);
         }
 
-        public (PairSuggestion, PrefferdTracks) MatchParameter
-        {
-            get => (StageSuggestion, SelectedTrack);
-        }
-
         DelegateCommand _stageNext;
         public DelegateCommand StageNext => _stageNext ??= new(
                () =>

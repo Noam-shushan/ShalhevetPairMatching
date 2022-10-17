@@ -131,7 +131,14 @@
                                     <Setter Property="BorderBrush" Value="Black" />
                                     <Setter Property="BorderThickness" Value="1" />
                                 </Trigger>
+                                <DataTrigger Binding="{Binding IsInArchive}" Value="True">
+                                    <Setter Property="Background" Value="#f7f19f" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsMatch}" Value="False">
+                                    <Setter Property="Background" Value="#bdffb4" />
+                                </DataTrigger>
                             </Style.Triggers>
+
                         </Style>
 
                         <Style x:Key="TestColumnStyle" TargetType="TextBlock">
@@ -228,6 +235,32 @@
 
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
+                                <TextBlock Style="{StaticResource TestColumnStyle}" Text="הערות" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <materialDesign:PopupBox PlacementMode="RightAndAlignMiddles" StaysOpen="True">
+                                        <materialDesign:PopupBox.ToggleContent>
+                                            <materialDesign:PackIcon
+                                                Width="25"
+                                                Height="25"
+                                                Kind="Note" />
+                                        </materialDesign:PopupBox.ToggleContent>
+                                        <ScrollViewer
+                                            Margin="3"
+                                            HorizontalAlignment="Left"
+                                            mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                                            HorizontalScrollBarVisibility="Disabled">
+                                            <local:NotesView MinHeight="300" MaxWidth="500" />
+                                        </ScrollViewer>
+                                    </materialDesign:PopupBox>
+
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
                                 <Button
                                     Command="{Binding ElementName=me, Path=DataContext.SendEmailToManyCommand}"
                                     Style="{StaticResource MaterialDesignIconButton}"
@@ -237,7 +270,10 @@
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל למשתתף">
+                                    <Button
+                                        Command="{Binding ElementName=me, Path=DataContext.SendEmailToOneCommand}"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="שלח מייל למשתתף">
                                         <materialDesign:PackIcon Kind="Email" />
                                     </Button>
                                 </DataTemplate>
@@ -256,10 +292,16 @@
                                                 <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="ערוך">
                                                     <materialDesign:PackIcon Kind="Edit" />
                                                 </Button>
-                                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח לארכיון">
+                                                <Button
+                                                    Command="{Binding ElementName=me, Path=DataContext.SendToArchivCommand}"
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    ToolTip="שלח לארכיון">
                                                     <materialDesign:PackIcon Kind="Archive" />
                                                 </Button>
-                                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק משתתף">
+                                                <Button
+                                                    Command="{Binding ElementName=me, Path=DataContext.DeleteCommand}"
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    ToolTip="מחק משתתף">
                                                     <materialDesign:PackIcon Kind="Delete" />
                                                 </Button>
                                             </StackPanel>
@@ -491,18 +533,6 @@
                                     </Grid>
                                 </GroupBox>
                                 <!--#endregion-->
-
-
-                                <ScrollViewer
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Grid.Column="3"
-                                    Margin="3"
-                                    HorizontalAlignment="Left"
-                                    mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
-                                    HorizontalScrollBarVisibility="Disabled">
-                                    <local:NotesView MaxWidth="500" />
-                                </ScrollViewer>
 
                                 <GroupBox
                                     Grid.Row="0"

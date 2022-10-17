@@ -9,6 +9,7 @@ using PairMatching.DomainModel.Email;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using PairMatching.Models;
 
 namespace GuiWpf.ViewModels
 {
@@ -30,7 +31,18 @@ namespace GuiWpf.ViewModels
             {
                 IsSendEmailOpen = isClose;
             });
+            _ea.GetEvent<NewEmailSendEvent>()
+                .Subscribe(em =>
+                {
+                    if (em == null)
+                    {
+                        return;
+                    }
+                    Emails.Add(em);
+                });
         }
+
+        public PaginCollectionViewModel<EmailModel> Emails { get; set; } = new();
 
         private bool _isSendEmailOpen = false;
         public bool IsSendEmailOpen
@@ -39,6 +51,15 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _isSendEmailOpen, value);
         }
 
+
+        DelegateCommand _load;
+        public DelegateCommand Load => _load ??= new(
+        async () =>
+        {
+            var emails = await _emailService.GetEmails();
+            Emails.Init(emails, 10, EmailsFilter);
+        });
+
         DelegateCommand _openSendCommand;
         public DelegateCommand OpenSendView => _openSendCommand ??= new(
         () =>
@@ -46,7 +67,10 @@ namespace GuiWpf.ViewModels
             IsSendEmailOpen = !IsSendEmailOpen;
         });
 
-
+        private bool EmailsFilter(EmailModel obj)
+        {
+            return true;
+        }
 
     }
 }

@@ -119,13 +119,21 @@ namespace GuiWpf.ViewModels
             {
                 _ea.GetEvent<IsSendEmailEvent>().Publish(true);
                 _ea.GetEvent<CloseDialogEvent>().Publish(false);
-                await _emailSender
-                   .To(To.ToArray())
-                   .Subject(Subject)
-                   .Body(Body)
-                   .Attachments(Attachments.Select(f => f.FilePath).ToArray())
-                   .SendOpenMailAsync();
-                _ea.GetEvent<IsSendEmailEvent>().Publish(false);             
+                //await _emailSender
+                //   .To(To.ToArray())
+                //   .Subject(Subject)
+                //   .Body(Body)
+                //   .Attachments(Attachments.Select(f => f.FilePath).ToArray())
+                //   .SendOpenMailAsync();
+                var newEmail = await _emailService.SendEmail(new EmailModel
+                {
+                    Body = Body,
+                    SendingDate = DateTime.Now,
+                    Subject = Subject,
+                    To = To,
+                });
+                _ea.GetEvent<IsSendEmailEvent>().Publish(false);
+                _ea.GetEvent<NewEmailSendEvent>().Publish(newEmail);
             }
             catch (Exception)
             {
