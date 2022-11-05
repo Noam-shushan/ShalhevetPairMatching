@@ -4,6 +4,10 @@ using PairMatching.DomainModel.DataAccessFactory;
 using Prism.Ioc;
 using System;
 using Newtonsoft.Json;
+using System.Globalization;
+using System.Net;
+using static System.Net.WebRequestMethods;
+using System.Net.NetworkInformation;
 
 namespace PairMatching.Root
 {
@@ -13,6 +17,21 @@ namespace PairMatching.Root
         
         public Startup()
         {            
+        }
+
+        public bool IsConnectedToInternet()
+        {
+                string host = @"google.com";  
+                bool result = false;
+                var p = new Ping();
+                try
+                {
+                    PingReply reply = p.Send(host, 3000);
+                    if (reply.Status == IPStatus.Success)
+                        return true;
+                }
+                catch { }
+                return result;
         }
 
         public MyConfiguration GetConfigurations()

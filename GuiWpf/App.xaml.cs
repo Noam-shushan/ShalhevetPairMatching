@@ -52,6 +52,13 @@ namespace GuiWpf
 
         protected override Window CreateShell()
         {
+            if (!_startup.GetConfigurations().IsTest && !_startup.IsConnectedToInternet())
+            {
+                MessageBox.Show("Please check your internet connection and try again.", "Error", MessageBoxButton.OK,
+                MessageBoxImage.Error, MessageBoxResult.None);
+                Shutdown();
+                return null;
+            }
             return Container.Resolve<MainWindow>();
         }
 
@@ -68,6 +75,14 @@ namespace GuiWpf
             ViewModelLocationProvider.Register<NotesView, NotesViewModel>();
             ViewModelLocationProvider.Register<SendEmailView, SendEmailViewModel>();
             ViewModelLocationProvider.Register<AutoMatchingView, AutoMatchingViewModel>();
+            
+        }
+
+        private void PrismApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK,
+                MessageBoxImage.Error, MessageBoxResult.None,
+                MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
             
         }
     }

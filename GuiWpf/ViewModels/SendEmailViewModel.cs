@@ -27,19 +27,23 @@ namespace GuiWpf.ViewModels
             _emailService = emailService;
             _emailSender = sendEmail;
 
-            _ea.GetEvent<GetEmailAddressToParticipaintsEvent>().Subscribe((to) =>
-            {
-                if (to == null)
+            _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
+                .Subscribe((to) =>
                 {
-                    return;
-                }
-                To.Clear();
-                To.AddRange(to);
-            });
+                    if (to == null)
+                    {
+                        return;
+                    }
+                    To.Clear();
+                    To.AddRange(to);
+                });
         }
         
         public ObservableCollection<EmailAddress> To { get; } = new();
 
+        public ObservableCollection<File> Attachments { get; } = new();
+
+        #region Properties
         private string _subject;
         public string Subject
         {
@@ -61,41 +65,21 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _selectedFile, value);
         }
 
-        public ObservableCollection<File> Attachments { get; } = new();
-
-        DelegateCommand _sendCommand;
-        public DelegateCommand SendCommand => _sendCommand ??= new(
-         () =>
+        private bool _isLeftToRight;
+        public bool IsLeftToRight
         {
-        });
+            get => _isLeftToRight;
+            set => SetProperty(ref _isLeftToRight, value);
+        }
+        #endregion
 
+        #region Commands
         DelegateCommand _addAttachmentCommand;
         public DelegateCommand AddAttachmentCommand => _addAttachmentCommand ??= new(
         () =>
         {
-            var openFileDialog = new OpenFileDialog()
-            {
-                Multiselect = true
-            };
-
-            var response = openFileDialog.ShowDialog();
-            if (!openFileDialog.CheckPathExists)
-            {
-                //Messages.MessageBoxError("קובץ לא קיים");
-            }
-            if (response == true)
-            {
-                var temp = openFileDialog.SafeFileNames
-                .Zip(openFileDialog.FileNames,
-                    (fn, fp) => new File
-                    {
-                        FileName = fn,
-                        FilePath = fp
-                    });
-                Attachments.AddRange(temp);
-            }
+            AddFiles();
         });
-       
 
         DelegateCommand _removeAttachmentsCommand;
         public DelegateCommand RemoveAttachmentCommand => _removeAttachmentsCommand ??= new(
@@ -131,6 +115,7 @@ namespace GuiWpf.ViewModels
                     SendingDate = DateTime.Now,
                     Subject = Subject,
                     To = To,
+                    Language = IsLeftToRight ? "en" : "he"
                 });
                 _ea.GetEvent<IsSendEmailEvent>().Publish(false);
                 _ea.GetEvent<NewEmailSendEvent>().Publish(newEmail);
@@ -139,8 +124,35 @@ namespace GuiWpf.ViewModels
             {
                 throw;
             }
-        });
+        },
+        () => false); 
+        #endregion
 
+
+        private void AddFiles()
+        {
+            var openFileDialog = new OpenFileDialog()
+            {
+                Multiselect = true
+            };
+
+            var response = openFileDialog.ShowDialog();
+            if (!openFileDialog.CheckPathExists)
+            {
+                //Messages.MessageBoxError("קובץ לא קיים");
+            }
+            if (response == true)
+            {
+                var temp = openFileDialog.SafeFileNames
+                .Zip(openFileDialog.FileNames,
+                    (fn, fp) => new File
+                    {
+                        FileName = fn,
+                        FilePath = fp
+                    });
+                Attachments.AddRange(temp);
+            }
+        }
 
     }
 

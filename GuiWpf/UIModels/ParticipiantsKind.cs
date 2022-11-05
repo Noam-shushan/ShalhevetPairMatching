@@ -13,18 +13,20 @@ namespace GuiWpf.UIModels
         [EnumDescription("בלי חברותא")]
         WithoutPair,
 
+        [EnumDescription("ארכיון")]
+        Archive
+    }
+
+    public enum ParticipiantsFrom
+    {
+        [EnumDescription("כל מקום")]
+        All,
+
         [EnumDescription("מישראל")]
         FromIsrael,
 
         [EnumDescription("מהתפוצות")]
-        FromWorld,
-
-        [EnumDescription("מישראל בלי חברותא")]
-
-        FromIsraelWithoutPair,
-
-        [EnumDescription("מהתפוצות בלי חברותא")]
-        FromWorldWithoutPair,
+        FromWorld
     }
 
     public enum PairKind

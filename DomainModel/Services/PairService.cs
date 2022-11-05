@@ -14,6 +14,7 @@ using PairMatching.DomainModel.BLModels;
 using PairMatching.DataAccess.Repositories;
 using System.ComponentModel.DataAnnotations;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -77,6 +78,30 @@ namespace PairMatching.DomainModel.Services
             return newPair;
         }
 
+        public async Task ChangeTrack(Pair pair, PrefferdTracks track)
+        {
+            pair.Track = track;
+            pair.TrackHistories.Append(new TrackHistory 
+            { 
+                Track = track,
+                DateOfUpdate = DateTime.Now
+            });
+            
+            await _unitOfWork
+                    .PairsRepositry
+                    .Update(pair);
+        }
+
+        public async Task ReturnToStandby(Pair pair)
+        {
+            pair.Status = PairStatus.Standby;
+
+            await _unitOfWork
+                     .PairsRepositry
+                     .Update(pair);
+        }
+
+
         public async Task DeletePair(Pair pair)
         {
             pair.IsDeleted = true;
@@ -134,6 +159,11 @@ namespace PairMatching.DomainModel.Services
                     }
                 }
             };
+        }
+
+        public async Task UpdatePair(Pair pair)
+        {
+            await _unitOfWork.PairsRepositry.Update(pair);
         }
         
         private async Task SendNewPairToWix(Pair pair)

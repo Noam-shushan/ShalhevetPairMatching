@@ -74,7 +74,8 @@ namespace GuiWpf.ViewModels
             var activePair = await _pairsService.ActivePair(pair);
             
             _ea.GetEvent<NewPairEvent>().Publish(activePair);
-        });
+        }, 
+        () => false);
 
         DelegateCommand _CancelStandbyPairCommand;
         public DelegateCommand CancelStandbyPairCommand => _CancelStandbyPairCommand ??= new(
