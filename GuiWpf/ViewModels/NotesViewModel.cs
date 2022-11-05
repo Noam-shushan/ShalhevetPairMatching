@@ -1,4 +1,5 @@
 ﻿using GuiWpf.Events;
+using PairMatching.DomainModel.Services;
 using PairMatching.Models;
 using Prism.Commands;
 using Prism.Events;
@@ -18,18 +19,31 @@ namespace GuiWpf.ViewModels
     {
         readonly IEventAggregator _ea;
 
-        public NotesViewModel(IEventAggregator ea)
+        readonly ParticipantService _participantService;
+
+        readonly PairService _pairService;
+        
+        BaseModel _model;
+
+        public NotesViewModel(IEventAggregator ea, ParticipantService participantService, PairService pairService)
         {
             _ea = ea;
-            _ea.GetEvent<GetNotesListEvent>()
-                .Subscribe(NewNotesListResivd);
+            
+            _participantService = participantService;
+            _pairService = pairService;
+            
+            //_ea.GetEvent<GetNotesListEvent>()
+            //    .Subscribe(NewNotesListResivd);
             _ea.GetEvent<ModelEnterEvent>()
-                .Subscribe((type) =>
+                .Subscribe((model) =>
                 {
-                    ModelType = type;
+                    _model = model.Item1;
+                    Notes.Clear();
+                    Notes.AddRange(_model.Notes);
+                    ModelType = model.Item2;
                 });
-        }
-        
+        } 
+
         private void NewNotesListResivd(IEnumerable<Note> notes)
         {
             Notes.Clear();
@@ -83,7 +97,7 @@ namespace GuiWpf.ViewModels
 
         DelegateCommand _AddNoteCommand;
         public DelegateCommand AddNoteCommand => _AddNoteCommand ??= new(
-        () =>
+        async () =>
         {
             var newNote = new Note
             {
@@ -94,14 +108,17 @@ namespace GuiWpf.ViewModels
             };
             
             Notes.Add(newNote);
-            
+            _model.Notes.Add(newNote);
             switch (ModelType)
             {
+
                 case ModelType.Participant:
-                    _ea.GetEvent<NewNoteForParticipaintEvent>().Publish(newNote);
+                    await _participantService.UpdateParticipaint(_model as Participant);
+                    //_ea.GetEvent<NewNoteForParticipaintEvent>().Publish((_modelId, newNote));
                     break;
                 case ModelType.Pair:
-                    _ea.GetEvent<NewNoteForPairEvent>().Publish(newNote);
+                    await _pairService.UpdatePair(_model as Pair);
+                    //_ea.GetEvent<NewNoteForPairEvent>().Publish((_modelId, newNote));
                     break;
             }
             Reset();
@@ -122,10 +139,10 @@ namespace GuiWpf.ViewModels
             switch (ModelType)
             {
                 case ModelType.Participant:
-                    _ea.GetEvent<DeleteNoteFromParticipiantEvent>().Publish(SelectedNote);
+                    _ea.GetEvent<DeleteNoteFromParticipiantEvent>().Publish(("", SelectedNote));
                     break;
                 case ModelType.Pair:
-                    _ea.GetEvent<DeleteNoteFromPairEvent>().Publish(SelectedNote);
+                    _ea.GetEvent<DeleteNoteFromPairEvent>().Publish(("", SelectedNote));
                     break;
             }
             Reset();

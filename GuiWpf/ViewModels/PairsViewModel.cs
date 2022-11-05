@@ -55,7 +55,7 @@ namespace GuiWpf.ViewModels
                         _ea.GetEvent<GetNotesListEvent>()
                             .Publish(SelectedPair.Notes);
                         _ea.GetEvent<ModelEnterEvent>()
-                            .Publish(ModelType.Participant);
+                            .Publish((SelectedPair, ModelType.Participant));
                     }
                 }
             }
@@ -199,28 +199,36 @@ namespace GuiWpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            _ea.GetEvent<NewNoteForPairEvent>().Subscribe(NewNoteResivd);
-            _ea.GetEvent<DeleteNoteFromPairEvent>().Subscribe(OnDeleteNote);
-            _ea.GetEvent<NewPairEvent>().Subscribe(NewPairResivd);
-        }
-
-        private void NewPairResivd(Pair pair)
-        {
-            if (pair is not null)
+            _ea.GetEvent<NewNoteForPairEvent>().Subscribe((id_note) =>
             {
-                Pairs.Add(pair);
-            }
+                var pair = Pairs.ItemsSource.FirstOrDefault(p => p.Id == id_note.Item1);
+                if (pair == null)
+                {
+                    return;
+                }
+                pair.Notes.Add(id_note.Item2);
+                _pairsService.UpdatePair(pair);
+            });
+            
+            _ea.GetEvent<DeleteNoteFromPairEvent>().Subscribe((id_note) =>
+            {
+                var pair = Pairs.ItemsSource.FirstOrDefault(p => p.Id == id_note.Item1);
+                if (pair == null)
+                {
+                    return;
+                }
+                pair.Notes.Remove(id_note.Item2);
+                _pairsService.UpdatePair(pair);
+            });
+            
+            _ea.GetEvent<NewPairEvent>().Subscribe((pair) =>
+            {
+                if (pair is not null)
+                {
+                    Pairs.Add(pair);
+                }
+            });
         }
-
-        private void OnDeleteNote(Note note)
-        {
-            SelectedPair.Notes.Remove(note);
-        }
-
-        private void NewNoteResivd(Note note)
-        {
-            SelectedPair.Notes.Add(note);
-        } 
         #endregion
     }
 }

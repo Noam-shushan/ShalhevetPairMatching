@@ -13,9 +13,11 @@ namespace PairMatching.DomainModel.Services
         Task<Pair> ActivePair(Pair pair);
         Task<Pair> AddNewPair(PairSuggestion pairSuggestion, PrefferdTracks track = PrefferdTracks.NoPrefrence);
         Task CancelPair(Pair pair);
+        Task ChangeTrack(Pair pair, PrefferdTracks track);
         Task<IEnumerable<Pair>> GetAllPairs();
         
         Task<IEnumerable<StandbyPair>> GetAllStandbyPairs();
+        Task UpdatePair(Pair pair);
     }
 
 }

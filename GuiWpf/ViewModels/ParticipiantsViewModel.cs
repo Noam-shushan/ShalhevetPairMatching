@@ -59,7 +59,7 @@ namespace GuiWpf.ViewModels
                         _ea.GetEvent<GetNotesListEvent>()
                         .Publish(SelectedParticipant.Notes);
                         _ea.GetEvent<ModelEnterEvent>()
-                            .Publish(ModelType.Participant);
+                            .Publish((SelectedParticipant, ModelType.Participant));
                     }
                 };
             }
@@ -128,6 +128,20 @@ namespace GuiWpf.ViewModels
                 }
             }
         }
+
+        private ParticipiantsFrom _fromFilter;
+        public ParticipiantsFrom FromIsraelFilter
+        {
+            get => _fromFilter;
+            set
+            {
+                if (SetProperty(ref _fromFilter, value))
+                {
+                    Participiants.Refresh();
+                }
+            }
+        }
+
 
         private string _searchParticipiantsWord = "";
         public string SearchParticipiantsWord
@@ -206,6 +220,8 @@ namespace GuiWpf.ViewModels
         async () =>
         {
             await _participantService.SendToArcive(SelectedParticipant);
+            SelectedParticipant.IsInArchive = true;
+            Participiants.Refresh();
         });
 
 
@@ -214,6 +230,8 @@ namespace GuiWpf.ViewModels
         async () =>
         {
             await _participantService.DeleteParticipaint(SelectedParticipant);
+            Participiants.ItemsSource.Remove(SelectedParticipant);
+            Participiants.Refresh();
         });
 
         DelegateCommand _addParticipantCommand;
@@ -222,6 +240,16 @@ namespace GuiWpf.ViewModels
             {
                 IsAddFormOpen = !IsAddFormOpen;
             });
+
+
+        DelegateCommand _ClearFilterCommand;
+        public DelegateCommand ClearFilterCommand => _ClearFilterCommand ??= new(
+        () =>
+        {
+            FromIsraelFilter = ParticipiantsFrom.All;
+            PartsKindFilter = ParticipiantsKind.All;
+            YearsFilter = allYears;
+        });
         #endregion
 
         #region Methods
@@ -246,32 +274,61 @@ namespace GuiWpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            _ea.GetEvent<CloseDialogEvent>().Subscribe(CloseFormResived);
+            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => IsAddFormOpen = isClose);
+            
             _ea.GetEvent<AddParticipantEvent>().Subscribe( (part) =>
             {
                 Participiants.Add(part);
                 //await _participantService.UpserteParticipant(part);
             });
+            
             _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
             {
                 IsSendEmailOpen = isClose;
             });
+            
+            _ea.GetEvent<NewNoteForParticipaintEvent>()
+                .Subscribe(async (id_note) =>
+                {
+                    var part = Participiants.ItemsSource
+                        .FirstOrDefault(p => p.Id == id_note.Item1);
+                    if (part == null)
+                    {
+                        return;
+                    }
+                    part.Notes.Add(id_note.Item2);
+                    await _participantService.UpdateParticipaint(part);
+                });
+            
+            _ea.GetEvent<DeleteNoteFromParticipiantEvent>()
+                .Subscribe(async (id_note) =>
+                {
+                    var part = Participiants.ItemsSource
+                        .FirstOrDefault(p => p.Id == id_note.Item1);
+                    if(part == null)
+                    {
+                        return;
+                    }
+                    part.Notes.Remove(id_note.Item2);
+                    await _participantService.UpdateParticipaint(part);
+                });
         }
 
         private bool ParticipiantsFilter(Participant participant)
         {
             var partKind = false;
             var year = false;
+            
+            var fromIsrael = (participant.IsFromIsrael && FromIsraelFilter == ParticipiantsFrom.FromIsrael)
+                || (!participant.IsFromIsrael && FromIsraelFilter == ParticipiantsFrom.FromWorld)
+                || ParticipiantsFrom.All == FromIsraelFilter;
 
             partKind = PartsKindFilter switch
             {
                 ParticipiantsKind.All => true,
                 ParticipiantsKind.WithPair => participant.MatchTo.Any(),
                 ParticipiantsKind.WithoutPair => !participant.MatchTo.Any(),
-                ParticipiantsKind.FromIsrael => participant.IsFromIsrael,
-                ParticipiantsKind.FromWorld => !participant.IsFromIsrael,
-                ParticipiantsKind.FromIsraelWithoutPair => participant.IsFromIsrael && !participant.MatchTo.Any(),
-                ParticipiantsKind.FromWorldWithoutPair => !participant.IsFromIsrael && !participant.MatchTo.Any(),
+                ParticipiantsKind.Archive => participant.IsInArchive,
                 _ => true
             };
 
@@ -279,13 +336,9 @@ namespace GuiWpf.ViewModels
 
             return participant.Name.Contains(SearchParticipiantsWord, StringComparison.InvariantCultureIgnoreCase)
                 && partKind
-                && year;
+                && year
+                && fromIsrael;
         }
-
-        private void CloseFormResived(bool isClose)
-        {
-            IsAddFormOpen = isClose;
-        } 
         #endregion
     }
 }

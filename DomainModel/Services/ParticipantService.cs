@@ -110,26 +110,44 @@ namespace PairMatching.DomainModel.Services
             }
         }
 
-        public async Task<Participant> UpserteParticipant(Participant part)
+        public async Task UpdateParticipaint(Participant participant)
+        {
+            if (participant is IsraelParticipant ip)
+            {
+                 await _unitOfWork
+                .IsraelParticipantsRepositry
+                .Update(ip);
+            }
+            else if (participant is WorldParticipant wp)
+            {
+                 await _unitOfWork
+                .WorldParticipantsRepositry
+                .Update(wp);
+            }
+        }
+
+        public async Task<Participant> InsertParticipant(Participant part)
         {
             dynamic wixId = await GetWixId(part);
             
             part.WixId = wixId;
 
+            Participant result = new();
+
             if (part is IsraelParticipant ip)
             {
-                return await _unitOfWork
+                result = await _unitOfWork
                 .IsraelParticipantsRepositry
                 .Insert(ip);
             }
             else if (part is WorldParticipant wp)
             {
-                return await _unitOfWork
+                result = await _unitOfWork
                 .WorldParticipantsRepositry
                 .Insert(wp);
             }
 
-            return null;   
+            return result;   
         }
         
         public async Task DeleteParticipaint(Participant participant)
@@ -140,11 +158,15 @@ namespace PairMatching.DomainModel.Services
 
             if (participant is IsraelParticipant ip)
             {
-                await _unitOfWork.IsraelParticipantsRepositry.Update(ip);
+                await _unitOfWork
+                    .IsraelParticipantsRepositry
+                    .Update(ip);
             }
             else if (participant is WorldParticipant wp)
             {
-                await _unitOfWork.WorldParticipantsRepositry.Update(wp);
+                await _unitOfWork
+                    .WorldParticipantsRepositry
+                    .Update(wp);
             }
         }
 
@@ -157,11 +179,15 @@ namespace PairMatching.DomainModel.Services
             
             if (participant is IsraelParticipant ip)
             {
-                await _unitOfWork.IsraelParticipantsRepositry.Update(ip);
+                await _unitOfWork
+                    .IsraelParticipantsRepositry
+                    .Update(ip);
             }
             else if (participant is WorldParticipant wp)
             {
-                await _unitOfWork.WorldParticipantsRepositry.Update(wp);
+                await _unitOfWork
+                    .WorldParticipantsRepositry
+                    .Update(wp);
             }
         }
 
@@ -173,12 +199,14 @@ namespace PairMatching.DomainModel.Services
                 Participant p;
                 if (participant.IsFromIsrael)
                 {
-                    p = await _unitOfWork.WorldParticipantsRepositry
+                    p = await _unitOfWork
+                        .WorldParticipantsRepositry
                         .GetByIdAsync(matchParticipant);
                 }
                 else
                 {
-                    p = await _unitOfWork.IsraelParticipantsRepositry
+                    p = await _unitOfWork
+                        .IsraelParticipantsRepositry
                      .GetByIdAsync(matchParticipant);
                 }
                 matchParticipants.Add(p);

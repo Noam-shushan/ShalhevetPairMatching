@@ -18,6 +18,7 @@ namespace PairMatching.DomainModel.Services
         
         IEnumerable<CountryUtc> GetCountryUtcs();
         Task SendToArcive(Participant participant);
-        Task<Participant> UpserteParticipant(Participant participant);
+        Task<Participant> InsertParticipant(Participant participant);
+        Task UpdateParticipaint(Participant participant);
     }
 }

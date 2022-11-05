@@ -56,7 +56,10 @@ namespace GuiWpf.ViewModels
         public DelegateCommand Load => _load ??= new(
         async () =>
         {
+            //await _emailService.VerifieyEmails();
+
             var emails = await _emailService.GetEmails();
+
             Emails.Init(emails, 10, EmailsFilter);
         });
 
