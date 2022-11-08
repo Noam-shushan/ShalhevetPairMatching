@@ -20,5 +20,6 @@ namespace PairMatching.DomainModel.Services
         Task SendToArcive(Participant participant);
         Task<Participant> InsertParticipant(Participant participant);
         Task UpdateParticipaint(Participant participant);
+        Task AddNote(Note note, Participant participant);
     }
 }

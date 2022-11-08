@@ -110,6 +110,12 @@ namespace PairMatching.DomainModel.Services
             }
         }
 
+        public async Task AddNote(Note note, Participant participant)
+        {
+            participant.Notes.Add(note);
+            await UpdateParticipaint(participant);
+        }
+
         public async Task UpdateParticipaint(Participant participant)
         {
             if (participant is IsraelParticipant ip)

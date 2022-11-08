@@ -10,47 +10,55 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Xml.Linq;
 
 namespace GuiWpf.ViewModels
-{
-    
-    
+{   
     public class NotesViewModel : BindableBase
     {
         readonly IEventAggregator _ea;
 
         readonly ParticipantService _participantService;
+        
+
+        private Participant _participantModel;
+
 
         readonly PairService _pairService;
-        
-        BaseModel _model;
 
-        public NotesViewModel(IEventAggregator ea, ParticipantService participantService, PairService pairService)
+        private Pair _pairModel;
+
+        //static int count = 0;
+        
+        public NotesViewModel(IEventAggregator ea, ParticipantService participantService)
         {
             _ea = ea;
-            
-            _participantService = participantService;
-            _pairService = pairService;
-            
-            //_ea.GetEvent<GetNotesListEvent>()
-            //    .Subscribe(NewNotesListResivd);
-            _ea.GetEvent<ModelEnterEvent>()
-                .Subscribe((model) =>
-                {
-                    _model = model.Item1;
-                    Notes.Clear();
-                    Notes.AddRange(_model.Notes);
-                    ModelType = model.Item2;
-                });
-        } 
 
-        private void NewNotesListResivd(IEnumerable<Note> notes)
-        {
-            Notes.Clear();
-            Notes.AddRange(notes);
+            _participantService = participantService;
+
+            _ea.GetEvent<ManageNotesForParticipiantEvent>()
+                .Subscribe((participant) =>
+                {
+                    //++count;
+                    //MessageBox.Show($"{count}");
+                    _participantModel = participant;
+                    Notes.Clear();
+                    Notes.AddRange(_participantModel.Notes);                   
+                });
+
+            _ea.GetEvent<ManageNotesForPairEvent>()
+                .Subscribe((pair) =>
+                {
+                    _pairModel = pair;
+                    Notes.Clear();
+                    Notes.AddRange(_pairModel.Notes);
+                });
         }
 
+        public ObservableCollection<Note> Notes { get; set; } = new();
 
+        #region Properties
         private ModelType _modelType;
         public ModelType ModelType
         {
@@ -58,7 +66,7 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _modelType, value);
         }
 
-        public ObservableCollection<Note> Notes { get; set; } = new();
+        
 
         private Note _selectedNote;
         public Note SelectedNote
@@ -94,36 +102,17 @@ namespace GuiWpf.ViewModels
             get => _isNewNoteFormOpen;
             set => SetProperty(ref _isNewNoteFormOpen, value);
         }
+        #endregion
 
+        #region Commands
         DelegateCommand _AddNoteCommand;
         public DelegateCommand AddNoteCommand => _AddNoteCommand ??= new(
         async () =>
         {
-            var newNote = new Note
-            {
-                Author = Author,
-                Content = Content,
-                Date = DateTime.Now,
-                Subject = Subject
-            };
-            
-            Notes.Add(newNote);
-            _model.Notes.Add(newNote);
-            switch (ModelType)
-            {
+            await AddNote();
+        }, () => false);
 
-                case ModelType.Participant:
-                    await _participantService.UpdateParticipaint(_model as Participant);
-                    //_ea.GetEvent<NewNoteForParticipaintEvent>().Publish((_modelId, newNote));
-                    break;
-                case ModelType.Pair:
-                    await _pairService.UpdatePair(_model as Pair);
-                    //_ea.GetEvent<NewNoteForPairEvent>().Publish((_modelId, newNote));
-                    break;
-            }
-            Reset();
-            IsNewNoteFormOpen = !IsNewNoteFormOpen;
-        });
+
 
         DelegateCommand _OpenNewNoteFormCommand;
         public DelegateCommand OpenNewNoteFormCommand => _OpenNewNoteFormCommand ??= new(
@@ -147,7 +136,33 @@ namespace GuiWpf.ViewModels
             }
             Reset();
             Notes.Remove(SelectedNote);
-        });
+        }, () => false);
+        #endregion
+
+
+        private async Task AddNote()
+        {
+            var newNote = new Note
+            {
+                Author = Author,
+                Content = Content,
+                Date = DateTime.Now,
+                Subject = Subject
+            };
+
+            Notes.Add(newNote);
+
+            if (_participantModel != null)
+            {
+                await _participantService.AddNote(newNote, _participantModel);
+            }
+            else if (_pairModel != null)
+            {
+                await _pairService.AddNote(newNote, _pairModel);
+            }
+            Reset();
+            IsNewNoteFormOpen = !IsNewNoteFormOpen;
+        }
 
         private void Reset()
         {

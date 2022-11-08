@@ -23,12 +23,12 @@
                     </Grid.RowDefinitions>
                     <DataGrid
                         Grid.Row="0"
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                         materialDesign:DataGridAssist.CornerRadius="20"
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         IsReadOnly="True"
                         ItemsSource="{Binding Notes}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                         SelectedItem="{Binding SelectedNote}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Date, StringFormat=d}" Header="תאריך" />

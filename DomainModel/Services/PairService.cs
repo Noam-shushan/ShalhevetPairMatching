@@ -11,10 +11,6 @@ using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.Tools;
 using PairMatching.Models.Dtos;
 using PairMatching.DomainModel.BLModels;
-using PairMatching.DataAccess.Repositories;
-using System.ComponentModel.DataAnnotations;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -217,6 +213,12 @@ namespace PairMatching.DomainModel.Services
                 p.FromIsrael = israelParts.FirstOrDefault(i => i.Id == p.FromIsraelId);
                 p.FromWorld = worldParts.FirstOrDefault(i => i.Id == p.FromWorldId);
             }
+        }
+
+        public async Task AddNote(Note newNote, Pair pairModel)
+        {
+            pairModel.Notes.Add(newNote);
+            await UpdatePair(pairModel);
         }
     }
 
