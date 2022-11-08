@@ -56,10 +56,8 @@ namespace GuiWpf.ViewModels
                 {
                     if (_selectedParticipant != null)
                     {
-                        _ea.GetEvent<GetNotesListEvent>()
-                        .Publish(SelectedParticipant.Notes);
-                        _ea.GetEvent<ModelEnterEvent>()
-                            .Publish((SelectedParticipant, ModelType.Participant));
+                        _ea.GetEvent<ManageNotesForParticipiantEvent>()
+                            .Publish(_selectedParticipant);
                     }
                 };
             }
@@ -275,43 +273,40 @@ namespace GuiWpf.ViewModels
         private void SubscribeToEvents()
         {
             _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => IsAddFormOpen = isClose);
-            
+
+            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => IsSendEmailOpen = isClose);
+
             _ea.GetEvent<AddParticipantEvent>().Subscribe( (part) =>
             {
                 Participiants.Add(part);
                 //await _participantService.UpserteParticipant(part);
-            });
+            });       
             
-            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
-            {
-                IsSendEmailOpen = isClose;
-            });
+            //_ea.GetEvent<NewNoteForParticipaintEvent>()
+            //    .Subscribe(async (id_note) =>
+            //    {
+            //        var part = Participiants.ItemsSource
+            //            .FirstOrDefault(p => p.Id == id_note.Item1);
+            //        if (part == null)
+            //        {
+            //            return;
+            //        }
+            //        part.Notes.Add(id_note.Item2);
+            //        await _participantService.UpdateParticipaint(part);
+            //    });
             
-            _ea.GetEvent<NewNoteForParticipaintEvent>()
-                .Subscribe(async (id_note) =>
-                {
-                    var part = Participiants.ItemsSource
-                        .FirstOrDefault(p => p.Id == id_note.Item1);
-                    if (part == null)
-                    {
-                        return;
-                    }
-                    part.Notes.Add(id_note.Item2);
-                    await _participantService.UpdateParticipaint(part);
-                });
-            
-            _ea.GetEvent<DeleteNoteFromParticipiantEvent>()
-                .Subscribe(async (id_note) =>
-                {
-                    var part = Participiants.ItemsSource
-                        .FirstOrDefault(p => p.Id == id_note.Item1);
-                    if(part == null)
-                    {
-                        return;
-                    }
-                    part.Notes.Remove(id_note.Item2);
-                    await _participantService.UpdateParticipaint(part);
-                });
+            //_ea.GetEvent<DeleteNoteFromParticipiantEvent>()
+            //    .Subscribe(async (id_note) =>
+            //    {
+            //        var part = Participiants.ItemsSource
+            //            .FirstOrDefault(p => p.Id == id_note.Item1);
+            //        if(part == null)
+            //        {
+            //            return;
+            //        }
+            //        part.Notes.Remove(id_note.Item2);
+            //        await _participantService.UpdateParticipaint(part);
+            //    });
         }
 
         private bool ParticipiantsFilter(Participant participant)

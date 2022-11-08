@@ -1,16 +1,10 @@
 ﻿using GuiWpf.Views;
 using Prism.Ioc;
 using Prism.Unity;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Windows;
 using PairMatching.DomainModel.DataAccessFactory;
-using PairMatching.Configurations;
-using Newtonsoft.Json;
 using PairMatching.DomainModel.Email;
 using PairMatching.DomainModel.Services;
-using static PairMatching.Tools.HelperFunction;
 using Prism.Mvvm;
 using GuiWpf.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
@@ -72,18 +66,23 @@ namespace GuiWpf
             ViewModelLocationProvider.Register<AddParticipantForm, AddParticipantFormViewModel>();
             ViewModelLocationProvider.Register<EmailsView, EmailsViewModel>();
             ViewModelLocationProvider.Register<ParisView, PairsViewModel>();
-            ViewModelLocationProvider.Register<NotesView, NotesViewModel>();
+            //ViewModelLocationProvider.Register<NotesView, NotesViewModel>();
             ViewModelLocationProvider.Register<SendEmailView, SendEmailViewModel>();
             ViewModelLocationProvider.Register<AutoMatchingView, AutoMatchingViewModel>();
             
         }
 
-        private void PrismApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private async void PrismApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK,
                 MessageBoxImage.Error, MessageBoxResult.None,
                 MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
-            
+
+            var emailSender = Container.Resolve<SendEmail>();
+            await emailSender.To("noam8shu@gmail.com")
+                .Subject("Bug in PairMatching")
+                .Body($"Message: {e.Exception.Message}\nSource: {e.Exception.Source}")
+                .SendOpenMailAsync();
         }
     }
 }

@@ -13,35 +13,15 @@ namespace GuiWpf.Events
 {
     public class CloseDialogEvent : PubSubEvent<bool> { }
 
-    public class AddParticipantEvent : PubSubEvent<Participant> { }
-
     public class GetNotesListEvent : PubSubEvent<IEnumerable<Note>> { }
-
-    public class NewNoteForParticipaintEvent : PubSubEvent<(string, Note)> { }
     
     public class NewNoteForPairEvent : PubSubEvent<(string, Note)> { }
 
-    public class DeleteNoteFromParticipiantEvent : PubSubEvent<(string, Note)> { }
-    
     public class DeleteNoteFromPairEvent : PubSubEvent<(string, Note)> { }
 
     public class ModelEnterEvent : PubSubEvent<(BaseModel, ModelType)> { }
 
-    public class ParticipantEnterEvent : PubSubEvent<Participant> { }
-
-    public class GetEmailAddressToParticipaintsEvent : PubSubEvent<IEnumerable<EmailAddress>> { }
-
     public class IsSendEmailEvent : PubSubEvent<bool> { }
-
-    public class NewMatchEvent : PubSubEvent<StandbyPair> { }
-    
-    public class RefreshMatchingEvent : PubSubEvent { }
-
-    public class NewPairEvent : PubSubEvent<Pair> { }
-
-    public class ShowFullComparisonEvent : PubSubEvent<(IEnumerable<PairSuggestion>, string)> { }
-
-    public class RefreshItemsEvnet : PubSubEvent<bool> { }
 
     public class NewEmailSendEvent : PubSubEvent<EmailModel> { }
 

@@ -52,10 +52,12 @@ namespace GuiWpf.ViewModels
                 {
                     if (_selectedPair != null)
                     {
-                        _ea.GetEvent<GetNotesListEvent>()
-                            .Publish(SelectedPair.Notes);
-                        _ea.GetEvent<ModelEnterEvent>()
-                            .Publish((SelectedPair, ModelType.Participant));
+                        _ea.GetEvent<ManageNotesForPairEvent>()
+                            .Publish(SelectedPair);
+                        //_ea.GetEvent<GetNotesListEvent>()
+                        //    .Publish(SelectedPair.Notes);
+                        //_ea.GetEvent<ModelEnterEvent>()
+                        //    .Publish((SelectedPair, ModelType.Participant));
                     }
                 }
             }
@@ -150,6 +152,15 @@ namespace GuiWpf.ViewModels
             IsInitialized = true;
         },
         () => !IsInitialized && !IsLoaded);
+
+        DelegateCommand _ClearFilterCommand;
+        public DelegateCommand ClearFilterCommand => _ClearFilterCommand ??= new(
+        () =>
+        {
+            PairKindFilter = PairKind.All;
+            TrackFilter = allTracks;
+            YearsFilter = allYears;
+        });
         #endregion
 
         #region Mathods
@@ -159,6 +170,9 @@ namespace GuiWpf.ViewModels
 
             var list = await _pairsService.GetAllPairs();
             _pairs.Clear();
+            var l = from p in list
+            orderby p.Notes.Count
+            select p;
             _pairs.AddRange(list);
             Pairs.Init(_pairs, 5, PairsFilter);
 
@@ -199,27 +213,27 @@ namespace GuiWpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            _ea.GetEvent<NewNoteForPairEvent>().Subscribe((id_note) =>
-            {
-                var pair = Pairs.ItemsSource.FirstOrDefault(p => p.Id == id_note.Item1);
-                if (pair == null)
-                {
-                    return;
-                }
-                pair.Notes.Add(id_note.Item2);
-                _pairsService.UpdatePair(pair);
-            });
+            //_ea.GetEvent<NewNoteForPairEvent>().Subscribe((id_note) =>
+            //{
+            //    var pair = Pairs.ItemsSource.FirstOrDefault(p => p.Id == id_note.Item1);
+            //    if (pair == null)
+            //    {
+            //        return;
+            //    }
+            //    pair.Notes.Add(id_note.Item2);
+            //    _pairsService.UpdatePair(pair);
+            //});
             
-            _ea.GetEvent<DeleteNoteFromPairEvent>().Subscribe((id_note) =>
-            {
-                var pair = Pairs.ItemsSource.FirstOrDefault(p => p.Id == id_note.Item1);
-                if (pair == null)
-                {
-                    return;
-                }
-                pair.Notes.Remove(id_note.Item2);
-                _pairsService.UpdatePair(pair);
-            });
+            //_ea.GetEvent<DeleteNoteFromPairEvent>().Subscribe((id_note) =>
+            //{
+            //    var pair = Pairs.ItemsSource.FirstOrDefault(p => p.Id == id_note.Item1);
+            //    if (pair == null)
+            //    {
+            //        return;
+            //    }
+            //    pair.Notes.Remove(id_note.Item2);
+            //    _pairsService.UpdatePair(pair);
+            //});
             
             _ea.GetEvent<NewPairEvent>().Subscribe((pair) =>
             {
