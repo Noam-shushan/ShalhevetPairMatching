@@ -1,0 +1,40 @@
+{
+  "IsTest": false,
+  "ConnctionsStrings": "mongodb+srv://NoamShushan:whDhb2wbWgwdOVKt@cluster0.l83mq.mongodb.net/Shalhevet?retryWrites=true&w=majority",
+  "ConfigIdInMongo": "6347152cdb4d761093357b54",
+  "MailSettingsDict": {
+    "Production": {
+      "Host": "smtp.gmail.com",
+      "Port": 465,
+      "From": "shalhevet@steinsaltzyeshiva.com",
+      "UserName": "Shalhevet",
+      "Password": "Chalom11",
+      "EnableSsl": true
+    },
+    "Test": {
+      "Host": "localhost",
+      "Port": 25,
+      "EnableSsl": false,
+      "From": "shalhevet@steinsaltzyeshiva.com",
+      "UserName": "Shalhevet"
+    }
+  },
+  "SpreadsheetsId": {
+    "English": "1s8JObwXhv9kCdAEX6e_m4SV6N0_RRRgmoeyoG1oR82c",
+    "Hebrew": "17gvL05Ar-0nCAKvLtAj_HUXDCmXs5L61qk_lkBSUIFo"
+  },
+  "WixApi": {
+    "newApplicants": "https://shalhevet.steinsaltzyeshiva.com/_functions/newApplicants/{INDEX OF THE LAST APPLICANTS RECIEVED}",
+    "getApplicant": "https://shalhevet.steinsaltzyeshiva.com/_functions/getApplicant/{INDEX OF THE APPLICANT TO GET INFO}",
+    "sendMembers": "https://shalhevet.steinsaltzyeshiva.com/_functions/sendMembers/",
+    "updateMember": "https://shalhevet.steinsaltzyeshiva.com/_functions/updateMember/",
+    "sendEmails": "https://shalhevet.steinsaltzyeshiva.com/_functions/sendEmails/",
+    "newMember": "https://shalhevet.steinsaltzyeshiva.com/_functions/newMember/",
+    "verifieyEmail": "https://liatshaked.wixsite.com/yeshiva/_functions/sentEmailStatus/{EMAIL ID}"
+  },
+  "Mailerlite": {
+    "kay": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiODNmNjU5NzMwZjU5YmMzYWRlZGQwYTY3ZmRmZWY1YzNkYmNjNjBjYjFmN2QzZjg3Y2Q3MjZiMTAzNzBiOTQ0M2YxOGU1MTc0ZjllZWEzMTQiLCJpYXQiOjE2NTg5NTU1NzUuMTY3MzMzLCJuYmYiOjE2NTg5NTU1NzUuMTY3MzM2LCJleHAiOjQ4MTQ2MjkxNzUuMTYyODczLCJzdWIiOiIxMzU5NjciLCJzY29wZXMiOltdfQ.UkNlAzPqqwhNM-nInsW_BFAhZrNJlHwXcK7VA-YF-_5G4OdHdPu4CVJxZZvegv1lRv883hbNblTNk9au-MYQCdfxuIXmrJJe_kUCylGukjfFB5oilwR-nKycVJntnxa3y2R9cmjZztb0DFpX2S3labicobhHZUiqGLeukHvLB5bCIeDZnhk-KK-_5mqBf8Hv4Dgfay_E0qUCHq3psbyeZEKAntCO7d04vbh642CFIR0cOrThe8JQGTj1oQ2VKWD-q0qjN1GEMBbeRLykINVBdy3nqnt_Qu8CEjYQygyfcWF2pMstixwUxWg8KMoIl_fmwCW2RCIANwesbkYeMav9CKjBSpnG7FA27jU2AOhqVYzyy_ocULiQVywLporoL8bRTCXrt3SdA69kvGfVDyxlxxx5hWmJjSlrTCYngqnDYkIldw50PU1sE37XFDrlFRrTjy3pC2x9za3D9VuOBdHfDPgcse0fr90WayCPxwXyOVgC4ZyNgXTHip0yZh6TTm_VQ6-RcZ6eqEXn_d2JQhbS5D2sspjePNVwwbDFtM-xKfXDhFm1ZNSx9lVEuWScbfTfukbC3SK0qBnP_LL5yFtWI-olPslpDrSCK9a3wd1vjh1RC7nyr5Di78mPhauln8kVAx2LvAo0r27EJsxET8FZqaKkdrUD2tB2ftSbkooPq68",
+    "base_url": "https://connect.mailerlite.com/"
+  },
+  "LogIdForError": "55cd96d4-da90-4c0b-ae57-42dfb023e4e4"
+}
