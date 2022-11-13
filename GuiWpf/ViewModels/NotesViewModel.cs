@@ -1,4 +1,5 @@
 ﻿using GuiWpf.Events;
+using MailKit;
 using PairMatching.DomainModel.Services;
 using PairMatching.Models;
 using Prism.Commands;
@@ -17,57 +18,33 @@ namespace GuiWpf.ViewModels
 {   
     public class NotesViewModel : BindableBase
     {
-        readonly IEventAggregator _ea;
-
-        readonly ParticipantService _participantService;
+        IParticipantService _participantService;
         
+        IPairsService _pairService;
 
-        private Participant _participantModel;
-
-
-        readonly PairService _pairService;
-
-        private Pair _pairModel;
-
-        //static int count = 0;
-        
-        public NotesViewModel(IEventAggregator ea, ParticipantService participantService)
+        private BaseModel _currentModel;
+        public BaseModel CurrentModel
         {
-            _ea = ea;
-
+            get => _currentModel;
+            set => SetProperty(ref _currentModel, value);
+        }
+        
+        public void Init(BaseModel model)
+        {
+            CurrentModel = model;
+            Notes.Clear();
+            Notes.AddRange(CurrentModel.Notes);
+        }
+        
+        public NotesViewModel(IParticipantService participantService, IPairsService pairService) 
+        {
             _participantService = participantService;
-
-            _ea.GetEvent<ManageNotesForParticipiantEvent>()
-                .Subscribe((participant) =>
-                {
-                    //++count;
-                    //MessageBox.Show($"{count}");
-                    _participantModel = participant;
-                    Notes.Clear();
-                    Notes.AddRange(_participantModel.Notes);                   
-                });
-
-            _ea.GetEvent<ManageNotesForPairEvent>()
-                .Subscribe((pair) =>
-                {
-                    _pairModel = pair;
-                    Notes.Clear();
-                    Notes.AddRange(_pairModel.Notes);
-                });
+            _pairService = pairService;
         }
 
         public ObservableCollection<Note> Notes { get; set; } = new();
 
         #region Properties
-        private ModelType _modelType;
-        public ModelType ModelType
-        {
-            get => _modelType;
-            set => SetProperty(ref _modelType, value);
-        }
-
-        
-
         private Note _selectedNote;
         public Note SelectedNote
         {
@@ -110,7 +87,7 @@ namespace GuiWpf.ViewModels
         async () =>
         {
             await AddNote();
-        }, () => false);
+        }, () => true);
 
 
 
@@ -123,20 +100,10 @@ namespace GuiWpf.ViewModels
 
         DelegateCommand _DeleteNoteCommand;
         public DelegateCommand DeleteNoteCommand => _DeleteNoteCommand ??= new(
-        () =>
+        async () =>
         {
-            switch (ModelType)
-            {
-                case ModelType.Participant:
-                    _ea.GetEvent<DeleteNoteFromParticipiantEvent>().Publish(("", SelectedNote));
-                    break;
-                case ModelType.Pair:
-                    _ea.GetEvent<DeleteNoteFromPairEvent>().Publish(("", SelectedNote));
-                    break;
-            }
-            Reset();
-            Notes.Remove(SelectedNote);
-        }, () => false);
+            await DeleteNote();
+        });
         #endregion
 
 
@@ -151,17 +118,31 @@ namespace GuiWpf.ViewModels
             };
 
             Notes.Add(newNote);
-
-            if (_participantModel != null)
+            
+            if (CurrentModel is Participant participant)
             {
-                await _participantService.AddNote(newNote, _participantModel);
+                await _participantService.AddNote(newNote, participant);
             }
-            else if (_pairModel != null)
+            else if (CurrentModel is Pair pair)
             {
-                await _pairService.AddNote(newNote, _pairModel);
+                await _pairService.AddNote(newNote, pair);
             }
             Reset();
             IsNewNoteFormOpen = !IsNewNoteFormOpen;
+        }
+        
+        private async Task DeleteNote()
+        {
+            var noteToDelete = SelectedNote;
+            Notes.Remove(SelectedNote);
+            if (CurrentModel is Participant participant)
+            {
+                await _participantService.DeleteNote(noteToDelete, participant);
+            }
+            else if (CurrentModel is Pair pair)
+            {
+                await _pairService.DeleteNote(noteToDelete, pair);
+            }
         }
 
         private void Reset()

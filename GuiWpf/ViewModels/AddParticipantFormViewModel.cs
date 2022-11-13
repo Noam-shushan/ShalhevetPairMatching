@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PairMatching.Tools;
 using Prism.Ioc;
 using Prism.Events;
 using PairMatching.Models;
 using GuiWpf.Events;
+using System.Collections.ObjectModel;
 
 namespace GuiWpf.ViewModels
 {
@@ -84,13 +86,6 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _prefferdTrack, value);
         }
 
-        private List<LearningTime> _learningTimes;
-        public List<LearningTime> LearningTimes
-        {
-            get => _learningTimes;
-            set => SetProperty(ref _learningTimes, value);
-        }
-
         private Genders _prefferdGender;
         public Genders PrefferdGender
         {
@@ -145,8 +140,44 @@ namespace GuiWpf.ViewModels
         {
             get => _isFromIsrael;
             set => SetProperty(ref _isFromIsrael, value);
-        } 
+        }
+
+
+        private ObservableCollection<LearningTime> _learningTimes = new();
+        public ObservableCollection<LearningTime> LearningTimes
+        {
+            get => _learningTimes;
+            set => SetProperty(ref _learningTimes, value);
+        }
         #endregion
+
+        DelegateCommand<object> _SelectTimeInDayCommand;
+        public DelegateCommand<object> SelectTimeInDayCommand => _SelectTimeInDayCommand ??= new(
+        (timeInDayParam) =>
+        {
+            if (timeInDayParam is Tuple<Days, TimesInDay> timeInDay)
+            {
+                LearningTimes.Add(new LearningTime
+                {
+                    Day = timeInDay.Item1,
+                    TimeInDay = new List<TimesInDay> { timeInDay.Item2 }
+                });
+            }
+        });
+
+        DelegateCommand<object> _RemoveTimeInDayCommand;
+        public DelegateCommand<object> RemoveTimeInDayCommand => _RemoveTimeInDayCommand ??= new(
+        (timeInDayParam) =>
+        {
+            if (timeInDayParam is Tuple<Days, TimesInDay> timeInDay)
+            {
+                LearningTimes.Remove(new LearningTime
+                {
+                    Day = timeInDay.Item1,
+                    TimeInDay = new List<TimesInDay> { timeInDay.Item2 }
+                });
+            }
+        });
 
         DelegateCommand _addCommand;
         public DelegateCommand AddCommand => _addCommand ??= new(
@@ -157,7 +188,13 @@ namespace GuiWpf.ViewModels
             {
                 Tracks = new[] { PrefferdTrack },
                 Gender = PrefferdGender,
-                LearningTime = LearningTimes,
+                LearningTime = from lt in LearningTimes
+                               group lt by lt.Day into day
+                               select new LearningTime
+                               {
+                                   Day = day.Key,
+                                   TimeInDay = day.SelectMany(t => t.TimeInDay).ToList()
+                               },
                 LearningStyle = LearningStyle
             };
             if(IsFromIsrael)

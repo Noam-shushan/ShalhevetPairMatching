@@ -71,6 +71,13 @@ namespace GuiWpf.ViewModels
             get => _isLeftToRight;
             set => SetProperty(ref _isLeftToRight, value);
         }
+
+        private string _link;
+        public string Link
+        {
+            get => _link;
+            set => SetProperty(ref _link, value);
+        }
         #endregion
 
         #region Commands
@@ -79,14 +86,14 @@ namespace GuiWpf.ViewModels
         () =>
         {
             AddFiles();
-        });
+        }, () => false);
 
         DelegateCommand _removeAttachmentsCommand;
         public DelegateCommand RemoveAttachmentCommand => _removeAttachmentsCommand ??= new(
         () =>
         {
             Attachments.Remove(SelectedFile);
-        });
+        }, () => false);
 
         DelegateCommand _cloesCommand;
         public DelegateCommand CloesCommand => _cloesCommand ??= new(
@@ -114,7 +121,9 @@ namespace GuiWpf.ViewModels
                     Body = Body,
                     SendingDate = DateTime.Now,
                     Subject = Subject,
-                    To = To,
+                    To = To.ToList(),
+                    HtmlBody = "",
+                    Link = Link,
                     Language = IsLeftToRight ? "en" : "he"
                 });
                 _ea.GetEvent<IsSendEmailEvent>().Publish(false);
@@ -124,8 +133,7 @@ namespace GuiWpf.ViewModels
             {
                 throw;
             }
-        },
-        () => false); 
+        }); 
         #endregion
 
 

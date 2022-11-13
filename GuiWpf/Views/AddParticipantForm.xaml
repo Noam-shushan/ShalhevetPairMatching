@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ex="clr-namespace:GuiWpf.Exstensions"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
@@ -11,8 +12,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     xmlns:prism="http://prismlibrary.com/"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="650"
+    d:DesignWidth="1000"
     prism:ViewModelLocator.AutoWireViewModel="True"
     FontSize="15"
     mc:Ignorable="d">
@@ -115,6 +116,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
@@ -256,13 +258,88 @@
             <Button
                 Grid.Row="8"
                 Grid.Column="0"
-                Grid.ColumnSpan="3"
+                Grid.ColumnSpan="4"
                 Height="40"
                 Margin="10"
                 HorizontalAlignment="Center"
                 Command="{Binding AddCommand}"
                 Content="הוסף"
                 Foreground="#F5F5F5" />
+
+            <Grid Grid.RowSpan="8" Grid.Column="3">
+                <!--<CheckBox Grid.Row="0" Content="ראשון" />
+                <CheckBox Grid.Row="1" Content="שני" />
+                <CheckBox Grid.Row="2" Content="שלישי" />
+                <CheckBox Grid.Row="3" Content="רביעי" />
+                <CheckBox Grid.Row="4" Content="חמישי" />-->
+                <ScrollViewer
+                    Margin="0,10"
+                    mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Hidden">
+                    <ListBox ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Days}}}" Style="{StaticResource MaterialDesignCardsListBox}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        x:Name="dayTextBlock"
+                                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                        Text="{Binding Path=.}" />
+
+                                    <ListBox Grid.Row="1" ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:TimesInDay}}}">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <ToggleButton
+                                                    x:Name="timeToggleButton"
+                                                    Content="{Binding Path=.}"
+                                                    Style="{StaticResource MahApps.Styles.ToggleButton}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="Checked">
+                                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectTimeInDayCommand, RelativeSource={RelativeSource AncestorType=local:AddParticipantForm}}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource WarpTimeWithHisDayEnumsConverter}">
+                                                                        <Binding ElementName="dayTextBlock" Path="Text" />
+                                                                        <Binding ElementName="timeToggleButton" Path="Content" />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                        <i:EventTrigger EventName="Unchecked">
+                                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.RemoveTimeInDayCommand, RelativeSource={RelativeSource AncestorType=local:AddParticipantForm}}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource WarpTimeWithHisDayEnumsConverter}">
+                                                                        <Binding ElementName="dayTextBlock" Path="Text" />
+                                                                        <Binding ElementName="timeToggleButton" Path="Content" />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </ToggleButton>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </Grid>
 
         </Grid>
     </DockPanel>
