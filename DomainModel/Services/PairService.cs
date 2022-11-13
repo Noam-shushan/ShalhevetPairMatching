@@ -68,7 +68,7 @@ namespace PairMatching.DomainModel.Services
                 .WorldParticipantsRepositry
                 // Update the world participaint
                 .Update(pair.FromWorld as WorldParticipant));
-
+            
             var newPair = await _unitOfWork.PairsRepositry.Insert(pair);
             
             return newPair;
@@ -82,6 +82,14 @@ namespace PairMatching.DomainModel.Services
                 Track = track,
                 DateOfUpdate = DateTime.Now
             });
+
+            //await _wix.NewPair(new NewPairWixDto
+            //{
+            //    chevrutaIdFirst = pair.FromIsraelId,
+            //    chevrutaIdSecond = pair.FromWorldId,
+            //    date = DateTime.Now,
+            //    trackId = track.GetDescriptionIdFromEnum()
+            //});
             
             await _unitOfWork
                     .PairsRepositry
@@ -96,7 +104,6 @@ namespace PairMatching.DomainModel.Services
                      .PairsRepositry
                      .Update(pair);
         }
-
 
         public async Task DeletePair(Pair pair)
         {
@@ -219,6 +226,12 @@ namespace PairMatching.DomainModel.Services
         {
             pairModel.Notes.Add(newNote);
             await UpdatePair(pairModel);
+        }
+
+        public async Task DeleteNote(Note selectedNote, Pair pair)
+        {
+            pair.Notes.Remove(selectedNote);
+            await UpdatePair(pair);
         }
     }
 

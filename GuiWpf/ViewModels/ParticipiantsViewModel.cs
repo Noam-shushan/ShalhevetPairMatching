@@ -22,18 +22,15 @@ namespace GuiWpf.ViewModels
     {
         readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
-        readonly IDialogCoordinator _dialog;
 
-        public ParticipiantsViewModel(IParticipantService participantService, IEventAggregator ea, IDialogCoordinator dialog)
+        public ParticipiantsViewModel(IParticipantService participantService, IPairsService pairService,  IEventAggregator ea)
         {
             _participantService = participantService;
             _ea = ea;
 
-            //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
-            //Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
-
             SubscribeToEvents();
-            _dialog = dialog;
+
+            MyNotesViewModel = new NotesViewModel(participantService, pairService);
         }
         
         #region Properties:
@@ -56,14 +53,20 @@ namespace GuiWpf.ViewModels
                 {
                     if (_selectedParticipant != null)
                     {
-                        _ea.GetEvent<ManageNotesForParticipiantEvent>()
-                            .Publish(_selectedParticipant);
+                        MyNotesViewModel.Init(_selectedParticipant);
                     }
                 };
             }
         }
-        #endregion
         
+        private NotesViewModel _myNotesViewModel;
+        public NotesViewModel MyNotesViewModel
+        {
+            get => _myNotesViewModel;
+            set => SetProperty(ref _myNotesViewModel, value);
+        }
+        #endregion
+
         #region Navigation Properties
         private bool _isAddFormOpen = false;
         public bool IsAddFormOpen
@@ -162,12 +165,11 @@ namespace GuiWpf.ViewModels
         public DelegateCommand Load => _load ??= new(
                async () =>
                {
-                   //await MetroProgressOnLoading();
                    await Refresh();
                    
                    IsInitialized = true;
                },
-               () => !IsInitialized || IsLoaded);
+               () => !IsInitialized && !IsLoaded);
 
         DelegateCommand _sendEmailToManyCommand;
         public DelegateCommand SendEmailToManyCommand => _sendEmailToManyCommand ??= new(
@@ -217,20 +219,24 @@ namespace GuiWpf.ViewModels
         public DelegateCommand SendToArchivCommand => _SendToArchivCommand ??= new(
         async () =>
         {
+            IsLoaded = true;
             await _participantService.SendToArcive(SelectedParticipant);
             SelectedParticipant.IsInArchive = true;
             Participiants.Refresh();
-        });
+            IsLoaded = false;
+        }, () => !IsLoaded);
 
 
         DelegateCommand _DeleteCommand;
         public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
         async () =>
         {
+            IsLoaded = true;
             await _participantService.DeleteParticipaint(SelectedParticipant);
             Participiants.ItemsSource.Remove(SelectedParticipant);
             Participiants.Refresh();
-        });
+            IsLoaded = false;
+        }, () => !IsLoaded);
 
         DelegateCommand _addParticipantCommand;
         public DelegateCommand AddParticipantCommand => _addParticipantCommand ??= new(
@@ -247,6 +253,7 @@ namespace GuiWpf.ViewModels
             FromIsraelFilter = ParticipiantsFrom.All;
             PartsKindFilter = ParticipiantsKind.All;
             YearsFilter = allYears;
+            SearchParticipiantsWord = ""; 
         });
         #endregion
 
@@ -260,8 +267,7 @@ namespace GuiWpf.ViewModels
 
             Participiants.Init(parts, 10, ParticipiantsFilter);
 
-            //Participiants.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Participant.Country)));
-            //Participiants.SortDescriptions.Add(new SortDescription(nameof(Participant.DateOfRegistered), ListSortDirection.Descending));
+            
 
             Years.Clear();
             Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
@@ -276,37 +282,11 @@ namespace GuiWpf.ViewModels
 
             _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => IsSendEmailOpen = isClose);
 
-            _ea.GetEvent<AddParticipantEvent>().Subscribe( (part) =>
+            _ea.GetEvent<AddParticipantEvent>().Subscribe(async (part) =>
             {
-                Participiants.Add(part);
-                //await _participantService.UpserteParticipant(part);
+                var newParticipaint = await _participantService.InsertParticipant(part);
+                Participiants.Add(newParticipaint);
             });       
-            
-            //_ea.GetEvent<NewNoteForParticipaintEvent>()
-            //    .Subscribe(async (id_note) =>
-            //    {
-            //        var part = Participiants.ItemsSource
-            //            .FirstOrDefault(p => p.Id == id_note.Item1);
-            //        if (part == null)
-            //        {
-            //            return;
-            //        }
-            //        part.Notes.Add(id_note.Item2);
-            //        await _participantService.UpdateParticipaint(part);
-            //    });
-            
-            //_ea.GetEvent<DeleteNoteFromParticipiantEvent>()
-            //    .Subscribe(async (id_note) =>
-            //    {
-            //        var part = Participiants.ItemsSource
-            //            .FirstOrDefault(p => p.Id == id_note.Item1);
-            //        if(part == null)
-            //        {
-            //            return;
-            //        }
-            //        part.Notes.Remove(id_note.Item2);
-            //        await _participantService.UpdateParticipaint(part);
-            //    });
         }
 
         private bool ParticipiantsFilter(Participant participant)

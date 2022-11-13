@@ -11,6 +11,8 @@ namespace GuiWpf.Exstensions
 {
     public class EnumBindingSourceExtension : MarkupExtension
     {
+        public EnumBindingSourceExtension() { }
+
         public Type EnumType { get; private set; }
 
         public EnumBindingSourceExtension(Type enumType)
@@ -28,7 +30,9 @@ namespace GuiWpf.Exstensions
             var result = enumValues
                 .Cast<Enum>()
                 .Select(value => value.GetDescriptionFromEnumValue());
-            return result;
+            return from v in result
+                   where v != string.Empty
+                   select v;
         }
     }
 }

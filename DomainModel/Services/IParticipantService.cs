@@ -21,5 +21,6 @@ namespace PairMatching.DomainModel.Services
         Task<Participant> InsertParticipant(Participant participant);
         Task UpdateParticipaint(Participant participant);
         Task AddNote(Note note, Participant participant);
+        Task DeleteNote(Note selectedNote, Participant participant);
     }
 }

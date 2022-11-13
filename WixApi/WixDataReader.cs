@@ -11,6 +11,8 @@ using PairMatching.Tools;
 using PairMatching.Models;
 using System.Net.Http.Json;
 using System.IO;
+using MongoDB.Bson.IO;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace PairMatching.WixApi
 {
@@ -29,36 +31,32 @@ namespace PairMatching.WixApi
 
         public async Task<IEnumerable<ParticipantWixDto>> GetNewParticipants(int index = 100)
         {
-            var query = _configuration
-                .WixApi["newApplicants"]
-                .Replace("{INDEX OF THE LAST APPLICANTS RECIEVED}", $"{index}");
-
-            var jsonContent = await _http.GetAsync(query);
-
-            var parsedObject = JObject.Parse(jsonContent);
-
-            var jsonPartsDtos = parsedObject["items"].ToString();
-
-            var data = JsonConvert
-                .DeserializeObject<IEnumerable<ParticipantWixDto>>(jsonPartsDtos);
-
-            return data;
-        }
-
-        public async Task<IEnumerable<EmailAddress>> SendEmail(EmailModel emailDto)
-        {
-            var query = _configuration.WixApi["sendEmails"];
-            
-            var email = new
+            try
             {
-                to = emailDto.To.Select(i => i.ParticipantWixId),
-                subject = emailDto.Subject,
-                body = emailDto.Body
-            };        
+                var query = _configuration
+                        .WixApi["newApplicants"]
+                        .Replace("{INDEX OF THE LAST APPLICANTS RECIEVED}", $"{index}");
 
-            await _http.PostAsync(query, email);
+                var jsonContent = await _http.GetAsync(query);
 
-            return null;
+                var parsedObject = JObject.Parse(jsonContent);
+
+                var jsonPartsDtos = parsedObject["items"].ToString();
+
+                var data = JsonConvert
+                    .DeserializeObject<IEnumerable<ParticipantWixDto>>(jsonPartsDtos);
+
+                return data;
+            }
+            catch (KeyNotFoundException)
+            {
+                return new List<ParticipantWixDto>();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<string> SendEmail(dynamic email)
@@ -91,7 +89,7 @@ namespace PairMatching.WixApi
         {
             var query = _configuration.WixApi["sendMembers"];
 
-            await _http.PostAsync(query, pairDto);
+            var jsonContent = await _http.PostAsync(query, pairDto);
         }
 
         public async Task UpsertParticipaint(UpsertParticipantOnWixDto participantDto)
@@ -124,9 +122,11 @@ namespace PairMatching.WixApi
         public async Task<IEnumerable<EmailRecipientsWixDto>> VerifieyEmail(string emailId)
         {
             var query = _configuration.WixApi["verifieyEmail"]
-                .Replace("{Email Id}", emailId);
+                .Replace("{EMAIL ID}", emailId);
 
-            var content = await _http.GetAsync(query);
+            var jsonContent = await _http.GetAsync(query);
+            var parsedObject = JObject.Parse(jsonContent);
+            var content = parsedObject["item"].ToString();
 
             var data = JsonConvert.DeserializeObject<IEnumerable<EmailRecipientsWixDto>>(content);
 

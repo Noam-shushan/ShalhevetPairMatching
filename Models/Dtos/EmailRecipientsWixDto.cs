@@ -12,7 +12,9 @@ namespace PairMatching.Models.Dtos
         [JsonProperty("contactId")]
         public string WixId { get; set; }
 
-        [JsonProperty("isSent")]
-        public bool IsSent { get; set; }
+        public bool IsSent { get => Status == "sent"; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
     }
 }

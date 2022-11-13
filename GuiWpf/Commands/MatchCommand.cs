@@ -29,10 +29,11 @@ namespace GuiWpf.Commands
 
         async Task Match(PairSuggestion pairSuggestion)
         {
+            _ea.GetEvent<CloseDialogEvent>().Publish(false);
             var newPair = await _pairsService.AddNewPair(pairSuggestion);
-
             await _matchingService.Refresh();
             _ea.GetEvent<RefreshMatchingEvent>().Publish();
+
 
             _ea.GetEvent<NewMatchEvent>()
                     .Publish(new() 

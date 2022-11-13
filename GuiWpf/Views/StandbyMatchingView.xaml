@@ -20,6 +20,7 @@
     </i:Interaction.Triggers>
     <Grid>
         <DataGrid
+            materialDesign:DataGridAssist.CornerRadius="10"
             AutoGenerateColumns="False"
             IsReadOnly="True"
             ItemsSource="{Binding StandbyPairs}"
@@ -36,6 +37,10 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn Binding="{Binding Pair.FromWorld.Name}" Header="משתתף מהתפוצות" />
+                <DataGridTextColumn
+                    Width="auto"
+                    Binding="{Binding Pair.Track, Converter={StaticResource EnumToStringConverter}}"
+                    Header="מסלול" />
 
                 <DataGridTemplateColumn Header="מספר הפסדים">
                     <DataGridTemplateColumn.CellTemplate>

@@ -14,21 +14,24 @@ using GuiWpf.UIModels;
 using System.Diagnostics;
 using PairMatching.Tools;
 using System.Windows.Controls.Primitives;
+using MailKit;
 
 namespace GuiWpf.ViewModels
 {
     public class PairsViewModel : ViewModelBase
     {
         readonly IPairsService _pairsService;
+        readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
 
-        public PairsViewModel(IPairsService pairsService, IEventAggregator ea)
+        public PairsViewModel(IPairsService pairsService, IParticipantService participantService, IEventAggregator ea)
         {
             _pairsService = pairsService;
+            _participantService = participantService;
             _ea = ea;
 
             SubscribeToEvents();
-
+            MyNotesViewModel = new NotesViewModel(_participantService, _pairsService);
         }
 
         #region Collections
@@ -52,16 +55,21 @@ namespace GuiWpf.ViewModels
                 {
                     if (_selectedPair != null)
                     {
-                        _ea.GetEvent<ManageNotesForPairEvent>()
-                            .Publish(SelectedPair);
-                        //_ea.GetEvent<GetNotesListEvent>()
-                        //    .Publish(SelectedPair.Notes);
-                        //_ea.GetEvent<ModelEnterEvent>()
-                        //    .Publish((SelectedPair, ModelType.Participant));
+                        if (_selectedPair != null)
+                        {
+                            MyNotesViewModel.Init(_selectedPair);
+                        }
                     }
                 }
             }
-        } 
+        }
+
+        private NotesViewModel _myNotesViewModel;
+        public NotesViewModel MyNotesViewModel
+        {
+            get => _myNotesViewModel;
+            set => SetProperty(ref _myNotesViewModel, value);
+        }
         #endregion
 
         #region Filtering
@@ -86,7 +94,7 @@ namespace GuiWpf.ViewModels
             {
                 if (SetProperty(ref _isAllSelected, value))
                 {
-                    Pairs.Items.OfType<Participant>()
+                    Pairs.FilterdItems
                         .ToList()
                         .ForEach(p => p.IsSelected = value);
                     Pairs.Refresh();
@@ -153,6 +161,53 @@ namespace GuiWpf.ViewModels
         },
         () => !IsInitialized && !IsLoaded);
 
+        DelegateCommand<object> _ChangeTrackCommand;
+        public DelegateCommand<object> ChangeTrackCommand => _ChangeTrackCommand ??= new(
+        async (track) =>
+        {
+            if(track is string trackStr)
+            {
+                var selectedTrack = Extensions.GetValueFromDescription<PrefferdTracks>(trackStr);
+                if (SelectedPair != null && SelectedPair.Track != selectedTrack)
+                {
+                    IsLoaded = true;
+                    await _pairsService.ChangeTrack(SelectedPair, selectedTrack);
+                    SelectedPair.Track = selectedTrack;
+                    IsLoaded = false;
+                }
+            }
+        }, (obj) => !IsLoaded);
+
+        DelegateCommand _DeleteAllPairsCommand;
+        public DelegateCommand DeleteAllPairsCommand => _DeleteAllPairsCommand ??= new(
+        async () =>
+        {
+            var pairsToDel = Pairs.FilterdItems.Where(p => p.IsSelected);
+            List<Task> tasks = new();
+            foreach(var p in pairsToDel)
+            {
+                tasks.Add(_pairsService.DeletePair(p));
+            }
+            await Task.WhenAll(tasks);
+            foreach(var p in pairsToDel)
+            {
+                Pairs.ItemsSource.Remove(p);
+            }
+            Pairs.Refresh();
+        });
+
+        DelegateCommand _DeletePairCommand;
+        public DelegateCommand DeletePairCommand => _DeletePairCommand ??= new(
+        async () =>
+        {
+            if (SelectedPair != null)
+            {
+                await _pairsService.DeletePair(SelectedPair);
+                Pairs.ItemsSource.Remove(SelectedPair);
+                Pairs.Refresh();
+            }
+        });
+
         DelegateCommand _ClearFilterCommand;
         public DelegateCommand ClearFilterCommand => _ClearFilterCommand ??= new(
         () =>
@@ -160,6 +215,7 @@ namespace GuiWpf.ViewModels
             PairKindFilter = PairKind.All;
             TrackFilter = allTracks;
             YearsFilter = allYears;
+            SearchPairsWord = "";
         });
         #endregion
 

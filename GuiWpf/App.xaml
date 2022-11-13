@@ -78,6 +78,7 @@
             <converters:AddOneConverter x:Key="AddOneConverter" />
             <materialDesign:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:ListOfStrintsToStringsConverter x:Key="ListOfStrintsToStringsConverter" />
+            <converters:WarpTimeWithHisDayEnumsConverter x:Key="WarpTimeWithHisDayEnumsConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
