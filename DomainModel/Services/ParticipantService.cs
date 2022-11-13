@@ -37,13 +37,10 @@ namespace PairMatching.DomainModel.Services
             var result = new List<Participant>();
             var tasks = new List<Task>();
 
-            //await SetNewParticipintsFromWix();
+            await SetNewParticipintsFromWix();
 
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();
-
-            //await _unitOfWork.IsraelParticipantsRepositry.SaveToDrive();
-            //await _unitOfWork.WorldParticipantsRepositry.SaveToDrive();
 
             tasks.Add(ips);
             tasks.Add(wps);
@@ -98,15 +95,26 @@ namespace PairMatching.DomainModel.Services
                 {
                     wp.UtcOffset = countryUts[wp.Country];
                 }
+                
+                if (ips.Any())
+                {
+                    await _unitOfWork.IsraelParticipantsRepositry
+                            .InsertMany(ips);
+                }
 
-                await _unitOfWork.IsraelParticipantsRepositry
-                    .InsertMany(ips);
-
-                await _unitOfWork.WorldParticipantsRepositry
-                        .InsertMany(wps);
-
-                config.WixIndex = partsDtos.Max(p => p.index);
-                await _unitOfWork.ConfigRepositry.UpdateDbConfig(config);
+                if (wps.Any())
+                {
+                    await _unitOfWork.WorldParticipantsRepositry
+                            .InsertMany(wps);
+                }
+              
+                int newMaxIndex = partsDtos.Max(p => p.index);
+                if(newMaxIndex != config.WixIndex)
+                {
+                    config.WixIndex = newMaxIndex;
+                    await _unitOfWork.ConfigRepositry
+                        .UpdateDbConfig(config);
+                }
             }
         }
 
@@ -135,7 +143,7 @@ namespace PairMatching.DomainModel.Services
         public async Task<Participant> InsertParticipant(Participant part)
         {
             dynamic wixId = await GetWixId(part);
-            
+
             part.WixId = wixId;
 
             Participant result = new();
@@ -268,6 +276,12 @@ namespace PairMatching.DomainModel.Services
                 }
                 return result;
             }
+        }
+
+        public async Task DeleteNote(Note selectedNote, Participant participant)
+        {
+            participant.Notes.Remove(selectedNote);
+            await UpdateParticipaint(participant);
         }
     }
 }

@@ -10,7 +10,6 @@
     xmlns:prism="http://prismlibrary.com/"
     d:DesignHeight="200"
     d:DesignWidth="400"
-    prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Grid>
         <GroupBox Header="הערות">
@@ -31,6 +30,19 @@
                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                         SelectedItem="{Binding SelectedNote}">
                         <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ToggleButton
+                                            Width="23"
+                                            Height="23"
+                                            Cursor="Hand"
+                                            Foreground="{StaticResource MainColor}"
+                                            IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DetailsVisibility, Converter={StaticResource VisbilityToBooleanConverter}, Mode=TwoWay}"
+                                            Style="{StaticResource MaterialDesignExpandCollapseToggleStyle}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Binding="{Binding Date, StringFormat=d}" Header="תאריך" />
                             <DataGridTextColumn Binding="{Binding Author}" Header="כותב ההערה" />
                             <DataGridTextColumn Binding="{Binding Subject}" Header="נושא" />
@@ -50,7 +62,7 @@
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
                                 <TextBlock
-                                    Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                    Style="{StaticResource MaterialDesignBody2TextBlock}"
                                     Text="{Binding Content}"
                                     TextWrapping="WrapWithOverflow" />
                             </DataTemplate>

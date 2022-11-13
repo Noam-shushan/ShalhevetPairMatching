@@ -41,7 +41,7 @@ namespace GuiWpf.ViewModels
         {
             await Refresh();
             IsInitialized = true;
-        }, () => !IsInitialized || !IsLoaded);
+        }, () => !IsInitialized && !IsLoaded);
 
         private async Task Refresh()
         {
@@ -51,7 +51,7 @@ namespace GuiWpf.ViewModels
             StandbyPairs.Clear();
             StandbyPairs.AddRange(pairs);
 
-            IsLoaded = true;
+            IsLoaded = false;
         }
 
         public ObservableCollection<StandbyPair> StandbyPairs { get; set; } = new();
@@ -67,6 +67,7 @@ namespace GuiWpf.ViewModels
         public DelegateCommand ActivePairCommand => _ActivePairCommand ??= new(
         async () =>
         {
+            IsLoaded = true;
             var pair = SelectedStandbyPair.Pair;
             
             StandbyPairs.Remove(SelectedStandbyPair);
@@ -74,13 +75,15 @@ namespace GuiWpf.ViewModels
             var activePair = await _pairsService.ActivePair(pair);
             
             _ea.GetEvent<NewPairEvent>().Publish(activePair);
-        }, 
-        () => false);
+            IsLoaded = false;
+        },
+        () => !IsLoaded);
 
         DelegateCommand _CancelStandbyPairCommand;
         public DelegateCommand CancelStandbyPairCommand => _CancelStandbyPairCommand ??= new(
         async () =>
         {
+            IsLoaded = true;
             var pair = SelectedStandbyPair.Pair;
 
             StandbyPairs.Remove(SelectedStandbyPair);
@@ -89,6 +92,8 @@ namespace GuiWpf.ViewModels
 
             await _matchingService.Refresh();
             _ea.GetEvent<RefreshMatchingEvent>().Publish();
-        });
+            IsLoaded = false;
+        },
+        () => !IsLoaded);
     }
 }

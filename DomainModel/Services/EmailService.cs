@@ -17,10 +17,13 @@ namespace PairMatching.DomainModel.Services
 
         readonly IUnitOfWork _unitOfWork;
 
+        readonly string _logId;
+
         public EmailService(IDataAccessFactory dataAccessFactory, MyConfiguration configuration)
         {
             _unitOfWork = dataAccessFactory.GetDataAccess();
             _wix = new WixDataReader(configuration);
+            _logId = configuration.LogIdForError;
         }
 
         public async Task<IEnumerable<EmailModel>> GetEmails()
@@ -38,16 +41,17 @@ namespace PairMatching.DomainModel.Services
             {
                 to = emailModel.To.Select(e => e.ParticipantWixId),
                 subject = emailModel.Subject,
-                body = emailModel.Body,
+                body = emailModel.Body,           
                 htmlBody = emailModel.HtmlBody,
                 hasHtmlBody = emailModel.HasHtmlBody,
-                link = emailModel.Links,
+                link = emailModel.Link,
                 language = emailModel.Language
             };
 
             var emailWixId = await _wix.SendEmail(email);
 
             emailModel.WixId = emailWixId;
+            emailModel.IsVerified = false;
             
             return await _unitOfWork
                 .EmailRepositry
@@ -67,9 +71,9 @@ namespace PairMatching.DomainModel.Services
                 var emailRecipents = await _wix.VerifieyEmail(email.WixId);
                 if(emailRecipents.Any())
                 {
-                    email.SendTo = from e in emailRecipents
+                    email.SendTo = (from e in emailRecipents
                                    where e.IsSent
-                                   select e.WixId;
+                                   select e.WixId).ToList();
                     email.IsVerified = true;
                     tasks.Add(_unitOfWork.EmailRepositry.Update(email));
                 }
@@ -77,12 +81,21 @@ namespace PairMatching.DomainModel.Services
 
             await Task.WhenAll(tasks);
         }
-    }
 
-    public class NotValidAddress
-    {
-        public string ParticipaintName { get; set; }
+        public async Task LogErrorToDev(Exception exception)
+        {
+            var email = new
+            {
+                to = new List<string> { _logId },
+                subject = "Bug in PairMatching",
+                body = $"Message: {exception.Message}\nSource: {exception.Source}",
+                htmlBody = "",
+                hasHtmlBody = false,
+                link = "",
+                language = "en"
+            };
 
-        public EmailAddress EmailAddress { get; set; }
+            var emailWixId = await _wix.SendEmail(email);
+        }
     }
 }

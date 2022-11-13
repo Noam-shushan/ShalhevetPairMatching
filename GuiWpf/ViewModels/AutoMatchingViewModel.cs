@@ -66,6 +66,6 @@ namespace GuiWpf.ViewModels
         () =>
         {
             _ea.GetEvent<ShowFullComparisonEvent>().Publish((AutoSuggestions, SelectedSuggestions.FromIsrael.Id));
-        });
+        }, () => !IsLoaded);
     }
 }

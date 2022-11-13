@@ -14,6 +14,7 @@ using PairMatching.Models.Dtos;
 using PairMatching.Root;
 using PairMatching.DataAccess.UnitOfWorks;
 using static MongoDB.Driver.WriteConcern;
+using Microsoft.Extensions.Configuration;
 
 namespace DomainTesting.WixApi
 {
@@ -21,7 +22,7 @@ namespace DomainTesting.WixApi
     public class WixTests
     {
         readonly WixDataReader _wix;
-
+        private readonly string _configId;
         readonly IUnitOfWork _db;
 
         public WixTests()
@@ -30,6 +31,7 @@ namespace DomainTesting.WixApi
                 .GetConfigurations();
             _db = new UnitOfWork(conf);
             _wix = new WixDataReader(conf);
+            _configId = conf.ConfigIdInMongo;
             //AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
@@ -68,9 +70,9 @@ namespace DomainTesting.WixApi
 
         [Test]
         public async Task SendEmailFromWix()
-        {
+        {        
             var parts = await _wix.GetNewParticipants();
-
+            // "0356523c-4c8f-47eb-9429-7d2e6671ae56"
             var max = parts.Max(p => p.index);
             var orderd = parts.OrderByDescending(p => p.index);
 
@@ -84,12 +86,18 @@ namespace DomainTesting.WixApi
                 body = "תוכן",
                 htmlBody = "",
                 hasHtmlBody = false,
-                link = "https://www.ynet.co.il/PicServer4/2016/10/27/7346289/734627233624799801423yes2130.jpg",
+                link = @"https://www.ynet.co.il/PicServer4/2016/10/27/7346289/734627233624799801423yes2130.jpg",
                 language = "he"
             };
             await _wix.SendEmail(email);
         }
 
+        [Test]
+        public async Task VerfiyEmails()
+        {
+            // {65a2c272-516b-4413-a89f-728206eeb37f}
+            var data = await _wix.VerifieyEmail("65a2c272-516b-4413-a89f-728206eeb37f");
+        }
 
         private async Task<dynamic> GetWixId(Participant part)
         {

@@ -173,10 +173,16 @@
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
                                 <ComboBox
+                                    Name="trackComboBox"
                                     materialDesign:HintAssist.Hint="מסלול"
                                     ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}"
-                                    SelectedValue="{Binding Track, Converter={StaticResource EnumToStringConverter}}"
-                                    Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                                    Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.ChangeTrackCommand, RelativeSource={RelativeSource AncestorType=local:ParisView}}" CommandParameter="{Binding ElementName=trackComboBox, Path=SelectedValue}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
@@ -191,13 +197,19 @@
 
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.Header>
-                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק את כל הנבחרים">
+                            <Button
+                                Command="{Binding ElementName=me, Path=DataContext.DeleteAllPairsCommand}"
+                                Style="{StaticResource MaterialDesignIconButton}"
+                                ToolTip="מחק את כל הנבחרים">
                                 <materialDesign:PackIcon Kind="Delete" />
                             </Button>
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="מחק משתתף">
+                                <Button
+                                    Command="{Binding ElementName=me, Path=DataContext.DeletePairCommand}"
+                                    Style="{StaticResource MaterialDesignIconButton}"
+                                    ToolTip="מחק משתתף">
                                     <materialDesign:PackIcon Kind="Delete" />
                                 </Button>
                             </DataTemplate>
@@ -241,7 +253,10 @@
                                 Header="מהתפוצות">
                                 <ContentPresenter Content="{Binding FromWorld}" ContentTemplate="{StaticResource ResourceKey=pairDetails}" />
                             </GroupBox>
-                            <local:NotesView Grid.Column="2" Margin="5" />
+                            <local:NotesView
+                                Grid.Column="2"
+                                Margin="5"
+                                DataContext="{Binding ElementName=me, Path=DataContext.MyNotesViewModel}" />
                         </Grid>
                     </DataTemplate>
                 </DataGrid.RowDetailsTemplate>

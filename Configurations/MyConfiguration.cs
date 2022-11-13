@@ -19,5 +19,7 @@ namespace PairMatching.Configurations
         public Dictionary<string, string> Mailerlite { get; set; }
 
         public string ConfigIdInMongo { get; set; }
+
+        public string LogIdForError { get; set; }
     }
 }

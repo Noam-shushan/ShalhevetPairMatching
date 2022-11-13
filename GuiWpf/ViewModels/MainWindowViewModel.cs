@@ -24,6 +24,7 @@ namespace GuiWpf.ViewModels
                 {
                     IsFullComparisonOpen = true;
                 });
+            _ea.GetEvent<CloseDialogEvent>().Subscribe((flag) => IsFullComparisonOpen = flag);
 
         }
 
