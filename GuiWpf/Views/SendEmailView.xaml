@@ -79,15 +79,27 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
                     <TextBlock
+                        Grid.Column="0"
                         Margin="0,0,10,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Text="נמענים:" />
-                    <ListBox ItemsSource="{Binding To}" Style="{StaticResource MaterialDesignFilterChipListBox}">
+                    <ListBox
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding To}"
+                        Style="{StaticResource MaterialDesignFilterChipListBox}">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel
@@ -103,16 +115,32 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <TextBlock
-                        HorizontalAlignment="Center"
+                        Grid.Column="2"
+                        HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
                         Text="..." />
-                </StackPanel>
+                    <CheckBox
+                        Grid.Column="3"
+                        HorizontalAlignment="Left"
+                        Content="אנגלית?"
+                        IsChecked="{Binding IsLeftToRight}" />
+                </Grid>
                 <TextBox
                     Grid.Row="1"
                     Margin="0,2"
                     materialDesign:HintAssist.Hint="נושא"
-                    Text="{Binding Subject}" />
+                    Text="{Binding Subject}">
+                    <TextBox.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignTextBox}" TargetType="TextBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLeftToRight}" Value="True">
+                                    <Setter Property="FlowDirection" Value="LeftToRight" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
 
                 <TextBox
                     Grid.Row="2"
@@ -123,11 +151,26 @@
                     AcceptsReturn="True"
                     FontSize="16"
                     SpellCheck.IsEnabled="True"
-                    Style="{StaticResource EmailTextBoxStyle}"
                     Text="{Binding Body}"
-                    TextWrapping="WrapWithOverflow" />
+                    TextWrapping="WrapWithOverflow">
+                    <TextBox.Style>
+                        <Style BasedOn="{StaticResource EmailTextBoxStyle}" TargetType="TextBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLeftToRight}" Value="True">
+                                    <Setter Property="FlowDirection" Value="LeftToRight" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                <TextBox
+                    Grid.Row="3"
+                    Margin="10"
+                    materialDesign:HintAssist.Hint="הוסף קישור"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    Text="{Binding Link}" />
 
-                <Grid Grid.Row="3">
+                <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
@@ -144,7 +187,8 @@
                         Grid.Column="1"
                         Margin="10,0"
                         Command="{Binding AddAttachmentCommand}"
-                        Style="{StaticResource MaterialDesignIconButton}">
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Visibility="Collapsed">
                         <materialDesign:PackIcon Kind="AttachFile" />
                     </Button>
 
@@ -154,7 +198,8 @@
                         ItemsSource="{Binding Attachments}"
                         SelectedItem="{Binding SelectedFile}"
                         SelectionMode="Single"
-                        Style="{StaticResource MaterialDesignChoiceChipAccentListBox}">
+                        Style="{StaticResource MaterialDesignChoiceChipAccentListBox}"
+                        Visibility="Collapsed">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />

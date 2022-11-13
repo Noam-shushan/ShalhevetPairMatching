@@ -5,6 +5,7 @@
     xmlns:controloers="clr-namespace:GuiWpf.Controlers"
     xmlns:custom="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,6 +14,13 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Load}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -25,6 +33,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Grid
                     Grid.Row="0"
@@ -50,14 +59,79 @@
                     </Button>
                 </Grid>
 
-                <DataGrid Grid.Row="1">
+                <DataGrid
+                    Grid.Row="1"
+                    materialDesign:DataGridAssist.CornerRadius="10"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding Emails.Items}"
+                    RowDetailsVisibilityMode="Collapsed"
+                    ScrollViewer.CanContentScroll="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="תאריך" />
-                        <DataGridTextColumn Header="נושא" />
-                        <DataGridTextColumn Header="מספר נמענים" />
+                        <DataGridTemplateColumn Header="">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ToggleButton
+                                        Width="23"
+                                        Height="23"
+                                        Cursor="Hand"
+                                        Foreground="{StaticResource MainColor}"
+                                        IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DetailsVisibility, Converter={StaticResource VisbilityToBooleanConverter}, Mode=TwoWay}"
+                                        Style="{StaticResource MaterialDesignExpandCollapseToggleStyle}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Date, StringFormat=dd/MM/yyyy}" Header="תאריך" />
+                        <DataGridTextColumn Binding="{Binding Subject}" Header="נושא" />
+                        <DataGridTextColumn Binding="{Binding To.Count}" Header="מספר נמענים" />
+                        <DataGridTextColumn Binding="{Binding SendTo.Count}" Header="קיבלו" />
                     </DataGrid.Columns>
 
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,0,10,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="נמענים:" />
+                                    <ListBox
+                                        HorizontalAlignment="Left"
+                                        ItemsSource="{Binding To}"
+                                        Style="{StaticResource MaterialDesignFilterChipListBox}">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel
+                                                    MaxWidth="590"
+                                                    IsItemsHost="True"
+                                                    Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" ToolTip="{Binding Address}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="0,20,0,0"
+                                    Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                    Text="{Binding Body}" />
+                            </Grid>
+
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
+
                 </DataGrid>
+                <local:PaginCollectionView Grid.Row="2" DataContext="{Binding Emails}" />
             </Grid>
         </materialDesign:Card>
 

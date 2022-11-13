@@ -13,7 +13,7 @@ using PairMatching.Models;
 
 namespace GuiWpf.ViewModels
 {
-    public class EmailsViewModel : BindableBase
+    public class EmailsViewModel : ViewModelBase
     {
         readonly IEventAggregator _ea;
 
@@ -56,12 +56,20 @@ namespace GuiWpf.ViewModels
         public DelegateCommand Load => _load ??= new(
         async () =>
         {
-            //await _emailService.VerifieyEmails();
+            await Refrash();
+            IsInitialized = true;
+        }, () =>!IsInitialized && !IsLoaded);
+
+        private async Task Refrash()
+        {
+            IsLoaded = true;
+            await _emailService.VerifieyEmails();
 
             var emails = await _emailService.GetEmails();
 
             Emails.Init(emails, 10, EmailsFilter);
-        });
+            IsLoaded = false;
+        }
 
         DelegateCommand _openSendCommand;
         public DelegateCommand OpenSendView => _openSendCommand ??= new(

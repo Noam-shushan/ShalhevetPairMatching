@@ -252,7 +252,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.Header>
                                 <TextBlock Style="{StaticResource TestColumnStyle}" Text="הערות" />
                             </DataGridTemplateColumn.Header>
@@ -260,18 +260,23 @@
                                 <DataTemplate>
                                     <materialDesign:PopupBox PlacementMode="RightAndAlignMiddles" StaysOpen="True">
                                         <materialDesign:PopupBox.ToggleContent>
-                                            <materialDesign:PackIcon
-                                                Width="25"
-                                                Height="25"
-                                                Foreground="{StaticResource MainColor}"
-                                                Kind="Note" />
+                                            <materialDesign:Badged Badge="{Binding Notes.Count}" BadgePlacementMode="TopLeft">
+                                                <materialDesign:PackIcon
+                                                    Width="25"
+                                                    Height="25"
+                                                    Foreground="{StaticResource MainColor}"
+                                                    Kind="Note" />
+                                            </materialDesign:Badged>
                                         </materialDesign:PopupBox.ToggleContent>
                                         <ScrollViewer
                                             Margin="3"
                                             HorizontalAlignment="Left"
                                             mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
                                             HorizontalScrollBarVisibility="Disabled">
-                                            <local:NotesView MinHeight="300" MaxWidth="500" />
+                                            <local:NotesView
+                                                MinHeight="300"
+                                                MaxWidth="500"
+                                                DataContext="{Binding ElementName=me, Path=DataContext.MyNotesViewModel}" />
                                         </ScrollViewer>
                                     </materialDesign:PopupBox>
 

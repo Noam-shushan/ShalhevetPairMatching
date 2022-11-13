@@ -35,6 +35,7 @@ namespace GuiWpf.ViewModels
                 });
         }
 
+
         List<PairSuggestion> _pairSuggestions = new();
 
         DelegateCommand _load;

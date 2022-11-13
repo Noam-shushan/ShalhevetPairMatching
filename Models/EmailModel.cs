@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace PairMatching.Models
         
         public string WixId { get; set; }
 
-        public IEnumerable<string> SendTo { get; set; }
+        public List<string> SendTo { get; set; } = new();
 
-        public IEnumerable<EmailAddress> To { get; set; }
+        public List<EmailAddress> To { get; set; } = new();
 
         public string Subject { get; set; }
 
@@ -30,18 +31,22 @@ namespace PairMatching.Models
 
         public string Language { get; set; }
 
-        public IEnumerable<string> Links { get; set; }
+        public string Link { get; set; }
 
         public DateTime SendingDate { get; set; }
 
         public bool IsVerified { get; set; }
 
+        public DateTime Date { get; set; }
+
+        [JsonIgnore]
         [BsonIgnore]
         public IEnumerable<EmailAddress> MissSentAddress 
         {
             get => To.Where(e => !SendTo.Contains(e.ParticipantWixId));
         }
-
+        
+        [JsonIgnore]
         [BsonIgnore]
         public bool IsSentForAll { get => !MissSentAddress.Any(); }
     }
