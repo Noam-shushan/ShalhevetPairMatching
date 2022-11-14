@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>PairMatching.ExcelTool</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="6.0.7" />
+    <PackageReference Include="EPPlus" Version="6.1.0" />
   </ItemGroup>
 
 </Project>
