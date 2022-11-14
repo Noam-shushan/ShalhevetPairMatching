@@ -132,7 +132,7 @@ namespace PairMatching.DomainModel.Email
                     {
                         await client.SendAsync(message);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         continue;
                     }
