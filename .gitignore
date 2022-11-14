@@ -3,13 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-
-.git.bfg-report/
-bfg.jar
-GuiWpf\bin\Debug\net5.0-windows\localDB/*
-DomainTesting\bin\Debug\net5.0\Excels/*
-DomainTesting\bin\Debug\net5.0\localDB/*
-
 # User-specific files
 *.rsuser
 *.suo
