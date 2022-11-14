@@ -16,7 +16,8 @@ namespace PairMatching.Root
         MyConfiguration _configuration;
         
         public Startup()
-        {            
+        {     
+            
         }
 
         public bool IsConnectedToInternet()
