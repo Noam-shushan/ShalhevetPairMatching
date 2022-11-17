@@ -174,6 +174,34 @@ namespace GuiWpf.ViewModels
         {
             return CanGoPrev;
         });
+
+        DelegateCommand<object> _SortByCommand;
+        public DelegateCommand<object> SortByCommand => _SortByCommand ??= new(
+        (e) =>
+        {
+            if (e is System.Windows.Controls.DataGridSortingEventArgs ev)
+            {
+                var sortPath = ev.Column?.SortMemberPath;
+                var sortDir = ev.Column?.SortDirection;
+                if (!string.IsNullOrWhiteSpace(sortPath) && sortDir != null)
+                {
+                    var prop = typeof(T).GetProperty(sortPath);
+                    if(prop != null)
+                    {
+                        if(sortDir == ListSortDirection.Ascending)
+                        {
+                            ItemsSource = new(ItemsSource.OrderBy(item => prop.GetValue(item)));
+                        }
+                        else
+                        {
+                            ItemsSource = new (ItemsSource.OrderByDescending(item => prop.GetValue(item)));
+                        }
+                        Refresh();
+                    }
+
+                }
+            }
+        });
         #endregion
 
         #region Methods

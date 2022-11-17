@@ -224,13 +224,10 @@ namespace GuiWpf.ViewModels
         {
             IsLoaded = true;
 
+            await _pairsService.VerifieyNewPairsInWix();
+
             var list = await _pairsService.GetAllPairs();
-            _pairs.Clear();
-            var l = from p in list
-            orderby p.Notes.Count
-            select p;
-            _pairs.AddRange(list);
-            Pairs.Init(_pairs, 5, PairsFilter);
+            Pairs.Init(list, 5, PairsFilter);
 
             Years.Clear();
             Years.AddRange(_pairs.Select(p => p.DateOfCreate.Year.ToString()).Distinct());

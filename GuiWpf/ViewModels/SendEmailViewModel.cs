@@ -72,7 +72,7 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _isLeftToRight, value);
         }
 
-        private string _link;
+        private string _link = "";
         public string Link
         {
             get => _link;

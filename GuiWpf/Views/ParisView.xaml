@@ -113,6 +113,11 @@
                 RowDetailsVisibilityMode="Collapsed"
                 ScrollViewer.CanContentScroll="False"
                 SelectedItem="{Binding SelectedPair}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Sorting">
+                        <i:InvokeCommandAction Command="{Binding Pairs.SortByCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <DataGrid.Resources>
 
                     <DataTemplate x:Key="pairDetails" DataType="{x:Type DataGridTemplateColumn}">
@@ -187,7 +192,11 @@
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="תאריך יצירה">
+                    <DataGridTemplateColumn
+                        CanUserSort="True"
+                        Header="תאריך יצירה"
+                        SortDirection="Descending"
+                        SortMemberPath="DateOfCreate">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding DateOfCreate, StringFormat=dd/MM/yyyy}" />

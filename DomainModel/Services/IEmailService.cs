@@ -11,6 +11,7 @@ namespace PairMatching.DomainModel.Services
     {
         Task<IEnumerable<EmailModel>> GetEmails();
         Task LogErrorToDev(Exception exception);
+        Task ResendEmail(EmailModel emailModel);
         Task<EmailModel> SendEmail(EmailModel email);
         Task VerifieyEmails();
     }

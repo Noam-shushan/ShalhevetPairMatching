@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace GuiWpf.ViewModels
@@ -242,6 +243,7 @@ namespace GuiWpf.ViewModels
         public DelegateCommand AddParticipantCommand => _addParticipantCommand ??= new(
             () =>
             {
+
                 IsAddFormOpen = !IsAddFormOpen;
             });
 

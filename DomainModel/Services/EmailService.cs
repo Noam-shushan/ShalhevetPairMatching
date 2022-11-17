@@ -30,8 +30,8 @@ namespace PairMatching.DomainModel.Services
         {
             var emails = await _unitOfWork
                 .EmailRepositry
-                .GetAllAsync(e => e.IsVerified);
-            
+                .GetAllAsync();
+
             return emails;
         }
 
@@ -52,10 +52,34 @@ namespace PairMatching.DomainModel.Services
 
             emailModel.WixId = emailWixId;
             emailModel.IsVerified = false;
+            emailModel.Date = DateTime.Now;
             
             return await _unitOfWork
                 .EmailRepositry
                 .Insert(emailModel);           
+        }
+
+        public async Task ResendEmail(EmailModel emailModel) 
+        {
+            var email = new
+            {
+                to = emailModel.MissSentAddress.Select(e => e.ParticipantWixId),
+                subject = emailModel.Subject,
+                body = emailModel.Body,
+                htmlBody = emailModel.HtmlBody,
+                hasHtmlBody = emailModel.HasHtmlBody,
+                link = emailModel.Link,
+                language = emailModel.Language
+            };
+
+            var emailWixId = await _wix.SendEmail(email);
+
+            emailModel.WixId = emailWixId;
+            emailModel.IsVerified = false;
+
+            await _unitOfWork
+                .EmailRepositry
+                .Update(emailModel);
         }
 
         public async Task VerifieyEmails()
@@ -69,11 +93,11 @@ namespace PairMatching.DomainModel.Services
             foreach (var email in emails)
             {
                 var emailRecipents = await _wix.VerifieyEmail(email.WixId);
-                if(emailRecipents.Any())
+                if (emailRecipents.Any())
                 {
                     email.SendTo = (from e in emailRecipents
-                                   where e.IsSent
-                                   select e.WixId).ToList();
+                                    where e.IsSent
+                                    select e.WixId).ToList();
                     email.IsVerified = true;
                     tasks.Add(_unitOfWork.EmailRepositry.Update(email));
                 }
@@ -86,9 +110,9 @@ namespace PairMatching.DomainModel.Services
         {
             var email = new
             {
-                to = new List<string> { _logId },
+                to = new string[]{ _logId },
                 subject = "Bug in PairMatching",
-                body = $"Message: {exception.Message}\nSource: {exception.Source}",
+                body = $"Message: {exception.Message}\nSource: {exception.Source}\nStack Trace: {exception.StackTrace}",
                 htmlBody = "",
                 hasHtmlBody = false,
                 link = "",

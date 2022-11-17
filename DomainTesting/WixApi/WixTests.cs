@@ -51,21 +51,20 @@ namespace DomainTesting.WixApi
         [Test]
         public async Task NewPairToWixTest()
         {
-            var parts = await _wix.GetNewParticipants();
-            
-            var max = parts.Max(p => p.index);
-            var orderd = parts.OrderByDescending(p => p.index);
-            
-            var a = orderd.FirstOrDefault();
-            var b = orderd.FirstOrDefault(p => p.index == max - 1);
-
-            await _wix.NewPair(new NewPairWixDto
+            var id = await _wix.NewPair(new NewPairWixDto
             {
-                chevrutaIdFirst = a.contactId,
-                chevrutaIdSecond = b.contactId,
+                chevrutaIdFirst = "816b10ef-0076-4d6a-b51d-a441f873dcfc",
+                chevrutaIdSecond = "0356523c-4c8f-47eb-9429-7d2e6671ae56",
                 date = DateTime.Now,
                 trackId = "df6ce1e8-1839-4749-bd4f-495295d75657"
             });
+        }
+
+        [Test]
+        public async Task VerfiyNewPair()
+        {
+            // "11d4ccb4-1ff5-4a1b-b459-767af3c02b6e"
+            var data = await _wix.VerifieyNewPair("11d4ccb4-1ff5-4a1b-b459-767af3c02b6e");
         }
 
         [Test]

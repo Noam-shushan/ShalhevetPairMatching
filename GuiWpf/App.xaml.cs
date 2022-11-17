@@ -71,13 +71,13 @@ namespace GuiWpf
 
         private async void PrismApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK,
-                MessageBoxImage.Error, MessageBoxResult.None,
-                MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+            //MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK,
+            //    MessageBoxImage.Error, MessageBoxResult.None,
+            //    MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
 
-            var emailService = Container.Resolve<IEmailService>();
+            //var emailService = Container.Resolve<IEmailService>();
 
-            await emailService.LogErrorToDev(e.Exception);
+            //await emailService.LogErrorToDev(e.Exception);
         }
     }
 }

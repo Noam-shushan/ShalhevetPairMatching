@@ -21,6 +21,7 @@ namespace PairMatching.DomainModel.Services
         
         Task<IEnumerable<StandbyPair>> GetAllStandbyPairs();
         Task UpdatePair(Pair pair);
+        Task VerifieyNewPairsInWix();
     }
 
 }
