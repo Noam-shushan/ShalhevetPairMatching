@@ -49,24 +49,24 @@
                         Grid.Column="0"
                         SearchCommand="{Binding SearchEmailsCommand}"
                         SearchWord="{Binding SearchEmailsWord}" />
-
-                    <Button
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Command="{Binding OpenSendView}"
-                        Style="{StaticResource MaterialDesignIconButton}">
-                        <materialDesign:PackIcon Kind="PlusCircle" />
-                    </Button>
                 </Grid>
 
                 <DataGrid
                     Grid.Row="1"
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    CanUserSortColumns="True"
                     IsReadOnly="True"
                     ItemsSource="{Binding Emails.Items}"
                     RowDetailsVisibilityMode="Collapsed"
-                    ScrollViewer.CanContentScroll="False">
+                    ScrollViewer.CanContentScroll="False"
+                    SelectedItem="{Binding SelectedEmail}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Sorting">
+                            <i:InvokeCommandAction Command="{Binding Emails.SortByCommand}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="">
                             <DataGridTemplateColumn.CellTemplate>
@@ -81,10 +81,27 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Binding="{Binding Date, StringFormat=dd/MM/yyyy}" Header="תאריך" />
+                        <DataGridTextColumn
+                            Binding="{Binding Date, StringFormat=dd/MM/yyyy}"
+                            CanUserSort="True"
+                            Header="תאריך"
+                            SortDirection="Descending"
+                            SortMemberPath="Date" />
                         <DataGridTextColumn Binding="{Binding Subject}" Header="נושא" />
                         <DataGridTextColumn Binding="{Binding To.Count}" Header="מספר נמענים" />
                         <DataGridTextColumn Binding="{Binding SendTo.Count}" Header="קיבלו" />
+                        <DataGridTemplateColumn Header="שלח שוב למי שלא קיבל">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Command="{Binding DataContext.ResendEmailCommand, RelativeSource={RelativeSource AncestorType=local:EmailsView}}"
+                                        IsEnabled="{Binding IsMiss}"
+                                        Style="{StaticResource MaterialDesignIconButton}">
+                                        <materialDesign:PackIcon Kind="EmailResend" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
 
                     <DataGrid.RowDetailsTemplate>
@@ -104,7 +121,7 @@
                                     <ListBox
                                         HorizontalAlignment="Left"
                                         ItemsSource="{Binding To}"
-                                        Style="{StaticResource MaterialDesignFilterChipListBox}">
+                                        Style="{StaticResource MaterialDesignChoiceChipListBox}">
                                         <ListBox.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel
@@ -120,11 +137,27 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                 </StackPanel>
-                                <TextBlock
+                                <Border
                                     Grid.Row="1"
-                                    Margin="0,20,0,0"
-                                    Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                    Text="{Binding Body}" />
+                                    BorderBrush="#121826"
+                                    BorderThickness="1">
+                                    <TextBlock
+                                        MinHeight="200"
+                                        MaxWidth="1000"
+                                        Margin="0,20,0,0"
+                                        Text="{Binding Body}"
+                                        TextWrapping="WrapWithOverflow">
+                                        <TextBlock.Style>
+                                            <Style BasedOn="{StaticResource MaterialDesignBody1TextBlock}" TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnglish}" Value="True">
+                                                        <Setter Property="FlowDirection" Value="LeftToRight" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Border>
                             </Grid>
 
                         </DataTemplate>
@@ -134,9 +167,5 @@
                 <local:PaginCollectionView Grid.Row="2" DataContext="{Binding Emails}" />
             </Grid>
         </materialDesign:Card>
-
-        <custom:Modal Panel.ZIndex="1" IsOpen="{Binding IsSendEmailOpen}">
-            <local:SendEmailView />
-        </custom:Modal>
     </Grid>
 </UserControl>

@@ -35,6 +35,8 @@ namespace PairMatching.Models
 
         public DateTime SendingDate { get; set; }
 
+        public bool IsEnglish { get; set; }
+
         public bool IsVerified { get; set; }
 
         public DateTime Date { get; set; }
@@ -48,6 +50,6 @@ namespace PairMatching.Models
         
         [JsonIgnore]
         [BsonIgnore]
-        public bool IsSentForAll { get => !MissSentAddress.Any(); }
+        public bool IsMiss { get => MissSentAddress.Any(); }
     }
 }

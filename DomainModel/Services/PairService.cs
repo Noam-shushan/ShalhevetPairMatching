@@ -25,19 +25,27 @@ namespace PairMatching.DomainModel.Services
             _unitOfWork = dataAccessFactory.GetDataAccess();
 
             _wix = new WixDataReader(config);
-        }    
-        
-        // Get the most preffred track from pairs repositry 
-        public async Task<PrefferdTracks> GetMostPrefferdTracks()
-        {
-            var pairs = await GetAllPairs();
-            var mostPrefferdTracks = pairs.GroupBy(p => p.Track)
-             .OrderByDescending(g => g.Count())
-             .FirstOrDefault()
-             .Key;
-            return mostPrefferdTracks;
         }
-        
+
+        public async Task VerifieyNewPairsInWix()
+        {
+            var pairs = await _unitOfWork
+                            .PairsRepositry
+                            .GetAllAsync(p => p.Status == PairStatus.Active && p.WixId != "");
+
+            var tasks = new List<Task>();
+            foreach(var p in pairs)
+            {
+                var data = await _wix.VerifieyNewPair(p.WixId);
+                if (data.Where(e => e.IsSent).Count() == 2)
+                {
+                    p.Status = PairStatus.Learning;
+                    tasks.Add(_unitOfWork.PairsRepositry.Update(p));
+                }
+            }
+            await Task.WhenAll(tasks);
+        }
+
         public async Task<IEnumerable<Pair>> GetAllPairs()
         {
             var pairs = await _unitOfWork
@@ -83,14 +91,16 @@ namespace PairMatching.DomainModel.Services
                 DateOfUpdate = DateTime.Now
             });
 
-            //await _wix.NewPair(new NewPairWixDto
-            //{
-            //    chevrutaIdFirst = pair.FromIsraelId,
-            //    chevrutaIdSecond = pair.FromWorldId,
-            //    date = DateTime.Now,
-            //    trackId = track.GetDescriptionIdFromEnum()
-            //});
-            
+            var id = await _wix.NewPair(new NewPairWixDto
+            {
+                chevrutaIdFirst = pair.FromIsraelId,
+                chevrutaIdSecond = pair.FromWorldId,
+                date = DateTime.Now,
+                trackId = track.GetDescriptionIdFromEnum()
+            });
+
+            pair.WixId = id;
+
             await _unitOfWork
                     .PairsRepositry
                     .Update(pair);
@@ -117,7 +127,9 @@ namespace PairMatching.DomainModel.Services
             pair.IsActive = true;
             pair.Status = PairStatus.Active;
 
-            await SendNewPairToWix(pair);
+            var wixId = await SendNewPairToWix(pair);
+
+            pair.WixId = wixId ?? "";
 
             await _unitOfWork.PairsRepositry.Update(pair);
 
@@ -169,15 +181,16 @@ namespace PairMatching.DomainModel.Services
             await _unitOfWork.PairsRepositry.Update(pair);
         }
         
-        private async Task SendNewPairToWix(Pair pair)
+        private async Task<string> SendNewPairToWix(Pair pair)
         {
-            await _wix.NewPair(new NewPairWixDto
+            var id = await _wix.NewPair(new NewPairWixDto
             {
                 chevrutaIdFirst = pair.FromIsrael.WixId,
                 chevrutaIdSecond = pair.FromWorld.WixId,
                 date = DateTime.Now,
                 trackId = pair.Track.GetDescriptionIdFromEnum()
             });
+            return id;
         }
 
         public async Task<IEnumerable<StandbyPair>> GetAllStandbyPairs()

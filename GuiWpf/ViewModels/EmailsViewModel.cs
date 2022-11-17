@@ -5,10 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using GuiWpf.Events;
 using PairMatching.DomainModel.Services;
-using PairMatching.DomainModel.Email;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 using PairMatching.Models;
 
 namespace GuiWpf.ViewModels
@@ -18,19 +16,12 @@ namespace GuiWpf.ViewModels
         readonly IEventAggregator _ea;
 
         private IEmailService _emailService;
-        
-        private SendEmail _emailSender;
 
-        public EmailsViewModel(IEmailService emailService, IEventAggregator ea, SendEmail sendEmail)
+        public EmailsViewModel(IEmailService emailService, IEventAggregator ea)
         {
             _emailService = emailService;
             _ea = ea;
-            _emailSender = sendEmail;
 
-            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
-            {
-                IsSendEmailOpen = isClose;
-            });
             _ea.GetEvent<NewEmailSendEvent>()
                 .Subscribe(em =>
                 {
@@ -44,13 +35,12 @@ namespace GuiWpf.ViewModels
 
         public PaginCollectionViewModel<EmailModel> Emails { get; set; } = new();
 
-        private bool _isSendEmailOpen = false;
-        public bool IsSendEmailOpen
+        private EmailModel _selectedEmail;
+        public EmailModel SelectedEmail
         {
-            get => _isSendEmailOpen;
-            set => SetProperty(ref _isSendEmailOpen, value);
+            get => _selectedEmail;
+            set => SetProperty(ref _selectedEmail, value);
         }
-
 
         DelegateCommand _load;
         public DelegateCommand Load => _load ??= new(
@@ -59,6 +49,16 @@ namespace GuiWpf.ViewModels
             await Refrash();
             IsInitialized = true;
         }, () =>!IsInitialized && !IsLoaded);
+
+
+        DelegateCommand _ResendEmailCommand;
+        public DelegateCommand ResendEmailCommand => _ResendEmailCommand ??= new(
+        async () =>
+        {
+            _ea.GetEvent<IsSendEmailEvent>().Publish(true);
+            await _emailService.ResendEmail(SelectedEmail);
+            _ea.GetEvent<IsSendEmailEvent>().Publish(false);
+        });
 
         private async Task Refrash()
         {
@@ -70,13 +70,6 @@ namespace GuiWpf.ViewModels
             Emails.Init(emails, 10, EmailsFilter);
             IsLoaded = false;
         }
-
-        DelegateCommand _openSendCommand;
-        public DelegateCommand OpenSendView => _openSendCommand ??= new(
-        () =>
-        {
-            IsSendEmailOpen = !IsSendEmailOpen;
-        });
 
         private bool EmailsFilter(EmailModel obj)
         {

@@ -139,10 +139,16 @@
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
+                    CanUserSortColumns="True"
                     ItemsSource="{Binding Path=Participiants.Items}"
                     RowDetailsVisibilityMode="Collapsed"
                     ScrollViewer.CanContentScroll="False"
                     SelectedItem="{Binding SelectedParticipant}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Sorting">
+                            <i:InvokeCommandAction Command="{Binding Participiants.SortByCommand}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
                     <DataGrid.Resources>
                         <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
@@ -244,7 +250,12 @@
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="תאריך הרשמה" IsReadOnly="True">
+                        <DataGridTemplateColumn
+                            CanUserSort="True"
+                            Header="תאריך הרשמה"
+                            IsReadOnly="True"
+                            SortDirection="Ascending"
+                            SortMemberPath="DateOfRegistered">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Style="{StaticResource TestColumnStyle}" Text="{Binding DateOfRegistered, StringFormat=dd/MM/yyyy}" />

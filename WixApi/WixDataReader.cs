@@ -50,7 +50,7 @@ namespace PairMatching.WixApi
             }
             catch (KeyNotFoundException)
             {
-                return new List<ParticipantWixDto>();
+                return Enumerable.Empty<ParticipantWixDto>();
             }
             catch (Exception)
             {
@@ -85,24 +85,15 @@ namespace PairMatching.WixApi
             return data;
         }
 
-        public async Task NewPair(NewPairWixDto pairDto)
+        public async Task<string> NewPair(NewPairWixDto pairDto)
         {
             var query = _configuration.WixApi["sendMembers"];
 
             var jsonContent = await _http.PostAsync(query, pairDto);
-        }
 
-        public async Task UpsertParticipaint(UpsertParticipantOnWixDto participantDto)
-        {
-            var query = _configuration.WixApi["updateMember"];
-            var dto = new UpsertParticipantOnWixDtoNoId();
-            if (participantDto._id == "")
-            {
-                participantDto.isNew = true;
-                participantDto.CopyPropertiesTo(dto);                
-            }
-           
-            await _http.PostAsync(query, participantDto);
+            var parsedObject = JObject.Parse(jsonContent);
+
+            return parsedObject["id"].ToString();
         }
 
         public async Task<string> NewParticipant(dynamic participantWixDto)
@@ -119,18 +110,58 @@ namespace PairMatching.WixApi
             return id?.ToString();
         }
 
+        public async Task<IEnumerable<EmailRecipientsWixDto>> VerifieyNewPair(string id)
+        {
+            try
+            {
+                var query = _configuration.WixApi["hevrutaEmailStatus"]
+                        .Replace("{PAIR ID}", id);
+
+                var jsonContent = await _http.GetAsync(query);
+
+                var parsedObject = JObject.Parse(jsonContent);
+
+                var content = parsedObject["status"].ToString();
+
+                var data = JsonConvert.DeserializeObject<IEnumerable<EmailRecipientsWixDto>>(content);
+
+                return data;
+            }
+            catch (KeyNotFoundException)
+            {
+                return Enumerable.Empty<EmailRecipientsWixDto>();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<EmailRecipientsWixDto>> VerifieyEmail(string emailId)
         {
-            var query = _configuration.WixApi["verifieyEmail"]
-                .Replace("{EMAIL ID}", emailId);
+            try
+            {
+                var query = _configuration.WixApi["verifieyEmail"]
+                    .Replace("{EMAIL ID}", emailId);
 
-            var jsonContent = await _http.GetAsync(query);
-            var parsedObject = JObject.Parse(jsonContent);
-            var content = parsedObject["item"].ToString();
+                var jsonContent = await _http.GetAsync(query);
+                var parsedObject = JObject.Parse(jsonContent);
+                var content = parsedObject["item"].ToString();
 
-            var data = JsonConvert.DeserializeObject<IEnumerable<EmailRecipientsWixDto>>(content);
+                var data = JsonConvert.DeserializeObject<IEnumerable<EmailRecipientsWixDto>>(content);
 
-            return data;
+                return data;
+            }
+            catch (KeyNotFoundException)
+            {
+                return Enumerable.Empty<EmailRecipientsWixDto>();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

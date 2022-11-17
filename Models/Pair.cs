@@ -11,7 +11,9 @@ namespace PairMatching.Models
     {
         [BsonIgnore]
         public int OldId { get; set; }
-        
+
+        public string WixId { get; set; } = "";
+
         public string FromIsraelId { get; set; }
 
         public string FromWorldId { get; set; }

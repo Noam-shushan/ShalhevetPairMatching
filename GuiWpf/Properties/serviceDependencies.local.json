@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "compute.appService1": {
+      "group": "connections",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/shalhevet-pair-matching",
+      "type": "compute.appService.windows"
+    }
+  }
+}

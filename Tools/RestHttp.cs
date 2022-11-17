@@ -44,7 +44,7 @@ namespace PairMatching.Tools
                 var request = new RestRequest(new Uri(uri));
 
                 var response = await client.GetAsync(request);
-                // error: "No items found with index above 128"
+
                 if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     throw new KeyNotFoundException(response.Content);
