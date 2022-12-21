@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Configurations\Configurations.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\ExcelGenerator\ExcelTools.csproj" />
+    <ProjectReference Include="..\PairMatching.Logger\PairMatching.Logger.csproj" />
     <ProjectReference Include="..\Tools\UtilTools.csproj" />
     <ProjectReference Include="..\WixApi\WixApi.csproj" />
   </ItemGroup>

@@ -3,7 +3,7 @@
     public record IsraelParticipant : Participant
     {
 
-        public OpenQuestionsForIsrael OpenQuestions { get; set; }
+        public OpenQuestionsForIsrael OpenQuestions { get; set; } = new();
 
         /// <summary>
         ///  level of English

@@ -170,10 +170,14 @@ namespace GuiWpf.ViewModels
                 var selectedTrack = Extensions.GetValueFromDescription<PrefferdTracks>(trackStr);
                 if (SelectedPair != null && SelectedPair.Track != selectedTrack)
                 {
-                    IsLoaded = true;
-                    await _pairsService.ChangeTrack(SelectedPair, selectedTrack);
-                    SelectedPair.Track = selectedTrack;
-                    IsLoaded = false;
+                    if(Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשנות את המסלול ל- {trackStr}"))
+                    {
+                        IsLoaded = true;
+                        await _pairsService.ChangeTrack(SelectedPair, selectedTrack);
+                        SelectedPair.Track = selectedTrack;
+                        IsLoaded = false;
+                    }
+
                 }
             }
         }, (obj) => !IsLoaded);
@@ -182,19 +186,22 @@ namespace GuiWpf.ViewModels
         public DelegateCommand DeleteAllPairsCommand => _DeleteAllPairsCommand ??= new(
         async () =>
         {
-            var pairsToDel = Pairs.FilterdItems.Where(p => p.IsSelected);
-            List<Task> tasks = new();
-            foreach(var p in pairsToDel)
+            if(Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך למחוק את כל הנבחרים?"))
             {
-                tasks.Add(_pairsService.DeletePair(p));
+                var pairsToDel = Pairs.FilterdItems.Where(p => p.IsSelected);
+                List<Task> tasks = new();
+                foreach(var p in pairsToDel)
+                {
+                    tasks.Add(_pairsService.DeletePair(p));
+                }
+                await Task.WhenAll(tasks);
+                foreach(var p in pairsToDel)
+                {
+                    Pairs.ItemsSource.Remove(p);
+                }
+                Pairs.Refresh();
             }
-            await Task.WhenAll(tasks);
-            foreach(var p in pairsToDel)
-            {
-                Pairs.ItemsSource.Remove(p);
-            }
-            Pairs.Refresh();
-        });
+        }, () => !IsLoaded);
 
         DelegateCommand _DeletePairCommand;
         public DelegateCommand DeletePairCommand => _DeletePairCommand ??= new(
@@ -202,11 +209,16 @@ namespace GuiWpf.ViewModels
         {
             if (SelectedPair != null)
             {
-                await _pairsService.DeletePair(SelectedPair);
-                Pairs.ItemsSource.Remove(SelectedPair);
-                Pairs.Refresh();
+                if(Messages.MessageBoxConfirmation("בטוח שברצונך למחוק את החברותא?"))
+                {
+                    IsLoaded = true;
+                    await _pairsService.DeletePair(SelectedPair);
+                    Pairs.ItemsSource.Remove(SelectedPair);
+                    Pairs.Refresh();
+                    IsLoaded = false;
+                }
             }
-        });
+        }, ()=> !IsLoaded);
 
         DelegateCommand _ClearFilterCommand;
         public DelegateCommand ClearFilterCommand => _ClearFilterCommand ??= new(

@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace PairMatching.DataAccess.Infrastructure
 {
-    internal class MongoDataAccess : IDataAccess
+    public class MongoDataAccess : IDataAccess
     {
         // The connections strings of the database
         readonly string _connctionsStrings;

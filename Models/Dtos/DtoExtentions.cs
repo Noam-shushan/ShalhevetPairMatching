@@ -15,7 +15,7 @@ namespace PairMatching.Models.Dtos
         public static dynamic ToIsraelParticipantWixDto(this IsraelParticipant participant)
         {
             var name = participant.Name.Split();
-            return new
+            var result = new
             {
                 additionalInfo = participant.OpenQuestions.AdditionalInfo,
                 biographHeb = participant.OpenQuestions.BiographHeb,
@@ -67,6 +67,7 @@ namespace PairMatching.Models.Dtos
                 fName = name.First(),
                 lName = string.Join(" ", name.Skip(1))
             };
+            return result;
         }
         
         public static dynamic ToWorldParticipantWixDto(this WorldParticipant participant)

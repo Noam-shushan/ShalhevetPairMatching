@@ -6,7 +6,7 @@ namespace PairMatching.Models
 {
     public record WorldParticipant : Participant
     {
-        public OpenQuestionsForWorld OpenQuestions { get; set; }
+        public OpenQuestionsForWorld OpenQuestions { get; set; } = new();
 
         /// <summary>
         /// the utc offset of the student

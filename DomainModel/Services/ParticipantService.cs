@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using PairMatching.Configurations;
 using PairMatching.DataAccess.UnitOfWorks;
 using PairMatching.DomainModel.DataAccessFactory;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using PairMatching.Loggin;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -21,13 +21,17 @@ namespace PairMatching.DomainModel.Services
 
         readonly WixDataReader _wix;
 
+        readonly Logger _logger;
+
         readonly string _configId;
 
-        public ParticipantService(IDataAccessFactory dataAccessFactory, MyConfiguration configuration)
+        public ParticipantService(IDataAccessFactory dataAccessFactory, MyConfiguration configuration, Logger logger)
         {
             _unitOfWork = dataAccessFactory.GetDataAccess();
 
             _wix = new WixDataReader(configuration);
+
+            _logger = logger;
 
             _configId = configuration.ConfigIdInMongo;
         }
@@ -37,7 +41,7 @@ namespace PairMatching.DomainModel.Services
             var result = new List<Participant>();
             var tasks = new List<Task>();
 
-            await SetNewParticipintsFromWix();
+            //await SetNewParticipintsFromWix();
 
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();
@@ -76,10 +80,21 @@ namespace PairMatching.DomainModel.Services
             int temp = max ?? WixDataReader.MinIndex;
             int index = temp < WixDataReader.MinIndex ? WixDataReader.MinIndex : temp;
 
-            var partsDtos = await _wix.GetNewParticipants(index);
+            IEnumerable<ParticipantWixDto> partsDtos;
+            try
+            {
+                partsDtos = await _wix.GetNewParticipants(index);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error while trying to get new members from wix", ex);
+                throw new UserException($"Sory... there is some error\nDo not worry the develper is informed");
+            }
 
             if (partsDtos.Any())
             {
+                _logger.LogInformation($"There is {partsDtos.Count()} new members from wix");
+                
                 var list = partsDtos.ToLookup(p => p is IsraelParticipantWixDto);
                 
                 var ips = list[true]
@@ -122,43 +137,70 @@ namespace PairMatching.DomainModel.Services
         {
             participant.Notes.Add(note);
             await UpdateParticipaint(participant);
+            _logger.LogInformation($"Note added to participant: {participant.Id} by {note.Author}");
         }
 
         public async Task UpdateParticipaint(Participant participant)
         {
-            if (participant is IsraelParticipant ip)
+            try
             {
-                 await _unitOfWork
-                .IsraelParticipantsRepositry
-                .Update(ip);
+                if (participant is IsraelParticipant ip)
+                {
+                    await _unitOfWork
+                        .IsraelParticipantsRepositry
+                        .Update(ip);
+                }
+                else if (participant is WorldParticipant wp)
+                {
+                    await _unitOfWork
+                        .WorldParticipantsRepositry
+                        .Update(wp);
+                }
             }
-            else if (participant is WorldParticipant wp)
+            catch (Exception ex)
             {
-                 await _unitOfWork
-                .WorldParticipantsRepositry
-                .Update(wp);
+                _logger.LogError($"Can not update member '{participant.Id}'", ex);
+                throw new UserException($"Sory... there is some error\nDo not worry the develper is informed");
             }
         }
 
         public async Task<Participant> InsertParticipant(Participant part)
         {
-            dynamic wixId = await GetWixId(part);
+            dynamic wixId = ""; 
+            try
+            {
+                wixId = await GetWixId(part);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Error while trying to add '{part.Name}' to wix", ex);
+                throw new UserException($"Error while trying to add '{part.Name}' to wix");
+            }
 
             part.WixId = wixId;
 
             Participant result = new();
 
-            if (part is IsraelParticipant ip)
+            try
             {
-                result = await _unitOfWork
-                .IsraelParticipantsRepositry
-                .Insert(ip);
+                if (part is IsraelParticipant ip)
+                {
+                    result = await _unitOfWork
+                    .IsraelParticipantsRepositry
+                    .Insert(ip);
+                }
+                else if (part is WorldParticipant wp)
+                {
+                    result = await _unitOfWork
+                    .WorldParticipantsRepositry
+                    .Insert(wp);
+                }
+                _logger.LogInformation($"new participaint added {result.Id}");
             }
-            else if (part is WorldParticipant wp)
+            catch (Exception ex)
             {
-                result = await _unitOfWork
-                .WorldParticipantsRepositry
-                .Insert(wp);
+                _logger.LogError($"Can not insert member '{part.Name}'", ex);
+                throw new UserException($"Sory... there is some error\nDo not worry the develper is informed");
             }
 
             return result;   
@@ -170,18 +212,9 @@ namespace PairMatching.DomainModel.Services
 
             participant.IsDeleted = true;
 
-            if (participant is IsraelParticipant ip)
-            {
-                await _unitOfWork
-                    .IsraelParticipantsRepositry
-                    .Update(ip);
-            }
-            else if (participant is WorldParticipant wp)
-            {
-                await _unitOfWork
-                    .WorldParticipantsRepositry
-                    .Update(wp);
-            }
+            await UpdateParticipaint(participant);
+
+            _logger.LogInformation($"Delete participaint {participant.Id}");
         }
 
         public async Task SendToArcive(Participant participant)
@@ -189,58 +222,58 @@ namespace PairMatching.DomainModel.Services
             await RemoveMatchParticipaints(participant);
             
             participant.IsInArchive = true;
-            participant.MatchTo = new();
-            
-            if (participant is IsraelParticipant ip)
-            {
-                await _unitOfWork
-                    .IsraelParticipantsRepositry
-                    .Update(ip);
-            }
-            else if (participant is WorldParticipant wp)
-            {
-                await _unitOfWork
-                    .WorldParticipantsRepositry
-                    .Update(wp);
-            }
+
+            await UpdateParticipaint(participant);
+
+            _logger.LogInformation($"Send participaint {participant.Id} to archiv");
         }
 
         private async Task RemoveMatchParticipaints(Participant participant)
         {
-            var matchParticipants = new List<Participant>();
-            foreach (var matchParticipant in participant.MatchTo)
+            try
             {
-                Participant p;
-                if (participant.IsFromIsrael)
+                var matchParticipants = new List<Participant>();
+                foreach (var matchParticipant in participant.MatchTo)
                 {
-                    p = await _unitOfWork
-                        .WorldParticipantsRepositry
-                        .GetByIdAsync(matchParticipant);
+                    Participant p;
+                    if (participant.IsFromIsrael)
+                    {
+                        p = await _unitOfWork
+                            .WorldParticipantsRepositry
+                            .GetByIdAsync(matchParticipant);
+                    }
+                    else
+                    {
+                        p = await _unitOfWork
+                            .IsraelParticipantsRepositry
+                         .GetByIdAsync(matchParticipant);
+                    }
+                    matchParticipants.Add(p);
                 }
-                else
+                var tasks = new List<Task>();
+                foreach (var p in matchParticipants)
                 {
-                    p = await _unitOfWork
-                        .IsraelParticipantsRepositry
-                     .GetByIdAsync(matchParticipant);
+                    p.MatchTo.Remove(participant.Id);
+                    if (participant.IsFromIsrael)
+                    {
+                        tasks.Add(_unitOfWork.WorldParticipantsRepositry
+                            .Update(p as WorldParticipant));
+                    }
+                    else
+                    {
+                        tasks.Add(_unitOfWork.IsraelParticipantsRepositry
+                            .Update(p as IsraelParticipant));
+                    }
                 }
-                matchParticipants.Add(p);
+                await Task.WhenAll(tasks);
+                
+                _logger.LogInformation($"Member '{participant.Name}' is unmatch");
             }
-            var tasks = new List<Task>();
-            foreach (var p in matchParticipants)
+            catch (Exception ex)
             {
-                p.MatchTo.Remove(participant.Id);
-                if (participant.IsFromIsrael)
-                {
-                    tasks.Add(_unitOfWork.WorldParticipantsRepositry
-                        .Update(p as WorldParticipant));
-                }
-                else
-                {
-                    tasks.Add(_unitOfWork.IsraelParticipantsRepositry
-                        .Update(p as IsraelParticipant));
-                }
+                _logger.LogError($"Can not unmatch member '{participant.Name}'", ex);
+                throw new UserException($"Sory... there is some error\nDo not worry the develper is informed");
             }
-            await Task.WhenAll(tasks);
         }
 
         private async Task<dynamic> GetWixId(Participant part)
@@ -282,6 +315,7 @@ namespace PairMatching.DomainModel.Services
         {
             participant.Notes.Remove(selectedNote);
             await UpdateParticipaint(participant);
+            _logger.LogInformation($"Delete note by {selectedNote.Author} from '{participant.Name}'");
         }
     }
 }

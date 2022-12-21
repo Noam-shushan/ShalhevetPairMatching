@@ -110,7 +110,7 @@ namespace GuiWpf.ViewModels
             {
                 if (SetProperty(ref _isAllSelected, value))
                 {
-                    Participiants.Items.OfType<Participant>()
+                    Participiants.FilterdItems
                         .ToList()
                         .ForEach(p => p.IsSelected = value);
                     Participiants.Refresh();
@@ -179,7 +179,7 @@ namespace GuiWpf.ViewModels
             IsSendEmailOpen = !IsSendEmailOpen;
             if (IsSendEmailOpen)
             {
-                var address = from p in Participiants.Items
+                var address = from p in Participiants.FilterdItems
                               where p.IsSelected
                               select new EmailAddress
                               {
@@ -220,11 +220,17 @@ namespace GuiWpf.ViewModels
         public DelegateCommand SendToArchivCommand => _SendToArchivCommand ??= new(
         async () =>
         {
-            IsLoaded = true;
-            await _participantService.SendToArcive(SelectedParticipant);
-            SelectedParticipant.IsInArchive = true;
-            Participiants.Refresh();
-            IsLoaded = false;
+            if(SelectedParticipant != null)
+            {
+                if(Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשלוח את {SelectedParticipant.Name} ?"))
+                {
+                    IsLoaded = true;
+                    await _participantService.SendToArcive(SelectedParticipant);
+                    SelectedParticipant.IsInArchive = true;
+                    Participiants.Refresh();
+                    IsLoaded = false;
+                }
+            }
         }, () => !IsLoaded);
 
 
@@ -232,18 +238,23 @@ namespace GuiWpf.ViewModels
         public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
         async () =>
         {
-            IsLoaded = true;
-            await _participantService.DeleteParticipaint(SelectedParticipant);
-            Participiants.ItemsSource.Remove(SelectedParticipant);
-            Participiants.Refresh();
-            IsLoaded = false;
+            if(SelectedParticipant != null)
+            {
+                if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך למחוק את {SelectedParticipant.Name} ?"))
+                {
+                    IsLoaded = true;
+                    await _participantService.DeleteParticipaint(SelectedParticipant);
+                    Participiants.ItemsSource.Remove(SelectedParticipant);
+                    Participiants.Refresh();
+                    IsLoaded = false;
+                }
+            }
         }, () => !IsLoaded);
 
         DelegateCommand _addParticipantCommand;
         public DelegateCommand AddParticipantCommand => _addParticipantCommand ??= new(
             () =>
             {
-
                 IsAddFormOpen = !IsAddFormOpen;
             });
 

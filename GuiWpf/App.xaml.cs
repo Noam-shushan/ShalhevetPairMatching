@@ -3,14 +3,13 @@ using Prism.Ioc;
 using Prism.Unity;
 using System.Windows;
 using PairMatching.DomainModel.DataAccessFactory;
-using PairMatching.DomainModel.Email;
 using PairMatching.DomainModel.Services;
 using Prism.Mvvm;
 using GuiWpf.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
 using PairMatching.Root;
 using GuiWpf.Commands;
-using DnsClient.Internal;
+using PairMatching.Loggin;
 
 namespace GuiWpf
 {
@@ -27,9 +26,21 @@ namespace GuiWpf
             _startup = new Startup();
         }
 
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            var logger = Container.Resolve<Logger>();
+            await logger.SendLogs();
+
+            base.OnExit(e);
+        }
+
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+
             containerRegistry.RegisterInstance(_startup.GetConfigurations());
+
+            containerRegistry.RegisterInstance(new Logger(_startup.GetConfigurations().ConnctionsStrings));
+
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
 
             containerRegistry.RegisterSingleton<MatchCommand>();
@@ -69,15 +80,17 @@ namespace GuiWpf
             
         }
 
-        private async void PrismApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void PrismApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            //MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK,
-            //    MessageBoxImage.Error, MessageBoxResult.None,
-            //    MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+            MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK,
+                MessageBoxImage.Error, MessageBoxResult.None,
+                MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
 
-            //var emailService = Container.Resolve<IEmailService>();
-
-            //await emailService.LogErrorToDev(e.Exception);
+            var logger = Container.Resolve<Logger>();
+            if(e.Exception is not UserException)
+            {
+                logger.LogError("", e.Exception);
+            }
         }
     }
 }

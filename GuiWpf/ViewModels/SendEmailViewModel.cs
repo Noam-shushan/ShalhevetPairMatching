@@ -19,13 +19,11 @@ namespace GuiWpf.ViewModels
     {
         readonly IEventAggregator _ea;
         readonly IEmailService _emailService;
-        private SendEmail _emailSender;
 
         public SendEmailViewModel(IEventAggregator ea, IEmailService emailService, SendEmail sendEmail)
         {
             _ea = ea;
             _emailService = emailService;
-            _emailSender = sendEmail;
 
             _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
                 .Subscribe((to) =>
@@ -99,8 +97,14 @@ namespace GuiWpf.ViewModels
         public DelegateCommand CloesCommand => _cloesCommand ??= new(
         () =>
         {
+            Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
         });
+
+        private void Reset()
+        {
+            Subject = Body = Link = string.Empty;
+        }
 
         DelegateCommand _sendEmailCommand;
         public DelegateCommand SendEmailCommand => _sendEmailCommand ??= new(
@@ -119,7 +123,6 @@ namespace GuiWpf.ViewModels
                 var newEmail = await _emailService.SendEmail(new EmailModel
                 {
                     Body = Body,
-                    SendingDate = DateTime.Now,
                     Subject = Subject,
                     To = To.ToList(),
                     HtmlBody = "",
