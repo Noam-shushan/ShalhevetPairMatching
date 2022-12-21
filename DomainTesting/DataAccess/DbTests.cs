@@ -41,6 +41,26 @@ namespace DomainTesting.DataAccess
                 Name = "test",
             };
             var id = await _db.IsraelParticipantsRepositry.Insert(part);
-        }       
+        }
+
+        [Test]
+        public async Task AddProperty()
+        {
+            var pairs = await _db.EmailRepositry.GetAllAsync();
+        }
+
+        [Test]
+        public async Task SaveToDrive()
+        {
+            var tasks = new List<Task>
+            {
+                _db.IsraelParticipantsRepositry.SaveToDrive(),
+                _db.WorldParticipantsRepositry.SaveToDrive(),
+                _db.EmailRepositry.SaveToDrive(),
+                _db.PairsRepositry.SaveToDrive()
+            };
+
+            await Task.WhenAll(tasks);
+        }
     }
 }

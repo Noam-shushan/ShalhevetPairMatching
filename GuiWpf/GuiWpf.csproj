@@ -34,6 +34,7 @@
     <ProjectReference Include="..\Configurations\Configurations.csproj" />
     <ProjectReference Include="..\DomainModel\DomainModel.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\PairMatching.Logger\PairMatching.Logger.csproj" />
     <ProjectReference Include="..\Root\Root.csproj" />
     <ProjectReference Include="..\Tools\UtilTools.csproj" />
   </ItemGroup>

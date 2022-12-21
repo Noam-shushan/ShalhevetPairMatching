@@ -82,11 +82,11 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn
-                            Binding="{Binding Date, StringFormat=dd/MM/yyyy}"
+                            Binding="{Binding SendingDate, StringFormat=dd/MM/yyyy HH:mm}"
                             CanUserSort="True"
                             Header="תאריך"
                             SortDirection="Descending"
-                            SortMemberPath="Date" />
+                            SortMemberPath="SendingDate" />
                         <DataGridTextColumn Binding="{Binding Subject}" Header="נושא" />
                         <DataGridTextColumn Binding="{Binding To.Count}" Header="מספר נמענים" />
                         <DataGridTextColumn Binding="{Binding SendTo.Count}" Header="קיבלו" />
@@ -106,39 +106,63 @@
 
                     <DataGrid.RowDetailsTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid Margin="5">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        Margin="0,0,10,0"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Text="נמענים:" />
-                                    <ListBox
-                                        HorizontalAlignment="Left"
-                                        ItemsSource="{Binding To}"
-                                        Style="{StaticResource MaterialDesignChoiceChipListBox}">
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel
-                                                    MaxWidth="590"
-                                                    IsItemsHost="True"
-                                                    Orientation="Horizontal" />
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Name}" ToolTip="{Binding Address}" />
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </StackPanel>
+
+                                <Grid Grid.Row="0" Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,0,10,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                            Text="נמענים:" />
+                                        <ComboBox
+                                            HorizontalAlignment="Left"
+                                            materialDesign:ComboBoxAssist.ShowSelectedItem="True"
+                                            IsEditable="False"
+                                            ItemsSource="{Binding To}"
+                                            Style="{StaticResource MaterialDesignFilledComboBox}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Name}" ToolTip="{Binding Address}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,0,10,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                            Text="לא קיבלו:" />
+                                        <ComboBox
+                                            HorizontalAlignment="Left"
+                                            materialDesign:ComboBoxAssist.ShowSelectedItem="True"
+                                            IsEditable="False"
+                                            ItemsSource="{Binding MissSentAddress}"
+                                            Style="{StaticResource MaterialDesignFilledComboBox}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Name}" ToolTip="{Binding Address}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Grid>
                                 <Border
                                     Grid.Row="1"
+                                    Padding="5"
                                     BorderBrush="#121826"
                                     BorderThickness="1">
                                     <TextBlock
@@ -150,8 +174,11 @@
                                         <TextBlock.Style>
                                             <Style BasedOn="{StaticResource MaterialDesignBody1TextBlock}" TargetType="TextBlock">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsEnglish}" Value="True">
+                                                    <DataTrigger Binding="{Binding Language}" Value="en">
                                                         <Setter Property="FlowDirection" Value="LeftToRight" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Language}" Value="he">
+                                                        <Setter Property="FlowDirection" Value="RightToLeft" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>

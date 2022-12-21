@@ -17,7 +17,6 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:uiModels="clr-namespace:GuiWpf.UIModels"
     xmlns:vm="clr-namespace:GuiWpf.ViewModels"
-    Name="me"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -190,7 +189,7 @@
 
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
-                                <CheckBox Cursor="Hand" IsChecked="{Binding ElementName=me, Path=DataContext.IsAllSelected}" />
+                                <CheckBox Cursor="Hand" IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}" />
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -227,11 +226,6 @@
                                         Text="{Binding PhoneNumber}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Cursor="Pen" Text="{Binding PhoneNumber}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Header="מייל">
@@ -243,11 +237,6 @@
                                         Text="{Binding Email}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Cursor="Pen" Text="{Binding Email}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn
@@ -287,7 +276,7 @@
                                             <local:NotesView
                                                 MinHeight="300"
                                                 MaxWidth="500"
-                                                DataContext="{Binding ElementName=me, Path=DataContext.MyNotesViewModel}" />
+                                                DataContext="{Binding DataContext.MyNotesViewModel, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}" />
                                         </ScrollViewer>
                                     </materialDesign:PopupBox>
 
@@ -298,7 +287,7 @@
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
                                 <Button
-                                    Command="{Binding ElementName=me, Path=DataContext.SendEmailToManyCommand}"
+                                    Command="{Binding DataContext.SendEmailToManyCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
                                     Style="{StaticResource MaterialDesignIconButton}"
                                     ToolTip="שלח מייל לכל הנבחרים">
                                     <materialDesign:PackIcon Kind="Email" />
@@ -307,7 +296,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button
-                                        Command="{Binding ElementName=me, Path=DataContext.SendEmailToOneCommand}"
+                                        Command="{Binding DataContext.SendEmailToOneCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
                                         Style="{StaticResource MaterialDesignIconButton}"
                                         ToolTip="שלח מייל למשתתף">
                                         <materialDesign:PackIcon Kind="Email" />
@@ -329,13 +318,13 @@
                                                     <materialDesign:PackIcon Kind="Edit" />
                                                 </Button>
                                                 <Button
-                                                    Command="{Binding ElementName=me, Path=DataContext.SendToArchivCommand}"
+                                                    Command="{Binding DataContext.SendToArchivCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
                                                     Style="{StaticResource MaterialDesignIconButton}"
                                                     ToolTip="שלח לארכיון">
                                                     <materialDesign:PackIcon Kind="Archive" />
                                                 </Button>
                                                 <Button
-                                                    Command="{Binding ElementName=me, Path=DataContext.DeleteCommand}"
+                                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
                                                     Style="{StaticResource MaterialDesignIconButton}"
                                                     ToolTip="מחק משתתף">
                                                     <materialDesign:PackIcon Kind="Delete" />

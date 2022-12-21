@@ -55,9 +55,12 @@ namespace GuiWpf.ViewModels
         public DelegateCommand ResendEmailCommand => _ResendEmailCommand ??= new(
         async () =>
         {
-            _ea.GetEvent<IsSendEmailEvent>().Publish(true);
-            await _emailService.ResendEmail(SelectedEmail);
-            _ea.GetEvent<IsSendEmailEvent>().Publish(false);
+            if(Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך לשלוח את המייל שוב?"))
+            {
+                _ea.GetEvent<IsSendEmailEvent>().Publish(true);
+                await _emailService.ResendEmail(SelectedEmail);
+                _ea.GetEvent<IsSendEmailEvent>().Publish(false);
+            }
         });
 
         private async Task Refrash()

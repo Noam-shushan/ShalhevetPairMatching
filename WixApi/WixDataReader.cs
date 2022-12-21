@@ -61,15 +61,23 @@ namespace PairMatching.WixApi
 
         public async Task<string> SendEmail(dynamic email)
         {
-            var query = _configuration.WixApi["sendEmails"];
+            try
+            {
+                var query = _configuration.WixApi["sendEmails"];
 
-            var jsonContent = await _http.PostAsync(query, email);
+                var jsonContent = await _http.PostAsync(query, email);
 
-            var parsedObject = JObject.Parse(jsonContent);
+                var parsedObject = JObject.Parse(jsonContent);
 
-            var id = parsedObject["inserted"]["_id"];
+                var id = parsedObject["inserted"]["_id"];
 
-            return id?.ToString();
+                return id?.ToString();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<ParticipantWixDto> GetOneParticipant(int index)

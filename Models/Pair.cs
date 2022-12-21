@@ -14,13 +14,13 @@ namespace PairMatching.Models
 
         public string WixId { get; set; } = "";
 
-        public string FromIsraelId { get; set; }
+        public string FromIsraelId { get; set; } = "";
 
-        public string FromWorldId { get; set; }
+        public string FromWorldId { get; set; } = "";
 
         public DateTime DateOfCreate { get; set; }
 
-        public IEnumerable<TrackHistory> TrackHistories { get; set; }
+        public IEnumerable<TrackHistory> TrackHistories { get; set; } = new List<TrackHistory>();
 
         public DateTime DateOfDelete { get; set; }
 
@@ -34,13 +34,13 @@ namespace PairMatching.Models
         public PairStatus Status { get; set; }
 
         [BsonIgnore]
-        public Participant FromIsrael { get; set; }
+        public Participant FromIsrael { get; set; } = new();
 
         [BsonIgnore]
-        public Participant FromWorld { get; set; }
+        public Participant FromWorld { get; set; } = new();
     }
 
-    public class TrackHistory
+    public record TrackHistory
     {
         public PrefferdTracks Track { get; set; }
 

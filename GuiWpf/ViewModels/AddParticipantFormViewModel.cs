@@ -195,7 +195,8 @@ namespace GuiWpf.ViewModels
                                    Day = day.Key,
                                    TimeInDay = day.SelectMany(t => t.TimeInDay).ToList()
                                },
-                LearningStyle = LearningStyle
+                LearningStyle = LearningStyle,
+                NumberOfMatchs = NumberOfMatchs
             };
             if(IsFromIsrael)
             {
@@ -211,7 +212,8 @@ namespace GuiWpf.ViewModels
                     PhoneNumber = PhoneNumber,
                     PairPreferences = preferences,
                     DesiredSkillLevel = DesiredSkillLevel,
-                    EnglishLevel = EnglishLevel,  
+                    EnglishLevel = EnglishLevel,
+                    
                 };
             }
             else
@@ -229,7 +231,7 @@ namespace GuiWpf.ViewModels
                     Name = Name,
                     PhoneNumber = PhoneNumber,
                     PairPreferences = preferences,
-                    DesiredEnglishLevel = DesiredEnglishLevel
+                    DesiredEnglishLevel = DesiredEnglishLevel,
                 };
             }
             _ea.GetEvent<AddParticipantEvent>().Publish(newParticipant);

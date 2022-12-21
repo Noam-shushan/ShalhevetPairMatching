@@ -11,6 +11,7 @@ using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.Tools;
 using PairMatching.Models.Dtos;
 using PairMatching.DomainModel.BLModels;
+using PairMatching.Loggin;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -20,30 +21,48 @@ namespace PairMatching.DomainModel.Services
 
         readonly WixDataReader _wix;
 
-        public PairService(IDataAccessFactory dataAccessFactory, MyConfiguration config)
+        readonly Logger _logger;
+
+        public PairService(IDataAccessFactory dataAccessFactory, MyConfiguration config, Logger logger)
         {
             _unitOfWork = dataAccessFactory.GetDataAccess();
+
+            _logger = logger;
 
             _wix = new WixDataReader(config);
         }
 
         public async Task VerifieyNewPairsInWix()
         {
-            var pairs = await _unitOfWork
-                            .PairsRepositry
-                            .GetAllAsync(p => p.Status == PairStatus.Active && p.WixId != "");
-
-            var tasks = new List<Task>();
-            foreach(var p in pairs)
+            try
             {
-                var data = await _wix.VerifieyNewPair(p.WixId);
-                if (data.Where(e => e.IsSent).Count() == 2)
+                var pairs = await _unitOfWork
+                        .PairsRepositry
+                        .GetAllAsync(p => p.Status == PairStatus.Active && p.WixId != "");
+
+                var tasks = new List<Task>();
+                foreach (var p in pairs)
                 {
-                    p.Status = PairStatus.Learning;
-                    tasks.Add(_unitOfWork.PairsRepositry.Update(p));
+                    if (string.IsNullOrWhiteSpace(p.WixId))
+                    {
+                        continue;
+                    }
+                    var data = await _wix.VerifieyNewPair(p.WixId);
+                    if (data.Where(e => e.IsSent).Count() == 2)
+                    {
+                        p.Status = PairStatus.Learning;
+                        tasks.Add(_unitOfWork.PairsRepositry.Update(p));
+                    }
                 }
+                await Task.WhenAll(tasks);
+                if(tasks.Count > 0)
+                    _logger.LogInformation($"Verifiey new pairs: {tasks.Count}");
             }
-            await Task.WhenAll(tasks);
+            catch (Exception ex)
+            {
+                _logger.LogError("Error Verifiey new pairs", ex);
+                throw new UserException("Can not Verifiey new havrota");
+            }
         }
 
         public async Task<IEnumerable<Pair>> GetAllPairs()
@@ -53,57 +72,75 @@ namespace PairMatching.DomainModel.Services
                 .GetAllAsync(p => p.Status > PairStatus.Standby);
 
             await SetParticipaintsForEachPair(pairs);
-
-            //await _unitOfWork.PairsRepositry.SaveToDrive();
             
             return pairs;
         }
 
         public async Task<Pair> AddNewPair(PairSuggestion pairSuggestion, PrefferdTracks track = PrefferdTracks.NoPrefrence)
         {
-            var pair = CreateNewPair(pairSuggestion, track);
+            try
+            {
+                var pair = CreateNewPair(pairSuggestion, track);
 
-            pair.FromIsrael.MatchTo.Add(pair.FromWorldId);
-            pair.FromWorld.MatchTo.Add(pair.FromIsraelId);
+                pair.FromIsrael.MatchTo.Add(pair.FromWorldId);
+                pair.FromWorld.MatchTo.Add(pair.FromIsraelId);
 
-            await Task.WhenAll(
-                _unitOfWork
-                .IsraelParticipantsRepositry
-                // Update the israeli participaint
-                .Update(pair.FromIsrael as IsraelParticipant),
-                
-                _unitOfWork
-                .WorldParticipantsRepositry
-                // Update the world participaint
-                .Update(pair.FromWorld as WorldParticipant));
-            
-            var newPair = await _unitOfWork.PairsRepositry.Insert(pair);
-            
-            return newPair;
+                await Task.WhenAll(
+                    _unitOfWork
+                    .IsraelParticipantsRepositry
+                    // Update the israeli participaint
+                    .Update(pair.FromIsrael as IsraelParticipant),
+
+                    _unitOfWork
+                    .WorldParticipantsRepositry
+                    // Update the world participaint
+                    .Update(pair.FromWorld as WorldParticipant));
+
+                var newPair = await _unitOfWork.PairsRepositry.Insert(pair);
+
+                _logger.LogInformation($"Add new pair {newPair.Id}");
+
+                return newPair;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Can not add new pair {pairSuggestion.FromIsrael.Id} -> {pairSuggestion.FromWorld.Id}", ex);
+                throw new UserException($"Can not add new havrota {pairSuggestion.FromIsrael.Name} -> {pairSuggestion.FromWorld.Name}");
+            }
         }
 
         public async Task ChangeTrack(Pair pair, PrefferdTracks track)
         {
-            pair.Track = track;
-            pair.TrackHistories.Append(new TrackHistory 
-            { 
-                Track = track,
-                DateOfUpdate = DateTime.Now
-            });
-
-            var id = await _wix.NewPair(new NewPairWixDto
+            try
             {
-                chevrutaIdFirst = pair.FromIsraelId,
-                chevrutaIdSecond = pair.FromWorldId,
-                date = DateTime.Now,
-                trackId = track.GetDescriptionIdFromEnum()
-            });
+                pair.Track = track;
+                pair.TrackHistories.Append(new TrackHistory
+                {
+                    Track = track,
+                    DateOfUpdate = DateTime.Now
+                });
 
-            pair.WixId = id;
+                var id = await _wix.NewPair(new NewPairWixDto
+                {
+                    chevrutaIdFirst = pair.FromIsraelId,
+                    chevrutaIdSecond = pair.FromWorldId,
+                    date = DateTime.Now,
+                    trackId = track.GetDescriptionIdFromEnum()
+                });
 
-            await _unitOfWork
-                    .PairsRepositry
-                    .Update(pair);
+                pair.WixId = id;
+
+                await _unitOfWork
+                        .PairsRepositry
+                        .Update(pair);
+                
+                _logger.LogInformation($"Change track to pair {pair.Id} to {track}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Can not change track to pair {pair.Id}, {pair.Track} -> {track}", ex);
+                throw new UserException($"CCan not change track to havrota {pair.FromIsrael.Name} -> {pair.FromWorld.Name}");
+            }
         }
 
         public async Task ReturnToStandby(Pair pair)
@@ -113,6 +150,8 @@ namespace PairMatching.DomainModel.Services
             await _unitOfWork
                      .PairsRepositry
                      .Update(pair);
+
+            _logger.LogInformation($"Return to standby for pair {pair.Id}");
         }
 
         public async Task DeletePair(Pair pair)
@@ -120,6 +159,8 @@ namespace PairMatching.DomainModel.Services
             pair.IsDeleted = true;
             await UpdateParticipantsOnDelete(pair);
             await _unitOfWork.PairsRepositry.Update(pair);
+
+            _logger.LogInformation($"Delete pair {pair.Id}");
         }
 
         public async Task<Pair> ActivePair(Pair pair)
@@ -133,6 +174,8 @@ namespace PairMatching.DomainModel.Services
 
             await _unitOfWork.PairsRepositry.Update(pair);
 
+            _logger.LogInformation($"Active pair {pair.Id}");
+
             return pair;
         }
 
@@ -140,6 +183,8 @@ namespace PairMatching.DomainModel.Services
         {
             await UpdateParticipantsOnDelete(pair);
             await _unitOfWork.PairsRepositry.Delete(pair.Id);
+
+            _logger.LogInformation($"Censel pair {pair.Id}");
         }
 
         async Task UpdateParticipantsOnDelete(Pair pair)
@@ -183,14 +228,22 @@ namespace PairMatching.DomainModel.Services
         
         private async Task<string> SendNewPairToWix(Pair pair)
         {
-            var id = await _wix.NewPair(new NewPairWixDto
+            try
             {
-                chevrutaIdFirst = pair.FromIsrael.WixId,
-                chevrutaIdSecond = pair.FromWorld.WixId,
-                date = DateTime.Now,
-                trackId = pair.Track.GetDescriptionIdFromEnum()
-            });
-            return id;
+                var id = await _wix.NewPair(new NewPairWixDto
+                {
+                    chevrutaIdFirst = pair.FromIsrael.WixId,
+                    chevrutaIdSecond = pair.FromWorld.WixId,
+                    date = DateTime.Now,
+                    trackId = pair.Track.GetDescriptionIdFromEnum()
+                });
+                return id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Can not add havrota '{pair.FromIsrael.Name} -> {pair.FromWorld.Name}' to wix", ex);
+                throw new UserException($"Can not add havrota '{pair.FromIsrael.Name} -> {pair.FromWorld.Name}' to wix");
+            }
         }
 
         public async Task<IEnumerable<StandbyPair>> GetAllStandbyPairs()
