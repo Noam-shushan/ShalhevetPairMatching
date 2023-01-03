@@ -122,8 +122,8 @@ namespace PairMatching.DomainModel.Services
 
                 var id = await _wix.NewPair(new NewPairWixDto
                 {
-                    chevrutaIdFirst = pair.FromIsraelId,
-                    chevrutaIdSecond = pair.FromWorldId,
+                    chevrutaIdFirst = pair.FromIsrael.WixId,
+                    chevrutaIdSecond = pair.FromWorld.WixId,
                     date = DateTime.Now,
                     trackId = track.GetDescriptionIdFromEnum()
                 });
@@ -292,12 +292,14 @@ namespace PairMatching.DomainModel.Services
         {
             pairModel.Notes.Add(newNote);
             await UpdatePair(pairModel);
+            _logger.LogInformation($"add note to pair {pairModel.Id}");
         }
 
         public async Task DeleteNote(Note selectedNote, Pair pair)
         {
             pair.Notes.Remove(selectedNote);
             await UpdatePair(pair);
+            _logger.LogInformation($"delete note from pair {pair.Id}");
         }
     }
 
