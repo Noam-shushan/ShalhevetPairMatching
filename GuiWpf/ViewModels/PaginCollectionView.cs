@@ -232,7 +232,10 @@ namespace GuiWpf.ViewModels
             CanGoPrev = CurrentPage > 0;
 
             Items.Clear();
-            Items.AddRange(FilterdItems.Where(item => PagingFilter(item)));
+
+            var showItems = FilterdItems.Where(item => PagingFilter(item));
+            var reverseITems = showItems.Reverse();
+            Items.AddRange(showItems);
             
             PageCount = GetPageCount();
         }

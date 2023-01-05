@@ -18,12 +18,15 @@ namespace GuiWpf.ViewModels
     {
         readonly IMatchingService _matchingService;
 
-        readonly IEventAggregator _ea;        
+        readonly IEventAggregator _ea;
 
-        public AutoMatchingViewModel(IMatchingService matchingService, IEventAggregator ea)
+        readonly ExceptionHeandler _exceptionHeandler;
+
+        public AutoMatchingViewModel(IMatchingService matchingService, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
         {
             _matchingService = matchingService;
             _ea = ea;
+            _exceptionHeandler = exceptionHeandler;
             
             _ea.GetEvent<RefreshMatchingEvent>()
                 .Subscribe(async () =>
@@ -43,13 +46,20 @@ namespace GuiWpf.ViewModels
 
         private async Task Refresh()
         {
-            IsLoaded = true;
-            
-            var result = await _matchingService.GetMaxOptMatching();
-            AutoSuggestions.Clear();
-            AutoSuggestions.AddRange(result);
-            
-            IsLoaded = false;
+            try
+            {
+                IsLoaded = true;
+
+                var result = await _matchingService.GetMaxOptMatching();
+                AutoSuggestions.Clear();
+                AutoSuggestions.AddRange(result);
+
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         }
 
         public ObservableCollection<PairSuggestion> AutoSuggestions { get; } = new();

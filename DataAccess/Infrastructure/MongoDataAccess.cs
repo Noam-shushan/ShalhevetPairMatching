@@ -106,16 +106,14 @@ namespace PairMatching.DataAccess.Infrastructure
             return record;
         }
 
-        public Task UpdateOne<T>(string collectionName, T record, dynamic id)
+        public async Task UpdateOne<T>(string collectionName, T record, dynamic id)
         {
             var collection = ConnectToMongo<T>(collectionName);
 
             var filter = Builders<T>.Filter.Eq("Id", id);
 
-            var task = collection.ReplaceOneAsync(filter,
+            await collection.ReplaceOneAsync(filter,
                 record, new ReplaceOptions { IsUpsert = true });
-
-            return task;
         }
 
         public Task Delete<T>(string collectionName, dynamic id)

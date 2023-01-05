@@ -23,15 +23,17 @@ namespace GuiWpf.ViewModels
     {
         readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
+        readonly ExceptionHeandler _exceptionHeandler;
 
-        public ParticipiantsViewModel(IParticipantService participantService, IPairsService pairService,  IEventAggregator ea)
+        public ParticipiantsViewModel(IParticipantService participantService, IPairsService pairService,  IEventAggregator ea, ExceptionHeandler exceptionHeandler)
         {
             _participantService = participantService;
             _ea = ea;
+            _exceptionHeandler = exceptionHeandler;
 
             SubscribeToEvents();
 
-            MyNotesViewModel = new NotesViewModel(participantService, pairService);
+            MyNotesViewModel = new NotesViewModel(participantService, pairService, exceptionHeandler);
         }
         
         #region Properties:
@@ -224,11 +226,18 @@ namespace GuiWpf.ViewModels
             {
                 if(Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשלוח את {SelectedParticipant.Name} ?"))
                 {
-                    IsLoaded = true;
-                    await _participantService.SendToArcive(SelectedParticipant);
-                    SelectedParticipant.IsInArchive = true;
-                    Participiants.Refresh();
-                    IsLoaded = false;
+                    try
+                    {
+                        IsLoaded = true;
+                        await _participantService.SendToArcive(SelectedParticipant);
+                        SelectedParticipant.IsInArchive = true;
+                        Participiants.Refresh();
+                        IsLoaded = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        _exceptionHeandler.HeandleException(ex);
+                    }
                 }
             }
         }, () => !IsLoaded);
@@ -242,11 +251,18 @@ namespace GuiWpf.ViewModels
             {
                 if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך למחוק את {SelectedParticipant.Name} ?"))
                 {
-                    IsLoaded = true;
-                    await _participantService.DeleteParticipaint(SelectedParticipant);
-                    Participiants.ItemsSource.Remove(SelectedParticipant);
-                    Participiants.Refresh();
-                    IsLoaded = false;
+                    try
+                    {
+                        IsLoaded = true;
+                        await _participantService.DeleteParticipaint(SelectedParticipant);
+                        Participiants.ItemsSource.Remove(SelectedParticipant);
+                        Participiants.Refresh();
+                        IsLoaded = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        _exceptionHeandler.HeandleException(ex);
+                    }
                 }
             }
         }, () => !IsLoaded);
@@ -274,19 +290,26 @@ namespace GuiWpf.ViewModels
 
         private async Task Refresh()
         {
-            IsLoaded = true;
+            try
+            {
+                IsLoaded = true;
 
-            var parts = await _participantService.GetAll();
+                var parts = await _participantService.GetAll();
 
-            Participiants.Init(parts, 10, ParticipiantsFilter);
+                Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, ParticipiantsFilter);
 
-            
 
-            Years.Clear();
-            Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
-            Years.Insert(0, allYears);
 
-            IsLoaded = false;
+                Years.Clear();
+                Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
+                Years.Insert(0, allYears);
+
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         }
 
         private void SubscribeToEvents()
@@ -297,8 +320,15 @@ namespace GuiWpf.ViewModels
 
             _ea.GetEvent<AddParticipantEvent>().Subscribe(async (part) =>
             {
-                var newParticipaint = await _participantService.InsertParticipant(part);
-                Participiants.Add(newParticipaint);
+                try
+                {
+                    var newParticipaint = await _participantService.InsertParticipant(part);
+                    Participiants.Add(newParticipaint);
+                }
+                catch (Exception ex)
+                {
+                    _exceptionHeandler.HeandleException(ex);
+                }
             });       
         }
 

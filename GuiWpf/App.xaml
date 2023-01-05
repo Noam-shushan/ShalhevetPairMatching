@@ -6,8 +6,7 @@
     xmlns:local="clr-namespace:GuiWpf"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
-    xmlns:prism="http://prismlibrary.com/"
-    DispatcherUnhandledException="PrismApplication_DispatcherUnhandledException">
+    xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
 
         <ResourceDictionary>

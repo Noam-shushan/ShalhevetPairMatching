@@ -1,12 +1,8 @@
 ﻿using GuiWpf.Events;
 using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.DomainModel.Services;
-using PairMatching.Models;
 using Prism.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -14,33 +10,43 @@ namespace GuiWpf.Commands
 {
     public class MatchCommand : ICommand
     {
-        IEventAggregator _ea;
+        readonly IEventAggregator _ea;
 
-        IPairsService _pairsService;
+        readonly IPairsService _pairsService;
 
-        IMatchingService _matchingService;
+        readonly IMatchingService _matchingService;
 
-        public MatchCommand(IEventAggregator ea, IPairsService pairsService, IMatchingService matchingService)
+        readonly ExceptionHeandler _exceptionHeandler;
+
+        public MatchCommand(IEventAggregator ea, IPairsService pairsService, IMatchingService matchingService, ExceptionHeandler exceptionHeandler)
         {
             _ea = ea;
             _pairsService = pairsService;
+            _exceptionHeandler = exceptionHeandler;
             _matchingService = matchingService;
         }
 
         async Task Match(PairSuggestion pairSuggestion)
         {
-            _ea.GetEvent<CloseDialogEvent>().Publish(false);
-            var newPair = await _pairsService.AddNewPair(pairSuggestion);
-            await _matchingService.Refresh();
-            _ea.GetEvent<RefreshMatchingEvent>().Publish();
+            try
+            {
+                _ea.GetEvent<CloseDialogEvent>().Publish(false);
+                var newPair = await _pairsService.AddNewPair(pairSuggestion);
+                await _matchingService.Refresh();
+                _ea.GetEvent<RefreshMatchingEvent>().Publish();
 
 
-            _ea.GetEvent<NewMatchEvent>()
-                    .Publish(new() 
-                    {
-                        Pair = newPair,
-                        PairSuggestion = pairSuggestion
-                    });
+                _ea.GetEvent<NewMatchEvent>()
+                        .Publish(new()
+                        {
+                            Pair = newPair,
+                            PairSuggestion = pairSuggestion
+                        });
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         }
 
         public bool CanExecute(object? parameter)

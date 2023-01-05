@@ -19,11 +19,13 @@ namespace GuiWpf.ViewModels
     {
         readonly IEventAggregator _ea;
         readonly IEmailService _emailService;
+        readonly ExceptionHeandler _exceptionHeandler;
 
-        public SendEmailViewModel(IEventAggregator ea, IEmailService emailService, SendEmail sendEmail)
+        public SendEmailViewModel(IEventAggregator ea, IEmailService emailService, ExceptionHeandler exceptionHeandler)
         {
             _ea = ea;
             _emailService = emailService;
+            _exceptionHeandler = exceptionHeandler;
 
             _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
                 .Subscribe((to) =>
@@ -132,9 +134,9 @@ namespace GuiWpf.ViewModels
                 _ea.GetEvent<IsSendEmailEvent>().Publish(false);
                 _ea.GetEvent<NewEmailSendEvent>().Publish(newEmail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _exceptionHeandler.HeandleException(ex);
             }
         }); 
         #endregion

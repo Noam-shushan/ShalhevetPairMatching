@@ -10,6 +10,7 @@ using MahApps.Metro.Controls.Dialogs;
 using PairMatching.Root;
 using GuiWpf.Commands;
 using PairMatching.Loggin;
+using System.Threading.Tasks;
 
 namespace GuiWpf
 {
@@ -22,9 +23,11 @@ namespace GuiWpf
 
         public App() : base()
         {
+            // DispatcherUnhandledException="PrismApplication_DispatcherUnhandledException"
             //AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
             _startup = new Startup();
         }
+
 
         protected override async void OnExit(ExitEventArgs e)
         {
@@ -40,6 +43,7 @@ namespace GuiWpf
             containerRegistry.RegisterInstance(_startup.GetConfigurations());
 
             containerRegistry.RegisterInstance(new Logger(_startup.GetConfigurations().ConnctionsStrings));
+            containerRegistry.Register<ExceptionHeandler>();
 
             containerRegistry.Register<IDataAccessFactory, DataAccessFactory>();
 
@@ -77,20 +81,6 @@ namespace GuiWpf
             ViewModelLocationProvider.Register<ParisView, PairsViewModel>();
             ViewModelLocationProvider.Register<SendEmailView, SendEmailViewModel>();
             ViewModelLocationProvider.Register<AutoMatchingView, AutoMatchingViewModel>();
-            
-        }
-
-        private void PrismApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK,
-                MessageBoxImage.Error, MessageBoxResult.None,
-                MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
-
-            var logger = Container.Resolve<Logger>();
-            if(e.Exception is not UserException)
-            {
-                logger.LogError("", e.Exception);
-            }
         }
     }
 }

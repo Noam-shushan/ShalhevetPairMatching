@@ -22,11 +22,14 @@ namespace GuiWpf.ViewModels
 
         readonly IEventAggregator _ea;
 
-        public MatchingViewModel(IMatchingService matchingService, IEventAggregator ea, MatchCommand matchCommand)
+        readonly ExceptionHeandler _exceptionHeandler;
+
+        public MatchingViewModel(IMatchingService matchingService, IEventAggregator ea, MatchCommand matchCommand, ExceptionHeandler exceptionHeandler)
         {
             _matchingService = matchingService;
             _ea = ea;
             Match = matchCommand;
+            _exceptionHeandler = exceptionHeandler;
             
             _ea.GetEvent<RefreshMatchingEvent>()
                 .Subscribe(async () =>
@@ -50,20 +53,27 @@ namespace GuiWpf.ViewModels
 
         private async Task Refresh()
         {
-            IsLoaded = true;
-            
-            IsFullComparisonOpen = false;
+            try
+            {
+                IsLoaded = true;
 
-            var suggestions = await _matchingService.GetAllPairSuggestions();
+                IsFullComparisonOpen = false;
 
-            _pairSuggestions.Clear();
-            _pairSuggestions.AddRange(suggestions);
-            
-            var items = GroupPartBySuggestion(suggestions);
-            Participants.Init(items, 20, ItemsFilter);          
-            
-            
-            IsLoaded = false;
+                var suggestions = await _matchingService.GetAllPairSuggestions();
+
+                _pairSuggestions.Clear();
+                _pairSuggestions.AddRange(suggestions);
+
+                var items = GroupPartBySuggestion(suggestions);
+                Participants.Init(items, 20, ItemsFilter);
+
+
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         }
 
         private bool ItemsFilter(ParticipaintWithSuggestions p)

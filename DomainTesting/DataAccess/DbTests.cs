@@ -15,6 +15,8 @@ using PairMatching.WixApi;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using PairMatching.Root;
+using PairMatching.GoogleSheet;
+using System.Drawing;
 
 namespace DomainTesting.DataAccess
 {
@@ -23,11 +25,16 @@ namespace DomainTesting.DataAccess
     {
         readonly IUnitOfWork _db;
 
+        readonly MyConfiguration _conf;
+
+        readonly WixDataReader _wix;
+
         public DbTests()
         {
-            var conf = new Startup()
+            _conf = new Startup()
                 .GetConfigurations();
-            _db = new UnitOfWork(conf);
+            _db = new UnitOfWork(_conf);
+            _wix = new WixDataReader(_conf);
         }
 
         [Test]
@@ -61,6 +68,49 @@ namespace DomainTesting.DataAccess
             };
 
             await Task.WhenAll(tasks);
+        }
+
+        [Test]
+        public async Task FixDbAndGoogleSheet()
+        {       
+            var missingFromWd = new string[] 
+            { 
+                "rob@boundlessliving.org", 
+                "tamibenayon@yahoo.ca", 
+                "Scotthertzberg68@gmail.com",
+                "drmindybethlipson@gmail.com"
+            };
+            var parser = new GoogleSheetParser();
+            var lastWolrdRow = await parser.ReadAsync(new EnglishDiscriptor(new SpredsheetLastRange
+            {
+                HebrewSheets = "A141:Z",
+                EnglishSheets = "A123:Z"
+            }, _conf));
+
+            if (parser.NewStudents.Any())
+            {
+                var parts = parser.NewStudents
+                    .Select(s => s.ToParticipant())
+                    .ToLookup(p => p is IsraelParticipant);
+
+                var worlds = parts[false].Select(p => p as WorldParticipant);
+
+                foreach(var wp in worlds)
+                {
+                    //if (missingFromWd.Contains(wp.Email))
+                    //{
+                    //    var partWixDto = wp.ToWorldParticipantWixDto();
+                    //    var id = await _wix.NewParticipant(partWixDto);
+                    //    if(id is not null)
+                    //    {
+                    //        wp.WixId = id.ToString();
+                    //    }
+                    //}
+                }
+                await _db.WorldParticipantsRepositry.InsertMany(worlds);
+            }
+
+
         }
     }
 }

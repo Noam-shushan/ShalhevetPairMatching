@@ -24,10 +24,9 @@ namespace PairMatching.Loggin
             var log = new Log
             {
                 Date = DateTime.Now,
-                Message = msg,
+                Message = $"{msg}: '{ex.Message}'",
                 Source = $"path: '{callerPath}', line: '{callerLine}'",
                 Type = "error",
-                Exception = new ExceptionDto(ex)
             };
             Logs.Add(log);
         }
@@ -39,8 +38,7 @@ namespace PairMatching.Loggin
                 Date = DateTime.Now,
                 Message = msg,
                 Source = $"path: '{callerPath}', line: '{callerLine}'",
-                Type = "info",
-                Exception = new ExceptionDto()
+                Type = "info"
             };
             Logs.Add(log);
         }
@@ -52,7 +50,10 @@ namespace PairMatching.Loggin
 
         public async Task SendLogs()
         {
-            await _dataAccess.InsertMany(collectionName, Logs);
+            if (Logs.Any())
+            {
+                await _dataAccess.InsertMany(collectionName, Logs);
+            }
         }
     }
 }

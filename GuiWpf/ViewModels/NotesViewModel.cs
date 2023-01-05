@@ -18,9 +18,18 @@ namespace GuiWpf.ViewModels
 {   
     public class NotesViewModel : BindableBase
     {
-        IParticipantService _participantService;
+        readonly IParticipantService _participantService;
+        readonly IPairsService _pairService;
+        readonly ExceptionHeandler _exceptionHeandler;
+
+
         
-        IPairsService _pairService;
+        public NotesViewModel(IParticipantService participantService, IPairsService pairService, ExceptionHeandler exceptionHeandler) 
+        {
+            _participantService = participantService;
+            _pairService = pairService;
+            _exceptionHeandler = exceptionHeandler;
+        }
 
         private BaseModel _currentModel;
         public BaseModel CurrentModel
@@ -28,18 +37,12 @@ namespace GuiWpf.ViewModels
             get => _currentModel;
             set => SetProperty(ref _currentModel, value);
         }
-        
+
         public void Init(BaseModel model)
         {
             CurrentModel = model;
             Notes.Clear();
             Notes.AddRange(CurrentModel.Notes);
-        }
-        
-        public NotesViewModel(IParticipantService participantService, IPairsService pairService) 
-        {
-            _participantService = participantService;
-            _pairService = pairService;
         }
 
         public ObservableCollection<Note> Notes { get; set; } = new();
@@ -86,7 +89,14 @@ namespace GuiWpf.ViewModels
         public DelegateCommand AddNoteCommand => _AddNoteCommand ??= new(
         async () =>
         {
-            await AddNote();
+            try
+            {
+                await AddNote();
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         }, () => true);
 
 
@@ -102,7 +112,14 @@ namespace GuiWpf.ViewModels
         public DelegateCommand DeleteNoteCommand => _DeleteNoteCommand ??= new(
         async () =>
         {
-            await DeleteNote();
+            try
+            {
+                await DeleteNote();
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         });
         #endregion
 

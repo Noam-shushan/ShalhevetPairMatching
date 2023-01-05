@@ -23,21 +23,21 @@ namespace GuiWpf.ViewModels
         readonly IPairsService _pairsService;
         readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
+        readonly ExceptionHeandler _exceptionHeandler;
 
-        public PairsViewModel(IPairsService pairsService, IParticipantService participantService, IEventAggregator ea)
+        public PairsViewModel(IPairsService pairsService, IParticipantService participantService, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
         {
             _pairsService = pairsService;
             _participantService = participantService;
             _ea = ea;
+            _exceptionHeandler = exceptionHeandler;
 
             SubscribeToEvents();
-            MyNotesViewModel = new NotesViewModel(_participantService, _pairsService);
+            MyNotesViewModel = new NotesViewModel(_participantService, _pairsService, _exceptionHeandler);
         }
 
         #region Collections
         public PaginCollectionViewModel<Pair> Pairs { get; set; } = new();
-
-        ObservableCollection<Pair> _pairs { get; set; } = new();
 
         public ObservableCollection<string> Years { get; private set; } = new();
 
@@ -172,10 +172,17 @@ namespace GuiWpf.ViewModels
                 {
                     if(Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשנות את המסלול ל- {trackStr}"))
                     {
-                        IsLoaded = true;
-                        await _pairsService.ChangeTrack(SelectedPair, selectedTrack);
-                        SelectedPair.Track = selectedTrack;
-                        IsLoaded = false;
+                        try
+                        {
+                            IsLoaded = true;
+                            await _pairsService.ChangeTrack(SelectedPair, selectedTrack);
+                            SelectedPair.Track = selectedTrack;
+                            IsLoaded = false;
+                        }
+                        catch (Exception ex)
+                        {
+                            _exceptionHeandler.HeandleException(ex);
+                        }
                     }
 
                 }
@@ -188,18 +195,25 @@ namespace GuiWpf.ViewModels
         {
             if(Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך למחוק את כל הנבחרים?"))
             {
-                var pairsToDel = Pairs.FilterdItems.Where(p => p.IsSelected);
-                List<Task> tasks = new();
-                foreach(var p in pairsToDel)
+                try
                 {
-                    tasks.Add(_pairsService.DeletePair(p));
+                    var pairsToDel = Pairs.FilterdItems.Where(p => p.IsSelected);
+                    List<Task> tasks = new();
+                    foreach (var p in pairsToDel)
+                    {
+                        tasks.Add(_pairsService.DeletePair(p));
+                    }
+                    await Task.WhenAll(tasks);
+                    foreach (var p in pairsToDel)
+                    {
+                        Pairs.ItemsSource.Remove(p);
+                    }
+                    Pairs.Refresh();
                 }
-                await Task.WhenAll(tasks);
-                foreach(var p in pairsToDel)
+                catch (Exception ex)
                 {
-                    Pairs.ItemsSource.Remove(p);
+                    _exceptionHeandler.HeandleException(ex);
                 }
-                Pairs.Refresh();
             }
         }, () => !IsLoaded);
 
@@ -211,11 +225,18 @@ namespace GuiWpf.ViewModels
             {
                 if(Messages.MessageBoxConfirmation("בטוח שברצונך למחוק את החברותא?"))
                 {
-                    IsLoaded = true;
-                    await _pairsService.DeletePair(SelectedPair);
-                    Pairs.ItemsSource.Remove(SelectedPair);
-                    Pairs.Refresh();
-                    IsLoaded = false;
+                    try
+                    {
+                        IsLoaded = true;
+                        await _pairsService.DeletePair(SelectedPair);
+                        Pairs.ItemsSource.Remove(SelectedPair);
+                        Pairs.Refresh();
+                        IsLoaded = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        _exceptionHeandler.HeandleException(ex);
+                    }
                 }
             }
         }, ()=> !IsLoaded);
@@ -234,18 +255,25 @@ namespace GuiWpf.ViewModels
         #region Mathods
         private async Task Refresh()
         {
-            IsLoaded = true;
+            try
+            {
+                IsLoaded = true;
 
-            await _pairsService.VerifieyNewPairsInWix();
+                await _pairsService.VerifieyNewPairsInWix();
 
-            var list = await _pairsService.GetAllPairs();
-            Pairs.Init(list, 5, PairsFilter);
+                var pairs = await _pairsService.GetAllPairs();
+                Pairs.Init(pairs.OrderByDescending(p => p.DateOfCreate), 5, PairsFilter);
 
-            Years.Clear();
-            Years.AddRange(_pairs.Select(p => p.DateOfCreate.Year.ToString()).Distinct());
-            Years.Insert(0, allYears);
+                Years.Clear();
+                Years.AddRange(pairs.Select(p => p.DateOfCreate.Year.ToString()).Distinct());
+                Years.Insert(0, allYears);
 
-            IsLoaded = false;
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         }
 
         bool PairsFilter(Pair pair)

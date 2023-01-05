@@ -17,10 +17,13 @@ namespace GuiWpf.ViewModels
 
         private IEmailService _emailService;
 
-        public EmailsViewModel(IEmailService emailService, IEventAggregator ea)
+        readonly ExceptionHeandler _exceptionHeandler;
+
+        public EmailsViewModel(IEmailService emailService, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
         {
             _emailService = emailService;
             _ea = ea;
+            _exceptionHeandler = exceptionHeandler;
 
             _ea.GetEvent<NewEmailSendEvent>()
                 .Subscribe(em =>
@@ -57,21 +60,35 @@ namespace GuiWpf.ViewModels
         {
             if(Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך לשלוח את המייל שוב?"))
             {
-                _ea.GetEvent<IsSendEmailEvent>().Publish(true);
-                await _emailService.ResendEmail(SelectedEmail);
-                _ea.GetEvent<IsSendEmailEvent>().Publish(false);
+                try
+                {
+                    _ea.GetEvent<IsSendEmailEvent>().Publish(true);
+                    await _emailService.ResendEmail(SelectedEmail);
+                    _ea.GetEvent<IsSendEmailEvent>().Publish(false);
+                }
+                catch (Exception ex)
+                {
+                    _exceptionHeandler.HeandleException(ex);
+                }
             }
         });
 
         private async Task Refrash()
         {
-            IsLoaded = true;
-            await _emailService.VerifieyEmails();
+            try
+            {
+                IsLoaded = true;
+                await _emailService.VerifieyEmails();
 
-            var emails = await _emailService.GetEmails();
+                var emails = await _emailService.GetEmails();
 
-            Emails.Init(emails, 10, EmailsFilter);
-            IsLoaded = false;
+                Emails.Init(emails, 10, EmailsFilter);
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         }
 
         private bool EmailsFilter(EmailModel obj)

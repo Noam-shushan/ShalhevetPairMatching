@@ -22,11 +22,14 @@ namespace GuiWpf.ViewModels
 
         readonly IPairsService _pairsService;
 
-        public StandbyMatchingViewModel(IMatchingService matchingService, IEventAggregator ea, IPairsService pairsService)
+        readonly ExceptionHeandler _exceptionHeandler;
+
+        public StandbyMatchingViewModel(IMatchingService matchingService, IEventAggregator ea, IPairsService pairsService, ExceptionHeandler exceptionHeandler)
         {
             _matchingService = matchingService;
             _ea = ea;
             _pairsService = pairsService;
+            _exceptionHeandler = exceptionHeandler;
             
             _ea.GetEvent<NewMatchEvent>()
                 .Subscribe(standbyPair =>
@@ -45,13 +48,20 @@ namespace GuiWpf.ViewModels
 
         private async Task Refresh()
         {
-            IsLoaded = true;
-            var pairs = await _pairsService.GetAllStandbyPairs();
+            try
+            {
+                IsLoaded = true;
+                var pairs = await _pairsService.GetAllStandbyPairs();
 
-            StandbyPairs.Clear();
-            StandbyPairs.AddRange(pairs);
+                StandbyPairs.Clear();
+                StandbyPairs.AddRange(pairs);
 
-            IsLoaded = false;
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         }
 
         public ObservableCollection<StandbyPair> StandbyPairs { get; set; } = new();
@@ -67,15 +77,22 @@ namespace GuiWpf.ViewModels
         public DelegateCommand ActivePairCommand => _ActivePairCommand ??= new(
         async () =>
         {
-            IsLoaded = true;
-            var pair = SelectedStandbyPair.Pair;
-            
-            StandbyPairs.Remove(SelectedStandbyPair);
-            
-            var activePair = await _pairsService.ActivePair(pair);
-            
-            _ea.GetEvent<NewPairEvent>().Publish(activePair);
-            IsLoaded = false;
+            try
+            {
+                IsLoaded = true;
+                var pair = SelectedStandbyPair.Pair;
+
+                StandbyPairs.Remove(SelectedStandbyPair);
+
+                var activePair = await _pairsService.ActivePair(pair);
+
+                _ea.GetEvent<NewPairEvent>().Publish(activePair);
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         },
         () => !IsLoaded);
 
@@ -83,16 +100,23 @@ namespace GuiWpf.ViewModels
         public DelegateCommand CancelStandbyPairCommand => _CancelStandbyPairCommand ??= new(
         async () =>
         {
-            IsLoaded = true;
-            var pair = SelectedStandbyPair.Pair;
+            try
+            {
+                IsLoaded = true;
+                var pair = SelectedStandbyPair.Pair;
 
-            StandbyPairs.Remove(SelectedStandbyPair);
-            
-            await _pairsService.CancelPair(pair);
+                StandbyPairs.Remove(SelectedStandbyPair);
 
-            await _matchingService.Refresh();
-            _ea.GetEvent<RefreshMatchingEvent>().Publish();
-            IsLoaded = false;
+                await _pairsService.CancelPair(pair);
+
+                await _matchingService.Refresh();
+                _ea.GetEvent<RefreshMatchingEvent>().Publish();
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
         },
         () => !IsLoaded);
     }
