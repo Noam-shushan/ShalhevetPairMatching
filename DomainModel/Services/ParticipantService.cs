@@ -93,8 +93,7 @@ namespace PairMatching.DomainModel.Services
 
             if (partsDtos.Any())
             {
-                _logger.LogInformation($"There is {partsDtos.Count()} new members from wix");
-                
+
                 var list = partsDtos.ToLookup(p => p is IsraelParticipantWixDto);
                 
                 var ips = list[true]
@@ -122,7 +121,9 @@ namespace PairMatching.DomainModel.Services
                     await _unitOfWork.WorldParticipantsRepositry
                             .InsertMany(wps);
                 }
-              
+
+                _logger.LogInformation($"There is new members from wix, count: {partsDtos.Count()}");
+
                 int newMaxIndex = partsDtos.Max(p => p.index);
                 if(newMaxIndex != config.WixIndex)
                 {

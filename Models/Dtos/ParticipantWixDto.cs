@@ -125,7 +125,8 @@ namespace PairMatching.Models.Dtos
 
         // [Jewish, In a conversion proccess] 
         public string jewishAffiliation { get; set; }
-        public int age { get; set; }      
+
+        public string age { get; set; }      
         public string utc { get; set; }
         public string conversionRabi { get; set; }
         public string experience { get; set; }
@@ -174,5 +175,20 @@ namespace PairMatching.Models.Dtos
 
         //    return part;
         //}
+    }
+
+    internal class CastToAttribute : Attribute
+    {
+        public Type Type { get; set; }
+
+        public CastToAttribute(Type type)
+        {
+            Type = type;
+        }
+
+        public object Cast(object value)
+        {
+            return Convert.ChangeType(value, Type);
+        }
     }
 }

@@ -223,7 +223,10 @@ namespace PairMatching.Models.Dtos
                 part.OpenQuestions.HopesExpectations.Add(wixDto.otherHopesAndExpectations);
             }
 
-            part.Age = wixDto.age;
+            if(int.TryParse(wixDto.age,out int age))
+            {
+                part.Age = age;
+            }
             part.Profession = wixDto.profession;
             part.JewishAndComAff = wixDto.jewishAndComAff == "Other" ? wixDto.otherJewishAndComAff : wixDto.jewishAndComAff;
             part.DesiredEnglishLevel = GetValueFromDescription<EnglishLevels>(wixDto.levOfEn);
