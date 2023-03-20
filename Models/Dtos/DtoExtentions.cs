@@ -141,6 +141,7 @@ namespace PairMatching.Models.Dtos
             {
                 Name = wixDto.fullName,
                 WixId = wixDto.contactId,
+                _WixId = wixDto._id,
                 DateOfRegistered = wixDto._createdDate,
                 Email = wixDto.email,
                 WixIndex = wixDto.index,

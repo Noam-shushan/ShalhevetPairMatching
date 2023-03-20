@@ -122,8 +122,8 @@ namespace PairMatching.DomainModel.Services
 
                 var id = await _wix.NewPair(new NewPairWixDto
                 {
-                    chevrutaIdFirst = pair.FromIsrael.WixId,
-                    chevrutaIdSecond = pair.FromWorld.WixId,
+                    chevrutaIdFirst = pair.FromIsrael._WixId,
+                    chevrutaIdSecond = pair.FromWorld._WixId,
                     date = DateTime.Now,
                     trackId = track.GetDescriptionIdFromEnum()
                 });
@@ -139,7 +139,7 @@ namespace PairMatching.DomainModel.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Can not change track to pair {pair.Id}, {pair.Track} -> {track}", ex);
-                throw new UserException($"CCan not change track to havrota {pair.FromIsrael.Name} -> {pair.FromWorld.Name}");
+                throw new UserException($"Can not change track to havrota {pair.FromIsrael.Name} -> {pair.FromWorld.Name}");
             }
         }
 
@@ -232,8 +232,8 @@ namespace PairMatching.DomainModel.Services
             {
                 var id = await _wix.NewPair(new NewPairWixDto
                 {
-                    chevrutaIdFirst = pair.FromIsrael.WixId,
-                    chevrutaIdSecond = pair.FromWorld.WixId,
+                    chevrutaIdFirst = pair.FromIsrael._WixId,
+                    chevrutaIdSecond = pair.FromWorld._WixId,
                     date = DateTime.Now,
                     trackId = pair.Track.GetDescriptionIdFromEnum()
                 });

@@ -104,7 +104,7 @@ namespace PairMatching.WixApi
             return parsedObject["id"].ToString();
         }
 
-        public async Task<string> NewParticipant(dynamic participantWixDto)
+        public async Task<dynamic> NewParticipant(dynamic participantWixDto)
         {
             var query = _configuration.WixApi["newMember"];
             
@@ -113,9 +113,11 @@ namespace PairMatching.WixApi
 
             var parsedObject = JObject.Parse(jsonContent);
 
-            var id = parsedObject["inserted"]["contactId"];
+            var _id = parsedObject["inserted"]["_id"];
 
-            return id?.ToString();
+            var contactId = parsedObject["inserted"]["contactId"];
+
+            return new { _id, contactId };
         }
 
         public async Task<IEnumerable<EmailRecipientsWixDto>> VerifieyNewPair(string id)

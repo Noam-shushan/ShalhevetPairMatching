@@ -8,7 +8,6 @@ using PairMatching.Tools;
 using PairMatching.WixApi;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PairMatching.Loggin;
@@ -121,9 +120,10 @@ namespace PairMatching.DomainModel.Services
                     await _unitOfWork.WorldParticipantsRepositry
                             .InsertMany(wps);
                 }
-
-                _logger.LogInformation($"There is new members from wix, count: {partsDtos.Count()}");
-
+                
+                var names = partsDtos.Select(p => p.fullName);
+                _logger.LogInformation($"New members added: {string.Join(", ", names)}, count: {partsDtos.Count()}");
+                
                 int newMaxIndex = partsDtos.Max(p => p.index);
                 if(newMaxIndex != config.WixIndex)
                 {
@@ -178,7 +178,8 @@ namespace PairMatching.DomainModel.Services
                 throw new UserException($"Error while trying to add '{part.Name}' to wix");
             }
 
-            part.WixId = wixId;
+            part.WixId = wixId.contactId;
+            part._WixId = wixId._id;
 
             Participant result = new();
 

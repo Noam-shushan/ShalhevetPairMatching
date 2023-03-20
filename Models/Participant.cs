@@ -12,6 +12,9 @@ namespace PairMatching.Models
 
         public string WixId { get; set; } = "";
 
+        public string _WixId { get; set; } = "";
+
+
         // hop i dont need it
         public int OldId { get; set; }
 
