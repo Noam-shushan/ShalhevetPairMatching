@@ -40,7 +40,7 @@ namespace PairMatching.DomainModel.Services
             var result = new List<Participant>();
             var tasks = new List<Task>();
 
-            //await SetNewParticipintsFromWix();
+            await SetNewParticipintsFromWix();
 
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();

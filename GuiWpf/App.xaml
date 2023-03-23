@@ -54,7 +54,10 @@
                 x:Key="FilterComboBox"
                 BasedOn="{StaticResource MaterialDesignDataGridComboBox}"
                 TargetType="ComboBox">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontWeight" Value="DemiBold" />
+                <Setter Property="Foreground" Value="#5D6572" />
+                <Setter Property="FontFamily" Value="CordiaUPC" />
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="5,0,0,0" />
@@ -70,6 +73,10 @@
 
             <Style x:Key="GroupBoxHeadersGridForDataGrid" TargetType="Grid">
                 <Setter Property="MaxHeight" Value="35" />
+            </Style>
+
+            <Style TargetType="{x:Type Window}">
+                <Setter Property="FontFamily" Value="CordiaUPC" />
             </Style>
 
             <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
