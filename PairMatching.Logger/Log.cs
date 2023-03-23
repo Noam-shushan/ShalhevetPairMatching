@@ -16,5 +16,15 @@ namespace PairMatching.Loggin
         public string Source { get; set; } = "";
 
         public string Type { get; set; } = "";
+
+    }
+
+    public record ErrorLog : Log
+    {
+        public string ExceptionSource { get; set; }
+
+        public string StackTreac { get; set; }
+
+        public bool IsChecked { get; set; }
     }
 }

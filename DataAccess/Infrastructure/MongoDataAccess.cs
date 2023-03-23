@@ -44,7 +44,7 @@ namespace PairMatching.DataAccess.Infrastructure
                 var record = await collection.FindAsync(filter);
                 
                 return await record.FirstOrDefaultAsync();
-            }
+            }       
             catch (Exception)
             {
                 throw;

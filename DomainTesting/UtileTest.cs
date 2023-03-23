@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using PairMatching.Models;
+using PairMatching.Tools;
+using Newtonsoft.Json;
 
 namespace DomainTesting
 {
@@ -20,6 +23,40 @@ namespace DomainTesting
     [TestFixture]
     public class UtileTest
     {
+        IEnumerable<CountryUtc> Init()
+        {
+            var jsonString = HelperFunction.ReadJson(@"C:\Users\Asuspcc\source\ShalhevetPairMatching\DomainModel\Resources\Countries.json");
+            var result = JsonConvert.DeserializeObject<IEnumerable<CountryUtc>>(jsonString);
+            foreach (var country in result)
+            {
+                country.UtcOffset = country.UtcTimeOffset.ToTimeSpan();
+            }
+            return result;
+        }
+
+        [Test]
+        public void UniformCountryName()
+        {
+            var countries = Init();
+            foreach (var c in countries)
+            {
+                var res = CleanString(c.Country);
+            }
+        }
+
+        public string CleanString(string input)
+        {
+            // Replace any non-letter characters with whitespace
+            string cleaned = Regex.Replace(input, @"[^a-zA-Z]+", " ");
+
+            // Replace consecutive whitespace characters with a single space
+            cleaned = Regex.Replace(cleaned, @"\s+", " ");
+
+            // Trim any whitespace from the beginning or end of the output string
+            return cleaned.Trim();
+        }
+
+
 
         [Test]
         public void GetProps()

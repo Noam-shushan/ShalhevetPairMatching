@@ -44,8 +44,8 @@ namespace DomainTesting.WixApi
         [Test]
         public async Task GetAll()
         {
-            var parts = await _wix.GetNewParticipants(136);
-            
+            var parts = await _wix.GetNewParticipants(0);
+            var count = parts.Where(part => part._id != part.contactId);
         }
 
         [Test]
@@ -188,7 +188,7 @@ namespace DomainTesting.WixApi
             var ips = await _db.IsraelParticipantsRepositry.GetAllAsync();
             foreach (var ip in ips)
             {
-                ip._WixId = ip._WixId;
+                ip._WixId = ip.WixId;
                 tasks.Add(_db.IsraelParticipantsRepositry.Update(ip));
             }
             
@@ -196,7 +196,7 @@ namespace DomainTesting.WixApi
             
             foreach (var wp in wps)
             {
-                wp._WixId = wp._WixId;
+                wp._WixId = wp.WixId;
                 tasks.Add(_db.WorldParticipantsRepositry.Update(wp));
             }
             

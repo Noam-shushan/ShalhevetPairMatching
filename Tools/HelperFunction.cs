@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PairMatching.Tools
@@ -39,6 +40,18 @@ namespace PairMatching.Tools
             
             var jsonString = File.ReadAllText(path);
             return jsonString;
+        }
+
+        public static string CleanString(string input)
+        {
+            // Replace any non-letter characters with whitespace
+            string cleaned = Regex.Replace(input, @"[^a-zA-Z]+", " ");
+
+            // Replace consecutive whitespace characters with a single space
+            cleaned = Regex.Replace(cleaned, @"\s+", " ");
+
+            // Trim any whitespace from the beginning or end of the output string
+            return cleaned.Trim();
         }
     }
 }

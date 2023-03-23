@@ -28,11 +28,11 @@ namespace WixApi
 
     public class WixBadResponsForPostException : Exception
     {
-        public string Data { get; init; }
+        public string JsonData { get; init; }
 
         public WixBadResponsForPostException(string massge, string jsonData) : base(massge)
         {
-            Data = jsonData;
+            JsonData = jsonData;
         }
     }
 }

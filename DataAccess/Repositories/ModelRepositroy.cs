@@ -35,7 +35,7 @@ namespace PairMatching.DataAccess.Repositories
 
         public async Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>> predicate = null)
         {
-            var recods = 
+            var recods =
                 await _dataAccess.LoadManyAsync(_collectionName, predicate);
 
             return recods;

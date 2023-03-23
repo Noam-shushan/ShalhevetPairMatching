@@ -21,12 +21,15 @@ namespace PairMatching.Loggin
 
         public void LogError(string msg, Exception ex, [CallerFilePath] string callerPath = "", [CallerLineNumber] int callerLine = 0)
         {
-            var log = new Log
+            var log = new ErrorLog
             {
                 Date = DateTime.Now,
                 Message = $"{msg}: '{ex.Message}'",
                 Source = $"path: '{callerPath}', line: '{callerLine}'",
                 Type = "error",
+                ExceptionSource = ex.Source,
+                StackTreac = ex.StackTrace,
+                IsChecked = false
             };
             Logs.Add(log);
         }

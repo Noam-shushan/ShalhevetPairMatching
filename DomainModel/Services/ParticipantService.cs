@@ -40,10 +40,11 @@ namespace PairMatching.DomainModel.Services
             var result = new List<Participant>();
             var tasks = new List<Task>();
 
-            await SetNewParticipintsFromWix();
+            //await SetNewParticipintsFromWix();
 
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();
+
 
             tasks.Add(ips);
             tasks.Add(wps);
@@ -102,11 +103,14 @@ namespace PairMatching.DomainModel.Services
                         .Select(p => (p as WorldParticipantWixDto).ToWorldParticipant());
 
                 var countryUts = GetCountryUtcs()
-                    .ToDictionary(c => c.Country, c => c.UtcOffset);
+                    .ToDictionary(c => HelperFunction.CleanString(c.Country).ToLower(), c => c.UtcOffset);
 
                 foreach (var wp in wps)
                 {
-                    wp.UtcOffset = countryUts[wp.Country];
+                    if (countryUts.TryGetValue(HelperFunction.CleanString(wp.Country).ToLower(), out var utcOffset))
+                    {
+                        wp.UtcOffset = utcOffset;
+                    }
                 }
                 
                 if (ips.Any())
