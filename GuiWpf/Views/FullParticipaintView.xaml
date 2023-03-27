@@ -1,0 +1,274 @@
+﻿<UserControl
+    x:Class="GuiWpf.Views.FullParticipaintView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controlers="clr-namespace:GuiWpf.Controlers"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GuiWpf.Views"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    FlowDirection="RightToLeft"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="HideFieldOfWorldPartStyle" TargetType="controlers:Field">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Current.IsFromIsrael}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Current.IsFromIsrael}" Value="False">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <!--#region Preference-->
+        <GroupBox
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="5"
+            Header="העדפות מחברותא">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <controlers:Field
+                    Grid.Row="0"
+                    FieldName="מגדר מועדף"
+                    Value="{Binding Current.PairPreferences.Gender, Converter={StaticResource EnumToStringConverter}}" />
+
+                <controlers:Field
+                    Grid.Row="1"
+                    FieldName="רמת לימוד רצויה"
+                    Visibility="{Binding Current.IsFromIsrael, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Value="{Binding Current.DesiredSkillLevel, Converter={StaticResource EnumToStringConverter}}" />
+
+                <controlers:Field
+                    Grid.Row="1"
+                    FieldName="רמת אנגלית רצויה"
+                    Style="{StaticResource HideFieldOfWorldPartStyle}"
+                    Value="{Binding Current.DesiredEnglishLevel, Converter={StaticResource EnumToStringConverter}}" />
+
+                <controlers:Field
+                    Grid.Row="2"
+                    FieldName="סגנון לימוד"
+                    Value="{Binding Current.PairPreferences.LearningStyle, Converter={StaticResource EnumToStringConverter}}" />
+
+                <controlers:Field
+                    Grid.Row="3"
+                    FieldName="מספר חברותות אופציונליות"
+                    Value="{Binding Current.PairPreferences.NumberOfMatchs}" />
+
+
+
+            </Grid>
+        </GroupBox>
+        <!--#endregion-->
+
+        <GroupBox
+            Grid.Row="1"
+            Margin="5"
+            Header="מסלולי לימוד">
+            <ScrollViewer
+                mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ListBox ItemsSource="{Binding Current.PairPreferences.Tracks}" Style="{StaticResource MaterialDesignChoiceChipListBox}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter}}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </ScrollViewer>
+        </GroupBox>
+
+        <GroupBox
+            Grid.Row="2"
+            Margin="5"
+            Header="שפות">
+            <ScrollViewer
+                mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                HorizontalScrollBarVisibility="Hidden"
+                VerticalScrollBarVisibility="Hidden">
+                <ListBox ItemsSource="{Binding Current.OtherLanguages}" Style="{StaticResource MaterialDesignChoiceChipAccentListBox}" />
+            </ScrollViewer>
+        </GroupBox>
+
+        <Grid
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+
+            <!--#region Adisional info template-->
+            <GroupBox
+                Grid.Row="0"
+                Margin="5"
+                Header="פרטים נוספים">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <controlers:Field
+                        Grid.Row="0"
+                        FieldName="מגדר"
+                        Value="{Binding Current.Gender, Converter={StaticResource EnumToStringConverter}}" />
+
+                    <controlers:Field
+                        Grid.Row="1"
+                        FieldName="גיל"
+                        Style="{StaticResource HideFieldOfWorldPartStyle}"
+                        Value="{Binding Current.RealAge}" />
+
+                    <controlers:Field
+                        Grid.Row="2"
+                        FieldName="רמת אנגלית"
+                        Visibility="{Binding Current.IsFromIsrael, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Value="{Binding Current.EnglishLevel, Converter={StaticResource EnumToStringConverter}}" />
+
+                    <controlers:Field
+                        Grid.Row="3"
+                        FieldName="רמת לימוד"
+                        Style="{StaticResource HideFieldOfWorldPartStyle}"
+                        Value="{Binding Current.SkillLevel, Converter={StaticResource EnumToStringConverter}}" />
+
+                    <controlers:Field
+                        Grid.Row="4"
+                        FieldName="Jewish Affiliation"
+                        FlowDirection="LeftToRight"
+                        Style="{StaticResource HideFieldOfWorldPartStyle}"
+                        Value="{Binding Current.JewishAffiliation}" />
+
+                    <controlers:Field
+                        Grid.Row="5"
+                        FieldName="Profession"
+                        FlowDirection="LeftToRight"
+                        Style="{StaticResource HideFieldOfWorldPartStyle}"
+                        Value="{Binding Current.Profession}" />
+
+
+
+                    <controlers:Field
+                        Grid.Row="7"
+                        FieldName="City"
+                        FlowDirection="LeftToRight"
+                        Style="{StaticResource HideFieldOfWorldPartStyle}"
+                        Value="{Binding Current.Address.City}" />
+
+                    <controlers:Field
+                        Grid.Row="8"
+                        FieldName="State"
+                        FlowDirection="LeftToRight"
+                        Style="{StaticResource HideFieldOfWorldPartStyle}"
+                        Value="{Binding Current.Address.State}" />
+
+
+                </Grid>
+            </GroupBox>
+            <!--#endregion-->
+
+            <!--#region Learning time-->
+            <GroupBox
+                Grid.Row="1"
+                Margin="5"
+                Header="זמני לימוד">
+
+                <ScrollViewer
+                    mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Hidden">
+                    <ListBox ItemsSource="{Binding LearningTimes}" Style="{StaticResource MaterialDesignCardsListBox}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="5" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <materialDesign:Card
+                                        Grid.Row="0"
+                                        Margin="3"
+                                        Background="#fff5d9"
+                                        UniformCornerRadius="10">
+                                        <TextBlock
+                                            Padding="3"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Day, Converter={StaticResource EnumToStringConverter}}" />
+                                    </materialDesign:Card>
+                                    <ListBox Grid.Row="1" ItemsSource="{Binding TimeInDay}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=., Converter={StaticResource EnumToStringConverter}}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </GroupBox>
+            <!--#endregion-->
+        </Grid>
+
+        <GroupBox
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="2"
+            Margin="5"
+            Header="שאלות פתוחות">
+            <local:OpenQuestionsView
+                MaxWidth="350"
+                MaxHeight="350"
+                OpenQuestions="{Binding Current.OpenQuestions}" />
+        </GroupBox>
+
+    </Grid>
+</UserControl>

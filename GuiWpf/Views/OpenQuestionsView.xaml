@@ -33,12 +33,16 @@
             <Setter Property="Padding" Value="8" />
             <Setter Property="Margin" Value="5" />
         </Style>
+
     </UserControl.Resources>
     <Grid>
         <ContentPresenter Content="{Binding Path=OpenQuestions, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
             <ContentPresenter.Resources>
                 <DataTemplate DataType="{x:Type models:OpenQuestionsForIsrael}">
-                    <ScrollViewer materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" CanContentScroll="True">
+                    <ScrollViewer
+                        materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
+                        materialDesign:ScrollViewerAssist.ShowSeparators="True"
+                        CanContentScroll="True">
 
                         <Grid>
                             <Grid.RowDefinitions>
@@ -106,6 +110,7 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
                             <Expander Grid.Row="0" Style="{StaticResource OpenQuestionsExspender}">
@@ -129,28 +134,36 @@
                                 <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding PersonalBackground}" />
                             </Expander>
 
+
                             <Expander Grid.Row="3" Style="{StaticResource OpenQuestionsExspender}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="JewishAndComAff" />
+                                </Expander.Header>
+                                <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding JewishAndComAff}" />
+                            </Expander>
+
+                            <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
                                 <Expander.Header>
                                     <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="Additional information you would like us to know about you" />
                                 </Expander.Header>
                                 <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AdditionalInfo}" />
                             </Expander>
 
-                            <Expander Grid.Row="4" Style="{StaticResource OpenQuestionsExspender}">
+                            <Expander Grid.Row="5" Style="{StaticResource OpenQuestionsExspender}">
                                 <Expander.Header>
                                     <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="What are your hopes and expectations from this program?" />
                                 </Expander.Header>
                                 <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding HopesExpectations, Converter={StaticResource ListOfStrintsToStringsConverter}}" />
                             </Expander>
 
-                            <Expander Grid.Row="5" Style="{StaticResource OpenQuestionsExspender}">
+                            <Expander Grid.Row="6" Style="{StaticResource OpenQuestionsExspender}">
                                 <Expander.Header>
                                     <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="Anything else you would like to tell us?" />
                                 </Expander.Header>
                                 <TextBlock Style="{StaticResource OpenQuestionsContent}" Text="{Binding AnythingElse}" />
                             </Expander>
 
-                            <Expander Grid.Row="6" Style="{StaticResource OpenQuestionsExspender}">
+                            <Expander Grid.Row="7" Style="{StaticResource OpenQuestionsExspender}">
                                 <Expander.Header>
                                     <TextBlock Style="{StaticResource OpenQuestionsHeaders}" Text="Who introduced you to this program? Where did you hear about Shalhevet?" />
                                 </Expander.Header>

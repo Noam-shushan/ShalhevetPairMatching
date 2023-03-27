@@ -150,7 +150,14 @@ namespace GuiWpf.ViewModels
         public ParticipaintWithSuggestions SelectedParticipaint
         {
             get => _selectedParticipaint;
-            set => SetProperty(ref _selectedParticipaint, value);
+            set
+            {
+                if (SetProperty(ref _selectedParticipaint, value))
+                {
+                    _ea.GetEvent<OnParticipaintSelected>().Publish(_selectedParticipaint.Participant);
+                    _ea.GetEvent<ShowFullParticipaintEvent>().Publish(true);
+                };
+            }
         }
         
         private ParticipantSuggestion _selectedSuggestion;

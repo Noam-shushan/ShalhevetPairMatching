@@ -22,10 +22,10 @@ namespace PairMatching.DataAccess.Repositories
             _dataAccess = dataAccess;
         }
 
-        public async Task<SpredsheetLastRange> GetSpredsheetLastRange()
+        public Task<SpredsheetLastRange> GetSpredsheetLastRange()
         {
             var lastRange = 
-                await _dataAccess.LoadOneAsync<SpredsheetLastRange>(countersAndSpredsheetLastRange, 2);
+                 _dataAccess.LoadOneAsync<SpredsheetLastRange>(countersAndSpredsheetLastRange, 2);
             return lastRange;
         }
 

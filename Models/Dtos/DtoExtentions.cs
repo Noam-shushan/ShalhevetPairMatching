@@ -215,7 +215,8 @@ namespace PairMatching.Models.Dtos
                 WhoIntroduced = wixDto.whoIntroduced,
                 RequestsFromPair = wixDto.requests,
                 PersonalBackground = wixDto.background,
-                Experience = wixDto.experience
+                Experience = wixDto.experience,
+                JewishAndComAff = wixDto.jewishAndComAff
             };
             if (part.OpenQuestions.HopesExpectations.Contains("Other")
                 && !string.IsNullOrEmpty(wixDto.otherHopesAndExpectations))

@@ -17,4 +17,8 @@ namespace GuiWpf.Events
     public class AddParticipantEvent : PubSubEvent<Participant> { }
 
     public class ManageNotesForParticipiantEvent : PubSubEvent<Participant> { }
+
+    public class OnParticipaintSelected : PubSubEvent<Participant> { }
+
+    public class ShowFullParticipaintEvent : PubSubEvent<bool> { }
 }

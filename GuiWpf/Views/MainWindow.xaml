@@ -82,7 +82,7 @@
             <DockPanel Margin="10">
                 <Button
                     HorizontalAlignment="Left"
-                    Command="{Binding CloseFullComparisonCommand}"
+                    Command="{Binding CloseDialogCommand}"
                     DockPanel.Dock="Top"
                     Style="{StaticResource MaterialDesignIconButton}">
                     <materialDesign:PackIcon Kind="Close" />
@@ -90,6 +90,19 @@
                 <local:FullPairMatchingComparisonView />
             </DockPanel>
 
+        </modelPopup:Modal>
+
+        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsFullParticipaintOpen}">
+            <DockPanel Margin="10">
+                <Button
+                    HorizontalAlignment="Left"
+                    Command="{Binding CloseDialogCommand}"
+                    DockPanel.Dock="Top"
+                    Style="{StaticResource MaterialDesignIconButton}">
+                    <materialDesign:PackIcon Kind="Close" />
+                </Button>
+                <local:FullParticipaintView />
+            </DockPanel>
         </modelPopup:Modal>
     </Grid>
 </mah:MetroWindow>

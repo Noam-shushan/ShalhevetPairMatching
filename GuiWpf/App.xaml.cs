@@ -81,6 +81,7 @@ namespace GuiWpf
             ViewModelLocationProvider.Register<ParisView, PairsViewModel>();
             ViewModelLocationProvider.Register<SendEmailView, SendEmailViewModel>();
             ViewModelLocationProvider.Register<AutoMatchingView, AutoMatchingViewModel>();
+            ViewModelLocationProvider.Register<FullParticipaintView, FullParticipaintViewModel>();
         }
     }
 }

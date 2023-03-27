@@ -33,12 +33,9 @@ namespace PairMatching.DataAccess.Repositories
             await jr.InsertMany(_collectionName, recods);
         }
 
-        public async Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>> predicate = null)
+        public Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>> predicate = null)
         {
-            var recods =
-                await _dataAccess.LoadManyAsync(_collectionName, predicate);
-
-            return recods;
+            return _dataAccess.LoadManyAsync(_collectionName, predicate);
         }
 
         public async Task<TModel> GetByIdAsync(int id)
@@ -47,40 +44,31 @@ namespace PairMatching.DataAccess.Repositories
             return model ?? throw new KeyNotFoundException($"Model with id = '{id}' not found");
         }
 
-        public async Task<TModel> Insert(TModel model)
+        public async Task<TModel> GetByIdAsync(string id)
         {
-            var result = await _dataAccess.InsertOne(_collectionName, model);
-            
-            //_taskManeger.Add(task);
-            return result;
+            var model = await _dataAccess.LoadOneAsync<TModel>(_collectionName, id);
+            return model ?? throw new KeyNotFoundException($"Model with id = '{id}' not found");
+        }
+
+        public Task<TModel> Insert(TModel model)
+        {
+            return _dataAccess.InsertOne(_collectionName, model);
         }
 
         public Task InsertMany(IEnumerable<TModel> models)
         {
-            var task = _dataAccess.InsertMany(_collectionName, models);
-            //_taskManeger.Add(task);
-            return task;
+            return _dataAccess.InsertMany(_collectionName, models);
         }
 
         public Task Update(TModel model)
         {
             var id = model.GetCurrentId();
-            var task = _dataAccess.UpdateOne(_collectionName, model, id);
-            //_taskManeger.Add(task);
-            return task;
+            return _dataAccess.UpdateOne(_collectionName, model, id);
         }
 
         public Task Delete(dynamic id)
         {
-            var task = _dataAccess.Delete<TModel>(_collectionName, id);
-
-            return task;
-        }
-         
-        public async Task<TModel> GetByIdAsync(string id)
-        {
-            var model = await _dataAccess.LoadOneAsync<TModel>(_collectionName, id);
-            return model ?? throw new KeyNotFoundException($"Model with id = '{id}' not found");
+            return _dataAccess.Delete<TModel>(_collectionName, id);
         }
     }
 }

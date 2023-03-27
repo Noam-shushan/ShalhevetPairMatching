@@ -170,6 +170,7 @@
                             <Setter Property="VerticalAlignment" Value="Center" />
                         </Style>
                     </DataGrid.Resources>
+                    <!--  sdadsadasd  -->
 
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="">
@@ -513,6 +514,12 @@
                                         </ScrollViewer>
 
                                         <controlers:Field
+                                            Grid.Row="6"
+                                            FieldName="גיל"
+                                            Style="{StaticResource HideFieldOfWorldPartStyle}"
+                                            Value="{Binding RealAge}" />
+
+                                        <controlers:Field
                                             Grid.Row="3"
                                             FieldName="JewishAndComAff"
                                             FlowDirection="LeftToRight"
@@ -521,7 +528,7 @@
 
                                         <controlers:Field
                                             Grid.Row="4"
-                                            FieldName="JewishAffiliation"
+                                            FieldName="Jewish Affiliation"
                                             FlowDirection="LeftToRight"
                                             Style="{StaticResource HideFieldOfWorldPartStyle}"
                                             Value="{Binding JewishAffiliation}" />
@@ -533,12 +540,7 @@
                                             Style="{StaticResource HideFieldOfWorldPartStyle}"
                                             Value="{Binding Profession}" />
 
-                                        <controlers:Field
-                                            Grid.Row="6"
-                                            FieldName="Age"
-                                            FlowDirection="LeftToRight"
-                                            Style="{StaticResource HideFieldOfWorldPartStyle}"
-                                            Value="{Binding Age}" />
+
 
                                         <controlers:Field
                                             Grid.Row="7"

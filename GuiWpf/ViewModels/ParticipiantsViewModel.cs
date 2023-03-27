@@ -57,6 +57,8 @@ namespace GuiWpf.ViewModels
                     if (_selectedParticipant != null)
                     {
                         MyNotesViewModel.Init(_selectedParticipant);
+                        _ea.GetEvent<OnParticipaintSelected>().Publish(_selectedParticipant);
+                        _ea.GetEvent<ShowFullParticipaintEvent>().Publish(true);
                     }
                 };
             }

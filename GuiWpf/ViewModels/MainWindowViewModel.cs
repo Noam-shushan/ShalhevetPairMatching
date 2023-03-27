@@ -26,6 +26,13 @@ namespace GuiWpf.ViewModels
                 });
             _ea.GetEvent<CloseDialogEvent>().Subscribe((flag) => IsFullComparisonOpen = flag);
 
+            _ea.GetEvent<ShowFullParticipaintEvent>()
+                .Subscribe(
+                (val) =>
+                {
+                    IsFullParticipaintOpen = val;
+                });
+
         }
 
         private bool _isSendEmail;
@@ -42,11 +49,20 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _isFullComparisonOpen, value);
         }
 
-        DelegateCommand _CloseFullComparisonCommand;
-        public DelegateCommand CloseFullComparisonCommand => _CloseFullComparisonCommand ??= new(
+
+        private bool _isFullParticipaintOpen;
+        public bool IsFullParticipaintOpen
+        {
+            get => _isFullParticipaintOpen;
+            set => SetProperty(ref _isFullParticipaintOpen, value);
+        }
+
+        DelegateCommand _CloseDialogCommand;
+        public DelegateCommand CloseDialogCommand => _CloseDialogCommand ??= new(
         () =>
         {
             IsFullComparisonOpen = false;
+            IsFullParticipaintOpen = false;
         });
 
 

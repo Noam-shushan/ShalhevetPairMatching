@@ -32,5 +32,8 @@ namespace PairMatching.Models
         public string Experience { get; set; } = "";
 
         public string PersonalBackground { get; set; } = "";
+
+        public string JewishAndComAff { get; set; } = "";
+
     }
 }
