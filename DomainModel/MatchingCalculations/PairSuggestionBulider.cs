@@ -86,7 +86,9 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
             score += tracksMatchCount;
             
-            score += _result.MatchingTimes.Select(mt => mt.TotalMatchTime.Hours).Sum();
+            score += _result.MatchingTimes
+                .Select(mt => mt.TotalMatchTime.Hours)
+                .Sum();
 
             return score;
         }
