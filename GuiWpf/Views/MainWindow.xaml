@@ -79,30 +79,11 @@
         </StatusBar>
 
         <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsFullComparisonOpen}">
-            <DockPanel Margin="10">
-                <Button
-                    HorizontalAlignment="Left"
-                    Command="{Binding CloseDialogCommand}"
-                    DockPanel.Dock="Top"
-                    Style="{StaticResource MaterialDesignIconButton}">
-                    <materialDesign:PackIcon Kind="Close" />
-                </Button>
-                <local:FullPairMatchingComparisonView />
-            </DockPanel>
-
+            <local:FullPairMatchingComparisonView Margin="10" />
         </modelPopup:Modal>
 
         <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsFullParticipaintOpen}">
-            <DockPanel Margin="10">
-                <Button
-                    HorizontalAlignment="Left"
-                    Command="{Binding CloseDialogCommand}"
-                    DockPanel.Dock="Top"
-                    Style="{StaticResource MaterialDesignIconButton}">
-                    <materialDesign:PackIcon Kind="Close" />
-                </Button>
-                <local:FullParticipaintView />
-            </DockPanel>
+            <local:FullParticipaintView Margin="10" />
         </modelPopup:Modal>
     </Grid>
 </mah:MetroWindow>

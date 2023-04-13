@@ -14,354 +14,364 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.Resources>
-            <Style x:Key="SuggustionChards" TargetType="materialDesign:Card">
-                <Setter Property="UniformCornerRadius" Value="30" />
-                <Setter Property="Margin" Value="5" />
-            </Style>
-        </Grid.Resources>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-        </Grid.ColumnDefinitions>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-
+    <DockPanel>
         <Button
-            Grid.Row="0"
-            Grid.Column="0"
-            HorizontalAlignment="Center"
-            Command="{Binding StageNext}"
-            Style="{StaticResource MahApps.Styles.Button.Split.Arrow}"
-            ToolTip="זוג הבא">
-            <mah:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72A;" />
+            HorizontalAlignment="Left"
+            Command="{Binding CloseDialogCommand}"
+            DockPanel.Dock="Top"
+            Style="{StaticResource MaterialDesignIconButton}">
+            <materialDesign:PackIcon Kind="Close" />
         </Button>
 
-        <Button
-            Grid.Row="0"
-            Grid.Column="4"
-            HorizontalAlignment="Center"
-            Command="{Binding StagePrevious}"
-            Style="{StaticResource MahApps.Styles.Button.Split.Arrow}"
-            ToolTip="זוג הקודם">
-            <mah:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72B;" />
-        </Button>
+        <Grid>
+            <Grid.Resources>
+                <Style x:Key="SuggustionChards" TargetType="materialDesign:Card">
+                    <Setter Property="UniformCornerRadius" Value="30" />
+                    <Setter Property="Margin" Value="5" />
+                </Style>
+            </Grid.Resources>
 
-        <!--#region From Israel zone-->
-        <materialDesign:Card
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="1"
-            Margin="5,5,5,5"
-            Background="#1a90f8"
-            Opacity="0.8"
-            Style="{StaticResource SuggustionChards}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Margin="0,0,0,5"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                    Text="משתתף מישראל" />
-                <controlers:Field
-                    Grid.Row="1"
-                    FieldName="שם"
-                    Value="{Binding StageSuggestion.FromIsrael.Name}" />
-                <controlers:Field
-                    Grid.Row="2"
-                    FieldName="אימייל"
-                    Value="{Binding StageSuggestion.FromIsrael.Email}" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
 
-                <GroupBox
-                    Grid.Row="4"
-                    Margin="5"
-                    materialDesign:ColorZoneAssist.Mode="Light"
-                    BorderBrush="Transparent"
-                    BorderThickness="0"
-                    Header="שאלות פתוחות">
-                    <local:OpenQuestionsView Grid.Row="4" OpenQuestions="{Binding StageSuggestion.FromIsrael.OpenQuestions}" />
-                </GroupBox>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <Button
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                Command="{Binding StageNext}"
+                Style="{StaticResource MahApps.Styles.Button.Split.Arrow}"
+                ToolTip="זוג הבא">
+                <mah:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72A;" />
+            </Button>
+
+            <Button
+                Grid.Row="0"
+                Grid.Column="4"
+                HorizontalAlignment="Center"
+                Command="{Binding StagePrevious}"
+                Style="{StaticResource MahApps.Styles.Button.Split.Arrow}"
+                ToolTip="זוג הקודם">
+                <mah:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72B;" />
+            </Button>
+
+            <!--#region From Israel zone-->
+            <materialDesign:Card
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1"
+                Margin="5,5,5,5"
+                Background="#1a90f8"
+                Opacity="0.8"
+                Style="{StaticResource SuggustionChards}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="0,0,0,5"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="משתתף מישראל" />
+                    <controlers:Field
+                        Grid.Row="1"
+                        FieldName="שם"
+                        Value="{Binding StageSuggestion.FromIsrael.Name}" />
+                    <controlers:Field
+                        Grid.Row="2"
+                        FieldName="אימייל"
+                        Value="{Binding StageSuggestion.FromIsrael.Email}" />
+
+                    <GroupBox
+                        Grid.Row="4"
+                        Margin="5"
+                        materialDesign:ColorZoneAssist.Mode="Light"
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
+                        Header="שאלות פתוחות">
+                        <local:OpenQuestionsView Grid.Row="4" OpenQuestions="{Binding StageSuggestion.FromIsrael.OpenQuestions}" />
+                    </GroupBox>
 
 
-            </Grid>
-        </materialDesign:Card>
-        <!--#endregion-->
+                </Grid>
+            </materialDesign:Card>
+            <!--#endregion-->
 
-        <!--#region Matching zone-->
-        <materialDesign:Card
-            Grid.Row="0"
-            Grid.Column="2"
-            Margin="5,5,5,5"
-            Padding="4"
-            Style="{StaticResource SuggustionChards}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <!--#region Matching zone-->
+            <materialDesign:Card
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="5,5,5,5"
+                Padding="4"
+                Style="{StaticResource SuggustionChards}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                <TextBlock
-                    Grid.Row="0"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                    Text="יש התאמה ב:" />
+                    <TextBlock
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="יש התאמה ב:" />
 
-                <controlers:Field
-                    Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    FieldName="רמת אנגלית"
-                    Value="{Binding StageSuggestion.IsEnglishLevelMatch}" />
+                    <controlers:Field
+                        Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        FieldName="רמת אנגלית"
+                        Value="{Binding StageSuggestion.IsEnglishLevelMatch}" />
 
-                <controlers:Field
-                    Grid.Row="2"
-                    HorizontalAlignment="Center"
-                    FieldName="מגדר"
-                    Value="{Binding StageSuggestion.IsGenderMatch}" />
+                    <controlers:Field
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        FieldName="מגדר"
+                        Value="{Binding StageSuggestion.IsGenderMatch}" />
 
-                <controlers:Field
-                    Grid.Row="3"
-                    HorizontalAlignment="Center"
-                    FieldName="רמת לימוד"
-                    Value="{Binding StageSuggestion.IsSkillLevelMatch}" />
+                    <controlers:Field
+                        Grid.Row="3"
+                        HorizontalAlignment="Center"
+                        FieldName="רמת לימוד"
+                        Value="{Binding StageSuggestion.IsSkillLevelMatch}" />
 
-                <controlers:Field
-                    Grid.Row="4"
-                    HorizontalAlignment="Center"
-                    FieldName="סגנון לימוד"
-                    Value="{Binding StageSuggestion.IsLearningStyleMatch}" />
+                    <controlers:Field
+                        Grid.Row="4"
+                        HorizontalAlignment="Center"
+                        FieldName="סגנון לימוד"
+                        Value="{Binding StageSuggestion.IsLearningStyleMatch}" />
 
-                <GroupBox
-                    Grid.Row="5"
-                    materialDesign:ColorZoneAssist.Mode="PrimaryLight"
-                    Header="מסלולי לימוד"
-                    Style="{StaticResource MaterialDesignGroupBox}">
-                    <ScrollViewer
-                        mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                        ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                        <ListBox
-                            ItemsSource="{Binding StageSuggestion.PrefferdTrack}"
-                            SelectedItem="{Binding SelectedTrack}"
-                            Style="{StaticResource MaterialDesignChoiceChipListBox}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter}}" />
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </ScrollViewer>
-                </GroupBox>
+                    <GroupBox
+                        Grid.Row="5"
+                        materialDesign:ColorZoneAssist.Mode="PrimaryLight"
+                        Header="מסלולי לימוד"
+                        Style="{StaticResource MaterialDesignGroupBox}">
+                        <ScrollViewer
+                            mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                            <ListBox
+                                ItemsSource="{Binding StageSuggestion.PrefferdTrack}"
+                                SelectedItem="{Binding SelectedTrack}"
+                                Style="{StaticResource MaterialDesignChoiceChipListBox}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter}}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                    </GroupBox>
 
-                <GroupBox
-                    Grid.Row="6"
-                    Margin="5"
-                    materialDesign:ColorZoneAssist.Mode="PrimaryLight">
-                    <GroupBox.Header>
+                    <GroupBox
+                        Grid.Row="6"
+                        Margin="5"
+                        materialDesign:ColorZoneAssist.Mode="PrimaryLight">
+                        <GroupBox.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="שעות מקבילות" />
+
+                                <materialDesign:Card
+                                    Grid.Column="1"
+                                    Margin="30,0,0,0"
+                                    Padding="2"
+                                    HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="הפרש זמן מישראל : " />
+                                        <TextBlock FlowDirection="LeftToRight" Text="{Binding StageSuggestion.FromWorld.DiffFromIsrael.Hours}" />
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Grid>
+                        </GroupBox.Header>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="שעות מקבילות" />
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.Resources>
+                                <Style x:Key="DaysStyle" TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="FontSize" Value="12" />
+                                    <Setter Property="FontWeight" Value="DemiBold" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                                <Style x:Key="HoursStyle" TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                                    <Setter Property="Margin" Value="2" />
+                                    <Setter Property="FontSize" Value="11" />
+                                    <Setter Property="FontWeight" Value="DemiBold" />
+                                    <Setter Property="Padding" Value="3" />
+                                </Style>
+                                <Style x:Key="BoredersStyle" TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10" />
+                                </Style>
+                            </Grid.Resources>
 
-                            <materialDesign:Card
-                                Grid.Column="1"
-                                Margin="30,0,0,0"
-                                Padding="2"
-                                HorizontalAlignment="Right">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="הפרש זמן מישראל : " />
-                                    <TextBlock FlowDirection="LeftToRight" Text="{Binding StageSuggestion.FromWorld.DiffFromIsrael.Hours}" />
-                                </StackPanel>
-                            </materialDesign:Card>
+                            <ListBox MaxHeight="160" ItemsSource="{Binding StageSuggestion.MatchingTimes}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <materialDesign:Card Background="#fff5d9" UniformCornerRadius="10">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock
+                                                        Grid.Row="0"
+                                                        Grid.Column="0"
+                                                        Margin="3"
+                                                        Style="{StaticResource DaysStyle}"
+                                                        Text="{Binding IsraelDay, Converter={StaticResource EnumToStringConverter}}" />
+
+                                                    <TextBlock
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        Margin="3"
+                                                        Style="{StaticResource DaysStyle}"
+                                                        Text="{Binding WorldDay, Converter={StaticResource EnumToStringConverter}}" />
+
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.Column="0"
+                                                        Margin="3"
+                                                        Background="#1a90f8"
+                                                        Style="{StaticResource BoredersStyle}">
+                                                        <TextBlock Style="{StaticResource HoursStyle}" Text="{Binding HoursIsrael, Converter={StaticResource EnumToStringConverter}}" />
+                                                    </Border>
+
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Margin="3"
+                                                        Background="#d9711c"
+                                                        Style="{StaticResource BoredersStyle}">
+                                                        <TextBlock Style="{StaticResource HoursStyle}" Text="{Binding HoursWorld, Converter={StaticResource EnumToStringConverter}}" />
+                                                    </Border>
+
+                                                    <controlers:Field
+                                                        Grid.Row="2"
+                                                        Grid.Column="0"
+                                                        Grid.ColumnSpan="2"
+                                                        FieldName="שעות"
+                                                        Value="{Binding TotalMatchTime}" />
+                                                </Grid>
+                                            </materialDesign:Card>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </Grid>
-                    </GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.Resources>
-                            <Style x:Key="DaysStyle" TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="FontSize" Value="12" />
-                                <Setter Property="FontWeight" Value="DemiBold" />
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                            </Style>
-                            <Style x:Key="HoursStyle" TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                <Setter Property="VerticalAlignment" Value="Stretch" />
-                                <Setter Property="Margin" Value="2" />
-                                <Setter Property="FontSize" Value="11" />
-                                <Setter Property="FontWeight" Value="DemiBold" />
-                                <Setter Property="Padding" Value="3" />
-                            </Style>
-                            <Style x:Key="BoredersStyle" TargetType="Border">
-                                <Setter Property="CornerRadius" Value="10" />
-                            </Style>
-                        </Grid.Resources>
+                    </GroupBox>
+                </Grid>
 
-                        <ListBox MaxHeight="160" ItemsSource="{Binding StageSuggestion.MatchingTimes}">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <materialDesign:Card Background="#fff5d9" UniformCornerRadius="10">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="auto" />
-                                                    <RowDefinition Height="auto" />
-                                                    <RowDefinition Height="auto" />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto" />
-                                                    <ColumnDefinition Width="auto" />
-                                                </Grid.ColumnDefinitions>
+            </materialDesign:Card>
+            <!--#endregion-->
 
-                                                <TextBlock
-                                                    Grid.Row="0"
-                                                    Grid.Column="0"
-                                                    Margin="3"
-                                                    Style="{StaticResource DaysStyle}"
-                                                    Text="{Binding IsraelDay, Converter={StaticResource EnumToStringConverter}}" />
+            <!--#region From world zone-->
+            <materialDesign:Card
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="3"
+                Margin="5,5,5,5"
+                Background="#d9711c"
+                Style="{StaticResource SuggustionChards}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="0,0,0,5"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="משתתף מהתפוצות" />
+                    <controlers:Field
+                        Grid.Row="1"
+                        FieldName="שם"
+                        Value="{Binding StageSuggestion.FromWorld.Name}" />
+                    <controlers:Field
+                        Grid.Row="2"
+                        FieldName="ארץ"
+                        Value="{Binding StageSuggestion.FromWorld.Country}" />
 
-                                                <TextBlock
-                                                    Grid.Row="0"
-                                                    Grid.Column="1"
-                                                    Margin="3"
-                                                    Style="{StaticResource DaysStyle}"
-                                                    Text="{Binding WorldDay, Converter={StaticResource EnumToStringConverter}}" />
+                    <GroupBox
+                        Grid.Row="4"
+                        Margin="5"
+                        materialDesign:ColorZoneAssist.Mode="Light"
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
+                        Header="שאלות פתוחות">
+                        <local:OpenQuestionsView Grid.Row="4" OpenQuestions="{Binding StageSuggestion.FromWorld.OpenQuestions}" />
+                    </GroupBox>
 
-                                                <Border
-                                                    Grid.Row="1"
-                                                    Grid.Column="0"
-                                                    Margin="3"
-                                                    Background="#1a90f8"
-                                                    Style="{StaticResource BoredersStyle}">
-                                                    <TextBlock Style="{StaticResource HoursStyle}" Text="{Binding HoursIsrael, Converter={StaticResource EnumToStringConverter}}" />
-                                                </Border>
+                </Grid>
+            </materialDesign:Card>
+            <!--#endregion-->
 
-                                                <Border
-                                                    Grid.Row="1"
-                                                    Grid.Column="1"
-                                                    Margin="3"
-                                                    Background="#d9711c"
-                                                    Style="{StaticResource BoredersStyle}">
-                                                    <TextBlock Style="{StaticResource HoursStyle}" Text="{Binding HoursWorld, Converter={StaticResource EnumToStringConverter}}" />
-                                                </Border>
-
-                                                <controlers:Field
-                                                    Grid.Row="2"
-                                                    Grid.Column="0"
-                                                    Grid.ColumnSpan="2"
-                                                    FieldName="שעות"
-                                                    Value="{Binding TotalMatchTime}" />
-                                            </Grid>
-                                        </materialDesign:Card>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </Grid>
-                </GroupBox>
-            </Grid>
-
-        </materialDesign:Card>
-        <!--#endregion-->
-
-        <!--#region From world zone-->
-        <materialDesign:Card
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="3"
-            Margin="5,5,5,5"
-            Background="#d9711c"
-            Style="{StaticResource SuggustionChards}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Margin="0,0,0,5"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                    Text="משתתף מהתפוצות" />
-                <controlers:Field
-                    Grid.Row="1"
-                    FieldName="שם"
-                    Value="{Binding StageSuggestion.FromWorld.Name}" />
-                <controlers:Field
-                    Grid.Row="2"
-                    FieldName="ארץ"
-                    Value="{Binding StageSuggestion.FromWorld.Country}" />
-
-                <GroupBox
-                    Grid.Row="4"
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="2"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
                     Margin="5"
-                    materialDesign:ColorZoneAssist.Mode="Light"
-                    BorderBrush="Transparent"
-                    BorderThickness="0"
-                    Header="שאלות פתוחות">
-                    <local:OpenQuestionsView Grid.Row="4" OpenQuestions="{Binding StageSuggestion.FromWorld.OpenQuestions}" />
-                </GroupBox>
+                    VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Command="{Binding Match}"
+                    CommandParameter="{Binding StageSuggestion}"
+                    Content="התאם"
+                    FontSize="20"
+                    Style="{StaticResource MaterialDesignOutlinedDarkButton}" />
+            </StackPanel>
 
-            </Grid>
-        </materialDesign:Card>
-        <!--#endregion-->
-
-        <StackPanel
-            Grid.Row="1"
-            Grid.Column="2"
-            HorizontalAlignment="Center"
-            Orientation="Horizontal">
-            <Button
-                Margin="5"
-                VerticalAlignment="Center"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Command="{Binding Match}"
-                CommandParameter="{Binding StageSuggestion}"
-                Content="התאם"
-                FontSize="20"
-                Style="{StaticResource MaterialDesignOutlinedDarkButton}" />
-        </StackPanel>
-
-    </Grid>
+        </Grid>
+    </DockPanel>
 </UserControl>

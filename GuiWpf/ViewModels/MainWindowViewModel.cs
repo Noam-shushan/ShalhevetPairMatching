@@ -17,22 +17,21 @@ namespace GuiWpf.ViewModels
         public MainWindowViewModel(IEventAggregator ea)
         {
             _ea = ea;
+            
             _ea.GetEvent<IsSendEmailEvent>().Subscribe((val) => IsSendEmail = val);
-            _ea.GetEvent<ShowFullComparisonEvent>()
-                .Subscribe(
-                (val) => 
-                {
-                    IsFullComparisonOpen = true;
-                });
-            _ea.GetEvent<CloseDialogEvent>().Subscribe((flag) => IsFullComparisonOpen = flag);
 
-            _ea.GetEvent<ShowFullParticipaintEvent>()
-                .Subscribe(
-                (val) =>
+            _ea.GetEvent<OpenCloseDialogEvent>()
+                .Subscribe(e =>
                 {
-                    IsFullParticipaintOpen = val;
+                    if (e.Item2 == typeof(FullParticipaintViewModel))
+                    {
+                        IsFullParticipaintOpen = e.Item1;
+                    }
+                    else if (e.Item2 == typeof(FullPairMatchingComparisonViewModel))
+                    {
+                        IsFullComparisonOpen = e.Item1;
+                    }
                 });
-
         }
 
         private bool _isSendEmail;
@@ -56,15 +55,5 @@ namespace GuiWpf.ViewModels
             get => _isFullParticipaintOpen;
             set => SetProperty(ref _isFullParticipaintOpen, value);
         }
-
-        DelegateCommand _CloseDialogCommand;
-        public DelegateCommand CloseDialogCommand => _CloseDialogCommand ??= new(
-        () =>
-        {
-            IsFullComparisonOpen = false;
-            IsFullParticipaintOpen = false;
-        });
-
-
     }
 }

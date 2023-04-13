@@ -8,10 +8,21 @@ using PairMatching.Models;
 using PairMatching.DomainModel.MatchingCalculations;
 using GuiWpf.UIModels;
 using PairMatching.DomainModel.BLModels;
+using GuiWpf.Views;
 
 namespace GuiWpf.Events
 {
     public class CloseDialogEvent : PubSubEvent<bool> { }
+
+    public class OpenCloseDialogEvent : PubSubEvent<(bool, Type)> 
+    {
+        public void CloseAll() 
+        {
+            Publish((false, typeof(FullPairMatchingComparisonView)));
+            Publish((false, typeof(FullParticipaintView)));
+
+        }
+    }
 
     public class GetNotesListEvent : PubSubEvent<IEnumerable<Note>> { }
     

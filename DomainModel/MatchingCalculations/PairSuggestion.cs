@@ -9,10 +9,15 @@ namespace PairMatching.DomainModel.MatchingCalculations
 {
     public class PairSuggestion
     {
+        /// <summary>
+        /// The maximum match score for a pair is 21 hours per 5 days, 6 tracks and 4 more simple preferences.
+        /// </summary>
+        const int MaxScore = (21 * 5) + 6 + 1 + 1 + 1 + 1;
+
         public Participant FromIsrael { get; set; }
 
         public Participant FromWorld { get; set; }
-
+        
         public List<MatchingTime> MatchingTimes { get; set; } = new List<MatchingTime>();
 
         public bool IsEnglishLevelMatch { get; set; }
@@ -25,7 +30,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public int MatchingScore { get; set; }
 
-        public double MatchingPercent => Math.Round((double)(100 * MatchingScore) / 26);
+        public double MatchingPercent => Math.Round((double)(100 * MatchingScore) / MaxScore);
 
         public IEnumerable<PrefferdTracks> PrefferdTrack { get; set; }
 

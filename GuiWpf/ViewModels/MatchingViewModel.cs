@@ -57,8 +57,6 @@ namespace GuiWpf.ViewModels
             {
                 IsLoaded = true;
 
-                IsFullComparisonOpen = false;
-
                 var suggestions = await _matchingService.GetAllPairSuggestions();
 
                 _pairSuggestions.Clear();
@@ -130,13 +128,6 @@ namespace GuiWpf.ViewModels
             }
         }
 
-        private bool _isFullComparisonOpen;
-        public bool IsFullComparisonOpen
-        {
-            get => _isFullComparisonOpen;
-            set => SetProperty(ref _isFullComparisonOpen, value);
-        }
-
         private PrefferdTracks _selectedTrack;
         public PrefferdTracks SelectedTrack
         {
@@ -152,11 +143,7 @@ namespace GuiWpf.ViewModels
             get => _selectedParticipaint;
             set
             {
-                if (SetProperty(ref _selectedParticipaint, value))
-                {
-                    _ea.GetEvent<OnParticipaintSelected>().Publish(_selectedParticipaint.Participant);
-                    _ea.GetEvent<ShowFullParticipaintEvent>().Publish(true);
-                };
+                SetProperty(ref _selectedParticipaint, value);
             }
         }
         
@@ -177,6 +164,17 @@ namespace GuiWpf.ViewModels
                        select ps;
             _ea.GetEvent<ShowFullComparisonEvent>()
             .Publish((list, SelectedSuggestion.Id));
+            _ea.GetEvent<OpenCloseDialogEvent>().Publish((true, typeof(FullPairMatchingComparisonViewModel)));
+        });
+
+
+        DelegateCommand _OpenFullParticipiantCommand;
+        public DelegateCommand OpenFullParticipiantCommand => _OpenFullParticipiantCommand ??= new(
+        () =>
+        {
+            _ea.GetEvent<OnParticipaintSelected>().Publish(SelectedParticipaint.Participant);
+            _ea.GetEvent<OpenCloseDialogEvent>().Publish((true, typeof(FullParticipaintViewModel)));
+
         });
 
 

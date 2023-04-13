@@ -76,6 +76,7 @@ namespace GuiWpf.ViewModels
         () =>
         {
             _ea.GetEvent<ShowFullComparisonEvent>().Publish((AutoSuggestions, SelectedSuggestions.FromIsrael.Id));
+            _ea.GetEvent<OpenCloseDialogEvent>().Publish((true, typeof(FullPairMatchingComparisonViewModel)));
         }, () => !IsLoaded);
     }
 }

@@ -1,4 +1,5 @@
-﻿using GuiWpf.Events;
+﻿using GuiWpf.Commands;
+using GuiWpf.Events;
 using GuiWpf.UIModels;
 using MahApps.Metro.Controls.Dialogs;
 using PairMatching.DomainModel.Services;
@@ -57,8 +58,8 @@ namespace GuiWpf.ViewModels
                     if (_selectedParticipant != null)
                     {
                         MyNotesViewModel.Init(_selectedParticipant);
-                        _ea.GetEvent<OnParticipaintSelected>().Publish(_selectedParticipant);
-                        _ea.GetEvent<ShowFullParticipaintEvent>().Publish(true);
+                        
+                        _ea.GetEvent<OnParticipaintSelected>().Publish(SelectedParticipant);
                     }
                 };
             }
@@ -286,6 +287,17 @@ namespace GuiWpf.ViewModels
             YearsFilter = allYears;
             SearchParticipiantsWord = ""; 
         });
+
+
+        DelegateCommand _OpenFullParticipiantCommand;
+        public DelegateCommand OpenFullParticipiantCommand => _OpenFullParticipiantCommand ??= new(
+        () =>
+        {
+            _ea.GetEvent<OpenCloseDialogEvent>()
+                       .Publish((true, typeof(FullParticipaintViewModel)));
+        });
+
+        public CopyCommand CopyCommand { get; set; } = new();
         #endregion
 
         #region Methods

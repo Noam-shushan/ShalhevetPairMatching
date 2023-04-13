@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using PairMatching.Tools;
 using System.Text;
 using GuiWpf.Events;
 using System.Threading.Tasks;
@@ -73,21 +74,53 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _selectedStandbyPair, value);
         }
 
+        DelegateCommand<object> _ChangeTrackCommand;
+        public DelegateCommand<object> ChangeTrackCommand => _ChangeTrackCommand ??= new(
+        async (track) =>
+        {
+            if (track is string trackStr)
+            {
+                var selectedTrack = Extensions.GetValueFromDescription<PrefferdTracks>(trackStr);
+                if (SelectedStandbyPair.Pair != null && SelectedStandbyPair.PairSuggestion.ChosenTrack != selectedTrack)
+                {
+                    if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשנות את המסלול ל- {trackStr}"))
+                    {
+                        try
+                        {
+                            IsLoaded = true;
+                            await _pairsService.ChangeTrack(SelectedStandbyPair.Pair, selectedTrack);
+                            SelectedStandbyPair.Pair.Track = selectedTrack;
+                            SelectedStandbyPair.PairSuggestion.ChosenTrack = selectedTrack;
+                            IsLoaded = false;
+                        }
+                        catch (Exception ex)
+                        {
+                            _exceptionHeandler.HeandleException(ex);
+                        }
+                    }
+
+                }
+            }
+        }, (obj) => !IsLoaded);
+
         DelegateCommand _ActivePairCommand;
         public DelegateCommand ActivePairCommand => _ActivePairCommand ??= new(
         async () =>
         {
             try
             {
-                IsLoaded = true;
-                var pair = SelectedStandbyPair.Pair;
+                if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לתאם סופית את {SelectedStandbyPair.Pair.FromIsrael.Name} ל- {SelectedStandbyPair.Pair.FromWorld.Name} במסלול '{SelectedStandbyPair.PairSuggestion.ChosenTrack.GetDescriptionFromEnumValue()}'"))
+                {
+                    IsLoaded = true;
+                    var pair = SelectedStandbyPair.Pair;
 
-                StandbyPairs.Remove(SelectedStandbyPair);
+                    StandbyPairs.Remove(SelectedStandbyPair);
 
-                var activePair = await _pairsService.ActivePair(pair);
+                    var activePair = await _pairsService.ActivePair(pair);
 
-                _ea.GetEvent<NewPairEvent>().Publish(activePair);
-                IsLoaded = false;
+                    _ea.GetEvent<NewPairEvent>().Publish(activePair);
+                    IsLoaded = false;
+                }
             }
             catch (Exception ex)
             {

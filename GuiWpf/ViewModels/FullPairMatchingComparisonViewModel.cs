@@ -14,18 +14,18 @@ using PairMatching.Models;
 
 namespace GuiWpf.ViewModels
 {
-    public class FullPairMatchingComparisonViewModel : ViewModelBase
+    public class FullPairMatchingComparisonViewModel : DialogViewModel
     {
         readonly IEventAggregator _ea;
 
-        public FullPairMatchingComparisonViewModel(IEventAggregator ea, MatchCommand matchCommand)
+        public FullPairMatchingComparisonViewModel(IEventAggregator ea, MatchCommand matchCommand) : base(ea)
         {
             _ea = ea;
             Match = matchCommand;
 
             _ea.GetEvent<ShowFullComparisonEvent>()
                 .Subscribe(ps =>
-                {
+                {     
                     if (ps.Item1 is null || ps.Item2 is null)
                         return;
                     

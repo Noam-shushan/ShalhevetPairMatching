@@ -40,14 +40,16 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
             if (_result.IsMinmunMatch)
             {
-                _result.MatchingScore = CalculateMatchingScore();
-                _result.PrefferdTrack = FindPrefferdTrack();
+                var (traks, tracksMatchCount) = FindPrefferdTrack();
+                _result.PrefferdTrack = traks;
+                _result.ChosenTrack = traks.Where(t => t != PrefferdTracks.NoPrefrence).FirstOrDefault();
+                _result.MatchingScore = CalculateMatchingScore(tracksMatchCount);
                 return _result;
             }
             return null;
         }
 
-        private IEnumerable<PrefferdTracks> FindPrefferdTrack()
+        private (IEnumerable<PrefferdTracks>, int) FindPrefferdTrack()
         {
             var tracks = _ip.PairPreferences.Tracks
                 .Intersect(_wp.PairPreferences.Tracks);
@@ -55,17 +57,17 @@ namespace PairMatching.DomainModel.MatchingCalculations
             {
                 if(_ip.PairPreferences.Tracks.Any(t => t == PrefferdTracks.NoPrefrence))
                 {
-                    return _wp.PairPreferences.Tracks;
+                    return (_wp.PairPreferences.Tracks, 0);
                 }
                 else if(_wp.PairPreferences.Tracks.Any(t => t == PrefferdTracks.NoPrefrence))
                 {
-                    return _ip.PairPreferences.Tracks;
+                    return (_ip.PairPreferences.Tracks, 0);
                 }     
             }
-            return tracks;
+            return (tracks, tracks.Count());
         }
 
-        int CalculateMatchingScore()
+        int CalculateMatchingScore(int tracksMatchCount)
         {
             int score = 0;
             
@@ -81,15 +83,10 @@ namespace PairMatching.DomainModel.MatchingCalculations
             if (_ip.PairPreferences.Gender == _wp.Gender
                 && _wp.PairPreferences.Gender == _ip.Gender)
                 score++;
-            
-            if(_ip.PairPreferences.Tracks
-                .Where(t => t != PrefferdTracks.NoPrefrence)
-                .Intersect(_wp.PairPreferences.Tracks
-                    .Where(t => t != PrefferdTracks.NoPrefrence))
-                .Any())
-                score++;
 
-            score += _result.MatchingTimes.Count;
+            score += tracksMatchCount;
+            
+            score += _result.MatchingTimes.Select(mt => mt.TotalMatchTime.Hours).Sum();
 
             return score;
         }

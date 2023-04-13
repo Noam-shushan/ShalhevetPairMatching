@@ -99,6 +99,7 @@
                 <DataTemplate DataType="{x:Type models:OpenQuestionsForWorld}">
                     <ScrollViewer
                         materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
+                        materialDesign:ScrollViewerAssist.ShowSeparators="True"
                         CanContentScroll="True"
                         FlowDirection="LeftToRight">
                         <Grid>

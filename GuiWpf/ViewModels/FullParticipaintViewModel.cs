@@ -10,19 +10,20 @@ using System.Collections.ObjectModel;
 using MongoDB.Driver;
 using System.Windows.Data;
 using System.ComponentModel;
+using Prism.Commands;
 
 namespace GuiWpf.ViewModels
 {
-    class FullParticipaintViewModel : ViewModelBase
+    class FullParticipaintViewModel : DialogViewModel
     {
         readonly IEventAggregator _ea;
         
-        public FullParticipaintViewModel(IEventAggregator ea)
+        public FullParticipaintViewModel(IEventAggregator ea) : base(ea)
         {
             _ea = ea;
             _ea.GetEvent<OnParticipaintSelected>().Subscribe(
                 (p) => 
-                { 
+                {
                     Current = p;
                     LearningTimes = CollectionViewSource.GetDefaultView(Current.PairPreferences.LearningTime);
                     LearningTimes.Filter = l => (l as LearningTime).TimeInDay.Any();
@@ -44,7 +45,6 @@ namespace GuiWpf.ViewModels
             get => _propName;
             set => SetProperty(ref _propName, value);
         }
-
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GuiWpf.Events;
+using GuiWpf.Views;
 using PairMatching.DomainModel.MatchingCalculations;
 using PairMatching.DomainModel.Services;
 using Prism.Events;
@@ -30,8 +31,8 @@ namespace GuiWpf.Commands
         {
             try
             {
-                _ea.GetEvent<CloseDialogEvent>().Publish(false);
-                
+                _ea.GetEvent<OpenCloseDialogEvent>().CloseAll();
+
                 var newPair = await _pairsService.AddNewPair(pairSuggestion);
                 
                 await _matchingService.Refresh();

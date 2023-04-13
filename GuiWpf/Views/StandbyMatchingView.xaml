@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ex="clr-namespace:GuiWpf.Exstensions"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:GuiWpf.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -22,13 +23,16 @@
         <DataGrid
             materialDesign:DataGridAssist.CornerRadius="10"
             AutoGenerateColumns="False"
-            IsReadOnly="True"
+            CanUserAddRows="False"
             ItemsSource="{Binding StandbyPairs}"
             SelectedItem="{Binding SelectedStandbyPair}">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Pair.FromIsrael.Name}" Header="משתתף מישראל" />
+                <DataGridTextColumn
+                    Binding="{Binding Pair.FromIsrael.Name}"
+                    Header="משתתף מישראל"
+                    IsReadOnly="True" />
 
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <materialDesign:PackIcon Kind="ArrowLeftRight" />
@@ -36,11 +40,34 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Binding="{Binding Pair.FromWorld.Name}" Header="משתתף מהתפוצות" />
                 <DataGridTextColumn
-                    Width="auto"
-                    Binding="{Binding Pair.Track, Converter={StaticResource EnumToStringConverter}}"
-                    Header="מסלול" />
+                    Binding="{Binding Pair.FromWorld.Name}"
+                    Header="משתתף מהתפוצות"
+                    IsReadOnly="True" />
+
+                <DataGridTemplateColumn Width="auto" Header="מסלול">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding PairSuggestion.ChosenTrack, Converter={StaticResource EnumToStringConverter}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox
+                                Name="trackComboBox"
+                                materialDesign:HintAssist.Hint="מסלול"
+                                ItemsSource="{Binding PairSuggestion.PrefferdTrack, Converter={StaticResource EnumToStringConverter}}"
+                                Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.ChangeTrackCommand, RelativeSource={RelativeSource AncestorType=local:StandbyMatchingView}}" CommandParameter="{Binding ElementName=trackComboBox, Path=SelectedValue}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Header="מספר הפסדים">
                     <DataGridTemplateColumn.CellTemplate>
