@@ -86,7 +86,7 @@
                     VerticalAlignment="Center"
                     Foreground="#F5F5F5"
                     Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                    Text="משתתף חדש" />
+                    Text="{Binding Title}" />
                 <Button
                     Grid.Column="1"
                     HorizontalAlignment="Left"
@@ -264,7 +264,21 @@
                 HorizontalAlignment="Center"
                 Command="{Binding AddCommand}"
                 Content="הוסף"
-                Foreground="#F5F5F5" />
+                Foreground="#F5F5F5"
+                Visibility="{Binding IsEdit, Converter={StaticResource InvertBooleanToVisiblityConvertor}}" />
+
+            <Button
+                Grid.Row="8"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                Height="40"
+                Margin="10"
+                HorizontalAlignment="Center"
+                Command="{Binding EditCommand}"
+                Content="שמור עריכה"
+                Foreground="#F5F5F5"
+                Visibility="{Binding IsEdit, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
 
             <Grid Grid.RowSpan="8" Grid.Column="3">
                 <!--<CheckBox Grid.Row="0" Content="ראשון" />

@@ -10,6 +10,7 @@
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modelPopup="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:models="clr-namespace:PairMatching.Models;assembly=Models"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:uiModels="clr-namespace:GuiWpf.UIModels"
@@ -233,7 +234,10 @@
 
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל למשתתף">
+                                <Button
+                                    Command="{Binding DataContext.OpenSendEmailCommand, RelativeSource={RelativeSource AncestorType=local:ParisView}}"
+                                    Style="{StaticResource MaterialDesignIconButton}"
+                                    ToolTip="שלח מייל לחברותא">
                                     <materialDesign:PackIcon Kind="Email" />
                                 </Button>
                             </DataTemplate>
@@ -272,6 +276,22 @@
 
             <local:PaginCollectionView Grid.Row="2" DataContext="{Binding Pairs}" />
         </Grid>
+
+        <!--<Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsSendEmailOpen}">
+                <local:SendEmailView />
+            </modelPopup:Modal>
+            <modelPopup:Modal
+                Grid.Column="1"
+                Panel.ZIndex="1"
+                IsOpen="{Binding IsSendEmailOpen}">
+                <local:SendEmailView />
+            </modelPopup:Modal>
+        </Grid>-->
 
         <mah:ProgressRing
             Grid.Row="1"

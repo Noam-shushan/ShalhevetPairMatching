@@ -25,9 +25,74 @@ namespace GuiWpf.ViewModels
             _participantService = participantService;
             _ea = ea;
             CountryUtcs = _participantService.GetCountryUtcs();
+
+            _ea.GetEvent<NewParticipaintEvent>()
+                .Subscribe(isNew =>
+                {
+                    if (isNew)
+                    {
+                        Reset();
+                    }
+                });
+
+            _ea.GetEvent<EditParticipaintEvent>()
+                .Subscribe(part =>
+                {
+                    IsEdit = true;
+                    Title = $"ערוך את {part.Name}";
+                    EditParticipaint = part;
+                    Name = part.Name;
+                    PhoneNumber = part.PhoneNumber;
+                    Email = part.Email;
+                    Gender = part.Gender;
+                    Country.Country = part.Country;
+                    IsFromIsrael = part.IsFromIsrael;
+
+                    PrefferdTrack = part.PairPreferences.Tracks.FirstOrDefault();
+                    PrefferdGender = part.PairPreferences.Gender;
+                    NumberOfMatchs = part.PairPreferences.NumberOfMatchs;
+                    OtherLanguages = part.OtherLanguages;
+                    LearningStyle = part.PairPreferences.LearningStyle;
+                    
+                    LearningTimes.Clear();
+                    LearningTimes.AddRange(part.PairPreferences.LearningTime);
+                    
+                    if (part.IsFromIsrael && part is IsraelParticipant)
+                    {
+                        var ipart = part as IsraelParticipant;
+                        EnglishLevel = ipart.EnglishLevel;
+                        DesiredSkillLevel = ipart.DesiredSkillLevel;
+                    }
+                    else if(!part.IsFromIsrael && part is WorldParticipant)
+                    {
+                        var wpart = part as WorldParticipant;
+                        SkillLevel = wpart.SkillLevel;
+                        DesiredEnglishLevel = wpart.DesiredEnglishLevel;
+                        Country.UtcOffset = wpart.UtcOffset;
+                    }
+                    else
+                    {
+
+                    }
+
+                });
         }
 
         #region Properties
+        private Participant _editParticipaint = new();
+        public Participant EditParticipaint
+        {
+            get => _editParticipaint;
+            set => SetProperty(ref _editParticipaint, value);
+        }
+
+        private string _title = "משתתף חדש";
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
+
         private bool _isEdit;
         public bool IsEdit
         {
@@ -65,7 +130,7 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _gender, value);
         }
 
-        private CountryUtc _country;
+        private CountryUtc _country = new();
         public CountryUtc Country
         {
             get => _country;
@@ -243,13 +308,58 @@ namespace GuiWpf.ViewModels
         DelegateCommand _CancelCommand;
         public DelegateCommand CancelCommand => _CancelCommand ??= new(
         () =>
-        { // ask natan if to clear her the props   
+        { // ask natan if to clear her the props
+            Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
+        });
+
+
+        DelegateCommand _EditCommand;
+        public DelegateCommand EditCommand => _EditCommand ??= new(
+        async () =>
+        {
+            if(!Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך לבצע שינויים אלו?"))
+            {
+                Reset();
+                return;
+            }
+            EditParticipaint.PhoneNumber = PhoneNumber;
+            EditParticipaint.Email = Email;
+            EditParticipaint.Country = Country.Country;
+            EditParticipaint.Name = Name;
+            EditParticipaint.PairPreferences.Tracks = new PrefferdTracks[] { PrefferdTrack };
+            EditParticipaint.PairPreferences.NumberOfMatchs = NumberOfMatchs;
+            EditParticipaint.PairPreferences.Gender = PrefferdGender;
+            EditParticipaint.PairPreferences.LearningStyle = LearningStyle;
+            EditParticipaint.PairPreferences.LearningTime = LearningTimes;
+            if(IsFromIsrael && EditParticipaint is IsraelParticipant)
+            {
+                (EditParticipaint as IsraelParticipant).EnglishLevel = EnglishLevel;
+                (EditParticipaint as IsraelParticipant).DesiredSkillLevel = DesiredSkillLevel;
+            }
+            else if (!IsFromIsrael && EditParticipaint is WorldParticipant)
+            {
+                (EditParticipaint as WorldParticipant).SkillLevel = SkillLevel;
+                (EditParticipaint as WorldParticipant).DesiredEnglishLevel = DesiredEnglishLevel;
+                (EditParticipaint as WorldParticipant).UtcOffset = Country.UtcOffset;
+            }
+            else
+            {
+
+            }
+            await _participantService.UpdateParticipaint(EditParticipaint);
+            _ea.GetEvent<ParticipaintWesUpdate>().Publish(EditParticipaint);
+            Reset();
+            _ea.GetEvent<CloseDialogEvent>().Publish(false);
+
         });
 
         private void Reset()
         {
+            IsEdit = false;
+            EditParticipaint = new();
             Name = Email = PhoneNumber = string.Empty;
+            Title = "משתתף חדש";
             Country = new();
             Gender = default;
             SkillLevel = default;

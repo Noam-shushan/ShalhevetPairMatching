@@ -70,6 +70,13 @@ namespace GuiWpf.ViewModels
             get => _myNotesViewModel;
             set => SetProperty(ref _myNotesViewModel, value);
         }
+
+        private bool _isSendEmailOpen;
+        public bool IsSendEmailOpen
+        {
+            get => _isSendEmailOpen;
+            set => SetProperty(ref _isSendEmailOpen, value);
+        }
         #endregion
 
         #region Filtering
@@ -250,6 +257,16 @@ namespace GuiWpf.ViewModels
             YearsFilter = allYears;
             SearchPairsWord = "";
         });
+
+        DelegateCommand _OpenSendEmailCommand;
+        public DelegateCommand OpenSendEmailCommand => _OpenSendEmailCommand ??= new(
+        () =>
+        {
+            var ipart = SelectedPair.FromIsrael;
+            var wpart = SelectedPair.FromWorld;
+
+            //IsSendEmailOpen = true;
+        });
         #endregion
 
         #region Mathods
@@ -335,6 +352,13 @@ namespace GuiWpf.ViewModels
                     Pairs.Add(pair);
                 }
             });
+
+            _ea.GetEvent<CloseDialogEvent>()
+                .Subscribe(isClose =>
+                {
+                    IsSendEmailOpen = isClose;
+                });
+
         }
         #endregion
     }

@@ -161,6 +161,7 @@ namespace PairMatching.DomainModel.Services
                         .WorldParticipantsRepositry
                         .Update(wp);
                 }
+                _logger.LogInformation($"participaint {participant.Id} get update");
             }
             catch (Exception ex)
             {

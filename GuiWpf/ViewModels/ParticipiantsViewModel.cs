@@ -87,6 +87,14 @@ namespace GuiWpf.ViewModels
             get => _isSendEmailOpen;
             set => SetProperty(ref _isSendEmailOpen, value);
         }
+
+
+        private bool _isEditParticipaintOpen;
+        public bool IsEditParticipaintOpen
+        {
+            get => _isEditParticipaintOpen;
+            set => SetProperty(ref _isEditParticipaintOpen, value);
+        }
         #endregion
 
         #region Filtering
@@ -274,8 +282,18 @@ namespace GuiWpf.ViewModels
         public DelegateCommand AddParticipantCommand => _addParticipantCommand ??= new(
             () =>
             {
+                _ea.GetEvent<NewParticipaintEvent>().Publish(true);
                 IsAddFormOpen = !IsAddFormOpen;
             });
+
+
+        DelegateCommand _OpenEditParticipiantCommand;
+        public DelegateCommand OpenEditParticipiantCommand => _OpenEditParticipiantCommand ??= new(
+        () =>
+        {
+            _ea.GetEvent<EditParticipaintEvent>().Publish(SelectedParticipant);
+            IsEditParticipaintOpen = !IsEditParticipaintOpen;
+        });
 
 
         DelegateCommand _ClearFilterCommand;
@@ -328,9 +346,21 @@ namespace GuiWpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => IsAddFormOpen = isClose);
+            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => 
+            {
+                IsAddFormOpen = isClose;
+                IsSendEmailOpen = isClose;
+                IsEditParticipaintOpen = isClose;
+            });
 
-            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => IsSendEmailOpen = isClose);
+            _ea.GetEvent<ParticipaintWesUpdate>()
+                .Subscribe(updetetdParts =>
+                {
+                    var oldPart = Participiants.ItemsSource
+                    .FirstOrDefault(p => p.Id == updetetdParts.Id);
+                    Participiants.ItemsSource.Remove(oldPart);
+                    Participiants.Add(updetetdParts);
+                });
 
             _ea.GetEvent<AddParticipantEvent>().Subscribe(async (part) =>
             {

@@ -71,9 +71,11 @@
                         <Setter Property="MinWidth" Value="850" />
                     </Style>
                 </Grid.Resources>
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -126,6 +128,7 @@
                         Content="אנגלית?"
                         IsChecked="{Binding IsLeftToRight}" />
                 </Grid>
+
                 <TextBox
                     Grid.Row="1"
                     Margin="0,2"
@@ -144,9 +147,10 @@
 
                 <TextBox
                     Grid.Row="2"
-                    Height="300"
                     MaxWidth="600"
-                    Margin="0,2"
+                    Margin="0,10"
+                    Padding="0,20"
+                    VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="תוכן"
                     AcceptsReturn="True"
                     FontSize="16"
@@ -163,6 +167,7 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
+
                 <TextBox
                     Grid.Row="3"
                     Margin="10"

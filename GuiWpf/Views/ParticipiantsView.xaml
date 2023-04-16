@@ -241,7 +241,8 @@
                                                 <Button
                                                     Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
                                                     CommandParameter="{Binding PhoneNumber}"
-                                                    Style="{StaticResource MaterialDesignIconButton}">
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    ToolTip="העתק">
                                                     <materialDesign:PackIcon Kind="ContentCopy" />
                                                 </Button>
                                             </StackPanel>
@@ -250,7 +251,8 @@
                                                 <Button
                                                     Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
                                                     CommandParameter="{Binding Email}"
-                                                    Style="{StaticResource MaterialDesignIconButton}">
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    ToolTip="העתק">
                                                     <materialDesign:PackIcon Kind="ContentCopy" />
                                                 </Button>
                                             </StackPanel>
@@ -324,7 +326,10 @@
                                             BorderBrush="LightGray"
                                             BorderThickness="1">
                                             <StackPanel>
-                                                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="ערוך">
+                                                <Button
+                                                    Command="{Binding DataContext.OpenEditParticipiantCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    ToolTip="ערוך">
                                                     <materialDesign:PackIcon Kind="Edit" />
                                                 </Button>
                                                 <Button
@@ -360,6 +365,10 @@
 
         <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsSendEmailOpen}">
             <local:SendEmailView />
+        </modelPopup:Modal>
+
+        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsEditParticipaintOpen}">
+            <local:AddParticipantForm />
         </modelPopup:Modal>
 
 

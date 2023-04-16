@@ -30,7 +30,7 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         public int MatchingScore { get; set; }
 
-        public double MatchingPercent => Math.Round((double)(100 * MatchingScore) / MaxScore);
+        public double MatchingPercent => Math.Round((double)(MaxScore * MatchingScore) / 100);
 
         public IEnumerable<PrefferdTracks> PrefferdTrack { get; set; }
 
