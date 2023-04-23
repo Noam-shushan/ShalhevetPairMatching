@@ -12,10 +12,14 @@ using GuiWpf.Events;
 using Prism.Events;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.Windows.Data;
+using Amazon.Runtime.Internal.Util;
+using System.ComponentModel;
+using Microsoft.VisualBasic;
 
 namespace GuiWpf.ViewModels
 {
-    public class SendEmailViewModel : BindableBase
+    public class SendEmailViewModel : ViewModelBase
     {
         readonly IEventAggregator _ea;
         readonly IEmailService _emailService;
@@ -26,24 +30,37 @@ namespace GuiWpf.ViewModels
             _ea = ea;
             _emailService = emailService;
             _exceptionHeandler = exceptionHeandler;
-
-            _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
-                .Subscribe((to) =>
-                {
-                    if (to == null)
-                    {
-                        return;
-                    }
-                    To.Clear();
-                    To.AddRange(to);
-                });
         }
-        
+
+        public void Init(IEnumerable<EmailAddress> emailAddresses, bool isOpen)
+        {
+            if (emailAddresses == null)
+            {
+                return;
+            }
+            To.Clear();
+            To.AddRange(emailAddresses);
+            ToView.Clear();
+            ToView.AddRange(To.Take(4));
+            IsOpen = isOpen;
+        }
+
         public ObservableCollection<EmailAddress> To { get; } = new();
 
         public ObservableCollection<File> Attachments { get; } = new();
 
+        public ObservableCollection<EmailAddress> ToView { get; } = new();
+
         #region Properties
+
+        private bool _isMinimize = false;
+        public bool IsMinimize
+        {
+            get => _isMinimize;
+            set => SetProperty(ref _isMinimize, value);
+        }
+
+
         private string _subject;
         public string Subject
         {
@@ -95,17 +112,34 @@ namespace GuiWpf.ViewModels
             Attachments.Remove(SelectedFile);
         }, () => false);
 
-        DelegateCommand _cloesCommand;
-        public DelegateCommand CloesCommand => _cloesCommand ??= new(
+        DelegateCommand _closeCommand;
+        public DelegateCommand CloseCommand => _closeCommand ??= new(
         () =>
         {
             Reset();
-            _ea.GetEvent<CloseDialogEvent>().Publish(false);
+            IsOpen = false;
         });
+
+
+        DelegateCommand _MinimizeCommand;
+        public DelegateCommand MinimizeCommand => _MinimizeCommand ??= new(
+        () =>
+        {
+            IsMinimize = true;
+        });
+
+
+        private bool _isOpen;
+        public bool IsOpen
+        {
+            get => _isOpen;
+            set => SetProperty(ref _isOpen, value);
+        }
 
         private void Reset()
         {
             Subject = Body = Link = string.Empty;
+            To.Clear();
         }
 
         DelegateCommand _sendEmailCommand;
@@ -115,13 +149,6 @@ namespace GuiWpf.ViewModels
             try
             {
                 _ea.GetEvent<IsSendEmailEvent>().Publish(true);
-                _ea.GetEvent<CloseDialogEvent>().Publish(false);
-                //await _emailSender
-                //   .To(To.ToArray())
-                //   .Subject(Subject)
-                //   .Body(Body)
-                //   .Attachments(Attachments.Select(f => f.FilePath).ToArray())
-                //   .SendOpenMailAsync();
                 var newEmail = await _emailService.SendEmail(new EmailModel
                 {
                     Body = Body,
@@ -140,7 +167,6 @@ namespace GuiWpf.ViewModels
             }
         }); 
         #endregion
-
 
         private void AddFiles()
         {

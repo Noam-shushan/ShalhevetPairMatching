@@ -363,9 +363,7 @@
             <local:AddParticipantForm />
         </modelPopup:Modal>
 
-        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsSendEmailOpen}">
-            <local:SendEmailView />
-        </modelPopup:Modal>
+        <local:SendEmailView DataContext="{Binding SendEmailVm}" />
 
         <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsEditParticipaintOpen}">
             <local:AddParticipantForm />

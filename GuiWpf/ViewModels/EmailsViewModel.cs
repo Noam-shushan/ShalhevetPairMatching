@@ -93,7 +93,22 @@ namespace GuiWpf.ViewModels
 
         private bool EmailsFilter(EmailModel obj)
         {
-            return true;
+            return SearchEmails(obj);
+        }
+
+
+        private string _searchEmailsWord = "";
+        public string SearchEmailsWord
+        {
+            get => _searchEmailsWord;
+            set => SetProperty(ref _searchEmailsWord, value);
+        }
+
+        private bool SearchEmails(EmailModel obj)
+        {
+            return obj.Body.Contains(SearchEmailsWord, StringComparison.InvariantCultureIgnoreCase)
+                || obj.Subject.Contains(SearchEmailsWord, StringComparison.InvariantCultureIgnoreCase)
+                || obj.To.Any(ea => ea.Name.Contains(SearchEmailsWord, StringComparison.InvariantCultureIgnoreCase));
         }
 
     }

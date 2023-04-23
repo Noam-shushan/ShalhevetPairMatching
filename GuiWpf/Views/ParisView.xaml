@@ -227,7 +227,10 @@
 
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.Header>
-                            <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="שלח מייל לכל הנבחרים">
+                            <Button
+                                Command="{Binding DataContext.SendEmailToManyCommand, RelativeSource={RelativeSource AncestorType=local:ParisView}}"
+                                Style="{StaticResource MaterialDesignIconButton}"
+                                ToolTip="שלח מייל לכל הנבחרים">
                                 <materialDesign:PackIcon Kind="Email" />
                             </Button>
                         </DataGridTemplateColumn.Header>
@@ -235,7 +238,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button
-                                    Command="{Binding DataContext.OpenSendEmailCommand, RelativeSource={RelativeSource AncestorType=local:ParisView}}"
+                                    Command="{Binding DataContext.SendEmailToOneCommand, RelativeSource={RelativeSource AncestorType=local:ParisView}}"
                                     Style="{StaticResource MaterialDesignIconButton}"
                                     ToolTip="שלח מייל לחברותא">
                                     <materialDesign:PackIcon Kind="Email" />
@@ -277,21 +280,16 @@
             <local:PaginCollectionView Grid.Row="2" DataContext="{Binding Pairs}" />
         </Grid>
 
-        <!--<Grid>
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsSendEmailOpen}">
-                <local:SendEmailView />
-            </modelPopup:Modal>
-            <modelPopup:Modal
-                Grid.Column="1"
-                Panel.ZIndex="1"
-                IsOpen="{Binding IsSendEmailOpen}">
-                <local:SendEmailView />
-            </modelPopup:Modal>
-        </Grid>-->
+
+            <local:SendEmailView DataContext="{Binding SendEmailVmForIsraelParticipaint}" />
+
+            <local:SendEmailView Grid.Column="1" DataContext="{Binding SendEmailVmForWorldParticipaint}" />
+        </Grid>
 
         <mah:ProgressRing
             Grid.Row="1"

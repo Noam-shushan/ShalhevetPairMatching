@@ -26,7 +26,7 @@ namespace GuiWpf.ViewModels
         readonly IEventAggregator _ea;
         readonly ExceptionHeandler _exceptionHeandler;
 
-        public ParticipiantsViewModel(IParticipantService participantService, IPairsService pairService,  IEventAggregator ea, ExceptionHeandler exceptionHeandler)
+        public ParticipiantsViewModel(IParticipantService participantService, IPairsService pairService, IEmailService emailService, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
         {
             _participantService = participantService;
             _ea = ea;
@@ -35,6 +35,7 @@ namespace GuiWpf.ViewModels
             SubscribeToEvents();
 
             MyNotesViewModel = new NotesViewModel(participantService, pairService, exceptionHeandler);
+            SendEmailVm = new SendEmailViewModel(ea, emailService, exceptionHeandler);
         }
         
         #region Properties:
@@ -71,6 +72,14 @@ namespace GuiWpf.ViewModels
             get => _myNotesViewModel;
             set => SetProperty(ref _myNotesViewModel, value);
         }
+
+
+        private SendEmailViewModel _sendEmailVm;
+        public SendEmailViewModel SendEmailVm
+        {
+            get => _sendEmailVm;
+            set => SetProperty(ref _sendEmailVm, value);
+        }
         #endregion
 
         #region Navigation Properties
@@ -80,14 +89,6 @@ namespace GuiWpf.ViewModels
             get { return _isAddFormOpen; }
             set { SetProperty(ref _isAddFormOpen, value); }
         }
-
-        private bool _isSendEmailOpen = false;
-        public bool IsSendEmailOpen
-        {
-            get => _isSendEmailOpen;
-            set => SetProperty(ref _isSendEmailOpen, value);
-        }
-
 
         private bool _isEditParticipaintOpen;
         public bool IsEditParticipaintOpen
@@ -189,43 +190,35 @@ namespace GuiWpf.ViewModels
         public DelegateCommand SendEmailToManyCommand => _sendEmailToManyCommand ??= new(
         () =>
         {
-            IsSendEmailOpen = !IsSendEmailOpen;
-            if (IsSendEmailOpen)
-            {
-                var address = from p in Participiants.FilterdItems
-                              where p.IsSelected
-                              select new EmailAddress
-                              {
-                                  Address = p.Email,
-                                  Name = p.Name,
-                                  ParticipantId = p.Id,
-                                  ParticipantWixId = p.WixId
-                              };
-                _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
-                .Publish(address);
-            }
+            var address = from p in Participiants.FilterdItems
+                            where p.IsSelected
+                            select new EmailAddress
+                            {
+                                Address = p.Email,
+                                Name = p.Name,
+                                ParticipantId = p.Id,
+                                ParticipantWixId = p.WixId
+                            };
+            SendEmailVm.Init(address, true);
+
         });
 
         DelegateCommand _sendEmailToOneCommand;
         public DelegateCommand SendEmailToOneCommand => _sendEmailToOneCommand ??= new(
         () =>
         {
-            IsSendEmailOpen = !IsSendEmailOpen;
-            if (IsSendEmailOpen)
+            var address = new EmailAddress[]
             {
-                var address = new EmailAddress[]
+                new EmailAddress
                 {
-                    new EmailAddress
-                    {
-                        Address = SelectedParticipant.Email,
-                        Name = SelectedParticipant.Name,
-                        ParticipantId = SelectedParticipant.Id,
-                        ParticipantWixId = SelectedParticipant.WixId
-                    }
-                };
-                _ea.GetEvent<GetEmailAddressToParticipaintsEvent>()
-                .Publish(address);
-            }
+                    Address = SelectedParticipant.Email,
+                    Name = SelectedParticipant.Name,
+                    ParticipantId = SelectedParticipant.Id,
+                    ParticipantWixId = SelectedParticipant.WixId
+                }
+            };
+            SendEmailVm.Init(address, true);
+
         });
 
 
@@ -349,7 +342,6 @@ namespace GuiWpf.ViewModels
             _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => 
             {
                 IsAddFormOpen = isClose;
-                IsSendEmailOpen = isClose;
                 IsEditParticipaintOpen = isClose;
             });
 

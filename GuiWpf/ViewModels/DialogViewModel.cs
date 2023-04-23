@@ -13,9 +13,10 @@ namespace GuiWpf.ViewModels
     {
         readonly IEventAggregator _ea;
 
-        public DialogViewModel(IEventAggregator ea)
+        public DialogViewModel(IEventAggregator ea, Action onClose = null)
         {
             _ea = ea;
+            OnClose = onClose;
         }
 
         private bool _isModelOpen;
@@ -30,11 +31,13 @@ namespace GuiWpf.ViewModels
             }
         }
 
+        Action OnClose { get; set; }
+
         DelegateCommand _CloseDialogCommand;
         public DelegateCommand CloseDialogCommand => _CloseDialogCommand ??= new(
         () =>
         {
-            IsModelOpen = false;
+            IsModelOpen = false;   
         });
     }
 }
