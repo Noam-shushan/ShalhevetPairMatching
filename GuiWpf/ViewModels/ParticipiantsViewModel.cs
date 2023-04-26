@@ -4,6 +4,7 @@ using GuiWpf.UIModels;
 using MahApps.Metro.Controls.Dialogs;
 using PairMatching.DomainModel.Services;
 using PairMatching.Models;
+using PairMatching.ExcelTool;
 using PairMatching.Tools;
 using Prism.Commands;
 using Prism.Events;
@@ -17,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using GuiWpf.Views;
 
 namespace GuiWpf.ViewModels
 {
@@ -36,6 +38,7 @@ namespace GuiWpf.ViewModels
 
             MyNotesViewModel = new NotesViewModel(participantService, pairService, exceptionHeandler);
             SendEmailVm = new SendEmailViewModel(ea, emailService, exceptionHeandler);
+            ExportToExcelVm = new();
         }
         
         #region Properties:
@@ -96,6 +99,9 @@ namespace GuiWpf.ViewModels
             get => _isEditParticipaintOpen;
             set => SetProperty(ref _isEditParticipaintOpen, value);
         }
+
+        public ExcelExportViewModel<Participant> ExportToExcelVm { get; set; }
+
         #endregion
 
         #region Filtering
@@ -309,6 +315,15 @@ namespace GuiWpf.ViewModels
         });
 
         public CopyCommand CopyCommand { get; set; } = new();
+
+
+        DelegateCommand _ExportExcelCommand;
+        public DelegateCommand ExportExcelCommand => _ExportExcelCommand ??= new(
+        () =>
+        {
+            var participiants = Participiants.FilterdItems.ToList();
+            ExportToExcelVm.Init(participiants, true);
+        });
         #endregion
 
         #region Methods

@@ -25,16 +25,21 @@ namespace DomainTesting.ExcelTest
         {
             var builder = new SpredsheetInfoBuilder<Stam>("stam");
             var stam = new Stam();
-            var spredsheet = builder.AddItems(new List<Stam>
-            {
-                new (){ Age = 10, Email = "email", Name = "Noam1" },
-                new (){ Age = 11, Email = "email1", Name = "Noam2" },
-                new (){ Age = 30, Email = "email2", Name = "Noam3" },
-                new (){ Age = 50, Email = "email3", Name = "Noam4" }
-            }, "stam items")
-                .AddProperties(stam.GetType().GetProperty(nameof(Stam.Age)),
-                    stam.GetType().GetProperty(nameof(Stam.Name))
-                    ).Build();
+            var spredsheet = builder
+                .AddItems(new List<Stam>
+                        {
+                            new (){ Age = 10, Email = "email", Name = "Noam1" },
+                            new (){ Age = 11, Email = "email1", Name = "Noam2" },
+                            new (){ Age = 30, Email = "email2", Name = "Noam3" },
+                            new (){ Age = 50, Email = "email3", Name = "Noam4" }
+                        }, 
+            "stam items")
+                .AddProperties(
+                        stam.GetType()
+                        .GetProperty(nameof(Stam.Age)),
+                        stam.GetType().GetProperty(nameof(Stam.Name))
+                    )
+                .Build();
         }
     }
 }

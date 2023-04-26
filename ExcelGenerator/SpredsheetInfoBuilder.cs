@@ -8,7 +8,7 @@ namespace PairMatching.ExcelTool
     {
         SpredsheetInfo<T> _result;
 
-        public SpredsheetInfoBuilder(string fileName)
+        public SpredsheetInfoBuilder(string fileName, string filePath = @"Excels\")
         {
             _result = new()
             {
@@ -44,12 +44,12 @@ namespace PairMatching.ExcelTool
                 throw new Exception();
             }
 
-            foreach (var i in _result.InputItems)
+            foreach (var item in _result.InputItems)
             {
                 Dictionary<string, object> finalItem = new();
                 foreach (var prop in _result.Properties)
                 {
-                    finalItem[prop.Name] = prop.GetValue(i, null);
+                    finalItem[prop.Name] = prop.GetValue(item, null);
                 }
                 _result.OutputItems.Add(finalItem);
             }

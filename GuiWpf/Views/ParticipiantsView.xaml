@@ -104,20 +104,50 @@
                             Kind="FilterOff" />
                     </Button>
 
-                    <Button
+                    <StackPanel
                         Grid.Column="5"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Command="{Binding AddParticipantCommand}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="הוסף משתתף">
-                        <materialDesign:PackIcon
-                            Width="28"
-                            Height="28"
-                            Kind="PlusCircle" />
-                    </Button>
+                        Orientation="Horizontal">
 
+                        <Button
+                            Margin="10,0"
+                            Command="{Binding ExportExcelCommand}"
+                            Style="{StaticResource MaterialDesignIconButton}"
+                            ToolTip="יצא נתונים לקובץ XL">
+                            <materialDesign:PackIcon
+                                Width="28"
+                                Height="28"
+                                Kind="Export" />
+                        </Button>
 
+                        <!--<materialDesign:PopupBox>
+                            <materialDesign:PopupBox.ToggleContent>
+                                <Button
+                                    Margin="10,0"
+                                    Style="{StaticResource MaterialDesignIconButton}"
+                                    ToolTip="יצא נתונים לקובץ XL">
+                                    <materialDesign:PackIcon
+                                        Width="28"
+                                        Height="28"
+                                        Kind="Export" />
+                                </Button>
+                            </materialDesign:PopupBox.ToggleContent>
+
+                            <local:ExcelExportView DataContext="{Binding ExportToExcelVm}" />
+
+                        </materialDesign:PopupBox>-->
+
+                        <Button
+                            Command="{Binding AddParticipantCommand}"
+                            Style="{StaticResource MaterialDesignIconButton}"
+                            ToolTip="הוסף משתתף">
+                            <materialDesign:PackIcon
+                                Width="28"
+                                Height="28"
+                                Kind="PlusCircle" />
+                        </Button>
+                    </StackPanel>
                 </Grid>
 
                 <!--#region Participaint data grid-->
@@ -368,6 +398,8 @@
         <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsEditParticipaintOpen}">
             <local:AddParticipantForm />
         </modelPopup:Modal>
+
+        <local:ExcelExportView DataContext="{Binding ExportToExcelVm}" />
 
 
         <mah:ProgressRing

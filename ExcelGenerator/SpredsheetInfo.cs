@@ -7,6 +7,8 @@ namespace PairMatching.ExcelTool
     {
         public string FileName { get; set; }
 
+        public string FilePath { get; set; }
+
         public string WorksheetName { get; set; }
 
         public Dictionary<string, IEnumerable<T>> Worksheets { get; set; }
