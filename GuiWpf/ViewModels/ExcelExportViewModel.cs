@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Ookii.Dialogs.Wpf;
 using PairMatching.Models;
+using PairMatching.DomainModel.Services;
+using PairMatching.DomainModel.BLModels;
 
 namespace GuiWpf.ViewModels
 {
@@ -16,19 +18,19 @@ namespace GuiWpf.ViewModels
 
         public ExitPopupModelViewModel ExitPopupVM { get; set; }
 
-        public ExcelExportViewModel()
+        readonly ExcelExportingService _excelService;
+
+        public ExcelExportViewModel(ExcelExportingService excelService)
         {
             ExitPopupVM = new ExitPopupModelViewModel(this);
-        }
+            _excelService = excelService;
 
-        private ObservableCollection<string> _propsName;
-        public ObservableCollection<string> PropsName
-        {
-            get => _propsName;
-            set => SetProperty(ref _propsName, value);
+            Properties = new(excelService.GetPropertiesOfType<T>());
         }
+        
+        public ObservableCollection<PropWithText> Properties { get; init; }
 
-        public ObservableCollection<string> SelectedProps = new();
+        public ObservableCollection<PropWithText> SelectedProps = new();
 
         private ObservableCollection<T> _values;
         public ObservableCollection<T> Values
@@ -59,11 +61,25 @@ namespace GuiWpf.ViewModels
         }
 
 
-        private bool _isSelectedAllProps = true;
+        private bool _isSelectedAllProps;
         public bool IsSelectedAllProps
         {
             get => _isSelectedAllProps;
-            set => SetProperty(ref _isSelectedAllProps, value);
+            set 
+            { 
+                if(SetProperty(ref _isSelectedAllProps, value))
+                {
+                    if (_isSelectedAllProps)
+                    {
+                        SelectedProps = new(Properties);
+                    }
+                    else
+                    {
+                        SelectedProps.Clear();
+                    }
+                    SelectedProps = new(Properties);
+                }
+            }
         }
 
         DelegateCommand _SelectFilePathCommand;
@@ -88,28 +104,29 @@ namespace GuiWpf.ViewModels
         DelegateCommand _ExportCommand;
         public DelegateCommand ExportCommand => _ExportCommand ??= new(
             async () =>
-            {
-                var spreadSheetInfoBuilder = new SpredsheetInfoBuilder<T>(FileName, FilePath);
-                var spreadSheetInfo = spreadSheetInfoBuilder
-                    .AddItems(Values, "Items")
-                    .AddProperties(SelectedProps.Select(propName => typeof(T).GetProperty(propName)).ToArray())
-                    .Build();
+            {   
                 IsLoaded = true;
-                var excel = new ExcelGenerator();
-                await excel.Generate(spreadSheetInfo);
+                await _excelService.Export(new ExcelFileInfo<T>
+                {
+                    FileName = FileName,
+                    FilePath = FilePath,
+                    Values = Values,
+                    Properties = SelectedProps.Select(p => p.Property).ToArray(),
+                    SheetName = ""
+                });
                 IsLoaded = false;
 
-            },
-            () => Values?.Count > 0 
-                && !string.IsNullOrEmpty(FileName) 
-                && !string.IsNullOrEmpty(FilePath)
+            }//,
+            //() => Values?.Count > 0 
+            //    && !string.IsNullOrEmpty(FileName) 
+            //    && !string.IsNullOrEmpty(FilePath)
         );
 
         DelegateCommand<object> _SelectPropCommand;
         public DelegateCommand<object> SelectPropCommand => _SelectPropCommand ??= new(
         (propParam) =>
         {
-            if (propParam is string prop)
+            if (propParam is PropWithText prop)
             {
                 SelectedProps.Add(prop);
             }
@@ -119,7 +136,7 @@ namespace GuiWpf.ViewModels
         public DelegateCommand<object> UnselectPropCommand => _UnselectPropCommand ??= new(
         (propParam) =>
         {
-            if (propParam is string prop)
+            if (propParam is PropWithText prop)
             {
                 SelectedProps.Remove(prop);
             }
@@ -133,12 +150,7 @@ namespace GuiWpf.ViewModels
         public void Init(IEnumerable<T> participiants, bool isOpen)
         {
             Values = new(participiants);
-            if (IsSelectedAllProps)
-            {
-                PropsName = new(typeof(T).GetProperties().Select(x => x.Name));
-            }
             IsOpen = isOpen;
-            
         }
     }
 }

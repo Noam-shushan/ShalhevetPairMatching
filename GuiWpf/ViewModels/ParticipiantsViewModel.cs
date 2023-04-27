@@ -28,7 +28,7 @@ namespace GuiWpf.ViewModels
         readonly IEventAggregator _ea;
         readonly ExceptionHeandler _exceptionHeandler;
 
-        public ParticipiantsViewModel(IParticipantService participantService, IPairsService pairService, IEmailService emailService, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
+        public ParticipiantsViewModel(IParticipantService participantService, IPairsService pairService, IEmailService emailService, ExcelExportingService excel, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
         {
             _participantService = participantService;
             _ea = ea;
@@ -38,7 +38,7 @@ namespace GuiWpf.ViewModels
 
             MyNotesViewModel = new NotesViewModel(participantService, pairService, exceptionHeandler);
             SendEmailVm = new SendEmailViewModel(ea, emailService, exceptionHeandler);
-            ExportToExcelVm = new();
+            ExportToExcelVm = new(excel);
         }
         
         #region Properties:

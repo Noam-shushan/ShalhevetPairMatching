@@ -38,7 +38,8 @@ namespace PairMatching.DomainModel.Services
             {
                 var pairs = await _unitOfWork
                         .PairsRepositry
-                        .GetAllAsync(p => p.Status == PairStatus.Active && p.WixId != "");
+                        .GetAllAsync(p => p.Status == PairStatus.Active && p.WixId != "")
+                        .ConfigureAwait(false);
 
                 var tasks = new List<Task>();
                 foreach (var p in pairs)
@@ -47,14 +48,15 @@ namespace PairMatching.DomainModel.Services
                     {
                         continue;
                     }
-                    var data = await _wix.VerifieyNewPair(p.WixId);
+                    var data = await _wix.VerifieyNewPair(p.WixId)
+                        .ConfigureAwait(false);
                     if (data.Where(e => e.IsSent).Count() == 2)
                     {
                         p.Status = PairStatus.Learning;
                         tasks.Add(_unitOfWork.PairsRepositry.Update(p));
                     }
                 }
-                await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks).ConfigureAwait(false);
                 if(tasks.Count > 0)
                     _logger.LogInformation($"Verifiey new pairs: {tasks.Count}");
             }
@@ -69,9 +71,11 @@ namespace PairMatching.DomainModel.Services
         {
             var pairs = await _unitOfWork
                 .PairsRepositry
-                .GetAllAsync(p => p.Status > PairStatus.Standby);
+                .GetAllAsync(p => p.Status > PairStatus.Standby)
+                .ConfigureAwait(false);
 
-            await SetParticipaintsForEachPair(pairs);
+            await SetParticipaintsForEachPair(pairs)
+                .ConfigureAwait(false);
             
             return pairs;
         }
@@ -94,9 +98,11 @@ namespace PairMatching.DomainModel.Services
                     _unitOfWork
                     .WorldParticipantsRepositry
                     // Update the world participaint
-                    .Update(pair.FromWorld as WorldParticipant));
+                    .Update(pair.FromWorld as WorldParticipant))
+                    .ConfigureAwait(false);
 
-                var newPair = await _unitOfWork.PairsRepositry.Insert(pair);
+                var newPair = await _unitOfWork.PairsRepositry.Insert(pair)
+                    .ConfigureAwait(false);
 
                 _logger.LogInformation($"Add new pair {newPair.Id}");
 
@@ -126,13 +132,14 @@ namespace PairMatching.DomainModel.Services
                     chevrutaIdSecond = pair.FromWorld._WixId,
                     date = DateTime.Now,
                     trackId = track.GetDescriptionIdFromEnum()
-                });
+                }).ConfigureAwait(false);
 
                 pair.WixId = id;
 
                 await _unitOfWork
                         .PairsRepositry
-                        .Update(pair);
+                        .Update(pair)
+                        .ConfigureAwait(false);
                 
                 _logger.LogInformation($"Change track to pair {pair.Id} to {track}");
             }
@@ -149,7 +156,8 @@ namespace PairMatching.DomainModel.Services
 
             await _unitOfWork
                      .PairsRepositry
-                     .Update(pair);
+                     .Update(pair)
+                     .ConfigureAwait(false);
 
             _logger.LogInformation($"Return to standby for pair {pair.Id}");
         }
@@ -157,8 +165,10 @@ namespace PairMatching.DomainModel.Services
         public async Task DeletePair(Pair pair)
         {
             pair.IsDeleted = true;
-            await UpdateParticipantsOnDelete(pair);
-            await _unitOfWork.PairsRepositry.Update(pair);
+            await UpdateParticipantsOnDelete(pair)
+                .ConfigureAwait(false);
+            await _unitOfWork.PairsRepositry.Update(pair)
+                .ConfigureAwait(false);
 
             _logger.LogInformation($"Delete pair {pair.Id}");
         }
@@ -168,11 +178,13 @@ namespace PairMatching.DomainModel.Services
             pair.IsActive = true;
             pair.Status = PairStatus.Active;
 
-            var wixId = await SendNewPairToWix(pair);
+            var wixId = await SendNewPairToWix(pair)
+                .ConfigureAwait(false);
 
             pair.WixId = wixId ?? "";
 
-            await _unitOfWork.PairsRepositry.Update(pair);
+            await _unitOfWork.PairsRepositry.Update(pair)
+                .ConfigureAwait(false);
 
             _logger.LogInformation($"Active pair {pair.Id}");
 
@@ -181,8 +193,10 @@ namespace PairMatching.DomainModel.Services
 
         public async Task CancelPair(Pair pair)
         {
-            await UpdateParticipantsOnDelete(pair);
-            await _unitOfWork.PairsRepositry.Delete(pair.Id);
+            await UpdateParticipantsOnDelete(pair)
+                .ConfigureAwait(false);
+            await _unitOfWork.PairsRepositry.Delete(pair.Id)
+                .ConfigureAwait(false);
 
             _logger.LogInformation($"Censel pair {pair.Id}");
         }
@@ -194,7 +208,8 @@ namespace PairMatching.DomainModel.Services
             
             await Task.WhenAll(
             _unitOfWork.IsraelParticipantsRepositry.Update(pair.FromIsrael as IsraelParticipant),
-            _unitOfWork.WorldParticipantsRepositry.Update(pair.FromWorld as WorldParticipant));
+            _unitOfWork.WorldParticipantsRepositry.Update(pair.FromWorld as WorldParticipant))
+                .ConfigureAwait(false);
         }
 
         public Pair CreateNewPair(PairSuggestion pairSuggestion, PrefferdTracks track = PrefferdTracks.NoPrefrence)
@@ -223,7 +238,8 @@ namespace PairMatching.DomainModel.Services
 
         public async Task UpdatePair(Pair pair)
         {
-            await _unitOfWork.PairsRepositry.Update(pair);
+            await _unitOfWork.PairsRepositry.Update(pair)
+                .ConfigureAwait(false);
         }
         
         private async Task<string> SendNewPairToWix(Pair pair)
@@ -236,7 +252,7 @@ namespace PairMatching.DomainModel.Services
                     chevrutaIdSecond = pair.FromWorld._WixId,
                     date = DateTime.Now,
                     trackId = pair.Track.GetDescriptionIdFromEnum()
-                });
+                }).ConfigureAwait(false);
                 return id;
             }
             catch (Exception ex)
@@ -250,9 +266,11 @@ namespace PairMatching.DomainModel.Services
         {
             var pairs = await _unitOfWork
                 .PairsRepositry
-                .GetAllAsync(p => p.Status == PairStatus.Standby);
+                .GetAllAsync(p => p.Status == PairStatus.Standby)
+                .ConfigureAwait(false);
             
-            await SetParticipaintsForEachPair(pairs);
+            await SetParticipaintsForEachPair(pairs)
+                .ConfigureAwait(false);
 
             var fly = new TimeIntervalFactory();
 
@@ -275,11 +293,13 @@ namespace PairMatching.DomainModel.Services
             
             var ips = pairs.Select(p => p.FromIsraelId).Distinct();
             var israelParts = await _unitOfWork.IsraelParticipantsRepositry
-                .GetAllAsync(p => ips.Contains(p.Id));
+                .GetAllAsync(p => ips.Contains(p.Id))
+                .ConfigureAwait(false);
 
             var wps = pairs.Select(p => p.FromWorldId).Distinct();
             var worldParts = await _unitOfWork.WorldParticipantsRepositry
-                .GetAllAsync(p => wps.Contains(p.Id));
+                .GetAllAsync(p => wps.Contains(p.Id))
+                .ConfigureAwait(false);
 
             foreach (var p in pairs)
             {
@@ -291,14 +311,16 @@ namespace PairMatching.DomainModel.Services
         public async Task AddNote(Note newNote, Pair pairModel)
         {
             pairModel.Notes.Add(newNote);
-            await UpdatePair(pairModel);
+            await UpdatePair(pairModel)
+                .ConfigureAwait(false);
             _logger.LogInformation($"add note to pair {pairModel.Id}");
         }
 
         public async Task DeleteNote(Note selectedNote, Pair pair)
         {
             pair.Notes.Remove(selectedNote);
-            await UpdatePair(pair);
+            await UpdatePair(pair)
+                .ConfigureAwait(false);
             _logger.LogInformation($"delete note from pair {pair.Id}");
         }
     }

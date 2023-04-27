@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using PairMatching.Tools;
 
 namespace PairMatching.ExcelTool
 {
@@ -8,11 +9,10 @@ namespace PairMatching.ExcelTool
     {
         SpredsheetInfo<T> _result;
 
-        public SpredsheetInfoBuilder(string fileName, string filePath = @"Excels\")
+        public SpredsheetInfoBuilder()
         {
             _result = new()
             {
-                FileName = fileName,
                 OutputItems = new(),
                 Worksheets = new()
             };
@@ -37,11 +37,11 @@ namespace PairMatching.ExcelTool
         {
             if (_result.InputItems == null)
             {
-                throw new Exception();
+                throw new MissingFieldException(nameof(SpredsheetInfoBuilder<T>), nameof(_result.InputItems));
             }
             if (_result.Properties == null)
             {
-                throw new Exception();
+                throw new MissingFieldException(nameof(SpredsheetInfoBuilder<T>), nameof(_result.Properties));
             }
 
             foreach (var item in _result.InputItems)
@@ -49,7 +49,16 @@ namespace PairMatching.ExcelTool
                 Dictionary<string, object> finalItem = new();
                 foreach (var prop in _result.Properties)
                 {
-                    finalItem[prop.Name] = prop.GetValue(item, null);
+                    var coluoName = prop.GetTextFromExportProperty();
+                    if (prop.PropertyType == typeof(DateTime))
+                    {
+                        var obj = prop.GetValue(item, null) as DateTime? ?? new DateTime?();
+                        finalItem[coluoName] = obj?.ToString("dd/MM/yyyy");
+                    }
+                    else
+                    {
+                        finalItem[coluoName] = prop.GetValue(item, null);
+                    }
                 }
                 _result.OutputItems.Add(finalItem);
             }

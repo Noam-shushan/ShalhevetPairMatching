@@ -155,6 +155,17 @@ namespace PairMatching.Tools
                 .Select((id, i) => new { Id = id, Index = i })
                 .ToDictionary(p => p.Id, p => p.Index);
         }
+
+        public static string GetTextFromExportProperty(this PropertyInfo property)
+        {
+            var attributes = property.GetCustomAttributes<ExportPropertyAttribute>(false);
+            return attributes.Any() ?
+                 attributes
+                .Cast<ExportPropertyAttribute>()
+                .Select(x => x.Text)
+                .FirstOrDefault()
+                : property.Name;
+        }
     }
 
 

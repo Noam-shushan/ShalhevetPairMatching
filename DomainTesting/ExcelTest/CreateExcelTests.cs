@@ -17,14 +17,14 @@ namespace DomainTesting.ExcelTest
         {
             var spredsheet = GetSpredsheetInfo();
 
-            var eg = new ExcelGenerator();
+            var eg = new ExcelGenerator("stam", "stam");
 
             await eg.Generate(spredsheet);
         }
 
         public SpredsheetInfo<Stam> GetSpredsheetInfo()
         {
-            var builder = new SpredsheetInfoBuilder<Stam>("stam");
+            var builder = new SpredsheetInfoBuilder<Stam>();
             var stam = new Stam();
             var spredsheet = builder.AddItems(new List<Stam>
             {

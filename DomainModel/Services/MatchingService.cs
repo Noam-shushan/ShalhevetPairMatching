@@ -22,21 +22,24 @@ namespace PairMatching.DomainModel.Services
        
         public async Task<IEnumerable<PairSuggestion>> GetAllPairSuggestions()
         {
-            var sb = await GetSuggestionsBuilder();
+            var sb = await GetSuggestionsBuilder()
+                .ConfigureAwait(false);
 
             return sb.GetPairSuggestions();
         }
 
         public async Task<IEnumerable<PairSuggestion>> GetMaxOptMatching()
         {
-            var sb = await GetSuggestionsBuilder();
+            var sb = await GetSuggestionsBuilder()
+                .ConfigureAwait(false);
 
             return sb.FindMaxOptPairs();
         }
 
         public async Task<IEnumerable<PairSuggestion>> GetMaxMatching()
         {
-            var sb = await GetSuggestionsBuilder();
+            var sb = await GetSuggestionsBuilder()
+                .ConfigureAwait(false);
 
             return sb.FindMaxPairs();
         }
@@ -51,10 +54,12 @@ namespace PairMatching.DomainModel.Services
         {
             var israelParticipants = await _unitOfWork
                 .IsraelParticipantsRepositry
-                .GetAllAsync();
+                .GetAllAsync()
+                .ConfigureAwait(false);
             var worldParticipants = await _unitOfWork
                 .WorldParticipantsRepositry
-                .GetAllAsync();
+                .GetAllAsync()
+                .ConfigureAwait(false);
             
             _suggestionsBuilder = new BuildSuggestions(israelParticipants.Where(i => i.IsOpenToMatch),
                     worldParticipants.Where(i => i.IsOpenToMatch));
@@ -63,13 +68,15 @@ namespace PairMatching.DomainModel.Services
         async Task<BuildSuggestions> GetSuggestionsBuilder()
         {
             if(_suggestionsBuilder is null)
-                await Refresh();
+                await Refresh()
+                    .ConfigureAwait(false);
             return _suggestionsBuilder;
         }
 
         public async Task AddMatchingHistory(PairSuggestion pairSuggestion)
         {
-            await _unitOfWork.MatchingHistorisRepositry.Insert(null);
+            await _unitOfWork.MatchingHistorisRepositry.Insert(null)
+                .ConfigureAwait(false);
         }
               
     }

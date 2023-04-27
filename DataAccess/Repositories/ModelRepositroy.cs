@@ -40,13 +40,15 @@ namespace PairMatching.DataAccess.Repositories
 
         public async Task<TModel> GetByIdAsync(int id)
         {
-            var model = await _dataAccess.LoadOneAsync<TModel>(_collectionName, id);
+            var model = await _dataAccess.LoadOneAsync<TModel>(_collectionName, id)
+                .ConfigureAwait(false);
             return model ?? throw new KeyNotFoundException($"Model with id = '{id}' not found");
         }
 
         public async Task<TModel> GetByIdAsync(string id)
         {
-            var model = await _dataAccess.LoadOneAsync<TModel>(_collectionName, id);
+            var model = await _dataAccess.LoadOneAsync<TModel>(_collectionName, id)
+                .ConfigureAwait(false);
             return model ?? throw new KeyNotFoundException($"Model with id = '{id}' not found");
         }
 

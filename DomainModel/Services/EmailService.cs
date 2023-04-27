@@ -34,7 +34,8 @@ namespace PairMatching.DomainModel.Services
         {
             var emails = await _unitOfWork
                 .EmailRepositry
-                .GetAllAsync();
+                .GetAllAsync()
+                .ConfigureAwait(false);
 
             return emails;
         }
@@ -61,7 +62,8 @@ namespace PairMatching.DomainModel.Services
                     language = emailModel.Language
                 };
 
-                var emailWixId = await _wix.SendEmail(email);
+                var emailWixId = await _wix.SendEmail(email)
+                    .ConfigureAwait(false);
 
                 emailModel.WixId = emailWixId;
                 emailModel.IsVerified = false;
@@ -69,7 +71,8 @@ namespace PairMatching.DomainModel.Services
                 
                 var newEmail = await _unitOfWork
                     .EmailRepositry
-                    .Insert(emailModel);
+                    .Insert(emailModel)
+                    .ConfigureAwait(false);
                 
                 _logger.LogInformation($"Send email, Id: {newEmail.Id}");
                 
@@ -124,7 +127,8 @@ namespace PairMatching.DomainModel.Services
                     language = emailModel.Language
                 };
 
-                var emailWixId = await _wix.SendEmail(email);
+                var emailWixId = await _wix.SendEmail(email)
+                    .ConfigureAwait(false);
                 _logger.LogInformation($"Resend email, Id: {emailModel.Id}");
 
                 emailModel.WixId = emailWixId;
@@ -132,7 +136,8 @@ namespace PairMatching.DomainModel.Services
 
                 await _unitOfWork
                     .EmailRepositry
-                    .Update(emailModel);
+                    .Update(emailModel)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -146,14 +151,16 @@ namespace PairMatching.DomainModel.Services
             try
             {
                 var emails = await _unitOfWork
-            .EmailRepositry
-            .GetAllAsync(e => !e.IsVerified);
+                        .EmailRepositry
+                        .GetAllAsync(e => !e.IsVerified)
+                        .ConfigureAwait(false);
 
                 var tasks = new List<Task>();
 
                 foreach (var email in emails)
                 {
-                    var emailRecipents = await _wix.VerifieyEmail(email.WixId);
+                    var emailRecipents = await _wix.VerifieyEmail(email.WixId)
+                        .ConfigureAwait(false);
                     if (emailRecipents.Any())
                     {
                         email.SendTo = (from e in emailRecipents
@@ -164,7 +171,8 @@ namespace PairMatching.DomainModel.Services
                     }
                 }
 
-                await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks)
+                    .ConfigureAwait(false);
                 if(tasks.Count > 0)
                     _logger.LogInformation($"verifiey emails: {tasks.Count}");
             }

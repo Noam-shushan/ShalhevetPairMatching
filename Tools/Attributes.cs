@@ -30,4 +30,27 @@ namespace PairMatching.Tools
 
         public string DisplyEngDescription { get => EngDescriptions.FirstOrDefault(); }
     }
+
+    public class ExportPropertyAttribute : Attribute
+    {
+        public string Text { get; set; }
+
+        public object Data { get; set; }
+
+        public ExportPropertyAttribute()
+        {
+
+        }
+
+        public ExportPropertyAttribute(string text)
+        {
+            Text = text;
+        }
+
+        public ExportPropertyAttribute(string text, object data)
+        {
+            Text = text;
+            Data = data;
+        }
+    }
 }

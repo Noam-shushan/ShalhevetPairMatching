@@ -20,17 +20,32 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                        Text="צור אקסל" />
 
-                <Grid>
+                    <local:ExitPopupModelView
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        DataContext="{Binding ExitPopupVM}" />
+                </Grid>
+
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBlock
@@ -46,22 +61,15 @@
                         HorizontalAlignment="Right"
                         Content="בחר הכל"
                         IsChecked="{Binding IsSelectedAllProps}" />
-
-                    <local:ExitPopupModelView
-                        Grid.Column="2"
-                        HorizontalAlignment="Right"
-                        DataContext="{Binding ExitPopupVM}" />
-
-
                 </Grid>
 
                 <ScrollViewer
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Margin="10"
                     mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
                     HorizontalScrollBarVisibility="Disabled"
                     VerticalScrollBarVisibility="Hidden">
-                    <ListBox ItemsSource="{Binding PropsName}" Style="{StaticResource MaterialDesignCardsListBox}">
+                    <ListBox ItemsSource="{Binding Properties}" Style="{StaticResource MaterialDesignCardsListBox}">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="5" Rows="6" />
@@ -71,14 +79,14 @@
                             <DataTemplate>
                                 <ToggleButton
                                     x:Name="propToggleButton"
-                                    Content="{Binding Path=.}"
+                                    Content="{Binding Text}"
                                     Style="{StaticResource MahApps.Styles.ToggleButton}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Checked">
-                                            <i:InvokeCommandAction Command="{Binding DataContext.SelectPropCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ExcelExportView}}}" CommandParameter="{Binding ElementName=propToggleButton, Path=Content}" />
+                                            <i:InvokeCommandAction Command="{Binding DataContext.SelectPropCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ExcelExportView}}}" CommandParameter="{Binding Path=.}" />
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="Unchecked">
-                                            <i:InvokeCommandAction Command="{Binding DataContext.UnselectPropCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ExcelExportView}}}" CommandParameter="{Binding ElementName=propToggleButton, Path=Content}" />
+                                            <i:InvokeCommandAction Command="{Binding DataContext.UnselectPropCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ExcelExportView}}}" CommandParameter="{Binding Path=.}" />
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </ToggleButton>
@@ -87,16 +95,32 @@
                     </ListBox>
                 </ScrollViewer>
 
-                <Button
-                    Grid.Row="2"
-                    Margin="0,10,0,10"
+                <StackPanel
+                    Grid.Row="3"
+                    Margin="0,10"
                     HorizontalAlignment="Center"
-                    Command="{Binding SelectFilePathCommand}"
-                    Content="בחר מיקום לקובץ" />
+                    Orientation="Horizontal">
+                    <Button
+                        Margin="20,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding SelectFilePathCommand}"
+                        Content="בחר מיקום לקובץ" />
+
+                    <TextBox
+                        MinWidth="200"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.FloatingScale="1"
+                        materialDesign:HintAssist.Hint="שם הקובץ"
+                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                        Text="{Binding FileName}" />
+                </StackPanel>
+
 
                 <Button
-                    Grid.Row="3"
-                    Margin="0,0,0,10"
+                    Grid.Row="4"
+                    Margin="0,10"
                     HorizontalAlignment="Center"
                     Command="{Binding ExportCommand}"
                     Content="צור" />

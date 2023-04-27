@@ -10,52 +10,54 @@ namespace PairMatching.ExcelTool
 {
     public class ExcelGenerator
     {
-        const string dir = @"Excels\";
+        readonly string _directoryPath;
+        readonly string _fileName;
 
-        public ExcelGenerator()
+
+        public ExcelGenerator(string dirPath, string fileName)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            
-            if (!Directory.Exists(dir))
+            _directoryPath = dirPath;
+            _fileName = fileName;
+            if (!Directory.Exists(dirPath))
             {
-                Directory.CreateDirectory(dir);
+                _directoryPath = @"Excel Files/";
             }
+            
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         public async Task Generate<T>(SpredsheetInfo<T> spredsheetInfo)
         {
-            await Generate(spredsheetInfo.OutputItems, spredsheetInfo.FileName, spredsheetInfo.WorksheetName);
+            await Generate(spredsheetInfo.OutputItems, spredsheetInfo.WorksheetName);
         }
 
-        public async Task Generate<T>(IEnumerable<T> values, string fileName, string worksheetName = "Main")
+        public async Task Generate<T>(IEnumerable<T> values, string worksheetName = "Main")
         {
-            var file = GetFileInfo(fileName);
-
             try
             {
+                var file = GetFileInfo();
+
                 using var package = new ExcelPackage(file);
 
                 var ws = package.Workbook.Worksheets.Add(worksheetName);
 
-
                 var range = ws.Cells["A1"].LoadFromCollection(values, true);
                 range.AutoFitColumns();
 
-                await package.SaveAsync();
+                await package.SaveAsync().ConfigureAwait(false);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
 
-        public async Task Generate(IEnumerable<IDictionary<string, object>> values, string fileName, string worksheetName = "Main")
+        public async Task Generate(IEnumerable<IDictionary<string, object>> values, string worksheetName = "Main")
         {
-            var file = GetFileInfo(fileName);
-
             try
             {
+                var file = GetFileInfo();
+                
                 using var package = new ExcelPackage(file);
 
                 var ws = package.Workbook.Worksheets.Add(worksheetName);
@@ -63,19 +65,18 @@ namespace PairMatching.ExcelTool
                 var range = ws.Cells["A1"].LoadFromDictionaries(values, true);
                 range.AutoFitColumns();
 
-                await package.SaveAsync();
+                await package.SaveAsync().ConfigureAwait(false);
             }
             catch (Exception)
             {
-
                 throw;
             }
 
         }
 
-        private static FileInfo GetFileInfo(string fileName)
+        private FileInfo GetFileInfo()
         {
-            var file = new FileInfo($"{dir}{fileName}.xlsx");
+            var file = new FileInfo(@$"{_directoryPath}\{_fileName}.xlsx");
 
             if (file.Exists)
             {
@@ -86,8 +87,7 @@ namespace PairMatching.ExcelTool
                 }
                 catch (IOException)
                 {
-
-                    throw new Exception($"File '{fileName}' is open, and can not be modify\nPlease close the file before");
+                    throw new Exception($"File '{_fileName}' is open, and can not be modify\nPlease close the file before");
                 }
             }
 

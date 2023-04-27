@@ -99,7 +99,7 @@ namespace DomainTesting
         [Test]
         public async Task CreateExcelTest()
         {
-            var eg = new ExcelGenerator();
+            var eg = new ExcelGenerator("stam", "stam");
 
             var parts = await _wix.GetNewParticipants();
 
@@ -127,7 +127,7 @@ namespace DomainTesting
                  });
 
 
-            await eg.Generate(values, "wix_data", "כולם ביחד, Wix & Google Forms (מהחודשיים הראשונים)");
+            await eg.Generate(values, "כולם ביחד, Wix & Google Forms (מהחודשיים הראשונים)");
         }
         
         

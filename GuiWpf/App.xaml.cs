@@ -53,6 +53,7 @@ namespace GuiWpf
             containerRegistry.Register<IPairsService, PairService>();
             containerRegistry.Register<IEmailService, EmailService>();
             containerRegistry.RegisterSingleton<IMatchingService, MatchingService>();
+            containerRegistry.Register<ExcelExportingService>();
 
             containerRegistry.Register<IDialogCoordinator, DialogCoordinator>();
         }

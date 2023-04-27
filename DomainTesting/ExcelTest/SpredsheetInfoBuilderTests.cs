@@ -23,7 +23,7 @@ namespace DomainTesting.ExcelTest
         [Test]
         public void SpredsheetInfoBuilderTest_Simple()
         {
-            var builder = new SpredsheetInfoBuilder<Stam>("stam");
+            var builder = new SpredsheetInfoBuilder<Stam>();
             var stam = new Stam();
             var spredsheet = builder
                 .AddItems(new List<Stam>
