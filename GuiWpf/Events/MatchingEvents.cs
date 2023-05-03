@@ -16,6 +16,8 @@ namespace GuiWpf.Events
 
     public class NewPairEvent : PubSubEvent<Pair> { }
 
+    public class SearchParticipaintForFreeMatchEvent : PubSubEvent<string> { }
+
     public class ShowFullComparisonEvent : PubSubEvent<(IEnumerable<PairSuggestion>, string)> { }
 
 }

@@ -144,8 +144,11 @@ namespace PairMatching.Models
     public enum PairStatus
     {
         Defulte,
+        [EnumDescription("המתנה")]
         Standby,
+        [EnumDescription("פעיל")]
         Active,
+        [EnumDescription("לומדים בפועל")]
         Learning
     }
     

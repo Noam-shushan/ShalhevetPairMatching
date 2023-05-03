@@ -40,7 +40,8 @@ namespace PairMatching.DomainModel.Services
             var result = new List<Participant>();
             var tasks = new List<Task>();
 
-            //await SetNewParticipintsFromWix();
+            await SetNewParticipintsFromWix()
+                .ConfigureAwait(false);
 
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();
@@ -49,7 +50,8 @@ namespace PairMatching.DomainModel.Services
             tasks.Add(ips);
             tasks.Add(wps);
 
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            await Task.WhenAll(tasks)
+                .ConfigureAwait(false);
 
             result.AddRange(ips.Result);
             result.AddRange(wps.Result);
@@ -153,13 +155,15 @@ namespace PairMatching.DomainModel.Services
                 {
                     await _unitOfWork
                         .IsraelParticipantsRepositry
-                        .Update(ip).ConfigureAwait(false);
+                        .Update(ip)
+                        .ConfigureAwait(false);
                 }
                 else if (participant is WorldParticipant wp)
                 {
                     await _unitOfWork
                         .WorldParticipantsRepositry
-                        .Update(wp);
+                        .Update(wp)
+                        .ConfigureAwait(false);
                 }
                 _logger.LogInformation($"participaint {participant.Id} get update");
             }
@@ -175,7 +179,8 @@ namespace PairMatching.DomainModel.Services
             dynamic wixId = ""; 
             try
             {
-                wixId = await GetWixId(part).ConfigureAwait(false);
+                wixId = await GetWixId(part)
+                    .ConfigureAwait(false);
             }
             catch(Exception ex)
             {
@@ -194,13 +199,15 @@ namespace PairMatching.DomainModel.Services
                 {
                     result = await _unitOfWork
                     .IsraelParticipantsRepositry
-                    .Insert(ip).ConfigureAwait(false);
+                    .Insert(ip)
+                    .ConfigureAwait(false);
                 }
                 else if (part is WorldParticipant wp)
                 {
                     result = await _unitOfWork
                     .WorldParticipantsRepositry
-                    .Insert(wp).ConfigureAwait(false);
+                    .Insert(wp)
+                    .ConfigureAwait(false);
                 }
                 _logger.LogInformation($"new participaint added {result.Id}");
             }
@@ -219,18 +226,21 @@ namespace PairMatching.DomainModel.Services
 
             participant.IsDeleted = true;
 
-            await UpdateParticipaint(participant).ConfigureAwait(false);
+            await UpdateParticipaint(participant)
+                .ConfigureAwait(false);
 
             _logger.LogInformation($"Delete participaint {participant.Id}");
         }
 
         public async Task SendToArcive(Participant participant)
         {
-            await RemoveMatchParticipaints(participant).ConfigureAwait(false);
+            await RemoveMatchParticipaints(participant)
+                .ConfigureAwait(false);
             
             participant.IsInArchive = true;
 
-            await UpdateParticipaint(participant).ConfigureAwait(false);
+            await UpdateParticipaint(participant)
+                .ConfigureAwait(false);
 
             _logger.LogInformation($"Send participaint {participant.Id} to archiv");
         }
@@ -247,13 +257,15 @@ namespace PairMatching.DomainModel.Services
                     {
                         p = await _unitOfWork
                             .WorldParticipantsRepositry
-                            .GetByIdAsync(matchParticipant).ConfigureAwait(false);
+                            .GetByIdAsync(matchParticipant)
+                            .ConfigureAwait(false);
                     }
                     else
                     {
                         p = await _unitOfWork
                             .IsraelParticipantsRepositry
-                         .GetByIdAsync(matchParticipant).ConfigureAwait(false);
+                         .GetByIdAsync(matchParticipant)
+                         .ConfigureAwait(false);
                     }
                     matchParticipants.Add(p);
                 }
@@ -272,7 +284,8 @@ namespace PairMatching.DomainModel.Services
                             .Update(p as IsraelParticipant));
                     }
                 }
-                await Task.WhenAll(tasks).ConfigureAwait(false);
+                await Task.WhenAll(tasks)
+                    .ConfigureAwait(false);
                 
                 _logger.LogInformation($"Member '{participant.Name}' is unmatch");
             }
@@ -295,7 +308,7 @@ namespace PairMatching.DomainModel.Services
                 partDto = wp.ToWorldParticipantWixDto();
             }
 
-            var wixId = await _wix.NewParticipant(partDto).ConfigureAwait(false);
+            var wixId = await _wix.NewParticipant(partDto);
             return wixId;
         }
 
@@ -321,7 +334,8 @@ namespace PairMatching.DomainModel.Services
         public async Task DeleteNote(Note selectedNote, Participant participant)
         {
             participant.Notes.Remove(selectedNote);
-            await UpdateParticipaint(participant).ConfigureAwait(false);
+            await UpdateParticipaint(participant)
+                .ConfigureAwait(false);
             _logger.LogInformation($"Delete note by {selectedNote.Author} from '{participant.Name}'");
         }
     }

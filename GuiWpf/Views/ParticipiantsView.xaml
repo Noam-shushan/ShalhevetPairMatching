@@ -293,6 +293,17 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
+                        <DataGridTemplateColumn Width="auto" Header="חברותא">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <controlers:Field
+                                        FieldName="יש"
+                                        FlowDirection="RightToLeft"
+                                        Value="{Binding IsMatch}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
 
                         <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.Header>

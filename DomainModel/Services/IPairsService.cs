@@ -14,6 +14,7 @@ namespace PairMatching.DomainModel.Services
         Task<Pair> AddNewPair(PairSuggestion pairSuggestion, PrefferdTracks track = PrefferdTracks.NoPrefrence);
         Task AddNote(Note newNote, Pair pairModel);
         Task CancelPair(Pair pair);
+        Task ChangeStatus(Pair pair, PairStatus status);
         Task ChangeTrack(Pair pair, PrefferdTracks track);
         Task DeleteNote(Note selectedNote, Pair pair);
         Task DeletePair(Pair pair);

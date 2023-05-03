@@ -228,7 +228,32 @@ namespace GuiWpf.ViewModels
 
                 }
             }
-        }, (obj) => !IsLoaded);
+        }, (_) => !IsLoaded);
+
+        
+        DelegateCommand<object> _ChangeStatusCommand;
+        public DelegateCommand<object> ChangeStatusCommand => _ChangeStatusCommand ??= new(
+        async (statusStr) =>
+        {
+            if (statusStr is string status)
+            {
+                var selectedStatus = Extensions.GetValueFromDescription<PairStatus>(status);
+                if (SelectedPair != null && SelectedPair.Status != selectedStatus)
+                {
+                    try
+                    {
+                        IsLoaded = true;
+                        await _pairsService.ChangeStatus(SelectedPair, selectedStatus);
+                        SelectedPair.Status = selectedStatus;
+                        IsLoaded = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        _exceptionHeandler.HeandleException(ex);
+                    }
+                }
+            }
+        },(_) => !IsLoaded);
 
         DelegateCommand _DeleteAllPairsCommand;
         public DelegateCommand DeleteAllPairsCommand => _DeleteAllPairsCommand ??= new(
@@ -360,7 +385,7 @@ namespace GuiWpf.ViewModels
                 await _pairsService.VerifieyNewPairsInWix();
 
                 var pairs = await _pairsService.GetAllPairs();
-                Pairs.Init(pairs.OrderByDescending(p => p.DateOfCreate), 5, PairsFilter);
+                Pairs.Init(pairs.OrderByDescending(p => p.DateOfCreate), 10, PairsFilter);
 
                 Years.Clear();
                 Years.AddRange(pairs.Select(p => p.DateOfCreate.Year.ToString()).Distinct());
@@ -398,8 +423,8 @@ namespace GuiWpf.ViewModels
 
         bool SearchPair(Pair pair)
         {
-            return pair.FromIsrael.Name.Contains(SearchPairsWord, StringComparison.InvariantCultureIgnoreCase)
-                || pair.FromWorld.Name.Contains(SearchPairsWord, StringComparison.InvariantCultureIgnoreCase);
+            return pair.FromIsrael.Name.SearchText(SearchPairsWord)
+                || pair.FromWorld.Name.SearchText(SearchPairsWord);
         }
 
         private void SubscribeToEvents()

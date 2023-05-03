@@ -168,6 +168,18 @@
                         Header="משתתף מהתפוצות"
                         IsReadOnly="True" />
 
+                    <DataGridTemplateColumn
+                        CanUserSort="True"
+                        Header="תאריך יצירה"
+                        SortDirection="Descending"
+                        SortMemberPath="DateOfCreate">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DateOfCreate, StringFormat=dd/MM/yyyy}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
                     <DataGridTemplateColumn Header="מסלול">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -192,16 +204,27 @@
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn
-                        CanUserSort="True"
-                        Header="תאריך יצירה"
-                        SortDirection="Descending"
-                        SortMemberPath="DateOfCreate">
+                    <DataGridTemplateColumn Width="auto" Header="סטטוס">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding DateOfCreate, StringFormat=dd/MM/yyyy}" />
+                                <TextBlock Text="{Binding Status, Converter={StaticResource EnumToStringConverter}}" ToolTip="לחץ על מנת לערוך" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <ComboBox
+                                    Name="statusComboBox"
+                                    materialDesign:HintAssist.Hint="מסלול"
+                                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PairStatus}}}"
+                                    Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.ChangeStatusCommand, RelativeSource={RelativeSource AncestorType=local:ParisView}}" CommandParameter="{Binding ElementName=statusComboBox, Path=SelectedValue}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
 
                     <DataGridTemplateColumn>

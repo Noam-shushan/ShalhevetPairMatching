@@ -40,7 +40,7 @@ namespace GuiWpf.ViewModels
             SendEmailVm = new SendEmailViewModel(ea, emailService, exceptionHeandler);
             ExportToExcelVm = new(excel);
         }
-        
+
         #region Properties:
 
         #region Collections
@@ -62,13 +62,13 @@ namespace GuiWpf.ViewModels
                     if (_selectedParticipant != null)
                     {
                         MyNotesViewModel.Init(_selectedParticipant);
-                        
+
                         _ea.GetEvent<OnParticipaintSelected>().Publish(SelectedParticipant);
                     }
                 };
             }
         }
-        
+
         private NotesViewModel _myNotesViewModel;
         public NotesViewModel MyNotesViewModel
         {
@@ -187,7 +187,7 @@ namespace GuiWpf.ViewModels
                async () =>
                {
                    await Refresh();
-                   
+
                    IsInitialized = true;
                },
                () => !IsInitialized && !IsLoaded);
@@ -197,14 +197,14 @@ namespace GuiWpf.ViewModels
         () =>
         {
             var address = from p in Participiants.FilterdItems
-                            where p.IsSelected
-                            select new EmailAddress
-                            {
-                                Address = p.Email,
-                                Name = p.Name,
-                                ParticipantId = p.Id,
-                                ParticipantWixId = p.WixId
-                            };
+                          where p.IsSelected
+                          select new EmailAddress
+                          {
+                              Address = p.Email,
+                              Name = p.Name,
+                              ParticipantId = p.Id,
+                              ParticipantWixId = p.WixId
+                          };
             SendEmailVm.Init(address, true);
 
         });
@@ -232,16 +232,25 @@ namespace GuiWpf.ViewModels
         public DelegateCommand SendToArchivCommand => _SendToArchivCommand ??= new(
         async () =>
         {
-            if(SelectedParticipant != null)
+            if (SelectedParticipant != null)
             {
-                if(Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשלוח את {SelectedParticipant.Name} ?"))
+                if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשלוח את {SelectedParticipant.Name} לארכיון?"))
                 {
+                    if (SelectedParticipant.IsMatch)
+                    {
+                        if (!Messages.MessageBoxConfirmation($"{SelectedParticipant.Name} נמצא בחברותא. שליחה לארכיון תבטל את החברותא. האם אתה בטוח שברצונך להמשיך?"))
+                        {
+                            return;
+                        }
+                    }
+                
                     try
                     {
                         IsLoaded = true;
                         await _participantService.SendToArcive(SelectedParticipant);
                         SelectedParticipant.IsInArchive = true;
                         Participiants.Refresh();
+                        _ea.GetEvent<RefreshMatchingEvent>().Publish();
                         IsLoaded = false;
                     }
                     catch (Exception ex)
@@ -257,23 +266,29 @@ namespace GuiWpf.ViewModels
         public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
         async () =>
         {
-            if(SelectedParticipant != null)
+            if(SelectedParticipant == null)
             {
-                if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך למחוק את {SelectedParticipant.Name} ?"))
-                {
-                    try
-                    {
-                        IsLoaded = true;
-                        await _participantService.DeleteParticipaint(SelectedParticipant);
-                        Participiants.ItemsSource.Remove(SelectedParticipant);
-                        Participiants.Refresh();
-                        IsLoaded = false;
-                    }
-                    catch (Exception ex)
-                    {
-                        _exceptionHeandler.HeandleException(ex);
-                    }
-                }
+                return;
+            }
+            var msg = SelectedParticipant.IsMatch ?
+            $"ל {SelectedParticipant.Name} יש חברותא, האם בכל זאת למחוק?"
+            : $"האם אתה בטוח שברצונך למחוק את {SelectedParticipant.Name} ?";
+            if (!Messages.MessageBoxConfirmation(msg))
+            {
+                return;         
+            }
+            try
+            {
+                IsLoaded = true;
+                await _participantService.DeleteParticipaint(SelectedParticipant);
+                Participiants.ItemsSource.Remove(SelectedParticipant);
+                Participiants.Refresh();
+                _ea.GetEvent<RefreshMatchingEvent>().Publish();
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
             }
         }, () => !IsLoaded);
 
@@ -380,7 +395,7 @@ namespace GuiWpf.ViewModels
                 {
                     _exceptionHeandler.HeandleException(ex);
                 }
-            });       
+            });
         }
 
         private bool ParticipiantsFilter(Participant participant)
@@ -403,11 +418,12 @@ namespace GuiWpf.ViewModels
 
             year = participant.DateOfRegistered.Year.ToString() == YearsFilter || YearsFilter == allYears;
 
-            return participant.Name.Contains(SearchParticipiantsWord, StringComparison.InvariantCultureIgnoreCase)
+            return (participant.Name.SearchText(SearchParticipiantsWord) || participant.Email.SearchText(SearchParticipiantsWord))
                 && partKind
                 && year
                 && fromIsrael;
         }
+
         #endregion
     }
 }

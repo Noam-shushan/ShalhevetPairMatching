@@ -1,6 +1,7 @@
 ﻿using PairMatching.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace PairMatching.DomainModel.MatchingCalculations
@@ -51,6 +52,14 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         private (IEnumerable<PrefferdTracks>, int) FindPrefferdTrack()
         {
+            if(_ip.PairPreferences.Tracks.All(t => t == PrefferdTracks.NoPrefrence) 
+                && _wp.PairPreferences.Tracks.All(t => t == PrefferdTracks.NoPrefrence))
+            {
+                var allTracks = Enum.GetValues<PrefferdTracks>().ToList();
+                allTracks.Remove(PrefferdTracks.NoPrefrence);
+                return (allTracks, allTracks.Count); 
+            }
+
             var tracks = _ip.PairPreferences.Tracks
                 .Intersect(_wp.PairPreferences.Tracks);
             if (!tracks.Any())

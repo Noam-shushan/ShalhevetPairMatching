@@ -88,7 +88,24 @@
                             SortDirection="Descending"
                             SortMemberPath="SendingDate" />
                         <DataGridTextColumn Binding="{Binding Subject}" Header="נושא" />
-                        <DataGridTextColumn Binding="{Binding To.Count}" Header="מספר נמענים" />
+                        <DataGridTemplateColumn Width="auto" Header="נמענים">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox
+                                        HorizontalAlignment="Left"
+                                        materialDesign:ComboBoxAssist.ShowSelectedItem="True"
+                                        IsEditable="False"
+                                        ItemsSource="{Binding To}"
+                                        Style="{StaticResource MaterialDesignFilledComboBox}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" ToolTip="{Binding Address}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Binding="{Binding SendTo.Count}" Header="קיבלו" />
                         <DataGridTemplateColumn Header="שלח שוב למי שלא קיבל">
                             <DataGridTemplateColumn.CellTemplate>

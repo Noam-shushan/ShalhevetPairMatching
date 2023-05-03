@@ -49,6 +49,14 @@ namespace PairMatching.Tools
             return text;
         }
 
+        public static bool SearchText(this string text, string searchWord)
+        {
+            if (string.IsNullOrEmpty(searchWord))
+                return true;
+
+            return text.ToLower().Contains(searchWord.ToLower(), StringComparison.InvariantCultureIgnoreCase);
+        }
+
         public static TimeSpan ToTimeSpan(this string timeStr)
         {
             string timeFormat = Regex.Replace(timeStr, "[^0-9.:-]", "");

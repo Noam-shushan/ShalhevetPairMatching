@@ -8,6 +8,7 @@ using PairMatching.DomainModel.Services;
 using Prism.Commands;
 using Prism.Events;
 using PairMatching.Models;
+using PairMatching.Tools;
 
 namespace GuiWpf.ViewModels
 {
@@ -91,9 +92,9 @@ namespace GuiWpf.ViewModels
             }
         }
 
-        private bool EmailsFilter(EmailModel obj)
+        private bool EmailsFilter(EmailModel emailModel)
         {
-            return SearchEmails(obj);
+            return SearchEmails(emailModel);
         }
 
 
@@ -101,14 +102,20 @@ namespace GuiWpf.ViewModels
         public string SearchEmailsWord
         {
             get => _searchEmailsWord;
-            set => SetProperty(ref _searchEmailsWord, value);
+            set
+            {
+                if(SetProperty(ref _searchEmailsWord, value))
+                {
+                    Emails.Refresh();
+                }
+            }
         }
 
         private bool SearchEmails(EmailModel obj)
         {
-            return obj.Body.Contains(SearchEmailsWord, StringComparison.InvariantCultureIgnoreCase)
-                || obj.Subject.Contains(SearchEmailsWord, StringComparison.InvariantCultureIgnoreCase)
-                || obj.To.Any(ea => ea.Name.Contains(SearchEmailsWord, StringComparison.InvariantCultureIgnoreCase));
+            return obj.Body.SearchText(SearchEmailsWord)
+                || obj.Subject.SearchText(SearchEmailsWord)
+                || obj.To.Any(ea => ea.Address.SearchText(SearchEmailsWord) || ea.Name.SearchText(SearchEmailsWord));
         }
 
     }

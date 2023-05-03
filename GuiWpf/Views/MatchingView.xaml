@@ -95,6 +95,30 @@
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>
+                                                <!--<DataGridTemplateColumn Header="התאמה חופשית">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel>
+                                                                <materialDesign:PopupBox IsPopupOpen="{Binding DataContext.IsFreeMatchSelectionOpen, Mode=OneWay, RelativeSource={RelativeSource AncestorType=local:MatchingView}}" PlacementMode="LeftAndAlignMiddles">
+                                                                    <materialDesign:PopupBox.ToggleContent>
+                                                                        <StackPanel />
+                                                                    </materialDesign:PopupBox.ToggleContent>
+                                                                    <ListBox
+                                                                        MaxHeight="80"
+                                                                        ItemsSource="{Binding DataContext.ParticipantsForFreeMatch, RelativeSource={RelativeSource AncestorType=local:MatchingView}}"
+                                                                        SelectedItem="{Binding DataContext.SelectedParticipaintForFreeMatch, RelativeSource={RelativeSource AncestorType=local:MatchingView}}">
+                                                                        <ListBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <TextBlock Text="{Binding Name}" />
+                                                                            </DataTemplate>
+                                                                        </ListBox.ItemTemplate>
+                                                                    </ListBox>
+                                                                </materialDesign:PopupBox>
+                                                                <controlers:SearchTextBox SearchWord="{Binding SearchParticipaintWordForFreeMatch}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>-->
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </materialDesign:Card>

@@ -20,5 +20,7 @@ namespace GuiWpf.UIModels
                 _suggestions = new(value.OrderByDescending(s => s.MatchingPercent));
             }
         }
+
+        public string SearchParticipaintWordForFreeMatch { get; set; } = "";
     }
 }

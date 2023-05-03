@@ -58,6 +58,7 @@ namespace PairMatching.Models
         [ExportProperty("תאריך הרשמה")]
         public DateTime DateOfRegistered { get; set; }
 
+        [ExportProperty("בארכיון?")]
         public bool IsInArchive { get; set; }
 
         public List<string> OtherLanguages { get; set; } = new();

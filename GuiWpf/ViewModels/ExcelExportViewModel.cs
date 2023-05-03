@@ -117,8 +117,8 @@ namespace GuiWpf.ViewModels
                 IsLoaded = false;
 
             }//,
-            //() => Values?.Count > 0 
-            //    && !string.IsNullOrEmpty(FileName) 
+            //() => Values?.Count > 0
+            //    && !string.IsNullOrEmpty(FileName)
             //    && !string.IsNullOrEmpty(FilePath)
         );
 

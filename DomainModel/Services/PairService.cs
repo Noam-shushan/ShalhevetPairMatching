@@ -71,7 +71,7 @@ namespace PairMatching.DomainModel.Services
         {
             var pairs = await _unitOfWork
                 .PairsRepositry
-                .GetAllAsync(p => p.Status > PairStatus.Standby)
+                .GetAllAsync(p => p.Status > PairStatus.Standby && !p.IsDeleted)
                 .ConfigureAwait(false);
 
             await SetParticipaintsForEachPair(pairs)
@@ -147,6 +147,26 @@ namespace PairMatching.DomainModel.Services
             {
                 _logger.LogError($"Can not change track to pair {pair.Id}, {pair.Track} -> {track}", ex);
                 throw new UserException($"Can not change track to havrota {pair.FromIsrael.Name} -> {pair.FromWorld.Name}");
+            }
+        }
+
+        public async Task ChangeStatus(Pair pair, PairStatus status)
+        {
+            try
+            {
+                pair.Status = status;
+
+                await _unitOfWork
+                        .PairsRepositry
+                        .Update(pair)
+                        .ConfigureAwait(false);
+
+                _logger.LogInformation($"Change status to pair {pair.Id} to {status}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Can not change status to pair {pair.Id}, {pair.Status} -> {status}", ex);
+                throw new UserException($"Can not change status to havrota {pair.FromIsrael.Name} -> {pair.FromWorld.Name}");
             }
         }
 

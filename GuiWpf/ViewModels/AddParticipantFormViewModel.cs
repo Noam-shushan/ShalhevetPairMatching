@@ -300,6 +300,7 @@ namespace GuiWpf.ViewModels
                 };
             }
             _ea.GetEvent<AddParticipantEvent>().Publish(newParticipant);
+            _ea.GetEvent<RefreshMatchingEvent>().Publish();
             Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
         });
@@ -351,7 +352,7 @@ namespace GuiWpf.ViewModels
             _ea.GetEvent<ParticipaintWesUpdate>().Publish(EditParticipaint);
             Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
-
+            _ea.GetEvent<RefreshMatchingEvent>().Publish();
         });
 
         private void Reset()
