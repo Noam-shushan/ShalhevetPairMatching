@@ -81,9 +81,5 @@
         <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsFullComparisonOpen}">
             <local:FullPairMatchingComparisonView Margin="10" />
         </modelPopup:Modal>
-
-        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsFullParticipaintOpen}">
-            <local:FullParticipaintView Margin="10" />
-        </modelPopup:Modal>
     </Grid>
 </mah:MetroWindow>

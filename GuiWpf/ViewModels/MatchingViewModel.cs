@@ -33,6 +33,7 @@ namespace GuiWpf.ViewModels
             Match = matchCommand;
             _exceptionHeandler = exceptionHeandler;
             _participantService = participantService;
+            FullParticipaintVm = new();
 
             _ea.GetEvent<RefreshMatchingEvent>()
                 .Subscribe(async () =>
@@ -61,6 +62,9 @@ namespace GuiWpf.ViewModels
         }
 
         List<PairSuggestion> _pairSuggestions = new();
+
+        public FullParticipaintViewModel FullParticipaintVm { get; set; }
+
 
         DelegateCommand _load;
         public DelegateCommand Load => _load ??= new(
@@ -193,9 +197,7 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenFullParticipiantCommand => _OpenFullParticipiantCommand ??= new(
         () =>
         {
-            _ea.GetEvent<OnParticipaintSelected>().Publish(SelectedParticipaint.Participant);
-            _ea.GetEvent<OpenCloseDialogEvent>().Publish((true, typeof(FullParticipaintViewModel)));
-
+            FullParticipaintVm.Init(SelectedParticipaint.Participant, true);
         });
 
 

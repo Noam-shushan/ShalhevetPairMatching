@@ -254,6 +254,9 @@
             </TabControl>
         </materialDesign:Card>
 
+        <local:FullParticipaintView Margin="10" DataContext="{Binding FullParticipaintVm}" />
+
+
         <mah:ProgressRing
             Grid.Row="1"
             Foreground="{StaticResource MainColor}"

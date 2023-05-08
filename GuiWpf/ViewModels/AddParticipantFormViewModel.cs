@@ -12,10 +12,12 @@ using Prism.Events;
 using PairMatching.Models;
 using GuiWpf.Events;
 using System.Collections.ObjectModel;
+using static PairMatching.Tools.HelperFunction;
+
 
 namespace GuiWpf.ViewModels
 {
-    public class AddParticipantFormViewModel : BindableBase
+    public class AddParticipantFormViewModel : ViewModelBase
     {
         readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
@@ -25,6 +27,8 @@ namespace GuiWpf.ViewModels
             _participantService = participantService;
             _ea = ea;
             CountryUtcs = _participantService.GetCountryUtcs();
+
+             
 
             _ea.GetEvent<NewParticipaintEvent>()
                 .Subscribe(isNew =>
@@ -45,7 +49,8 @@ namespace GuiWpf.ViewModels
                     PhoneNumber = part.PhoneNumber;
                     Email = part.Email;
                     Gender = part.Gender;
-                    Country.Country = part.Country;
+                    var selectedCountry = CountryUtcs.FirstOrDefault(c => CompereOnlyLetters(c.Country, part.Country));
+                    Country = selectedCountry ?? CountryUtcs.First();
                     IsFromIsrael = part.IsFromIsrael;
 
                     PrefferdTrack = part.PairPreferences.Tracks.FirstOrDefault();
@@ -56,25 +61,22 @@ namespace GuiWpf.ViewModels
                     
                     LearningTimes.Clear();
                     LearningTimes.AddRange(part.PairPreferences.LearningTime);
-                    
-                    if (part.IsFromIsrael && part is IsraelParticipant)
+                    OpenTimes = (from lt in part.PairPreferences.LearningTime
+                               from time in lt.TimeInDay
+                               select new Tuple<Days, TimesInDay>(lt.Day, time))
+                                .ToDictionary(key => key, val => true);
+
+
+                    if (part.IsFromIsrael && part is IsraelParticipant ipart)
                     {
-                        var ipart = part as IsraelParticipant;
                         EnglishLevel = ipart.EnglishLevel;
                         DesiredSkillLevel = ipart.DesiredSkillLevel;
                     }
-                    else if(!part.IsFromIsrael && part is WorldParticipant)
+                    else if(!part.IsFromIsrael && part is WorldParticipant wpart)
                     {
-                        var wpart = part as WorldParticipant;
                         SkillLevel = wpart.SkillLevel;
                         DesiredEnglishLevel = wpart.DesiredEnglishLevel;
-                        Country.UtcOffset = wpart.UtcOffset;
                     }
-                    else
-                    {
-
-                    }
-
                 });
         }
 
@@ -98,6 +100,14 @@ namespace GuiWpf.ViewModels
         {
             get => _isEdit;
             set => SetProperty(ref _isEdit, value);
+        }
+
+
+        private Dictionary<Tuple<Days, TimesInDay>, bool> _openTimes;
+        public Dictionary<Tuple<Days, TimesInDay>, bool> OpenTimes
+        {
+            get => _openTimes;
+            set => SetProperty(ref _openTimes, value);
         }
 
         public IEnumerable<CountryUtc> CountryUtcs { get; init; }
@@ -227,6 +237,7 @@ namespace GuiWpf.ViewModels
                     Day = timeInDay.Item1,
                     TimeInDay = new List<TimesInDay> { timeInDay.Item2 }
                 });
+                OpenTimes[timeInDay] = true;
             }
         });
 
@@ -241,6 +252,7 @@ namespace GuiWpf.ViewModels
                     Day = timeInDay.Item1,
                     TimeInDay = new List<TimesInDay> { timeInDay.Item2 }
                 });
+                OpenTimes[timeInDay] = false;
             }
         });
 
@@ -321,39 +333,52 @@ namespace GuiWpf.ViewModels
         {
             if(!Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך לבצע שינויים אלו?"))
             {
-                Reset();
                 return;
             }
+            IsLoaded = true;
             EditParticipaint.PhoneNumber = PhoneNumber;
             EditParticipaint.Email = Email;
             EditParticipaint.Country = Country.Country;
             EditParticipaint.Name = Name;
-            EditParticipaint.PairPreferences.Tracks = new PrefferdTracks[] { PrefferdTrack };
+            if (!EditParticipaint.PairPreferences.Tracks.Any(t => t == PrefferdTrack))
+            {
+                EditParticipaint.PairPreferences.Tracks.ToList().Add(PrefferdTrack);
+            }
             EditParticipaint.PairPreferences.NumberOfMatchs = NumberOfMatchs;
             EditParticipaint.PairPreferences.Gender = PrefferdGender;
             EditParticipaint.PairPreferences.LearningStyle = LearningStyle;
-            EditParticipaint.PairPreferences.LearningTime = LearningTimes;
-            if(IsFromIsrael && EditParticipaint is IsraelParticipant)
+            EditParticipaint.PairPreferences.LearningTime = from lt in LearningTimes
+                                                            group lt by lt.Day into day
+                                                            select new LearningTime
+                                                            {
+                                                                Day = day.Key,
+                                                                TimeInDay = day.SelectMany(t => t.TimeInDay).ToList()
+                                                            };
+            if(IsFromIsrael)
             {
-                (EditParticipaint as IsraelParticipant).EnglishLevel = EnglishLevel;
-                (EditParticipaint as IsraelParticipant).DesiredSkillLevel = DesiredSkillLevel;
-            }
-            else if (!IsFromIsrael && EditParticipaint is WorldParticipant)
-            {
-                (EditParticipaint as WorldParticipant).SkillLevel = SkillLevel;
-                (EditParticipaint as WorldParticipant).DesiredEnglishLevel = DesiredEnglishLevel;
-                (EditParticipaint as WorldParticipant).UtcOffset = Country.UtcOffset;
+                var ip = EditParticipaint.CopyPropertiesToNew<Participant, IsraelParticipant>();
+                ip.OpenQuestions = (EditParticipaint as IsraelParticipant).OpenQuestions;
+                ip.EnglishLevel = EnglishLevel;
+                ip.DesiredSkillLevel = DesiredSkillLevel;
+                await _participantService.UpdateParticipaint(ip);
+                _ea.GetEvent<ParticipaintWesUpdate>().Publish(ip);
             }
             else
             {
-
+                var wp = EditParticipaint.CopyPropertiesToNew<Participant, WorldParticipant>();
+                wp.OpenQuestions = (EditParticipaint as WorldParticipant).OpenQuestions;
+                wp.SkillLevel = SkillLevel;
+                wp.DesiredEnglishLevel = DesiredEnglishLevel;
+                wp.UtcOffset = Country.UtcOffset;
+                await _participantService.UpdateParticipaint(wp);
+                _ea.GetEvent<ParticipaintWesUpdate>().Publish(wp);
             }
-            await _participantService.UpdateParticipaint(EditParticipaint);
-            _ea.GetEvent<ParticipaintWesUpdate>().Publish(EditParticipaint);
+            IsLoaded = false;
             Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
             _ea.GetEvent<RefreshMatchingEvent>().Publish();
-        });
+            
+        }, () => !IsLoaded);
 
         private void Reset()
         {

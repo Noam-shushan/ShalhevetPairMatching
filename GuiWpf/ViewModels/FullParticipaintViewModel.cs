@@ -14,22 +14,14 @@ using Prism.Commands;
 
 namespace GuiWpf.ViewModels
 {
-    class FullParticipaintViewModel : DialogViewModel
+    public class FullParticipaintViewModel : ViewModelBase, IPopupViewModle
     {
-        readonly IEventAggregator _ea;
-        
-        public FullParticipaintViewModel(IEventAggregator ea) : base(ea)
+        public FullParticipaintViewModel()
         {
-            _ea = ea;
-            _ea.GetEvent<OnParticipaintSelected>().Subscribe(
-                (p) => 
-                {
-                    Current = p;
-                    LearningTimes = CollectionViewSource.GetDefaultView(Current.PairPreferences.LearningTime);
-                    LearningTimes.Filter = l => (l as LearningTime).TimeInDay.Any();
-                });
-            
+            ExitPopupVM = new ExitPopupModelViewModel(this);
         }
+
+        public ExitPopupModelViewModel ExitPopupVM { get; set; }
 
         private Participant _current;
         public Participant Current
@@ -38,7 +30,6 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _current, value);
         }
 
-
         private ICollectionView _propName;
         public ICollectionView LearningTimes
         {
@@ -46,5 +37,24 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _propName, value);
         }
 
+        private bool _isOpen;
+        public bool IsOpen
+        {
+            get => _isOpen;
+            set => SetProperty(ref _isOpen, value);
+        }
+
+        public void Init(Participant participant, bool isOpen)
+        {
+            Current = participant;
+            LearningTimes = CollectionViewSource.GetDefaultView(Current.PairPreferences.LearningTime);
+            LearningTimes.Filter = l => (l as LearningTime).TimeInDay.Any();
+            IsOpen = isOpen;
+        }
+
+        public void CloseDialog()
+        {
+            IsOpen = false;
+        }
     }
 }

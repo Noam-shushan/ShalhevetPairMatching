@@ -53,5 +53,21 @@ namespace PairMatching.Tools
             // Trim any whitespace from the beginning or end of the output string
             return cleaned.Trim();
         }
+        
+        public static bool CompereOnlyLetters(string frist, string second)
+        {
+            string s1 = RemoveAllCharsExeptLettersAndSpace(frist);
+            string s2 = RemoveAllCharsExeptLettersAndSpace(second);
+            return s1.ToLower() == s2.ToLower();
+        }
+
+        static string RemoveAllCharsExeptLettersAndSpace(string str)
+        {
+            var result = Regex.Replace(str, "[^0-9A-Za-z ,]", "");
+            var onlyOneSpace = new Regex(@"[ ]{2,}", RegexOptions.None);
+            result = onlyOneSpace.Replace(result, @" "); // "words with multiple spaces"
+
+            return result.Trim();
+        }
     }
 }

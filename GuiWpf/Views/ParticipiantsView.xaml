@@ -412,6 +412,7 @@
 
         <local:ExcelExportView DataContext="{Binding ExportToExcelVm}" />
 
+        <local:FullParticipaintView Margin="10" DataContext="{Binding FullParticipaintVm}" />
 
         <mah:ProgressRing
             Grid.Row="1"

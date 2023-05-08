@@ -86,6 +86,7 @@
             <converters:InvertBooleanToVisiblityConvertor x:Key="InvertBooleanToVisiblityConvertor" />
             <converters:ListOfStrintsToStringsConverter x:Key="ListOfStrintsToStringsConverter" />
             <converters:WarpTimeWithHisDayEnumsConverter x:Key="WarpTimeWithHisDayEnumsConverter" />
+            <converters:IsTimeAndDaySetConverter x:Key="IsTimeAndDaySetConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

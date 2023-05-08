@@ -57,6 +57,19 @@ namespace PairMatching.Tools
         }
 
         /// <summary>
+        /// Copy properties to new instance
+        /// </summary>
+        /// <typeparam name="S"></typeparam>
+        /// <param name="from"></param>
+        /// <param name="type"></param>
+        /// <returns>New instance with the value of the 'from' properties</returns>
+        public static TType CopyPropertiesToNew<S, TType>(this S from) where TType : class
+        {
+            object to = Activator.CreateInstance(typeof(TType)); // new object of Type
+            return from.CopyPropertiesTo(to as TType);
+        }
+
+        /// <summary>
         /// Clone any object. Get a copy
         /// </summary>
         /// <typeparam name="T"></typeparam>

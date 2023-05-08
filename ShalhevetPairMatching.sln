@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelTools", "ExcelGenerato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PairMatching.Logger", "PairMatching.Logger\PairMatching.Logger.csproj", "{1B41A57E-AE5F-469E-BE51-16B1FBA633AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShalhevetAPI", "ShalhevetAPI\ShalhevetAPI.csproj", "{FC2DD167-DF60-45AD-B835-D34171A60E32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{1B41A57E-AE5F-469E-BE51-16B1FBA633AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B41A57E-AE5F-469E-BE51-16B1FBA633AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B41A57E-AE5F-469E-BE51-16B1FBA633AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC2DD167-DF60-45AD-B835-D34171A60E32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC2DD167-DF60-45AD-B835-D34171A60E32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC2DD167-DF60-45AD-B835-D34171A60E32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC2DD167-DF60-45AD-B835-D34171A60E32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

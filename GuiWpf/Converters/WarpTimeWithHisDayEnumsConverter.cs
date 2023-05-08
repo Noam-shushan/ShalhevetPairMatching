@@ -31,4 +31,28 @@ namespace GuiWpf.Converters
             return null;
         }
     }
+
+    public class IsTimeAndDaySetConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length != 3)
+                return null;
+
+            if (values[0] is string dayStr 
+                && values[1] is string timeStr 
+                && values[2] is Dictionary<Tuple<Days, TimesInDay>, bool> openTimes)
+            {
+                var day = Extensions.GetValueFromDescription<Days>(dayStr);
+                var time = Extensions.GetValueFromDescription<TimesInDay>(timeStr);
+                return openTimes.ContainsKey(new Tuple<Days, TimesInDay>(day, time));
+            }
+            return null;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
 }

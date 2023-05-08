@@ -39,6 +39,7 @@ namespace GuiWpf.ViewModels
             MyNotesViewModel = new NotesViewModel(participantService, pairService, exceptionHeandler);
             SendEmailVm = new SendEmailViewModel(ea, emailService, exceptionHeandler);
             ExportToExcelVm = new(excel);
+            FullParticipaintVm = new();
         }
 
         #region Properties:
@@ -62,8 +63,6 @@ namespace GuiWpf.ViewModels
                     if (_selectedParticipant != null)
                     {
                         MyNotesViewModel.Init(_selectedParticipant);
-
-                        _ea.GetEvent<OnParticipaintSelected>().Publish(SelectedParticipant);
                     }
                 };
             }
@@ -101,6 +100,8 @@ namespace GuiWpf.ViewModels
         }
 
         public ExcelExportViewModel<Participant> ExportToExcelVm { get; set; }
+
+        public FullParticipaintViewModel FullParticipaintVm { get; set; }
 
         #endregion
 
@@ -325,8 +326,7 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenFullParticipiantCommand => _OpenFullParticipiantCommand ??= new(
         () =>
         {
-            _ea.GetEvent<OpenCloseDialogEvent>()
-                       .Publish((true, typeof(FullParticipaintViewModel)));
+            FullParticipaintVm.Init(SelectedParticipant, true);
         });
 
         public CopyCommand CopyCommand { get; set; } = new();

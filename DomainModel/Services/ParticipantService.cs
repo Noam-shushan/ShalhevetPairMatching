@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PairMatching.Loggin;
+using static PairMatching.Tools.HelperFunction;
 
 namespace PairMatching.DomainModel.Services
 {
@@ -41,7 +42,7 @@ namespace PairMatching.DomainModel.Services
             var tasks = new List<Task>();
 
             await SetNewParticipintsFromWix()
-                .ConfigureAwait(false);
+               .ConfigureAwait(false);
 
             var ips = GetAllFromIsrael();
             var wps = GetAllFromWorld();
@@ -85,7 +86,8 @@ namespace PairMatching.DomainModel.Services
             IEnumerable<ParticipantWixDto> partsDtos;
             try
             {
-                partsDtos = await _wix.GetNewParticipants(index).ConfigureAwait(false);
+                partsDtos = await _wix.GetNewParticipants(index)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -104,14 +106,13 @@ namespace PairMatching.DomainModel.Services
                 var wps = list[false]
                         .Select(p => (p as WorldParticipantWixDto).ToWorldParticipant());
 
-                var countryUts = GetCountryUtcs()
-                    .ToDictionary(c => HelperFunction.CleanString(c.Country).ToLower(), c => c.UtcOffset);
-
+                var countryUts = GetCountryUtcs();
                 foreach (var wp in wps)
                 {
-                    if (countryUts.TryGetValue(HelperFunction.CleanString(wp.Country).ToLower(), out var utcOffset))
+                    var utc = countryUts.FirstOrDefault(uc => CompereOnlyLetters(uc.Country, wp.Country));
+                    if (utc != null && utc.UtcOffset != wp.UtcOffset)
                     {
-                        wp.UtcOffset = utcOffset;
+                        wp.UtcOffset = utc.UtcOffset;
                     }
                 }
                 
@@ -135,7 +136,8 @@ namespace PairMatching.DomainModel.Services
                 {
                     config.WixIndex = newMaxIndex;
                     await _unitOfWork.ConfigRepositry
-                        .UpdateDbConfig(config).ConfigureAwait(false);
+                        .UpdateDbConfig(config)
+                        .ConfigureAwait(false);
                 }
             }
         }
@@ -149,10 +151,43 @@ namespace PairMatching.DomainModel.Services
 
         public async Task UpdateParticipaint(Participant participant)
         {
+            bool isInIsraelRepo = true;
+            bool isInWorldRepo = true;
+            try
+            {
+                var part = await _unitOfWork
+                    .IsraelParticipantsRepositry
+                    .GetByIdAsync(participant.Id)
+                    .ConfigureAwait(false);
+            }
+            catch (KeyNotFoundException)
+            {
+                isInIsraelRepo = false;
+            }
+            try
+            {
+                var part = await _unitOfWork
+                    .WorldParticipantsRepositry
+                    .GetByIdAsync(participant.Id)
+                    .ConfigureAwait(false);
+            }
+            catch (KeyNotFoundException)
+            {
+                isInWorldRepo = false;
+            }
+
+
             try
             {
                 if (participant is IsraelParticipant ip)
                 {
+                    if (isInWorldRepo)
+                    {
+                        await _unitOfWork
+                            .WorldParticipantsRepositry
+                            .Delete(participant.Id)
+                            .ConfigureAwait(false);
+                    }
                     await _unitOfWork
                         .IsraelParticipantsRepositry
                         .Update(ip)
@@ -160,6 +195,13 @@ namespace PairMatching.DomainModel.Services
                 }
                 else if (participant is WorldParticipant wp)
                 {
+                    if (isInIsraelRepo)
+                    {
+                        await _unitOfWork
+                            .IsraelParticipantsRepositry
+                            .Delete(participant.Id)
+                            .ConfigureAwait(false);
+                    }
                     await _unitOfWork
                         .WorldParticipantsRepositry
                         .Update(wp)

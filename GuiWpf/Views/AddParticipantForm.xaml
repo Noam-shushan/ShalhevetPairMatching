@@ -69,292 +69,324 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <DockPanel>
-        <Border
-            Background="CadetBlue"
-            CornerRadius="0 20 0 0"
-            DockPanel.Dock="Top">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    Margin="5,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Foreground="#F5F5F5"
-                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                    Text="{Binding Title}" />
-                <Button
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    Command="{Binding CancelCommand}"
-                    Style="{StaticResource MaterialDesignIconForegroundButton}">
-                    <materialDesign:PackIcon
-                        Width="20"
-                        Height="20"
-                        Foreground="#F5F5F5"
-                        Kind="Close" />
-                </Button>
-            </Grid>
-        </Border>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-
-
-
-            <WrapPanel Grid.Row="0" Style="{StaticResource FieldsWrapPanel}">
-                <materialDesign:PackIcon Kind="Person" Style="{StaticResource IconsStyle}" />
-                <TextBox
-                    materialDesign:HintAssist.Hint="שם"
-                    Style="{StaticResource Fields}"
-                    Text="{Binding Name}" />
-            </WrapPanel>
-
-            <WrapPanel Grid.Row="1" Style="{StaticResource FieldsWrapPanel}">
-                <materialDesign:PackIcon Kind="Email" Style="{StaticResource IconsStyle}" />
-                <TextBox
-                    materialDesign:HintAssist.Hint="אימייל"
-                    materialDesign:ValidationAssist.UsePopup="True"
-                    Style="{StaticResource Fields}"
-                    Text="{Binding Email}" />
-            </WrapPanel>
-
-            <WrapPanel Grid.Row="2" Style="{StaticResource FieldsWrapPanel}">
-                <materialDesign:PackIcon Kind="Phone" Style="{StaticResource IconsStyle}" />
-                <TextBox
-                    materialDesign:HintAssist.Hint="טלפון"
-                    Style="{StaticResource Fields}"
-                    Text="{Binding PhoneNumber}" />
-            </WrapPanel>
-
+        <DockPanel>
             <Border
-                Grid.Row="0"
-                Grid.Column="2"
-                Margin="15,8"
-                HorizontalAlignment="Stretch"
-                BorderBrush="Black"
-                BorderThickness="1"
-                CornerRadius="5">
-                <CheckBox
-                    HorizontalAlignment="Center"
-                    Content="? מישראל"
-                    FlowDirection="LeftToRight"
-                    IsChecked="{Binding IsFromIsrael}" />
+                Background="CadetBlue"
+                CornerRadius="0 20 0 0"
+                DockPanel.Dock="Top">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="5,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Foreground="#F5F5F5"
+                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                        Text="{Binding Title}" />
+                    <Button
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource MaterialDesignIconForegroundButton}">
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Foreground="#F5F5F5"
+                            Kind="Close" />
+                    </Button>
+                </Grid>
             </Border>
 
-            <ComboBox
-                Grid.Row="1"
-                Grid.Column="2"
-                materialDesign:HintAssist.Hint="ארץ"
-                materialDesign:HintAssist.HintOpacity="1"
-                IsTextSearchCaseSensitive="False"
-                IsTextSearchEnabled="True"
-                ItemsSource="{Binding CountryUtcs}"
-                SelectedValue="{Binding Country}"
-                Style="{StaticResource HideComboBoxIfIsrael}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Country}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-
-            <ComboBox
-                Grid.Row="2"
-                Grid.Column="2"
-                materialDesign:HintAssist.Hint="רמת לימוד"
-                ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:SkillLevels}}}"
-                SelectedValue="{Binding SkillLevel, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource HideComboBoxIfIsrael}" />
-
-            <ComboBox
-                Grid.Row="3"
-                Grid.Column="2"
-                materialDesign:HintAssist.Hint="רמת אנגלית רצויה מחברותא"
-                ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:EnglishLevels}}}"
-                SelectedValue="{Binding DesiredEnglishLevel, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource HideComboBoxIfIsrael}" />
-
-            <ComboBox
-                Grid.Row="1"
-                Grid.Column="2"
-                materialDesign:HintAssist.Hint="רמת לימוד רצויה מחברותא"
-                ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:SkillLevels}}}"
-                SelectedValue="{Binding DesiredSkillLevel, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource HideComboBoxIfWorld}" />
-
-            <ComboBox
-                Grid.Row="2"
-                Grid.Column="2"
-                materialDesign:HintAssist.Hint="רמת אנגלית"
-                ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:EnglishLevels}}}"
-                SelectedValue="{Binding EnglishLevel, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource HideComboBoxIfWorld}" />
-
-            <ComboBox
-                Grid.Row="3"
-                Grid.Column="0"
-                materialDesign:HintAssist.Hint="מגדר"
-                ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Genders}}}"
-                SelectedValue="{Binding Gender, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource BaseComboBox}" />
-
-            <ComboBox
-                Grid.Row="4"
-                Grid.Column="0"
-                materialDesign:HintAssist.Hint="מסלול"
-                ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}"
-                SelectedValue="{Binding PrefferdTrack, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource BaseComboBox}" />
-
-            <ComboBox
-                Grid.Row="4"
-                Grid.Column="2"
-                materialDesign:HintAssist.Hint="סגנון לימוד"
-                ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:LearningStyles}}}"
-                SelectedValue="{Binding LearningStyle, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource BaseComboBox}" />
-
-            <ComboBox
-                Grid.Row="5"
-                Grid.Column="2"
-                materialDesign:HintAssist.Hint="מגדר מועדף"
-                ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Genders}}}"
-                SelectedValue="{Binding PrefferdGender, Converter={StaticResource EnumToStringConverter}}"
-                Style="{StaticResource BaseComboBox}" />
-
-            <ComboBox
-                Grid.Row="5"
-                Grid.Column="0"
-                materialDesign:HintAssist.Hint="מספר חברותות אופציונאלי"
-                SelectedValue="{Binding NumberOfMatchs}"
-                SelectedValuePath="Content"
-                Style="{StaticResource BaseComboBox}">
-                <ComboBoxItem Content="1" />
-                <ComboBoxItem Content="2" />
-                <ComboBoxItem Content="3" />
-            </ComboBox>
-
-            <Button
-                Grid.Row="8"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                Height="40"
-                Margin="10"
-                HorizontalAlignment="Center"
-                Command="{Binding AddCommand}"
-                Content="הוסף"
-                Foreground="#F5F5F5"
-                Visibility="{Binding IsEdit, Converter={StaticResource InvertBooleanToVisiblityConvertor}}" />
-
-            <Button
-                Grid.Row="8"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                Height="40"
-                Margin="10"
-                HorizontalAlignment="Center"
-                Command="{Binding EditCommand}"
-                Content="שמור עריכה"
-                Foreground="#F5F5F5"
-                Visibility="{Binding IsEdit, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
 
 
-            <Grid Grid.RowSpan="8" Grid.Column="3">
-                <!--<CheckBox Grid.Row="0" Content="ראשון" />
+
+                <WrapPanel Grid.Row="0" Style="{StaticResource FieldsWrapPanel}">
+                    <materialDesign:PackIcon Kind="Person" Style="{StaticResource IconsStyle}" />
+                    <TextBox
+                        materialDesign:HintAssist.Hint="שם"
+                        Style="{StaticResource Fields}"
+                        Text="{Binding Name}" />
+                </WrapPanel>
+
+                <WrapPanel Grid.Row="1" Style="{StaticResource FieldsWrapPanel}">
+                    <materialDesign:PackIcon Kind="Email" Style="{StaticResource IconsStyle}" />
+                    <TextBox
+                        materialDesign:HintAssist.Hint="אימייל"
+                        materialDesign:ValidationAssist.UsePopup="True"
+                        Style="{StaticResource Fields}"
+                        Text="{Binding Email}" />
+                </WrapPanel>
+
+                <WrapPanel Grid.Row="2" Style="{StaticResource FieldsWrapPanel}">
+                    <materialDesign:PackIcon Kind="Phone" Style="{StaticResource IconsStyle}" />
+                    <TextBox
+                        materialDesign:HintAssist.Hint="טלפון"
+                        Style="{StaticResource Fields}"
+                        Text="{Binding PhoneNumber}" />
+                </WrapPanel>
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Margin="15,8"
+                    HorizontalAlignment="Stretch"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    CornerRadius="5">
+                    <CheckBox
+                        HorizontalAlignment="Center"
+                        Content="? מישראל"
+                        FlowDirection="LeftToRight"
+                        IsChecked="{Binding IsFromIsrael}" />
+                </Border>
+
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    materialDesign:HintAssist.Hint="ארץ"
+                    materialDesign:HintAssist.HintOpacity="1"
+                    IsTextSearchCaseSensitive="False"
+                    IsTextSearchEnabled="True"
+                    ItemsSource="{Binding CountryUtcs}"
+                    SelectedValue="{Binding Country}"
+                    Style="{StaticResource HideComboBoxIfIsrael}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Country}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <ComboBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    materialDesign:HintAssist.Hint="רמת לימוד"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:SkillLevels}}}"
+                    SelectedValue="{Binding SkillLevel, Converter={StaticResource EnumToStringConverter}}"
+                    Style="{StaticResource HideComboBoxIfIsrael}" />
+
+                <ComboBox
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    materialDesign:HintAssist.Hint="רמת אנגלית רצויה מחברותא"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:EnglishLevels}}}"
+                    SelectedValue="{Binding DesiredEnglishLevel, Converter={StaticResource EnumToStringConverter}}"
+                    Style="{StaticResource HideComboBoxIfIsrael}" />
+
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    materialDesign:HintAssist.Hint="רמת לימוד רצויה מחברותא"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:SkillLevels}}}"
+                    SelectedValue="{Binding DesiredSkillLevel, Converter={StaticResource EnumToStringConverter}}"
+                    Style="{StaticResource HideComboBoxIfWorld}" />
+
+                <ComboBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    materialDesign:HintAssist.Hint="רמת אנגלית"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:EnglishLevels}}}"
+                    SelectedValue="{Binding EnglishLevel, Converter={StaticResource EnumToStringConverter}}"
+                    Style="{StaticResource HideComboBoxIfWorld}" />
+
+                <ComboBox
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    materialDesign:HintAssist.Hint="מגדר"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Genders}}}"
+                    SelectedValue="{Binding Gender, Converter={StaticResource EnumToStringConverter}}"
+                    Style="{StaticResource BaseComboBox}" />
+
+                <ComboBox
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    materialDesign:HintAssist.Hint="מסלול"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}"
+                    SelectedValue="{Binding PrefferdTrack, Converter={StaticResource EnumToStringConverter}}"
+                    Style="{StaticResource BaseComboBox}" />
+
+                <ComboBox
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    materialDesign:HintAssist.Hint="סגנון לימוד"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:LearningStyles}}}"
+                    SelectedValue="{Binding LearningStyle, Converter={StaticResource EnumToStringConverter}}"
+                    Style="{StaticResource BaseComboBox}" />
+
+                <ComboBox
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    materialDesign:HintAssist.Hint="מגדר מועדף"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Genders}}}"
+                    SelectedValue="{Binding PrefferdGender, Converter={StaticResource EnumToStringConverter}}"
+                    Style="{StaticResource BaseComboBox}" />
+
+                <ComboBox
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    materialDesign:HintAssist.Hint="מספר חברותות אופציונאלי"
+                    SelectedValue="{Binding NumberOfMatchs}"
+                    SelectedValuePath="Content"
+                    Style="{StaticResource BaseComboBox}">
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                </ComboBox>
+
+                <Button
+                    Grid.Row="8"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Height="40"
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    Command="{Binding AddCommand}"
+                    Content="הוסף"
+                    Foreground="#F5F5F5"
+                    Visibility="{Binding IsEdit, Converter={StaticResource InvertBooleanToVisiblityConvertor}}" />
+
+
+                <mah:ProgressRing
+                    Grid.Row="8"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    DockPanel.Dock="Bottom"
+                    Foreground="{StaticResource MainColor}"
+                    IsLarge="True"
+                    Visibility="{Binding IsLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                <Button
+                    Grid.Row="8"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Height="40"
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    Command="{Binding EditCommand}"
+                    Content="שמור עריכה"
+                    Foreground="#F5F5F5"
+                    Visibility="{Binding IsEdit, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+
+                <Grid Grid.RowSpan="8" Grid.Column="3">
+                    <!--<CheckBox Grid.Row="0" Content="ראשון" />
                 <CheckBox Grid.Row="1" Content="שני" />
                 <CheckBox Grid.Row="2" Content="שלישי" />
                 <CheckBox Grid.Row="3" Content="רביעי" />
                 <CheckBox Grid.Row="4" Content="חמישי" />-->
-                <ScrollViewer
-                    Margin="0,10"
-                    mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
-                    HorizontalScrollBarVisibility="Disabled"
-                    VerticalScrollBarVisibility="Hidden">
-                    <ListBox ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Days}}}" Style="{StaticResource MaterialDesignCardsListBox}">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
+                    <!--  ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Days}}}" Style="{StaticResource MaterialDesignCardsListBox}"  -->
+                    <ScrollViewer
+                        Margin="0,10"
+                        mah:ScrollViewerHelper.BubbleUpScrollEventToParentScrollviewer="True"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Hidden">
+                        <ListBox ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:Days}}}" Style="{StaticResource MaterialDesignCardsListBox}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
 
-                                    <TextBlock
-                                        x:Name="dayTextBlock"
-                                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                                        Text="{Binding Path=.}" />
+                                        <TextBlock
+                                            x:Name="dayTextBlock"
+                                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                            Text="{Binding Path=.}" />
 
-                                    <ListBox Grid.Row="1" ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:TimesInDay}}}">
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal" />
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <ToggleButton
-                                                    x:Name="timeToggleButton"
-                                                    Content="{Binding Path=.}"
-                                                    Style="{StaticResource MahApps.Styles.ToggleButton}">
-                                                    <i:Interaction.Triggers>
-                                                        <i:EventTrigger EventName="Checked">
-                                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectTimeInDayCommand, RelativeSource={RelativeSource AncestorType=local:AddParticipantForm}}">
-                                                                <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource WarpTimeWithHisDayEnumsConverter}">
-                                                                        <Binding ElementName="dayTextBlock" Path="Text" />
-                                                                        <Binding ElementName="timeToggleButton" Path="Content" />
-                                                                    </MultiBinding>
-                                                                </i:InvokeCommandAction.CommandParameter>
-                                                            </i:InvokeCommandAction>
-                                                        </i:EventTrigger>
-                                                        <i:EventTrigger EventName="Unchecked">
-                                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.RemoveTimeInDayCommand, RelativeSource={RelativeSource AncestorType=local:AddParticipantForm}}">
-                                                                <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource WarpTimeWithHisDayEnumsConverter}">
-                                                                        <Binding ElementName="dayTextBlock" Path="Text" />
-                                                                        <Binding ElementName="timeToggleButton" Path="Content" />
-                                                                    </MultiBinding>
-                                                                </i:InvokeCommandAction.CommandParameter>
-                                                            </i:InvokeCommandAction>
-                                                        </i:EventTrigger>
-                                                    </i:Interaction.Triggers>
-                                                </ToggleButton>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </ScrollViewer>
+                                        <ListBox Grid.Row="1" ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:TimesInDay}}}">
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ToggleButton x:Name="timeToggleButton" Content="{Binding Path=.}">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="Checked">
+                                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectTimeInDayCommand, RelativeSource={RelativeSource AncestorType=local:AddParticipantForm}}">
+                                                                    <i:InvokeCommandAction.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource WarpTimeWithHisDayEnumsConverter}">
+                                                                            <Binding ElementName="dayTextBlock" Path="Text" />
+                                                                            <Binding ElementName="timeToggleButton" Path="Content" />
+                                                                        </MultiBinding>
+                                                                    </i:InvokeCommandAction.CommandParameter>
+                                                                </i:InvokeCommandAction>
+                                                            </i:EventTrigger>
+                                                            <i:EventTrigger EventName="Unchecked">
+                                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.RemoveTimeInDayCommand, RelativeSource={RelativeSource AncestorType=local:AddParticipantForm}}">
+                                                                    <i:InvokeCommandAction.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource WarpTimeWithHisDayEnumsConverter}">
+                                                                            <Binding ElementName="dayTextBlock" Path="Text" />
+                                                                            <Binding ElementName="timeToggleButton" Path="Content" />
+                                                                        </MultiBinding>
+                                                                    </i:InvokeCommandAction.CommandParameter>
+                                                                </i:InvokeCommandAction>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
+                                                        <ToggleButton.Style>
+                                                            <Style BasedOn="{StaticResource MahApps.Styles.ToggleButton}" TargetType="ToggleButton">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Value="True">
+                                                                        <DataTrigger.Binding>
+                                                                            <MultiBinding Converter="{StaticResource IsTimeAndDaySetConverter}">
+                                                                                <Binding ElementName="dayTextBlock" Path="Text" />
+                                                                                <Binding ElementName="timeToggleButton" Path="Content" />
+                                                                                <Binding Path="DataContext.OpenTimes" RelativeSource="{RelativeSource AncestorType=local:AddParticipantForm}" />
+                                                                            </MultiBinding>
+                                                                        </DataTrigger.Binding>
+                                                                        <Setter Property="IsChecked" Value="True" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ToggleButton.Style>
+                                                    </ToggleButton>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                </Grid>
+
             </Grid>
+        </DockPanel>
 
-        </Grid>
-    </DockPanel>
+    </Grid>
 </UserControl>
