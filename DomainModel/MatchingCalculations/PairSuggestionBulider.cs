@@ -158,7 +158,8 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         private bool IsLerningSkillMatch()
         {
-            return _wp.SkillLevel >= _ip.DesiredSkillLevel;
+
+            return _wp.SkillLevel >= _ip.DesiredSkillLevel || _ip.DesiredSkillLevel == SkillLevels.NoPrefrence;
         }
 
         private bool IsLearningStyleMatch()

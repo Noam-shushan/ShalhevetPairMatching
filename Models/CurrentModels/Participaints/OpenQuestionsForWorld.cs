@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace PairMatching.Models
 {
     public class OpenQuestionsForWorld
@@ -9,7 +11,7 @@ namespace PairMatching.Models
         public List<string> HopesExpectations { get; set; } = new ();
 
         public string AnythingElse { get; set; } = "";
-
+        
         public string ConversionRabi { get; set; } = "";
 
         public string RequestsFromPair { get; set; } = "";
@@ -21,6 +23,8 @@ namespace PairMatching.Models
         public string JewishAndComAff { get; set; } = "";
 
         public string GeneralInfo { get; set; } = "";
+
+        public string InfoOnAdd { get; set; } = "";
 
     }
 }    

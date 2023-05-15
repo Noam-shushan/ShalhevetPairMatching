@@ -159,10 +159,10 @@
     "Country": "Ireland",
     "UtcTimeOffset": "±00:00"
   },
-  {
-    "Country": "Israel",
-    "UtcTimeOffset": "02:00"
-  },
+  //{
+  //  "Country": "Israel",
+  //  "UtcTimeOffset": "02:00"
+  //},
   {
     "Country": "Italy",
     "UtcTimeOffset": "01:00"

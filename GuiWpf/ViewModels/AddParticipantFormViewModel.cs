@@ -21,63 +21,17 @@ namespace GuiWpf.ViewModels
     {
         readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
+        readonly ExceptionHeandler _exceptionHeandler;
 
-        public AddParticipantFormViewModel(IParticipantService participantService, IEventAggregator ea)
+        public AddParticipantFormViewModel(IParticipantService participantService, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
         {
             _participantService = participantService;
             _ea = ea;
+            _exceptionHeandler = exceptionHeandler;
+
             CountryUtcs = _participantService.GetCountryUtcs();
 
-             
-
-            _ea.GetEvent<NewParticipaintEvent>()
-                .Subscribe(isNew =>
-                {
-                    if (isNew)
-                    {
-                        Reset();
-                    }
-                });
-
-            _ea.GetEvent<EditParticipaintEvent>()
-                .Subscribe(part =>
-                {
-                    IsEdit = true;
-                    Title = $"ערוך את {part.Name}";
-                    EditParticipaint = part;
-                    Name = part.Name;
-                    PhoneNumber = part.PhoneNumber;
-                    Email = part.Email;
-                    Gender = part.Gender;
-                    var selectedCountry = CountryUtcs.FirstOrDefault(c => CompereOnlyLetters(c.Country, part.Country));
-                    Country = selectedCountry ?? CountryUtcs.First();
-                    IsFromIsrael = part.IsFromIsrael;
-
-                    PrefferdTrack = part.PairPreferences.Tracks.FirstOrDefault();
-                    PrefferdGender = part.PairPreferences.Gender;
-                    NumberOfMatchs = part.PairPreferences.NumberOfMatchs;
-                    OtherLanguages = part.OtherLanguages;
-                    LearningStyle = part.PairPreferences.LearningStyle;
-                    
-                    LearningTimes.Clear();
-                    LearningTimes.AddRange(part.PairPreferences.LearningTime);
-                    OpenTimes = (from lt in part.PairPreferences.LearningTime
-                               from time in lt.TimeInDay
-                               select new Tuple<Days, TimesInDay>(lt.Day, time))
-                                .ToDictionary(key => key, val => true);
-
-
-                    if (part.IsFromIsrael && part is IsraelParticipant ipart)
-                    {
-                        EnglishLevel = ipart.EnglishLevel;
-                        DesiredSkillLevel = ipart.DesiredSkillLevel;
-                    }
-                    else if(!part.IsFromIsrael && part is WorldParticipant wpart)
-                    {
-                        SkillLevel = wpart.SkillLevel;
-                        DesiredEnglishLevel = wpart.DesiredEnglishLevel;
-                    }
-                });
+            SubscaribeToEvents();
         }
 
         #region Properties
@@ -161,6 +115,13 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _prefferdTrack, value);
         }
 
+        private Dictionary<PrefferdTracks, bool> _traks = new();
+        public Dictionary<PrefferdTracks, bool> Tracks
+        {
+            get => _traks;
+            set => SetProperty(ref _traks, value);
+        }
+
         private Genders _prefferdGender;
         public Genders PrefferdGender
         {
@@ -218,25 +179,21 @@ namespace GuiWpf.ViewModels
         }
 
 
-        private ObservableCollection<LearningTime> _learningTimes = new();
-        public ObservableCollection<LearningTime> LearningTimes
+        private string _infoOnAdd;
+        public string InfoOnAdd
         {
-            get => _learningTimes;
-            set => SetProperty(ref _learningTimes, value);
+            get => _infoOnAdd;
+            set => SetProperty(ref _infoOnAdd, value);
         }
         #endregion
 
+        #region Commands
         DelegateCommand<object> _SelectTimeInDayCommand;
         public DelegateCommand<object> SelectTimeInDayCommand => _SelectTimeInDayCommand ??= new(
         (timeInDayParam) =>
         {
             if (timeInDayParam is Tuple<Days, TimesInDay> timeInDay)
             {
-                LearningTimes.Add(new LearningTime
-                {
-                    Day = timeInDay.Item1,
-                    TimeInDay = new List<TimesInDay> { timeInDay.Item2 }
-                });
                 OpenTimes[timeInDay] = true;
             }
         });
@@ -247,25 +204,48 @@ namespace GuiWpf.ViewModels
         {
             if (timeInDayParam is Tuple<Days, TimesInDay> timeInDay)
             {
-                LearningTimes.Remove(new LearningTime
-                {
-                    Day = timeInDay.Item1,
-                    TimeInDay = new List<TimesInDay> { timeInDay.Item2 }
-                });
                 OpenTimes[timeInDay] = false;
+            }
+        });
+
+        DelegateCommand<object> _SelectTrackCommand;
+        public DelegateCommand<object> SelectTrackCommand => _SelectTrackCommand ??= new(
+        (trackParam) =>
+        {
+            if (trackParam is string trackstr)
+            {
+                var track = Extensions.GetValueFromDescription<PrefferdTracks>(trackstr);
+                Tracks[track] = true;
+            }
+        });
+
+        DelegateCommand<object> _RemoveTrackCommand;
+        public DelegateCommand<object> RemoveTrackCommand => _RemoveTrackCommand ??= new(
+        (trackParam) =>
+        {
+            if (trackParam is string trackstr)
+            {
+                var track = Extensions.GetValueFromDescription<PrefferdTracks>(trackstr);
+                Tracks[track] = false;
             }
         });
 
         DelegateCommand _addCommand;
         public DelegateCommand AddCommand => _addCommand ??= new(
-        () =>
+        async () =>
         {
             Participant newParticipant;
             var preferences = new Preferences
             {
                 Tracks = new[] { PrefferdTrack },
                 Gender = PrefferdGender,
-                LearningTime = from lt in LearningTimes
+                LearningTime = from lt in from ot in OpenTimes
+                                          where ot.Value
+                                          select new LearningTime
+                                          {
+                                              Day = ot.Key.Item1,
+                                              TimeInDay = new List<TimesInDay> { ot.Key.Item2 }
+                                          }
                                group lt by lt.Day into day
                                select new LearningTime
                                {
@@ -275,7 +255,7 @@ namespace GuiWpf.ViewModels
                 LearningStyle = LearningStyle,
                 NumberOfMatchs = NumberOfMatchs
             };
-            if(IsFromIsrael)
+            if (IsFromIsrael)
             {
                 newParticipant = new IsraelParticipant
                 {
@@ -290,7 +270,10 @@ namespace GuiWpf.ViewModels
                     PairPreferences = preferences,
                     DesiredSkillLevel = DesiredSkillLevel,
                     EnglishLevel = EnglishLevel,
-                    
+                    OpenQuestions = new OpenQuestionsForIsrael
+                    {
+                        InfoOnAdd = InfoOnAdd
+                    }
                 };
             }
             else
@@ -309,19 +292,34 @@ namespace GuiWpf.ViewModels
                     PhoneNumber = PhoneNumber,
                     PairPreferences = preferences,
                     DesiredEnglishLevel = DesiredEnglishLevel,
+                    OpenQuestions = new OpenQuestionsForWorld
+                    {
+                        InfoOnAdd = InfoOnAdd
+                    }
                 };
             }
-            _ea.GetEvent<AddParticipantEvent>().Publish(newParticipant);
-            _ea.GetEvent<RefreshMatchingEvent>().Publish();
-            Reset();
-            _ea.GetEvent<CloseDialogEvent>().Publish(false);
-        });
+            try
+            {
+                IsLoaded = true;
+                var newPart = await _participantService.InsertParticipant(newParticipant);
+                _ea.GetEvent<AddParticipantEvent>().Publish(newPart);
+                _ea.GetEvent<RefreshMatchingEvent>().Publish();
+                IsLoaded = false;
+                Reset();
+                _ea.GetEvent<CloseDialogEvent>().Publish(false);
+            }
+            catch (Exception e)
+            {
+                IsLoaded = false;
+                _exceptionHeandler.HeandleException(e);
+            }
+        }, () => !IsLoaded);
 
 
         DelegateCommand _CancelCommand;
         public DelegateCommand CancelCommand => _CancelCommand ??= new(
         () =>
-        { // ask natan if to clear her the props
+        {
             Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
         });
@@ -331,54 +329,134 @@ namespace GuiWpf.ViewModels
         public DelegateCommand EditCommand => _EditCommand ??= new(
         async () =>
         {
-            if(!Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך לבצע שינויים אלו?"))
+            if (!Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך לבצע שינויים אלו?"))
             {
                 return;
             }
             IsLoaded = true;
             EditParticipaint.PhoneNumber = PhoneNumber;
             EditParticipaint.Email = Email;
-            EditParticipaint.Country = Country.Country;
             EditParticipaint.Name = Name;
-            if (!EditParticipaint.PairPreferences.Tracks.Any(t => t == PrefferdTrack))
-            {
-                EditParticipaint.PairPreferences.Tracks.ToList().Add(PrefferdTrack);
-            }
+
+            EditParticipaint.PairPreferences.Tracks =
+                Tracks
+                .Where(tv => tv.Value)
+                .Select(t => t.Key);
+            
             EditParticipaint.PairPreferences.NumberOfMatchs = NumberOfMatchs;
             EditParticipaint.PairPreferences.Gender = PrefferdGender;
             EditParticipaint.PairPreferences.LearningStyle = LearningStyle;
-            EditParticipaint.PairPreferences.LearningTime = from lt in LearningTimes
-                                                            group lt by lt.Day into day
-                                                            select new LearningTime
-                                                            {
-                                                                Day = day.Key,
-                                                                TimeInDay = day.SelectMany(t => t.TimeInDay).ToList()
-                                                            };
-            if(IsFromIsrael)
+            EditParticipaint.PairPreferences.LearningTime =
+                        from lt in from ot in OpenTimes
+                                   where ot.Value
+                                   select new LearningTime
+                                   {
+                                       Day = ot.Key.Item1,
+                                       TimeInDay = new List<TimesInDay> { ot.Key.Item2 }
+                                   }
+                        group lt by lt.Day into day
+                        select new LearningTime
+                        {
+                            Day = day.Key,
+                            TimeInDay = day.SelectMany(t => t.TimeInDay).ToList()
+                        };
+            bool isOpenToMathc = false;
+            bool isChangeCountry = false;
+            if (IsFromIsrael)
             {
-                var ip = EditParticipaint.CopyPropertiesToNew<Participant, IsraelParticipant>();
-                ip.OpenQuestions = (EditParticipaint as IsraelParticipant).OpenQuestions;
-                ip.EnglishLevel = EnglishLevel;
-                ip.DesiredSkillLevel = DesiredSkillLevel;
-                await _participantService.UpdateParticipaint(ip);
-                _ea.GetEvent<ParticipaintWesUpdate>().Publish(ip);
+                var israelPart = EditParticipaint.CopyPropertiesToNew<Participant ,IsraelParticipant>();
+                israelPart.Country = "Israel";
+                if (EditParticipaint is IsraelParticipant ip)
+                {
+                    israelPart.OpenQuestions = ip.OpenQuestions;
+                }
+                else if (EditParticipaint is WorldParticipant wp)
+                {
+                    ConvertWorldToIsrael(israelPart, wp);
+                    isChangeCountry = true;
+                }
+                israelPart.EnglishLevel = EnglishLevel;
+                israelPart.DesiredSkillLevel = DesiredSkillLevel;
+                try
+                {
+                    await _participantService.UpdateParticipaint(israelPart, isChangeCountry);
+                    _ea.GetEvent<ParticipaintWesUpdate>().Publish(israelPart);
+                    isOpenToMathc = israelPart.IsOpenToMatch;
+                }
+                catch (Exception e)
+                {
+                    _exceptionHeandler.HeandleException(e);
+                }
             }
             else
             {
-                var wp = EditParticipaint.CopyPropertiesToNew<Participant, WorldParticipant>();
-                wp.OpenQuestions = (EditParticipaint as WorldParticipant).OpenQuestions;
-                wp.SkillLevel = SkillLevel;
-                wp.DesiredEnglishLevel = DesiredEnglishLevel;
-                wp.UtcOffset = Country.UtcOffset;
-                await _participantService.UpdateParticipaint(wp);
-                _ea.GetEvent<ParticipaintWesUpdate>().Publish(wp);
+                var worldPart = EditParticipaint.CopyPropertiesToNew<Participant, WorldParticipant>();
+
+                if (EditParticipaint is IsraelParticipant ip)
+                {
+                    ConvertIsraelToWorld(ip, worldPart);
+                    isChangeCountry = true;
+                }
+                else if (EditParticipaint is WorldParticipant wp)
+                {
+                    worldPart.OpenQuestions = wp.OpenQuestions;
+                }
+
+                worldPart.SkillLevel = SkillLevel;
+                worldPart.DesiredEnglishLevel = DesiredEnglishLevel;
+                worldPart.Country = Country.Country;
+                worldPart.UtcOffset = Country.UtcOffset;
+                try
+                {
+                    await _participantService.UpdateParticipaint(worldPart, isChangeCountry);
+                    _ea.GetEvent<ParticipaintWesUpdate>().Publish(worldPart);
+                    isOpenToMathc = worldPart.IsOpenToMatch;
+                }
+                catch (Exception e)
+                {
+                    _exceptionHeandler.HeandleException(e);
+                }
             }
             IsLoaded = false;
             Reset();
             _ea.GetEvent<CloseDialogEvent>().Publish(false);
-            _ea.GetEvent<RefreshMatchingEvent>().Publish();
-            
+            if (isOpenToMathc)
+            {
+                _ea.GetEvent<RefreshMatchingEvent>().Publish();
+            }
         }, () => !IsLoaded);
+
+        #endregion
+
+        private void ConvertIsraelToWorld(IsraelParticipant israelParticipant, WorldParticipant worldParticipant)
+        {
+            worldParticipant.OpenQuestions = new OpenQuestionsForWorld
+            {
+                AdditionalInfo = israelParticipant.OpenQuestions.AdditionalInfo,
+                WhoIntroduced = israelParticipant.OpenQuestions.WhoIntroduced,
+                GeneralInfo =
+                $"פרטים ביוגרפיים:\n {israelParticipant.OpenQuestions.BiographHeb}\n\n" +
+                $"תכונות אישיות:\n {israelParticipant.OpenQuestions.PersonalTraits}\n\n" +
+                $"למה הצטרפת לשלהבת: \n {israelParticipant.OpenQuestions.WhyJoinShalhevet}\n"
+            };
+            worldParticipant.Address = new();
+        }
+
+        private void ConvertWorldToIsrael(IsraelParticipant israelParticipant, WorldParticipant worldParticipant)
+        {
+            israelParticipant.OpenQuestions = new OpenQuestionsForIsrael
+            {
+                AdditionalInfo = worldParticipant.OpenQuestions.AdditionalInfo,
+                WhoIntroduced = worldParticipant.OpenQuestions.WhoIntroduced,
+                GeneralInfo = $"Personal Background:\n{worldParticipant.OpenQuestions.PersonalBackground}\n\n" +
+                $"Experience:\n {worldParticipant.OpenQuestions.Experience}\n\n" +
+                $"Requests From Pair:\n{worldParticipant.OpenQuestions.RequestsFromPair}\n\n" +
+                $"JewishAndComAff:\n{worldParticipant.OpenQuestions.JewishAndComAff}\n\n" +
+                $"Conversion Rabi:\n{worldParticipant.OpenQuestions.ConversionRabi}\n\n" +
+                $"Anything Else:\n{worldParticipant.OpenQuestions.AnythingElse}\n\n" +
+                $"Expectations:\n{string.Join("\t\n", worldParticipant.OpenQuestions.HopesExpectations.Select(s => $"• {s}"))}\n\n"
+            };
+        }
 
         private void Reset()
         {
@@ -390,6 +468,67 @@ namespace GuiWpf.ViewModels
             Gender = default;
             SkillLevel = default;
             PrefferdTrack = default;
+            OpenTimes = new();
+            Tracks = new();
+        }
+        
+        private void HandleNewEdit(Participant part)
+        {
+            IsEdit = true;
+            Title = $"ערוך את {part.Name}";
+            EditParticipaint = part;
+            Name = part.Name;
+            PhoneNumber = part.PhoneNumber;
+            Email = part.Email;
+            Gender = part.Gender;
+            var selectedCountry = CountryUtcs.FirstOrDefault(c => CompereOnlyLetters(c.Country, part.Country));
+            Country = selectedCountry ?? CountryUtcs.First();
+            IsFromIsrael = part.IsFromIsrael;
+
+            PrefferdTrack = part.PairPreferences.Tracks.FirstOrDefault();
+            Tracks = part.PairPreferences.Tracks
+                .ToDictionary(t => t, _ => true);
+            
+            PrefferdGender = part.PairPreferences.Gender;
+            NumberOfMatchs = part.PairPreferences.NumberOfMatchs;
+            OtherLanguages = part.OtherLanguages;
+            LearningStyle = part.PairPreferences.LearningStyle;
+
+            OpenTimes = (from lt in part.PairPreferences.LearningTime
+                         from time in lt.TimeInDay
+                         select new Tuple<Days, TimesInDay>(lt.Day, time))
+                        .ToDictionary(key => key, val => true);
+
+
+            if (part.IsFromIsrael && part is IsraelParticipant ipart)
+            {
+                EnglishLevel = ipart.EnglishLevel;
+                DesiredSkillLevel = ipart.DesiredSkillLevel;
+                
+            }
+            else if (!part.IsFromIsrael && part is WorldParticipant wpart)
+            {
+                SkillLevel = wpart.SkillLevel;
+                DesiredEnglishLevel = wpart.DesiredEnglishLevel;
+            }
+        }
+
+        private void SubscaribeToEvents()
+        {
+            _ea.GetEvent<NewParticipaintEvent>()
+                .Subscribe(isNew =>
+                {
+                    if (isNew)
+                    {
+                        Reset();
+                    }
+                });
+
+            _ea.GetEvent<EditParticipaintEvent>()
+                .Subscribe(part =>
+                {
+                    HandleNewEdit(part);
+                });
         }
 
     }

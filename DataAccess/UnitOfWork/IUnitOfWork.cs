@@ -1,5 +1,8 @@
-﻿using PairMatching.DataAccess.Repositories;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using PairMatching.DataAccess.Repositories;
 using PairMatching.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace PairMatching.DataAccess.UnitOfWorks
@@ -21,7 +24,6 @@ namespace PairMatching.DataAccess.UnitOfWorks
         IModelRepository<MatchingHistory> MatchingHistorisRepositry { get; init; }
 
         IModelRepository<EmailModel> EmailRepositry { get; init; }
-
 
         Task Complete();
     }

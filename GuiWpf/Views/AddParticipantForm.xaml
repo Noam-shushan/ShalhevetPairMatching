@@ -225,13 +225,54 @@
                     SelectedValue="{Binding Gender, Converter={StaticResource EnumToStringConverter}}"
                     Style="{StaticResource BaseComboBox}" />
 
-                <ComboBox
+
+                <ListBox
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ToggleButton x:Name="trackToggleButton" Content="{Binding Path=.}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Checked">
+                                        <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectTrackCommand, RelativeSource={RelativeSource AncestorType=local:AddParticipantForm}}" CommandParameter="{Binding ElementName=trackToggleButton, Path=Content}" />
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Unchecked">
+                                        <i:InvokeCommandAction Command="{Binding Path=DataContext.RemoveTrackCommand, RelativeSource={RelativeSource AncestorType=local:AddParticipantForm}}" CommandParameter="{Binding ElementName=trackToggleButton, Path=Content}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ToggleButton.Style>
+                                    <Style BasedOn="{StaticResource MahApps.Styles.ToggleButton}" TargetType="ToggleButton">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <MultiBinding Converter="{StaticResource IsTrackSetConverter}">
+                                                        <Binding ElementName="trackToggleButton" Path="Content" />
+                                                        <Binding Path="DataContext.Tracks" RelativeSource="{RelativeSource AncestorType=local:AddParticipantForm}" />
+                                                    </MultiBinding>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="IsChecked" Value="True" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ToggleButton.Style>
+                            </ToggleButton>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!--<ComboBox
                     Grid.Row="4"
                     Grid.Column="0"
                     materialDesign:HintAssist.Hint="מסלול"
                     ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type models:PrefferdTracks}}}"
                     SelectedValue="{Binding PrefferdTrack, Converter={StaticResource EnumToStringConverter}}"
-                    Style="{StaticResource BaseComboBox}" />
+                    Style="{StaticResource BaseComboBox}" />-->
 
                 <ComboBox
                     Grid.Row="4"

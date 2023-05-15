@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace GuiWpf.Events
 {
+    public class ResiveParticipantsEvent : PubSubEvent<IEnumerable<Participant>> { }
+
     public class GetEmailAddressToParticipaintsEvent : PubSubEvent<IEnumerable<EmailAddress>> { }
 
     public class DeleteNoteFromParticipiantEvent : PubSubEvent<(string, Note)> { }

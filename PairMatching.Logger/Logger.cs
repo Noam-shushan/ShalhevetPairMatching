@@ -58,5 +58,19 @@ namespace PairMatching.Loggin
                 await _dataAccess.InsertMany(collectionName, Logs);
             }
         }
+
+        public async Task<IEnumerable<Log>> GetInfoLogs()
+        {
+            return await _dataAccess.LoadManyAsync<Log>(collectionName,
+                log => log.Type == "info")
+                .ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<ErrorLog>> GetErrorLogs()
+        {
+            return await _dataAccess.LoadManyAsync<ErrorLog>(collectionName,
+                log => log.Type == "error")
+                .ConfigureAwait(false);
+        }
     }
 }

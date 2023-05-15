@@ -15,5 +15,7 @@ namespace PairMatching.Models
         public string AdditionalInfo { get; set; } = "";
 
         public string GeneralInfo { get; set; } = "";
+
+        public string InfoOnAdd { get; set; } = "";
     }
 }

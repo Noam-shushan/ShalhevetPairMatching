@@ -75,7 +75,6 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _myNotesViewModel, value);
         }
 
-
         private SendEmailViewModel _sendEmailVm;
         public SendEmailViewModel SendEmailVm
         {
@@ -306,6 +305,11 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenEditParticipiantCommand => _OpenEditParticipiantCommand ??= new(
         () =>
         {
+            if (SelectedParticipant?.IsMatch == true)
+            {
+                Messages.MessageBoxError("לא ניתן לערוך משתתף עם חברותא");
+                return;
+            }
             _ea.GetEvent<EditParticipaintEvent>().Publish(SelectedParticipant);
             IsEditParticipaintOpen = !IsEditParticipaintOpen;
         });
@@ -351,9 +355,9 @@ namespace GuiWpf.ViewModels
 
                 var parts = await _participantService.GetAll();
 
+                _ea.GetEvent<ResiveParticipantsEvent>().Publish(parts);
+
                 Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, ParticipiantsFilter);
-
-
 
                 Years.Clear();
                 Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
@@ -384,17 +388,9 @@ namespace GuiWpf.ViewModels
                     Participiants.Add(updetetdParts);
                 });
 
-            _ea.GetEvent<AddParticipantEvent>().Subscribe(async (part) =>
+            _ea.GetEvent<AddParticipantEvent>().Subscribe((part) =>
             {
-                try
-                {
-                    var newParticipaint = await _participantService.InsertParticipant(part);
-                    Participiants.Add(newParticipaint);
-                }
-                catch (Exception ex)
-                {
-                    _exceptionHeandler.HeandleException(ex);
-                }
+                Participiants.Add(part);
             });
         }
 

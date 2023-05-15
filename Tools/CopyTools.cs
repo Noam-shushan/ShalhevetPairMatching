@@ -20,27 +20,40 @@ namespace PairMatching.Tools
         /// <param name="from">Copy from the object</param>
         /// <param name="to">Copy to this object</param>
         /// <returns>The object with the value of the 'from' properties</returns>
-        public static T CopyPropertiesTo<T, S>(this S from, T to)
+        public static T CopyPropertiesTo<T, S>(this S from, T to, params string[] ignoreProps)
         {
-            foreach (PropertyInfo propTo in to.GetType().GetProperties())
+            var properties = to.GetType().GetProperties();
+            foreach (var propTo in properties)
             {
-                if (!propTo.CanWrite)
+                if (!propTo.CanWrite || ignoreProps.Contains(propTo.Name))
                 {
                     continue;
                 }
-                PropertyInfo propFrom = typeof(S).GetProperty(propTo.Name);
-                if (propFrom == null)
+                var propFrom = from.GetType().GetProperty(propTo.Name);
+                if (!CanCopy(propFrom, propTo))
                 {
                     continue;
                 }
-
+                
+                
                 var value = propFrom.GetValue(from, null);
                 if (value != null)
                 {
+                    //if (propFrom.PropertyType.IsClass && !propFrom.PropertyType.IsArray)
+                    //{
+                    //    value.CopyPropertiesTo(propTo.GetValue(to));
+                    //}
                     propTo.SetValue(to, value);
                 }
             }
             return to;
+        }
+
+        private static bool CanCopy(PropertyInfo propFrom, PropertyInfo propTo)
+        {
+            return propFrom != null
+                    && propFrom.CanRead
+                    && propFrom.PropertyType == propTo.PropertyType;
         }
 
         /// <summary>

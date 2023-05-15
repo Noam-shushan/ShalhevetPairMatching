@@ -14,6 +14,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using PairMatching.Loggin;
+using PairMatching.Models.Dtos;
 
 namespace DomainTesting
 {
@@ -24,12 +26,17 @@ namespace DomainTesting
 
         readonly MyConfiguration _config;
 
+        readonly Logger _logger;
+        readonly WixDataReader _wix;
+
         public FixDB()
         {
             _config = new Startup()
                 .GetConfigurations();
             var db = new DataAccessFactory(_config);
             _unitOfWork = db.GetDataAccess();
+            _logger = new Logger(_config.ConnctionsStrings);
+            _wix = new(_config);
         }
 
         IEnumerable<CountryUtc> GetUtcs()
@@ -44,6 +51,108 @@ namespace DomainTesting
         }
 
         [Test]
+        public async Task FixOpenQastion()
+        {
+            var part = await _unitOfWork
+                .WorldParticipantsRepositry
+                .GetByIdAsync("645b7477ec0afde443ea7858");
+
+            if (part == null)
+            {
+                return;
+            }
+            // b7ed0236-6646-44cc-85a4-b85daaee3155
+            // b7ed0236-6646-44cc-85a4-b85daaee3155
+            var all = await _wix.GetNewParticipants(100);
+            
+            var participantWixDto = all.FirstOrDefault(p => p._id == part.WixId) as IsraelParticipantWixDto;
+
+            part.OpenQuestions = new OpenQuestionsForWorld
+            {
+                AdditionalInfo = participantWixDto.additionalInfo,
+                WhoIntroduced = participantWixDto.whoIntroduced,
+                GeneralInfo =
+                $"פרטים ביוגרפיים:\n {participantWixDto.biographHeb}\n\n" +
+                $"תכונות אישיות:\n {participantWixDto.personalTraits}\n\n" +
+                $"למה הצטרפת לשלהבת: \n {participantWixDto.whyJoinShalhevet}\n"
+            };
+            part.OtherLanguages = participantWixDto.otherLan;
+            if (participantWixDto.otherLan.Any() && !string.IsNullOrEmpty(participantWixDto.otherLang))
+            {
+                part.OtherLanguages.Add(participantWixDto.otherLang);
+            }
+
+            await _unitOfWork.WorldParticipantsRepositry.Update(part);
+        }
+
+        [Test]
+        public async Task AddPropertyToMongo()
+        {
+            var ips = await _unitOfWork
+                .IsraelParticipantsRepositry
+                .GetAllAsync();
+
+            var wps = await _unitOfWork
+                .WorldParticipantsRepositry
+                .GetAllAsync();
+        }
+
+        [Test]
+        public async Task GetLogs()
+        {
+            var logs = await _logger.GetInfoLogs();
+
+            foreach (var log in logs.OrderByDescending(l => l.Date))
+            {
+                Console.WriteLine(log);
+            }
+        }
+
+        [Test]
+        public async Task FixLearningTimeTest()
+        {
+            var participaints = new List<Participant>();
+
+            var ips = await _unitOfWork.IsraelParticipantsRepositry.GetAllAsync();
+            var wps = await _unitOfWork.WorldParticipantsRepositry.GetAllAsync();
+
+            participaints.AddRange(wps);
+            participaints.AddRange(ips);
+
+            await Task.WhenAll(FixLearningTime(participaints));
+        }
+
+        public List<Task> FixLearningTime(IEnumerable<Participant> participants)
+        {
+            var tasks = new List<Task>();
+            foreach (var part in participants)
+            {
+                if (part.PairPreferences.LearningTime
+                    .Any(lt => lt.TimeInDay.Count() != lt.TimeInDay.Distinct().Count()))
+                {
+                    part.PairPreferences.LearningTime = from lt in part.PairPreferences.LearningTime
+                                                        group lt by lt.Day into day
+                                                        select new LearningTime
+                                                        {
+                                                            Day = day.Key,
+                                                            TimeInDay = day.SelectMany(t => t.TimeInDay).Distinct()
+                                                        };
+                    if (part is IsraelParticipant ip)
+                    {
+                        tasks.Add(_unitOfWork.IsraelParticipantsRepositry.Update(ip));
+                    }
+                    else if (part is WorldParticipant wp)
+                    {
+                        tasks.Add(_unitOfWork.WorldParticipantsRepositry.Update(wp));
+                    }
+                }
+            }
+            return tasks;
+        }
+
+
+
+        [Test]
         public async Task FixUtc()
         {
             var utcs = GetUtcs().ToList();
@@ -51,10 +160,10 @@ namespace DomainTesting
             var worlds = await _unitOfWork.WorldParticipantsRepositry.GetAllAsync();
 
             var tasks = new List<Task>();
-            
-            foreach(var w in worlds)
+
+            foreach (var w in worlds)
             {
-                
+
                 var utc = utcs.Find(uc => CompereOnlyLetters(uc.Country, w.Country));
                 if (utc != null && utc.UtcOffset != w.UtcOffset)
                 {
@@ -73,7 +182,7 @@ namespace DomainTesting
             return s1.ToLower() == s2.ToLower();
         }
 
-        public string RemoveAllCharsExeptLettersAndSpace(string str) 
+        public string RemoveAllCharsExeptLettersAndSpace(string str)
         {
             var result = Regex.Replace(str, "[^0-9A-Za-z ,]", "");
             var onlyOneSpace = new Regex(@"[ ]{2,}", RegexOptions.None);

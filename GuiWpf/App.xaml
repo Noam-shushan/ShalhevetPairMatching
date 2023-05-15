@@ -87,6 +87,7 @@
             <converters:ListOfStrintsToStringsConverter x:Key="ListOfStrintsToStringsConverter" />
             <converters:WarpTimeWithHisDayEnumsConverter x:Key="WarpTimeWithHisDayEnumsConverter" />
             <converters:IsTimeAndDaySetConverter x:Key="IsTimeAndDaySetConverter" />
+            <converters:IsTrackSetConverter x:Key="IsTrackSetConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

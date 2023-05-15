@@ -13,6 +13,9 @@ using Prism.Events;
 using GuiWpf.Events;
 using GuiWpf.UIModels;
 using GuiWpf.Commands;
+using System.ComponentModel;
+using System.Windows.Data;
+using PairMatching.Tools;
 
 namespace GuiWpf.ViewModels
 {
@@ -40,19 +43,82 @@ namespace GuiWpf.ViewModels
                 {
                     await Refresh();
                 });
+            _ea.GetEvent<ResiveParticipantsEvent>().Subscribe((participants) =>
+            {
+                ParticipantsForFreeMatch = CollectionViewSource.GetDefaultView(participants);
+                ParticipantsForFreeMatch.SortDescriptions.Add(new SortDescription
+                {
+                    PropertyName = "DateOfRegistration",
+                    Direction = ListSortDirection.Ascending
+                });
+
+                ParticipantsForFreeMatch.Filter = (p) =>
+                {
+                    if (p is Participant participant)
+                    {
+                        return participant.Name.SearchText(SelectedParticipaint.SearchParticipaintWordForFreeMatch)
+                        || participant.Email.SearchText(SelectedParticipaint.SearchParticipaintWordForFreeMatch);
+                    }
+                    return false;
+                };
+
+                _allParticipants = new(participants);
+            });
         }
 
-        private bool _isFreeMatchSelectionOpen;
-        public bool IsFreeMatchSelectionOpen
+        List<Participant> _allParticipants = new();
+
+        public PaginCollectionViewModel<ParticipaintWithSuggestionsViewModel> Participants { get; set; } = new();
+
+        private ParticipaintWithSuggestionsViewModel _selectedParticipaint = new();
+        public ParticipaintWithSuggestionsViewModel SelectedParticipaint
         {
-            get => _isFreeMatchSelectionOpen;
-            set => SetProperty(ref _isFreeMatchSelectionOpen, value);
+            get => _selectedParticipaint;
+            set
+            {
+                SetProperty(ref _selectedParticipaint, value);
+            }
         }
 
-        public ObservableCollection<Participant> ParticipantsForFreeMatch
+        private string _searchParticipiantsWord = "";
+        public string SearchParticipiantsWord
         {
-            get;
-        } = new();
+            get { return _searchParticipiantsWord; }
+            set
+            {
+                if (SetProperty(ref _searchParticipiantsWord, value))
+                {
+                    Participants.Refresh();
+                }
+            }
+        }
+
+        private ParticipantSuggestion _selectedSuggestion;
+        public ParticipantSuggestion SelectedSuggestion
+        {
+            get => _selectedSuggestion;
+            set => SetProperty(ref _selectedSuggestion, value);
+        }
+
+        public bool IsFreeMatchSelectionOpen 
+        { 
+            get => SelectedParticipaint.SearchParticipaintWordForFreeMatch.Length >= 2; 
+        }
+        
+        public ICollectionView ParticipantsForFreeMatch { get; set; }
+
+
+        private ObservableCollection<Participant> _participantsForFreeMatch2 = new();
+        public ObservableCollection<Participant> ParticipantsForFreeMatch2
+        {
+            get
+            {
+                _participantsForFreeMatch2.Clear();
+                _participantsForFreeMatch2.AddRange(_allParticipants
+                    .Where(p => p.Name.SearchText(SelectedParticipaint.SearchParticipaintWordForFreeMatch)));
+                return _participantsForFreeMatch2;
+            }
+        }
 
         private Participant _selectedParticipaintForFreeMatch;
         public Participant SelectedParticipaintForFreeMatch
@@ -65,6 +131,12 @@ namespace GuiWpf.ViewModels
 
         public FullParticipaintViewModel FullParticipaintVm { get; set; }
 
+        private PrefferdTracks _selectedTrack;
+        public PrefferdTracks SelectedTrack
+        {
+            get => _selectedTrack;
+            set => SetProperty(ref _selectedTrack, value);
+        }
 
         DelegateCommand _load;
         public DelegateCommand Load => _load ??= new(
@@ -72,9 +144,34 @@ namespace GuiWpf.ViewModels
                {
                    //await MetroProgressOnLoading();
                    await Refresh();
+
                    IsInitialized = true;
                },
-               () => !IsInitialized || IsLoaded);
+               () => !IsInitialized && !IsLoaded);
+
+
+        DelegateCommand _OpenFullComparisonCommand;
+        public DelegateCommand OpenFullComparisonCommand => _OpenFullComparisonCommand ??= new(
+        () =>
+        {
+            var list = from ps in _pairSuggestions
+                       where ps.FromIsrael.Id == SelectedParticipaint.Participant.Id
+                       || ps.FromWorld.Id == SelectedParticipaint.Participant.Id
+                       select ps;
+            _ea.GetEvent<ShowFullComparisonEvent>()
+            .Publish((list, SelectedSuggestion.Id));
+            _ea.GetEvent<OpenCloseDialogEvent>().Publish((true, typeof(FullPairMatchingComparisonViewModel)));
+        });
+
+
+        DelegateCommand _OpenFullParticipiantCommand;
+        public DelegateCommand OpenFullParticipiantCommand => _OpenFullParticipiantCommand ??= new(
+        () =>
+        {
+            FullParticipaintVm.Init(SelectedParticipaint.Participant, true);
+        });
+
+        public MatchCommand Match { get; }
 
         private async Task Refresh()
         {
@@ -99,18 +196,19 @@ namespace GuiWpf.ViewModels
             }
         }
 
-        private bool ItemsFilter(ParticipaintWithSuggestions p)
+        private bool ItemsFilter(ParticipaintWithSuggestionsViewModel p)
         {
-            return p.Participant.Name.Contains(SearchParticipiantsWord, StringComparison.InvariantCultureIgnoreCase);
+            return p.Participant.Name.SearchText(SearchParticipiantsWord)
+                 || p.Participant.Email.SearchText(SearchParticipiantsWord);
         }
 
-        private IEnumerable<ParticipaintWithSuggestions> GroupPartBySuggestion(IEnumerable<PairSuggestion> suggestions)
+        private IEnumerable<ParticipaintWithSuggestionsViewModel> GroupPartBySuggestion(IEnumerable<PairSuggestion> suggestions)
         {
             return (from p in suggestions
                     let ip = p.FromIsrael
-                    group new { p.MatchingScore, p.FromWorld, p.MatchingPercent, Original = p } 
+                    group new { p.MatchingScore, p.FromWorld, p.MatchingPercent, Original = p }
                     by new { ip.Id, ip } into ps
-                    select new ParticipaintWithSuggestions
+                    select new ParticipaintWithSuggestionsViewModel
                     {
                         Participant = ps.Key.ip,
                         Suggestions = ps.Select(i => new ParticipantSuggestion
@@ -118,90 +216,27 @@ namespace GuiWpf.ViewModels
                             Country = i.FromWorld.Country,
                             Id = i.FromWorld.Id,
                             Name = i.FromWorld.Name,
-                            MatchingPercent = i.MatchingPercent, 
+                            MatchingPercent = i.MatchingPercent,
                             Original = i.Original
                         }).ToList()
                     })
                     .Union(from p in suggestions
-                            let wp = p.FromWorld
-                            group new { p.MatchingScore, p.FromIsrael, p.MatchingPercent, Original = p } 
-                            by new { wp.Id, wp } into ps
-                            select new ParticipaintWithSuggestions
-                            {
-                                Participant = ps.Key.wp,
-                                Suggestions = ps.Select(i => new ParticipantSuggestion
-                                {
-                                    Country = i.FromIsrael.Country,
-                                    Id = i.FromIsrael.Id,
-                                    Name = i.FromIsrael.Name,
-                                    MatchingPercent = i.MatchingPercent,
-                                    Original = i.Original                                    
-                                }).ToList()
-                            });
+                           let wp = p.FromWorld
+                           group new { p.MatchingScore, p.FromIsrael, p.MatchingPercent, Original = p }
+                           by new { wp.Id, wp } into ps
+                           select new ParticipaintWithSuggestionsViewModel
+                           {
+                               Participant = ps.Key.wp,
+                               Suggestions = ps.Select(i => new ParticipantSuggestion
+                               {
+                                   Country = i.FromIsrael.Country,
+                                   Id = i.FromIsrael.Id,
+                                   Name = i.FromIsrael.Name,
+                                   MatchingPercent = i.MatchingPercent,
+                                   Original = i.Original
+                               }).ToList()
+                           });
         }
-
-        private string _searchParticipiantsWord = "";
-        public string SearchParticipiantsWord
-        {
-            get { return _searchParticipiantsWord; }
-            set
-            {
-                if (SetProperty(ref _searchParticipiantsWord, value))
-                {
-                    Participants.Refresh();
-                }
-            }
-        }
-
-        private PrefferdTracks _selectedTrack;
-        public PrefferdTracks SelectedTrack
-        {
-            get => _selectedTrack;
-            set => SetProperty(ref _selectedTrack, value);
-        }
-
-        public PaginCollectionViewModel<ParticipaintWithSuggestions> Participants { get; set; } = new();
-
-        private ParticipaintWithSuggestions _selectedParticipaint = new();
-        public ParticipaintWithSuggestions SelectedParticipaint
-        {
-            get => _selectedParticipaint;
-            set
-            {
-                SetProperty(ref _selectedParticipaint, value);
-            }
-        }
-        
-        private ParticipantSuggestion _selectedSuggestion;
-        public ParticipantSuggestion SelectedSuggestion
-        {
-            get => _selectedSuggestion;
-            set => SetProperty(ref _selectedSuggestion, value);
-        }
-
-        DelegateCommand _OpenFullComparisonCommand;
-        public DelegateCommand OpenFullComparisonCommand => _OpenFullComparisonCommand ??= new(
-        () =>
-        {
-            var list = from ps in _pairSuggestions
-                       where ps.FromIsrael.Id == SelectedParticipaint.Participant.Id
-                       || ps.FromWorld.Id == SelectedParticipaint.Participant.Id
-                       select ps;
-            _ea.GetEvent<ShowFullComparisonEvent>()
-            .Publish((list, SelectedSuggestion.Id));
-            _ea.GetEvent<OpenCloseDialogEvent>().Publish((true, typeof(FullPairMatchingComparisonViewModel)));
-        });
-
-
-        DelegateCommand _OpenFullParticipiantCommand;
-        public DelegateCommand OpenFullParticipiantCommand => _OpenFullParticipiantCommand ??= new(
-        () =>
-        {
-            FullParticipaintVm.Init(SelectedParticipaint.Participant, true);
-        });
-
-
-        public MatchCommand Match { get; }
     }
     
 }

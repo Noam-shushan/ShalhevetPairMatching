@@ -19,7 +19,7 @@ namespace PairMatching.DomainModel.Services
         IEnumerable<CountryUtc> GetCountryUtcs();
         Task SendToArcive(Participant participant);
         Task<Participant> InsertParticipant(Participant participant);
-        Task UpdateParticipaint(Participant participant);
+        Task UpdateParticipaint(Participant participant, bool isChaengCountery = false);
         Task AddNote(Note note, Participant participant);
         Task DeleteNote(Note selectedNote, Participant participant);
     }

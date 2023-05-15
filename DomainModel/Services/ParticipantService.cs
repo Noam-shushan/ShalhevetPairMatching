@@ -149,45 +149,29 @@ namespace PairMatching.DomainModel.Services
             _logger.LogInformation($"Note added to participant: {participant.Id} by {note.Author}");
         }
 
-        public async Task UpdateParticipaint(Participant participant)
+        
+        public async Task UpdateParticipaint(Participant participant, bool isChaengCountery = false)
         {
-            bool isInIsraelRepo = true;
-            bool isInWorldRepo = true;
             try
             {
-                var part = await _unitOfWork
-                    .IsraelParticipantsRepositry
-                    .GetByIdAsync(participant.Id)
-                    .ConfigureAwait(false);
-            }
-            catch (KeyNotFoundException)
-            {
-                isInIsraelRepo = false;
-            }
-            try
-            {
-                var part = await _unitOfWork
-                    .WorldParticipantsRepositry
-                    .GetByIdAsync(participant.Id)
-                    .ConfigureAwait(false);
-            }
-            catch (KeyNotFoundException)
-            {
-                isInWorldRepo = false;
-            }
-
-
-            try
-            {
-                if (participant is IsraelParticipant ip)
+                if (isChaengCountery)
                 {
-                    if (isInWorldRepo)
+                    try
+                    {
+                        await _unitOfWork
+                        .IsraelParticipantsRepositry
+                        .Delete(participant.Id);
+                    }
+                    catch (KeyNotFoundException)
                     {
                         await _unitOfWork
                             .WorldParticipantsRepositry
-                            .Delete(participant.Id)
-                            .ConfigureAwait(false);
+                            .Delete(participant.Id);
                     }
+                    _logger.LogInformation($"participant {participant.Name}, {participant.Email} is cahnge country");
+                }
+                if (participant is IsraelParticipant ip)
+                {
                     await _unitOfWork
                         .IsraelParticipantsRepositry
                         .Update(ip)
@@ -195,13 +179,6 @@ namespace PairMatching.DomainModel.Services
                 }
                 else if (participant is WorldParticipant wp)
                 {
-                    if (isInIsraelRepo)
-                    {
-                        await _unitOfWork
-                            .IsraelParticipantsRepositry
-                            .Delete(participant.Id)
-                            .ConfigureAwait(false);
-                    }
                     await _unitOfWork
                         .WorldParticipantsRepositry
                         .Update(wp)
@@ -215,7 +192,8 @@ namespace PairMatching.DomainModel.Services
                 throw new UserException($"Sory... there is some error\nDo not worry the develper is informed");
             }
         }
-
+       
+        
         public async Task<Participant> InsertParticipant(Participant part)
         {
             dynamic wixId = ""; 
@@ -264,7 +242,8 @@ namespace PairMatching.DomainModel.Services
         
         public async Task DeleteParticipaint(Participant participant)
         {
-            await RemoveMatchParticipaints(participant).ConfigureAwait(false);
+            await RemoveMatchParticipaints(participant)
+                .ConfigureAwait(false);
 
             participant.IsDeleted = true;
 
@@ -363,7 +342,7 @@ namespace PairMatching.DomainModel.Services
 
             static IEnumerable<CountryUtc> Init()
             {
-                var jsonString = HelperFunction.ReadJson(@"Resources\Countries.json");
+                var jsonString = ReadJson(@"Resources\Countries.json");
                 var result = JsonConvert.DeserializeObject<IEnumerable<CountryUtc>>(jsonString);
                 foreach (var country in result)
                 {

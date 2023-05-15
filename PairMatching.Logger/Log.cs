@@ -14,10 +14,20 @@ namespace PairMatching.Loggin
         public DateTime Date { get; set; }
 
         public string Source { get; set; } = "";
-
+        
         public string Type { get; set; } = "";
 
+        // database misstake
+        public MyException Exception { get; set; }
+
     }
+    
+    public class MyException
+    {
+        public string StackTrace { get; set; }
+    }
+
+
 
     public record ErrorLog : Log
     {

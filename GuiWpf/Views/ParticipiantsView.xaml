@@ -121,23 +121,6 @@
                                 Kind="Export" />
                         </Button>
 
-                        <!--<materialDesign:PopupBox>
-                            <materialDesign:PopupBox.ToggleContent>
-                                <Button
-                                    Margin="10,0"
-                                    Style="{StaticResource MaterialDesignIconButton}"
-                                    ToolTip="יצא נתונים לקובץ XL">
-                                    <materialDesign:PackIcon
-                                        Width="28"
-                                        Height="28"
-                                        Kind="Export" />
-                                </Button>
-                            </materialDesign:PopupBox.ToggleContent>
-
-                            <local:ExcelExportView DataContext="{Binding ExportToExcelVm}" />
-
-                        </materialDesign:PopupBox>-->
-
                         <Button
                             Command="{Binding AddParticipantCommand}"
                             Style="{StaticResource MaterialDesignIconButton}"
@@ -304,6 +287,19 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
+                        <DataGridTemplateColumn Width="auto" Header="ערוך">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Command="{Binding DataContext.OpenEditParticipiantCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="ערוך">
+                                        <materialDesign:PackIcon Kind="Edit" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
 
                         <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.Header>
@@ -367,12 +363,6 @@
                                             BorderBrush="LightGray"
                                             BorderThickness="1">
                                             <StackPanel>
-                                                <Button
-                                                    Command="{Binding DataContext.OpenEditParticipiantCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
-                                                    Style="{StaticResource MaterialDesignIconButton}"
-                                                    ToolTip="ערוך">
-                                                    <materialDesign:PackIcon Kind="Edit" />
-                                                </Button>
                                                 <Button
                                                     Command="{Binding DataContext.SendToArchivCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
                                                     Style="{StaticResource MaterialDesignIconButton}"
