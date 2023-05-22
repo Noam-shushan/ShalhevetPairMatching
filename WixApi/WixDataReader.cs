@@ -131,7 +131,15 @@ namespace PairMatching.WixApi
 
                 var parsedObject = JObject.Parse(jsonContent);
 
-                var content = parsedObject["status"].ToString();
+                var content = "";
+                if (parsedObject.ContainsKey("status"))
+                {
+                    content = parsedObject["status"].ToString();
+                }
+                else
+                {
+                    return Enumerable.Empty<EmailRecipientsWixDto>();
+                }
 
                 var data = JsonConvert.DeserializeObject<IEnumerable<EmailRecipientsWixDto>>(content);
 

@@ -35,6 +35,11 @@ namespace GuiWpf.ViewModels
                     }
                     Emails.Add(em);
                 });
+            _ea.GetEvent<RefreshAll>()
+                .Subscribe(async () =>
+                {
+                    await Refresh();
+                });
         }
 
         public PaginCollectionViewModel<EmailModel> Emails { get; set; } = new();
@@ -46,11 +51,24 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _selectedEmail, value);
         }
 
+        private string _searchEmailsWord = "";
+        public string SearchEmailsWord
+        {
+            get => _searchEmailsWord;
+            set
+            {
+                if (SetProperty(ref _searchEmailsWord, value))
+                {
+                    Emails.Refresh();
+                }
+            }
+        }
+
         DelegateCommand _load;
         public DelegateCommand Load => _load ??= new(
         async () =>
         {
-            await Refrash();
+            await Refresh();
             IsInitialized = true;
         }, () =>!IsInitialized && !IsLoaded);
 
@@ -74,41 +92,50 @@ namespace GuiWpf.ViewModels
             }
         });
 
-        private async Task Refrash()
+        private async Task Refresh()
+        {
+            await VerifiySent();
+            await SetEmails();
+        }
+
+        private async Task SetEmails()
         {
             try
             {
                 IsLoaded = true;
-                await _emailService.VerifieyEmails();
 
                 var emails = await _emailService.GetEmails();
-
                 Emails.Init(emails, 10, EmailsFilter);
+
                 IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
+            }
+        }
+
+        private async Task VerifiySent()
+        {
+            try
+            {
+                IsLoaded = true;
+
+                await _emailService.VerifieyEmails();
+
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
             }
         }
 
         private bool EmailsFilter(EmailModel emailModel)
         {
             return SearchEmails(emailModel);
-        }
-
-
-        private string _searchEmailsWord = "";
-        public string SearchEmailsWord
-        {
-            get => _searchEmailsWord;
-            set
-            {
-                if(SetProperty(ref _searchEmailsWord, value))
-                {
-                    Emails.Refresh();
-                }
-            }
         }
 
         private bool SearchEmails(EmailModel obj)

@@ -353,6 +353,19 @@ namespace GuiWpf.ViewModels
             {
                 IsLoaded = true;
 
+                await _participantService.SetNewParticipintsFromWix();
+
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
+            }
+            try
+            {
+                IsLoaded = true;
+
                 var parts = await _participantService.GetAll();
 
                 _ea.GetEvent<ResiveParticipantsEvent>().Publish(parts);
@@ -368,6 +381,7 @@ namespace GuiWpf.ViewModels
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
             }
         }
 
@@ -392,6 +406,11 @@ namespace GuiWpf.ViewModels
             {
                 Participiants.Add(part);
             });
+            _ea.GetEvent<RefreshAll>()
+                .Subscribe(async () =>
+                {
+                    await Refresh();
+                });
         }
 
         private bool ParticipiantsFilter(Participant participant)

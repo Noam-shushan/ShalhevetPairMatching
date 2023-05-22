@@ -22,5 +22,6 @@ namespace PairMatching.DomainModel.Services
         Task UpdateParticipaint(Participant participant, bool isChaengCountery = false);
         Task AddNote(Note note, Participant participant);
         Task DeleteNote(Note selectedNote, Participant participant);
+        Task SetNewParticipintsFromWix();
     }
 }

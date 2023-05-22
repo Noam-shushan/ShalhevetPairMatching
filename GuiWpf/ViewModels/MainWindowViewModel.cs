@@ -55,5 +55,13 @@ namespace GuiWpf.ViewModels
             get => _isFullParticipaintOpen;
             set => SetProperty(ref _isFullParticipaintOpen, value);
         }
+
+
+        DelegateCommand _RefreshCommand;
+        public DelegateCommand RefreshCommand => _RefreshCommand ??= new(
+        () =>
+        {
+            _ea.GetEvent<RefreshAll>().Publish();
+        });
     }
 }

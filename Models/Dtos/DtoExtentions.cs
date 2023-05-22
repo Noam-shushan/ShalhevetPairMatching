@@ -233,7 +233,7 @@ namespace PairMatching.Models.Dtos
             part.JewishAndComAff = wixDto.jewishAndComAff == "Other" ? wixDto.otherJewishAndComAff : wixDto.jewishAndComAff;
             part.DesiredEnglishLevel = GetValueFromDescription<EnglishLevels>(wixDto.levOfEn);
             part.SkillLevel = GetValueFromDescription<SkillLevels>(wixDto.learningSkill);
-            part.Country = wixDto.utc;
+            part.Country = wixDto.country;
             part.UtcOffset = TimeSpan.FromHours(wixDto.timeOffset);
             part.JewishAffiliation = wixDto.jewishAffiliation;
             part.PairPreferences.Tracks = wixDto.prefTra.Select(t => GetValueFromDescription<PrefferdTracks>(t));

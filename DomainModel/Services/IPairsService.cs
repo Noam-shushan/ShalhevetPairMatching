@@ -10,7 +10,7 @@ namespace PairMatching.DomainModel.Services
 {
     public interface IPairsService
     {
-        Task<Pair> ActivePair(Pair pair);
+        Task<Pair> ActivePair(Pair pair, bool sendEmail = true);
         Task<Pair> AddNewPair(PairSuggestion pairSuggestion, PrefferdTracks track = PrefferdTracks.NoPrefrence);
         Task AddNote(Note newNote, Pair pairModel);
         Task CancelPair(Pair pair);

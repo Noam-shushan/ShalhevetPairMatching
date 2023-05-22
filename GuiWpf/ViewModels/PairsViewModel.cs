@@ -384,18 +384,28 @@ namespace GuiWpf.ViewModels
 
                 await _pairsService.VerifieyNewPairsInWix();
 
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
+            }
+            try
+            {
+                IsLoaded = true;
                 var pairs = await _pairsService.GetAllPairs();
                 Pairs.Init(pairs.OrderByDescending(p => p.DateOfCreate), 10, PairsFilter);
 
                 Years.Clear();
                 Years.AddRange(pairs.Select(p => p.DateOfCreate.Year.ToString()).Distinct());
                 Years.Insert(0, allYears);
-
                 IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
             }
         }
 
@@ -436,7 +446,11 @@ namespace GuiWpf.ViewModels
                     Pairs.Add(pair);
                 }
             });
-
+            _ea.GetEvent<RefreshAll>()
+                .Subscribe(async () =>
+                {
+                    await Refresh();
+                });
         }
         #endregion
     }

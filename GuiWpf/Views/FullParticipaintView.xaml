@@ -42,7 +42,7 @@
                 <TextBlock
                     Grid.Column="1"
                     HorizontalAlignment="Center"
-                    Style="{StaticResource MaterialDesignHeadline2TextBlock}"
+                    Style="{StaticResource MaterialDesignHeadline4TextBlock}"
                     Text="{Binding Current.Name}" />
             </Grid>
             <Grid>

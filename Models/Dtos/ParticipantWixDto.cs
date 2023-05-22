@@ -26,7 +26,9 @@ namespace PairMatching.Models.Dtos
         public string _id { get; set; }
         public string _owner { get; set; }
         public DateTime _createdDate { get; set; }
-        
+
+        public string country { get; set; }
+
         /// <summary>
         /// [Advanced, Moderate, Beginner]
         /// [גבוהה, בינונית, לא מכיר/ה. מאוד מתעיינ/ת, אין לי מסלול מועדף]

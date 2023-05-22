@@ -193,15 +193,17 @@ namespace PairMatching.DomainModel.Services
             _logger.LogInformation($"Delete pair {pair.Id}");
         }
 
-        public async Task<Pair> ActivePair(Pair pair)
+        public async Task<Pair> ActivePair(Pair pair, bool sendEmail = true)
         {
             pair.IsActive = true;
             pair.Status = PairStatus.Active;
+            if (sendEmail)
+            {
+                var wixId = await SendNewPairToWix(pair)
+                    .ConfigureAwait(false);
 
-            var wixId = await SendNewPairToWix(pair)
-                .ConfigureAwait(false);
-
-            pair.WixId = wixId ?? "";
+                pair.WixId = wixId ?? "";
+            }
 
             await _unitOfWork.PairsRepositry.Update(pair)
                 .ConfigureAwait(false);
@@ -265,7 +267,7 @@ namespace PairMatching.DomainModel.Services
         private async Task<string> SendNewPairToWix(Pair pair)
         {
             try
-            {
+            { // 08729b80-1e6c-4598-b88d-43c12bd52409 gil and test
                 var id = await _wix.NewPair(new NewPairWixDto
                 {
                     chevrutaIdFirst = pair.FromIsrael._WixId,

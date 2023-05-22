@@ -42,6 +42,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -49,6 +50,7 @@
         </Grid.RowDefinitions>
 
         <TabControl
+            Grid.ColumnSpan="2"
             materialDesign:ColorZoneAssist.Mode="PrimaryDark"
             Style="{StaticResource MahApps.Styles.TabControl.Animated}"
             TabStripPlacement="Top">
@@ -64,9 +66,20 @@
             <TabItem Header="מיילים">
                 <local:EmailsView />
             </TabItem>
+
         </TabControl>
 
-        <StatusBar Grid.Row="1">
+        <Button
+            Grid.Column="1"
+            Margin="5"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Command="{Binding RefreshCommand}"
+            Style="{StaticResource MaterialDesignIconButton}">
+            <materialDesign:PackIcon Kind="Refresh" />
+        </Button>
+
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="2">
             <StatusBarItem Visibility="{Binding IsSendEmail, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="שולח מיילים..." />

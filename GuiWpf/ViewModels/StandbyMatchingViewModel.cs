@@ -12,6 +12,8 @@ using PairMatching.Tools;
 using System.Text;
 using GuiWpf.Events;
 using System.Threading.Tasks;
+using Ookii.Dialogs.Wpf;
+
 
 namespace GuiWpf.ViewModels
 {
@@ -36,6 +38,11 @@ namespace GuiWpf.ViewModels
                 .Subscribe(standbyPair =>
                 {
                     StandbyPairs.Add(standbyPair);
+                });
+            _ea.GetEvent<RefreshAll>()
+                .Subscribe(async () =>
+                {
+                    await Refresh();
                 });
         }
 
@@ -81,51 +88,58 @@ namespace GuiWpf.ViewModels
             if (track is string trackStr)
             {
                 var selectedTrack = Extensions.GetValueFromDescription<PrefferdTracks>(trackStr);
-                if (SelectedStandbyPair.Pair != null && SelectedStandbyPair.PairSuggestion.ChosenTrack != selectedTrack)
+                if (SelectedStandbyPair.Pair == null || SelectedStandbyPair.PairSuggestion.ChosenTrack == selectedTrack)
                 {
-                    if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשנות את המסלול ל- {trackStr}"))
-                    {
-                        try
-                        {
-                            IsLoaded = true;
-                            await _pairsService.ChangeTrack(SelectedStandbyPair.Pair, selectedTrack);
-                            SelectedStandbyPair.Pair.Track = selectedTrack;
-                            SelectedStandbyPair.PairSuggestion.ChosenTrack = selectedTrack;
-                            IsLoaded = false;
-                        }
-                        catch (Exception ex)
-                        {
-                            _exceptionHeandler.HeandleException(ex);
-                        }
-                    }
-
+                    return;
+                }
+                if (!Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשנות את המסלול ל- {trackStr}"))
+                {
+                    return;
+                }
+                try
+                {
+                    IsLoaded = true;
+                    await _pairsService.ChangeTrack(SelectedStandbyPair.Pair, selectedTrack);
+                    SelectedStandbyPair.Pair.Track = selectedTrack;
+                    SelectedStandbyPair.PairSuggestion.ChosenTrack = selectedTrack;
+                    IsLoaded = false;
+                }
+                catch (Exception ex)
+                {
+                    _exceptionHeandler.HeandleException(ex);
                 }
             }
         }, (obj) => !IsLoaded);
 
         DelegateCommand _ActivePairCommand;
         public DelegateCommand ActivePairCommand => _ActivePairCommand ??= new(
-        async () =>
+        () =>
         {
-            try
+            var dialog = new TaskDialog
             {
-                if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לתאם סופית את {SelectedStandbyPair.Pair.FromIsrael.Name} ל- {SelectedStandbyPair.Pair.FromWorld.Name} במסלול '{SelectedStandbyPair.PairSuggestion.ChosenTrack.GetDescriptionFromEnumValue()}'"))
+                AllowDialogCancellation = true,
+                Content = $"האם אתה בטוח שברצונך לתאם סופית את {SelectedStandbyPair.Pair.FromIsrael.Name} ל- " +
+                $"{SelectedStandbyPair.Pair.FromWorld.Name} במסלול '{SelectedStandbyPair.PairSuggestion.ChosenTrack.GetDescriptionFromEnumValue()}'",
+                IsVerificationChecked = true,
+                RightToLeft = true,
+                WindowTitle = "התאם",
+                VerificationText = "האם ברצונך לשלוח מייל לחברותא?",
+
+            };
+
+            dialog.Buttons.Add(new TaskDialogButton(ButtonType.Yes));
+            dialog.Buttons.Add(new TaskDialogButton(ButtonType.No));
+
+            dialog.ButtonClicked += async (sender, e) =>
+            {
+                if (e.Item is TaskDialogButton button && button.ButtonType == ButtonType.Yes)
                 {
-                    IsLoaded = true;
-                    var pair = SelectedStandbyPair.Pair;
-
-                    StandbyPairs.Remove(SelectedStandbyPair);
-
-                    var activePair = await _pairsService.ActivePair(pair);
-
-                    _ea.GetEvent<NewPairEvent>().Publish(activePair);
-                    IsLoaded = false;
+                    bool sendEmail = (sender as TaskDialog)!.IsVerificationChecked;
+                    await AcitvePair(sendEmail);
                 }
-            }
-            catch (Exception ex)
-            {
-                _exceptionHeandler.HeandleException(ex);
-            }
+            };
+
+            dialog.ShowDialog();
         },
         () => !IsLoaded);
 
@@ -152,5 +166,26 @@ namespace GuiWpf.ViewModels
             }
         },
         () => !IsLoaded);
+
+        private async Task AcitvePair(bool sendEmail)
+        {
+            try
+            {
+                IsLoaded = true;
+                var pair = SelectedStandbyPair.Pair;
+
+                StandbyPairs.Remove(SelectedStandbyPair);
+
+                var activePair = await _pairsService.ActivePair(pair, sendEmail);
+
+                _ea.GetEvent<NewPairEvent>().Publish(activePair);
+                IsLoaded = false;
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
+            }
+        }
     }
 }
