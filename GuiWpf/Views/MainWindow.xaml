@@ -75,7 +75,8 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Command="{Binding RefreshCommand}"
-            Style="{StaticResource MaterialDesignIconButton}">
+            Style="{StaticResource MaterialDesignIconButton}"
+            Visibility="Collapsed">
             <materialDesign:PackIcon Kind="Refresh" />
         </Button>
 

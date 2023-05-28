@@ -35,11 +35,11 @@ namespace GuiWpf.ViewModels
                     }
                     Emails.Add(em);
                 });
-            _ea.GetEvent<RefreshAll>()
-                .Subscribe(async () =>
-                {
-                    await Refresh();
-                });
+            //_ea.GetEvent<RefreshAll>()
+            //    .Subscribe(async () =>
+            //    {
+            //        await Refresh();
+            //    });
         }
 
         public PaginCollectionViewModel<EmailModel> Emails { get; set; } = new();

@@ -262,7 +262,34 @@ namespace GuiWpf.ViewModels
         }, () => !IsLoaded);
 
 
-        DelegateCommand _DeleteCommand;
+        DelegateCommand _ExloadeFromArchivCommand;
+        public DelegateCommand ExloadeFromArchivCommand => _ExloadeFromArchivCommand ??= new(
+        async () =>
+        {
+            if (SelectedParticipant != null)
+            {
+                try
+                {
+                    IsLoaded = true;
+                    await _participantService.ExloadeFromArcive(SelectedParticipant);
+                    SelectedParticipant.IsInArchive = false;
+                    Participiants.Refresh();
+                    _ea.GetEvent<RefreshMatchingEvent>().Publish();
+                    IsLoaded = false;
+
+
+                }
+                catch (Exception ex)
+                {
+                    _exceptionHeandler.HeandleException(ex);
+                    IsLoaded = false;
+                }
+            }
+        }, () => !IsLoaded);
+            
+
+
+                DelegateCommand _DeleteCommand;
         public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
         async () =>
         {
@@ -305,11 +332,6 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenEditParticipiantCommand => _OpenEditParticipiantCommand ??= new(
         () =>
         {
-            if (SelectedParticipant?.IsMatch == true)
-            {
-                Messages.MessageBoxError("לא ניתן לערוך משתתף עם חברותא");
-                return;
-            }
             _ea.GetEvent<EditParticipaintEvent>().Publish(SelectedParticipant);
             IsEditParticipaintOpen = !IsEditParticipaintOpen;
         });
@@ -370,11 +392,11 @@ namespace GuiWpf.ViewModels
 
                 _ea.GetEvent<ResiveParticipantsEvent>().Publish(parts);
 
-                Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, ParticipiantsFilter);
-
                 Years.Clear();
                 Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
                 Years.Insert(0, allYears);
+
+                Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, ParticipiantsFilter);
 
                 IsLoaded = false;
             }

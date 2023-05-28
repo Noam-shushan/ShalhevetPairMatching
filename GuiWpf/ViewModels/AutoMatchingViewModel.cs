@@ -33,11 +33,11 @@ namespace GuiWpf.ViewModels
                 {
                     await Refresh();
                 });
-            _ea.GetEvent<RefreshAll>()
-                .Subscribe(async () =>
-                {
-                    await Refresh();
-                });
+            //_ea.GetEvent<RefreshAll>()
+            //    .Subscribe(async () =>
+            //    {
+            //        await Refresh();
+            //    });
         }
         
         DelegateCommand _load;

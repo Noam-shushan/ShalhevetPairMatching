@@ -1,17 +1,12 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using PairMatching.DomainModel.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PairMatching.Tools;
-using Prism.Ioc;
 using Prism.Events;
 using PairMatching.Models;
 using GuiWpf.Events;
-using System.Collections.ObjectModel;
 using static PairMatching.Tools.HelperFunction;
 
 
@@ -175,7 +170,15 @@ namespace GuiWpf.ViewModels
         public bool IsFromIsrael
         {
             get => _isFromIsrael;
-            set => SetProperty(ref _isFromIsrael, value);
+            set
+            {
+                if(value != _isFromIsrael && EditParticipaint.IsMatch)
+                {
+                    Messages.MessageBoxError("לא ניתן לערוך ארץ עבור משתתף עם חברותא");
+                    return;
+                }
+                SetProperty(ref _isFromIsrael, value);
+            }
         }
 
 

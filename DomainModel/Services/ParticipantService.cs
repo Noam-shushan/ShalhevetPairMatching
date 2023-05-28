@@ -356,5 +356,14 @@ namespace PairMatching.DomainModel.Services
                 .ConfigureAwait(false);
             _logger.LogInformation($"Delete note by {selectedNote.Author} from '{participant.Name}'");
         }
+
+        public async Task ExloadeFromArcive(Participant participant)
+        {
+            participant.IsInArchive = false;
+            await UpdateParticipaint(participant)
+                .ConfigureAwait(false);
+            _logger.LogInformation($"Exloade participaint {participant.Id} from archiv");
+            
+        }
     }
 }

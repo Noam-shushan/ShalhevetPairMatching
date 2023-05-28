@@ -366,8 +366,16 @@
                                                 <Button
                                                     Command="{Binding DataContext.SendToArchivCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
                                                     Style="{StaticResource MaterialDesignIconButton}"
-                                                    ToolTip="שלח לארכיון">
+                                                    ToolTip="שלח לארכיון"
+                                                    Visibility="{Binding IsInArchive, Converter={StaticResource InvertBooleanToVisiblityConvertor}}">
                                                     <materialDesign:PackIcon Kind="Archive" />
+                                                </Button>
+                                                <Button
+                                                    Command="{Binding DataContext.ExloadeFromArchivCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    ToolTip="הוצא מארכיון"
+                                                    Visibility="{Binding IsInArchive, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <materialDesign:PackIcon Kind="ArchiveOff" />
                                                 </Button>
                                                 <Button
                                                     Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"

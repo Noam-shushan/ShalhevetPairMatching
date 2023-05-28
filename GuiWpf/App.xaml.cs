@@ -63,7 +63,7 @@ namespace GuiWpf
             if (!_startup.GetConfigurations().IsTest && !_startup.IsConnectedToInternet())
             {
                 MessageBox.Show("Please check your internet connection and try again.", "Error", MessageBoxButton.OK,
-                MessageBoxImage.Error, MessageBoxResult.None);
+                    MessageBoxImage.Error, MessageBoxResult.None);
                 Shutdown();
                 return null;
             }

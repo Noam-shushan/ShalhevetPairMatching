@@ -39,11 +39,11 @@ namespace GuiWpf.ViewModels
                 {
                     StandbyPairs.Add(standbyPair);
                 });
-            _ea.GetEvent<RefreshAll>()
-                .Subscribe(async () =>
-                {
-                    await Refresh();
-                });
+            //_ea.GetEvent<RefreshAll>()
+            //    .Subscribe(async () =>
+            //    {
+            //        await Refresh();
+            //    });
         }
 
         DelegateCommand _Load;

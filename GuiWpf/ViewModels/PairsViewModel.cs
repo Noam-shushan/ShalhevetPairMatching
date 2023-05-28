@@ -395,11 +395,13 @@ namespace GuiWpf.ViewModels
             {
                 IsLoaded = true;
                 var pairs = await _pairsService.GetAllPairs();
-                Pairs.Init(pairs.OrderByDescending(p => p.DateOfCreate), 10, PairsFilter);
 
                 Years.Clear();
                 Years.AddRange(pairs.Select(p => p.DateOfCreate.Year.ToString()).Distinct());
                 Years.Insert(0, allYears);
+
+                Pairs.Init(pairs.OrderByDescending(p => p.DateOfCreate), 10, PairsFilter);
+
                 IsLoaded = false;
             }
             catch (Exception ex)
@@ -446,11 +448,11 @@ namespace GuiWpf.ViewModels
                     Pairs.Add(pair);
                 }
             });
-            _ea.GetEvent<RefreshAll>()
-                .Subscribe(async () =>
-                {
-                    await Refresh();
-                });
+            //_ea.GetEvent<RefreshAll>()
+            //    .Subscribe(async () =>
+            //    {
+            //        await Refresh();
+            //    });
         }
         #endregion
     }

@@ -65,11 +65,11 @@ namespace GuiWpf.ViewModels
                 _allParticipants = new(participants);
             });
 
-            _ea.GetEvent<RefreshAll>()
-                .Subscribe(async () =>
-                {
-                    await Refresh();
-                });
+            //_ea.GetEvent<RefreshAll>()
+            //    .Subscribe(async () =>
+            //    {
+            //        await Refresh();
+            //    });
         }
 
         List<Participant> _allParticipants = new();

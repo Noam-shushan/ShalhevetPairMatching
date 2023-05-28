@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Ioc;
 
 namespace GuiWpf.ViewModels
 {
@@ -17,7 +18,7 @@ namespace GuiWpf.ViewModels
         public MainWindowViewModel(IEventAggregator ea)
         {
             _ea = ea;
-            
+
             _ea.GetEvent<IsSendEmailEvent>().Subscribe((val) => IsSendEmail = val);
 
             _ea.GetEvent<OpenCloseDialogEvent>()
@@ -48,14 +49,12 @@ namespace GuiWpf.ViewModels
             set => SetProperty(ref _isFullComparisonOpen, value);
         }
 
-
         private bool _isFullParticipaintOpen;
         public bool IsFullParticipaintOpen
         {
             get => _isFullParticipaintOpen;
             set => SetProperty(ref _isFullParticipaintOpen, value);
         }
-
 
         DelegateCommand _RefreshCommand;
         public DelegateCommand RefreshCommand => _RefreshCommand ??= new(

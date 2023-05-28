@@ -207,7 +207,8 @@ namespace GuiWpf.ViewModels
         #region Methods
         public void Init(IEnumerable<T> items, int itemsPerPage, Predicate<T> filter = null)
         {
-            ItemsSource = new(items);
+            ItemsSource.Clear();
+            ItemsSource.AddRange(items);
 
             ItemsPerPage = itemsPerPage;
             
@@ -221,7 +222,8 @@ namespace GuiWpf.ViewModels
             var temp = FilterdItems.ToList();
             FilterdItems.Clear();
             var filter = Filter is null ? _ => true : Filter;
-            FilterdItems.AddRange(ItemsSource.Where(item => filter.Invoke(item)));
+            var filterItems = ItemsSource.Where(item => filter.Invoke(item));
+            FilterdItems.AddRange(filterItems);
             
             if (!add && !temp.SequenceEqual(FilterdItems))
             {   // return to the first page if there is a change by the filter
