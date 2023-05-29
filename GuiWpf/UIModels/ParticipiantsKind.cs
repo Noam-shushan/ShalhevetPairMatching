@@ -37,9 +37,6 @@ namespace GuiWpf.UIModels
         [EnumDescription("חברותות פעילות")]
         Active,
 
-        [EnumDescription("חברותות לא פעילות")]
-        Inactive,
-
         [EnumDescription("לומדות בפועל")]
         Learning
     }

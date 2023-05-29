@@ -150,11 +150,12 @@ namespace PairMatching.DomainModel.MatchingCalculations
 
         private bool IsTrackMatch()
         {
-            return _ip.PairPreferences.Tracks
+            bool intersectedTrack = _ip.PairPreferences.Tracks
                 .Intersect(_wp.PairPreferences.Tracks)
-                .Any() ||
-                _ip.PairPreferences.Tracks.Contains(PrefferdTracks.NoPrefrence) ||
-                _wp.PairPreferences.Tracks.Contains(PrefferdTracks.NoPrefrence);
+                .Any();
+            bool isNoPrefrence = _ip.PairPreferences.Tracks.Any(t => t == PrefferdTracks.NoPrefrence)
+                || _wp.PairPreferences.Tracks.Any(t => t == PrefferdTracks.NoPrefrence);
+            return intersectedTrack || isNoPrefrence;
         }
 
         private bool IsEnglishLevelMatch()

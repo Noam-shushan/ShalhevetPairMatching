@@ -165,7 +165,20 @@
                         HorizontalAlignment="Center"
                         Content="? מישראל"
                         FlowDirection="LeftToRight"
-                        IsChecked="{Binding IsFromIsrael}" />
+                        IsChecked="{Binding IsFromIsrael}">
+                        <CheckBox.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignCheckBox}" TargetType="CheckBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding EditParticipaint.IsMatch}" Value="False">
+                                        <Setter Property="IsEnabled" Value="True" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding EditParticipaint.IsMatch}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </CheckBox.Style>
+                    </CheckBox>
                 </Border>
 
                 <ComboBox
@@ -176,13 +189,24 @@
                     IsTextSearchCaseSensitive="False"
                     IsTextSearchEnabled="True"
                     ItemsSource="{Binding CountryUtcs}"
-                    SelectedValue="{Binding Country}"
-                    Style="{StaticResource HideComboBoxIfIsrael}">
+                    SelectedValue="{Binding Country}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Country}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
+                    <ComboBox.Style>
+                        <Style BasedOn="{StaticResource HideComboBoxIfIsrael}" TargetType="ComboBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding EditParticipaint.IsMatch}" Value="False">
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding EditParticipaint.IsMatch}" Value="True">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
                 </ComboBox>
 
                 <ComboBox

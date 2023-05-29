@@ -38,7 +38,9 @@ namespace PairMatching.DomainModel.Services
             {
                 var pairs = await _unitOfWork
                         .PairsRepositry
-                        .GetAllAsync(p => p.Status == PairStatus.Active && p.WixId != "")
+                        .GetAllAsync(p => !p.IsDeleted 
+                            && p.Status == PairStatus.Active 
+                            && p.WixId != "")
                         .ConfigureAwait(false);
 
                 var tasks = new List<Task>();

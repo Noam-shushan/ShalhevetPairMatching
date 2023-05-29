@@ -207,8 +207,7 @@ namespace GuiWpf.ViewModels
         #region Methods
         public void Init(IEnumerable<T> items, int itemsPerPage, Predicate<T> filter = null)
         {
-            ItemsSource.Clear();
-            ItemsSource.AddRange(items);
+            ItemsSource = new(items);
 
             ItemsPerPage = itemsPerPage;
             
@@ -233,17 +232,30 @@ namespace GuiWpf.ViewModels
             CanGoNext = CurrentPage + 1 < PageCount;
             CanGoPrev = CurrentPage > 0;
 
-            Items.Clear();
-
             var showItems = FilterdItems.Where(item => PagingFilter(item));
             var reverseITems = showItems.Reverse();
+            Items.Clear();
             Items.AddRange(showItems);
             
             PageCount = GetPageCount();
         }
 
-        public void Add(T item)
+        public void Add(T item, string idOnDelete = "")
         {
+            if(idOnDelete != "")
+            {
+                var foundedItem = ItemsSource.FirstOrDefault(x => 
+                    x.GetType()?
+                    .GetProperty(idOnDelete)?
+                    .GetValue(x)?
+                    .ToString() == item.GetType()?
+                        .GetProperty(idOnDelete)?
+                        .GetValue(item)?
+                        .ToString());
+
+                ItemsSource.Remove(foundedItem);
+            }
+            
             ItemsSource.Insert(0, item);
             Refresh(true);
         }

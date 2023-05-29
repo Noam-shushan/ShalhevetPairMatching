@@ -58,12 +58,14 @@ namespace GuiWpf.ViewModels
                 var result = await _matchingService.GetMaxOptMatching();
                 AutoSuggestions.Clear();
                 AutoSuggestions.AddRange(result);
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
+                IsLoaded = false;
             }
         }
 

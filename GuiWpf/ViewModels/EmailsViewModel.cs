@@ -81,6 +81,7 @@ namespace GuiWpf.ViewModels
             {
                 try
                 {
+                    IsLoaded = true;
                     _ea.GetEvent<IsSendEmailEvent>().Publish(true);
                     await _emailService.ResendEmail(SelectedEmail);
                     _ea.GetEvent<IsSendEmailEvent>().Publish(false);
@@ -88,6 +89,10 @@ namespace GuiWpf.ViewModels
                 catch (Exception ex)
                 {
                     _exceptionHeandler.HeandleException(ex);
+                }
+                finally
+                {
+                    IsLoaded = false;
                 }
             }
         });
@@ -106,12 +111,14 @@ namespace GuiWpf.ViewModels
 
                 var emails = await _emailService.GetEmails();
                 Emails.Init(emails, 10, EmailsFilter);
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
+            }
+            finally
+            {
                 IsLoaded = false;
             }
         }
@@ -123,12 +130,14 @@ namespace GuiWpf.ViewModels
                 IsLoaded = true;
 
                 await _emailService.VerifieyEmails();
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+                IsLoaded = false;
+            }
+            finally
+            {
                 IsLoaded = false;
             }
         }

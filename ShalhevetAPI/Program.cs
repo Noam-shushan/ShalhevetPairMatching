@@ -23,6 +23,7 @@ builder.Services.AddSingleton(configurations);
 builder.Services.AddSingleton(new Logger(configurations.ConnctionsStrings));
 builder.Services.AddScoped<IDataAccessFactory, DataAccessFactory>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IMatchingService, MatchingService>();
 
 var app = builder.Build();
 

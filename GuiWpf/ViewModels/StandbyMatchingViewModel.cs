@@ -63,12 +63,14 @@ namespace GuiWpf.ViewModels
 
                 StandbyPairs.Clear();
                 StandbyPairs.AddRange(pairs);
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
+                IsLoaded = false;
             }
         }
 
@@ -102,11 +104,14 @@ namespace GuiWpf.ViewModels
                     await _pairsService.ChangeTrack(SelectedStandbyPair.Pair, selectedTrack);
                     SelectedStandbyPair.Pair.Track = selectedTrack;
                     SelectedStandbyPair.PairSuggestion.ChosenTrack = selectedTrack;
-                    IsLoaded = false;
                 }
                 catch (Exception ex)
                 {
                     _exceptionHeandler.HeandleException(ex);
+                }
+                finally
+                {
+                    IsLoaded = false;
                 }
             }
         }, (obj) => !IsLoaded);
@@ -123,8 +128,7 @@ namespace GuiWpf.ViewModels
                 IsVerificationChecked = true,
                 RightToLeft = true,
                 WindowTitle = "התאם",
-                VerificationText = "האם ברצונך לשלוח מייל לחברותא?",
-
+                VerificationText = "האם ברצונך לשלוח מייל לחברותא?"
             };
 
             dialog.Buttons.Add(new TaskDialogButton(ButtonType.Yes));
@@ -150,6 +154,7 @@ namespace GuiWpf.ViewModels
             try
             {
                 IsLoaded = true;
+                _ea.GetEvent<MatchEvent>().Publish(true);
                 var pair = SelectedStandbyPair.Pair;
 
                 StandbyPairs.Remove(SelectedStandbyPair);
@@ -158,11 +163,16 @@ namespace GuiWpf.ViewModels
 
                 await _matchingService.Refresh();
                 _ea.GetEvent<RefreshMatchingEvent>().Publish();
-                IsLoaded = false;
+                
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
+                _ea.GetEvent<MatchEvent>().Publish(true);
+                IsLoaded = false;
             }
         },
         () => !IsLoaded);
@@ -179,11 +189,13 @@ namespace GuiWpf.ViewModels
                 var activePair = await _pairsService.ActivePair(pair, sendEmail);
 
                 _ea.GetEvent<NewPairEvent>().Publish(activePair);
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
-                _exceptionHeandler.HeandleException(ex);
+                _exceptionHeandler.HeandleException(ex);           
+            }
+            finally
+            {
                 IsLoaded = false;
             }
         }

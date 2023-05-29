@@ -41,6 +41,7 @@ namespace GuiWpf.ViewModels
             _ea.GetEvent<RefreshMatchingEvent>()
                 .Subscribe(async () =>
                 {
+                    await _matchingService.Refresh();
                     await Refresh();
                 });
             _ea.GetEvent<ResiveParticipantsEvent>().Subscribe((participants) =>
@@ -64,6 +65,8 @@ namespace GuiWpf.ViewModels
 
                 _allParticipants = new(participants);
             });
+
+            _ea.GetEvent<MatchEvent>().Subscribe(isProsessingMatching => IsLoaded = isProsessingMatching);
 
             //_ea.GetEvent<RefreshAll>()
             //    .Subscribe(async () =>
@@ -192,13 +195,14 @@ namespace GuiWpf.ViewModels
 
                 var items = GroupPartBySuggestion(suggestions);
                 Participants.Init(items, 20, ItemsFilter);
-
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
+                IsLoaded = false;
             }
         }
 

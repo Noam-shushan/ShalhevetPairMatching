@@ -112,7 +112,6 @@ namespace GuiWpf.ViewModels
         } 
         #endregion
 
-
         #region Filtering
         private PairKind _pairKindFilter = PairKind.All;
         public PairKind PairKindFilter
@@ -218,11 +217,14 @@ namespace GuiWpf.ViewModels
                             IsLoaded = true;
                             await _pairsService.ChangeTrack(SelectedPair, selectedTrack);
                             SelectedPair.Track = selectedTrack;
-                            IsLoaded = false;
                         }
                         catch (Exception ex)
                         {
                             _exceptionHeandler.HeandleException(ex);
+                        }
+                        finally
+                        {
+                            IsLoaded = false;
                         }
                     }
 
@@ -245,11 +247,14 @@ namespace GuiWpf.ViewModels
                         IsLoaded = true;
                         await _pairsService.ChangeStatus(SelectedPair, selectedStatus);
                         SelectedPair.Status = selectedStatus;
-                        IsLoaded = false;
                     }
                     catch (Exception ex)
                     {
                         _exceptionHeandler.HeandleException(ex);
+                    }
+                    finally
+                    {
+                        IsLoaded = false;
                     }
                 }
             }
@@ -263,6 +268,7 @@ namespace GuiWpf.ViewModels
             {
                 try
                 {
+                    IsLoaded = true;
                     var pairsToDel = Pairs.FilterdItems.Where(p => p.IsSelected);
                     List<Task> tasks = new();
                     foreach (var p in pairsToDel)
@@ -280,6 +286,10 @@ namespace GuiWpf.ViewModels
                 {
                     _exceptionHeandler.HeandleException(ex);
                 }
+                finally
+                {
+                    IsLoaded = false;
+                }
             }
         }, () => !IsLoaded);
 
@@ -294,14 +304,29 @@ namespace GuiWpf.ViewModels
                     try
                     {
                         IsLoaded = true;
+                        var fromIsraelId = SelectedPair.FromIsraelId;
+                        var fromWorldId = SelectedPair.FromWorldId;
+                        
                         await _pairsService.DeletePair(SelectedPair);
+                       
                         Pairs.ItemsSource.Remove(SelectedPair);
                         Pairs.Refresh();
-                        IsLoaded = false;
+                        
+                        _ea.GetEvent<RefreshMatchingEvent>().Publish();
+
+                        var ip = await _participantService.GetIsraeliParticipantById(fromIsraelId);
+                        var wp = await _participantService.GetWolrdParticipantById(fromWorldId);
+
+                        _ea.GetEvent<ParticipaintWesUpdate>().Publish(ip);
+                        _ea.GetEvent<ParticipaintWesUpdate>().Publish(wp);
                     }
                     catch (Exception ex)
                     {
                         _exceptionHeandler.HeandleException(ex);
+                    }
+                    finally 
+                    { 
+                        IsLoaded = false; 
                     }
                 }
             }
@@ -383,14 +408,13 @@ namespace GuiWpf.ViewModels
                 IsLoaded = true;
 
                 await _pairsService.VerifieyNewPairsInWix();
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
                 IsLoaded = false;
             }
+            finally { IsLoaded = false; }
             try
             {
                 IsLoaded = true;
@@ -401,14 +425,13 @@ namespace GuiWpf.ViewModels
                 Years.Insert(0, allYears);
 
                 Pairs.Init(pairs.OrderByDescending(p => p.DateOfCreate), 10, PairsFilter);
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
                 IsLoaded = false;
             }
+            finally { IsLoaded = false; }
         }
 
         bool PairsFilter(Pair pair)
@@ -416,8 +439,7 @@ namespace GuiWpf.ViewModels
             var pairKind = PairKindFilter switch
             {
                 PairKind.All => true,
-                PairKind.Active => pair.IsActive,
-                PairKind.Inactive => !pair.IsActive,
+                PairKind.Active => pair.Status == PairStatus.Active,
                 PairKind.Learning => pair.Status == PairStatus.Learning,
                 _ => true
             };
@@ -435,8 +457,8 @@ namespace GuiWpf.ViewModels
 
         bool SearchPair(Pair pair)
         {
-            return pair.FromIsrael.Name.SearchText(SearchPairsWord)
-                || pair.FromWorld.Name.SearchText(SearchPairsWord);
+            return pair.FromIsrael?.Name.SearchText(SearchPairsWord) == true 
+                || pair.FromWorld?.Name.SearchText(SearchPairsWord) == true;
         }
 
         private void SubscribeToEvents()

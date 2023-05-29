@@ -6,6 +6,7 @@ using Prism.Events;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace GuiWpf.Commands
 {
@@ -33,6 +34,8 @@ namespace GuiWpf.Commands
             {
                 _ea.GetEvent<OpenCloseDialogEvent>().CloseAll();
 
+                _ea.GetEvent<MatchEvent>().Publish(true);
+
                 var newPair = await _pairsService.AddNewPair(pairSuggestion);
                 
                 await _matchingService.Refresh();
@@ -49,10 +52,18 @@ namespace GuiWpf.Commands
             {
                 _exceptionHeandler.HeandleException(ex);
             }
+            finally
+            {
+                _ea.GetEvent<MatchEvent>().Publish(false);
+            }
         }
 
         public bool CanExecute(object? parameter)
         {
+            if (parameter is PairSuggestion pair)
+            {
+                return !pair.IsMatch;
+            }
             return true;
         }
 
@@ -60,6 +71,7 @@ namespace GuiWpf.Commands
         {
             if (parameter is PairSuggestion pair)
             {
+                pair.IsMatch = true;
                 await Match(pair);
             }
         }

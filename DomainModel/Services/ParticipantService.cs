@@ -193,7 +193,7 @@ namespace PairMatching.DomainModel.Services
         
         public async Task<Participant> InsertParticipant(Participant part)
         {
-            dynamic wixId = ""; 
+            WixIdDto wixId = null; 
             try
             {
                 wixId = await GetWixId(part)
@@ -205,8 +205,8 @@ namespace PairMatching.DomainModel.Services
                 throw new UserException($"Error while trying to add '{part.Name}' to wix");
             }
 
-            part.WixId = wixId.contactId;
-            part._WixId = wixId._id;
+            part.WixId = wixId.Id;
+            part._WixId = wixId._Id;
 
             Participant result = new();
 
@@ -364,6 +364,16 @@ namespace PairMatching.DomainModel.Services
                 .ConfigureAwait(false);
             _logger.LogInformation($"Exloade participaint {participant.Id} from archiv");
             
+        }
+
+        public Task<IsraelParticipant> GetIsraeliParticipantById(string id)
+        {
+            return _unitOfWork.IsraelParticipantsRepositry.GetByIdAsync(id);
+        }
+
+        public Task<WorldParticipant> GetWolrdParticipantById(string id)
+        {
+            return _unitOfWork.WorldParticipantsRepositry.GetByIdAsync(id);
         }
     }
 }

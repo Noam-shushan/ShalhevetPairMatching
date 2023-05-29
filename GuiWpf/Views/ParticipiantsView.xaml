@@ -141,10 +141,11 @@
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
                     CanUserSortColumns="True"
-                    ItemsSource="{Binding Path=Participiants.Items}"
+                    IsSynchronizedWithCurrentItem="True"
+                    ItemsSource="{Binding Path=Participiants.Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     RowDetailsVisibilityMode="Collapsed"
                     ScrollViewer.CanContentScroll="False"
-                    SelectedItem="{Binding SelectedParticipant}">
+                    SelectedItem="{Binding SelectedParticipant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Sorting">

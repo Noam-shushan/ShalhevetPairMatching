@@ -24,5 +24,7 @@ namespace PairMatching.DomainModel.Services
         Task DeleteNote(Note selectedNote, Participant participant);
         Task SetNewParticipintsFromWix();
         Task ExloadeFromArcive(Participant selectedParticipant);
+        Task<IsraelParticipant> GetIsraeliParticipantById(string fromIsraelId);
+        Task<WorldParticipant> GetWolrdParticipantById(string id);
     }
 }

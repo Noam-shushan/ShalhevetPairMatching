@@ -251,11 +251,14 @@ namespace GuiWpf.ViewModels
                         SelectedParticipant.IsInArchive = true;
                         Participiants.Refresh();
                         _ea.GetEvent<RefreshMatchingEvent>().Publish();
-                        IsLoaded = false;
                     }
                     catch (Exception ex)
                     {
                         _exceptionHeandler.HeandleException(ex);
+                    }
+                    finally
+                    {
+                        IsLoaded = false;
                     }
                 }
             }
@@ -275,21 +278,21 @@ namespace GuiWpf.ViewModels
                     SelectedParticipant.IsInArchive = false;
                     Participiants.Refresh();
                     _ea.GetEvent<RefreshMatchingEvent>().Publish();
-                    IsLoaded = false;
-
-
                 }
                 catch (Exception ex)
                 {
                     _exceptionHeandler.HeandleException(ex);
                     IsLoaded = false;
                 }
+                finally
+                {
+                    IsLoaded = false;
+                }
             }
         }, () => !IsLoaded);
             
 
-
-                DelegateCommand _DeleteCommand;
+        DelegateCommand _DeleteCommand;
         public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
         async () =>
         {
@@ -311,11 +314,14 @@ namespace GuiWpf.ViewModels
                 Participiants.ItemsSource.Remove(SelectedParticipant);
                 Participiants.Refresh();
                 _ea.GetEvent<RefreshMatchingEvent>().Publish();
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
+                IsLoaded = false;
             }
         }, () => !IsLoaded);
 
@@ -376,12 +382,13 @@ namespace GuiWpf.ViewModels
                 IsLoaded = true;
 
                 await _participantService.SetNewParticipintsFromWix();
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
                 IsLoaded = false;
             }
             try
@@ -397,12 +404,13 @@ namespace GuiWpf.ViewModels
                 Years.Insert(0, allYears);
 
                 Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, ParticipiantsFilter);
-
-                IsLoaded = false;
             }
             catch (Exception ex)
             {
                 _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
                 IsLoaded = false;
             }
         }
@@ -418,10 +426,8 @@ namespace GuiWpf.ViewModels
             _ea.GetEvent<ParticipaintWesUpdate>()
                 .Subscribe(updetetdParts =>
                 {
-                    var oldPart = Participiants.ItemsSource
-                    .FirstOrDefault(p => p.Id == updetetdParts.Id);
-                    Participiants.ItemsSource.Remove(oldPart);
-                    Participiants.Add(updetetdParts);
+                    SelectedParticipant = Participiants.Items.First();
+                    Participiants.Add(updetetdParts, "Id");
                 });
 
             _ea.GetEvent<AddParticipantEvent>().Subscribe((part) =>

@@ -47,5 +47,6 @@ namespace PairMatching.DomainModel.MatchingCalculations
                 IsGenderMatch &&
                 IsTrackMatch;
         }
+        public bool IsMatch { get; set; }
     }
 }

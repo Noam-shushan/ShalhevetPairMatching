@@ -104,7 +104,7 @@ namespace PairMatching.WixApi
             return parsedObject["id"].ToString();
         }
 
-        public async Task<dynamic> NewParticipant(dynamic participantWixDto)
+        public async Task<WixIdDto> NewParticipant(dynamic participantWixDto)
         {
             var query = _configuration.WixApi["newMember"];
             
@@ -113,11 +113,11 @@ namespace PairMatching.WixApi
 
             var parsedObject = JObject.Parse(jsonContent);
 
-            var _id = parsedObject["inserted"]["_id"];
+            var newPart = parsedObject["inserted"].ToString();
 
-            var contactId = parsedObject["inserted"]["contactId"];
+            var result = JsonConvert.DeserializeObject<WixIdDto>(newPart) as WixIdDto;
 
-            return new { _id, contactId };
+            return result;
         }
 
         public async Task<IEnumerable<EmailRecipientsWixDto>> VerifieyNewPair(string id)
@@ -181,5 +181,14 @@ namespace PairMatching.WixApi
                 throw;
             }
         }
+    }
+
+    public class WixIdDto
+    {
+        [JsonProperty("_id")]
+        public string _Id { get; set; }
+
+        [JsonProperty("contactId")]
+        public string Id { get; set; }
     }
 }

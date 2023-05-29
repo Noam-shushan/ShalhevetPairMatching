@@ -98,7 +98,7 @@ namespace DomainTesting.WixApi
             var data = await _wix.VerifieyEmail("65a2c272-516b-4413-a89f-728206eeb37f");
         }
 
-        private async Task<dynamic> GetWixId(Participant part)
+        private async Task<WixIdDto> GetWixId(Participant part)
         {
             dynamic partDto = new { };
             if (part is IsraelParticipant ip)
@@ -110,7 +110,7 @@ namespace DomainTesting.WixApi
                 partDto = wp.ToWorldParticipantWixDto();
             }
 
-            var wixId = await _wix.NewParticipant(partDto);
+            var wixId = await _wix.NewParticipant(partDto) as WixIdDto;
             return wixId;
         }
 
@@ -118,7 +118,7 @@ namespace DomainTesting.WixApi
         public async Task SetWixIdForIsraelParticipaints()
         {
             var ips = await _db.IsraelParticipantsRepositry
-                .GetAllAsync(p => string.IsNullOrEmpty(p.WixId) && p.Email != "אין" && p.Email != "@" && p.Email != "");
+                .GetAllAsync(p => string.IsNullOrEmpty(p._WixId) && p.Email != "אין" && p.Email != "@" && p.Email != "");
 
             var tasks = new List<Task>();
             
@@ -126,7 +126,7 @@ namespace DomainTesting.WixApi
             int idCount = 0;
             foreach (var ip in ips)
             {
-                dynamic id = "";
+                WixIdDto id = null;
                 try
                 {
                     id = await GetWixId(ip);
@@ -135,13 +135,12 @@ namespace DomainTesting.WixApi
                 {
                     continue;
                 }
-                if (id is string i)
-                {
-                    idCount++;
-                    ip.WixId = i;
-                    tasks.Add(_db.IsraelParticipantsRepositry
-                    .Update(ip));
-                }
+                
+                idCount++;
+                ip.WixId = id.Id;
+                ip._WixId = id._Id;
+                tasks.Add(_db.IsraelParticipantsRepositry
+                .Update(ip));
             }
             await Task.WhenAll(tasks);
             Assert.AreEqual(idCount, partsCount);
@@ -151,7 +150,7 @@ namespace DomainTesting.WixApi
         public async Task SetWixIdForWorldParticipaints()
         {
             var wps = await _db.WorldParticipantsRepositry
-                .GetAllAsync(p => string.IsNullOrEmpty(p.WixId));
+                .GetAllAsync(p => string.IsNullOrEmpty(p._WixId));
 
             var tasks = new List<Task>();
 
@@ -159,7 +158,7 @@ namespace DomainTesting.WixApi
             int idCount = 0;
             foreach (var wp in wps)
             {
-                dynamic id = "";
+                WixIdDto id = null;
                 try
                 {
                     id = await GetWixId(wp);
@@ -168,13 +167,12 @@ namespace DomainTesting.WixApi
                 {
                     continue;
                 }
-                if (id is string i)
-                {
-                    idCount++;
-                    wp.WixId = i;
-                    tasks.Add(_db.WorldParticipantsRepositry
-                    .Update(wp));
-                }
+
+                idCount++;
+                wp.WixId = id.Id;
+                wp._WixId = id._Id;
+                tasks.Add(_db.WorldParticipantsRepositry
+                .Update(wp));
             }
             await Task.WhenAll(tasks);
             Assert.AreEqual(idCount, partsCount);
