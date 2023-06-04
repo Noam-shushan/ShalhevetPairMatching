@@ -21,13 +21,17 @@ namespace PairMatching.DomainModel.Services
 
         readonly WixDataReader _wix;
 
+        readonly IMatchingService _matchingService;
+
         readonly Logger _logger;
 
-        public PairService(IDataAccessFactory dataAccessFactory, MyConfiguration config, Logger logger)
+        public PairService(IDataAccessFactory dataAccessFactory, MyConfiguration config, IMatchingService matchingService, Logger logger)
         {
             _unitOfWork = dataAccessFactory.GetDataAccess();
 
             _logger = logger;
+
+            _matchingService = matchingService;
 
             _wix = new WixDataReader(config);
         }
@@ -43,6 +47,8 @@ namespace PairMatching.DomainModel.Services
                             && p.WixId != "")
                         .ConfigureAwait(false);
 
+                await SetParticipaintsForEachPair(pairs);
+
                 var tasks = new List<Task>();
                 foreach (var p in pairs)
                 {
@@ -52,9 +58,10 @@ namespace PairMatching.DomainModel.Services
                     }
                     var data = await _wix.VerifieyNewPair(p.WixId)
                         .ConfigureAwait(false);
+                    
                     if (data.Where(e => e.IsSent).Count() == 2)
                     {
-                        p.Status = PairStatus.Learning;
+                        p.Status = PairStatus.Learning;                        
                         tasks.Add(_unitOfWork.PairsRepositry.Update(p));
                     }
                 }
@@ -88,19 +95,7 @@ namespace PairMatching.DomainModel.Services
             {
                 var pair = CreateNewPair(pairSuggestion, track);
 
-                pair.FromIsrael.MatchTo.Add(pair.FromWorldId);
-                pair.FromWorld.MatchTo.Add(pair.FromIsraelId);
-
-                await Task.WhenAll(
-                    _unitOfWork
-                    .IsraelParticipantsRepositry
-                    // Update the israeli participaint
-                    .Update(pair.FromIsrael as IsraelParticipant),
-
-                    _unitOfWork
-                    .WorldParticipantsRepositry
-                    // Update the world participaint
-                    .Update(pair.FromWorld as WorldParticipant))
+                await SetMatchToForTheParticipants(pair)
                     .ConfigureAwait(false);
 
                 var newPair = await _unitOfWork.PairsRepositry.Insert(pair)
@@ -115,6 +110,65 @@ namespace PairMatching.DomainModel.Services
                 _logger.LogError($"Can not add new pair {pairSuggestion.FromIsrael.Id} -> {pairSuggestion.FromWorld.Id}", ex);
                 throw new UserException($"Can not add new havrota {pairSuggestion.FromIsrael.Name} -> {pairSuggestion.FromWorld.Name}");
             }
+        }
+
+        private async Task SetMatchToForTheParticipants(Pair pair)
+        {
+            var israeliPair = await _unitOfWork
+                .IsraelParticipantsRepositry
+                .GetByIdAsync(pair.FromWorldId)
+                .ConfigureAwait(false);
+            israeliPair.MatchTo.Add(pair.FromWorldId);
+
+            var wolrdPair = await _unitOfWork
+                .WorldParticipantsRepositry
+                .GetByIdAsync(pair.FromWorldId)
+                .ConfigureAwait(false);
+            wolrdPair.MatchTo.Add(pair.FromIsraelId);
+
+            await Task.WhenAll(
+                _unitOfWork
+                .IsraelParticipantsRepositry
+                // Update the israeli participaint
+                .Update(israeliPair),
+
+                _unitOfWork
+                .WorldParticipantsRepositry
+                // Update the world participaint
+                .Update(wolrdPair))
+                .ConfigureAwait(false);
+        }
+
+        async Task<(IsraelParticipant, WorldParticipant)> GetParticipantsFromPair(Pair pair)
+        {
+            var israeliPair = await _unitOfWork
+                .IsraelParticipantsRepositry
+                .GetByIdAsync(pair.FromWorldId)
+                .ConfigureAwait(false);
+            var wolrdPair = await _unitOfWork
+                .WorldParticipantsRepositry
+                .GetByIdAsync(pair.FromWorldId)
+                .ConfigureAwait(false);
+            return (israeliPair, wolrdPair);
+        }
+
+        private async Task UnsetMatchToForTheParticipants(Pair pair)
+        {
+            var (israeliPair, wolrdPair) = await GetParticipantsFromPair(pair);
+            israeliPair.MatchTo.Remove(pair.FromWorldId);
+            wolrdPair.MatchTo.Remove(pair.FromIsraelId);
+
+            await Task.WhenAll(
+                _unitOfWork
+                .IsraelParticipantsRepositry
+                // Update the israeli participaint
+                .Update(israeliPair),
+
+                _unitOfWork
+                .WorldParticipantsRepositry
+                // Update the world participaint
+                .Update(wolrdPair))
+                .ConfigureAwait(false);
         }
 
         public async Task ChangeTrack(Pair pair, PrefferdTracks track)
@@ -187,7 +241,7 @@ namespace PairMatching.DomainModel.Services
         public async Task DeletePair(Pair pair)
         {
             pair.IsDeleted = true;
-            await UpdateParticipantsOnDelete(pair)
+            await UnsetMatchToForTheParticipants(pair)
                 .ConfigureAwait(false);
             await _unitOfWork.PairsRepositry.Update(pair)
                 .ConfigureAwait(false);
@@ -217,23 +271,12 @@ namespace PairMatching.DomainModel.Services
 
         public async Task CancelPair(Pair pair)
         {
-            await UpdateParticipantsOnDelete(pair)
+            await UnsetMatchToForTheParticipants(pair)
                 .ConfigureAwait(false);
             await _unitOfWork.PairsRepositry.Delete(pair.Id)
                 .ConfigureAwait(false);
 
             _logger.LogInformation($"Censel pair {pair.Id}");
-        }
-
-        async Task UpdateParticipantsOnDelete(Pair pair)
-        {
-            pair.FromIsrael.MatchTo.Remove(pair.FromWorldId);
-            pair.FromWorld.MatchTo.Remove(pair.FromIsraelId);
-            
-            await Task.WhenAll(
-            _unitOfWork.IsraelParticipantsRepositry.Update(pair.FromIsrael as IsraelParticipant),
-            _unitOfWork.WorldParticipantsRepositry.Update(pair.FromWorld as WorldParticipant))
-                .ConfigureAwait(false);
         }
 
         public Pair CreateNewPair(PairSuggestion pairSuggestion, PrefferdTracks track = PrefferdTracks.NoPrefrence)
@@ -244,8 +287,8 @@ namespace PairMatching.DomainModel.Services
                 Track = finalTrack,
                 FromIsraelId = pairSuggestion.FromIsrael.Id,
                 FromWorldId = pairSuggestion.FromWorld.Id,
-                FromIsrael = pairSuggestion.FromIsrael,
-                FromWorld = pairSuggestion.FromWorld,
+                FromIsrael = pairSuggestion.FromIsrael.CopyPropertiesToNew<Participant, ParticipantInPair>(),
+                FromWorld = pairSuggestion.FromWorld.CopyPropertiesToNew<Participant, ParticipantInPair>(),
                 Status = PairStatus.Standby,
                 DateOfCreate = DateTime.Now,
                 IsDeleted = false,
@@ -292,20 +335,18 @@ namespace PairMatching.DomainModel.Services
                 .PairsRepositry
                 .GetAllAsync(p => p.Status == PairStatus.Standby)
                 .ConfigureAwait(false);
-            
-            await SetParticipaintsForEachPair(pairs)
-                .ConfigureAwait(false);
 
-            var fly = new TimeIntervalFactory();
+            var pairSuggestions = await _matchingService.GetAllPairSuggestions();
 
-            var result = from p in pairs
-                   select new StandbyPair
-                   {
-                       Pair = p,
-                       PairSuggestion = new PairSuggestionBulider(p.FromIsrael as IsraelParticipant,
-                       p.FromWorld as WorldParticipant, fly)
-                       .Build()
-                   };
+            var result = from pair in pairs
+                         from pairSuggestion in pairSuggestions
+                         where pairSuggestion.FromIsrael.Id == pair.FromIsraelId
+                         where pairSuggestion.FromWorld.Id == pair.FromWorldId
+                         select new StandbyPair
+                        {
+                            Pair = pair,
+                            PairSuggestion = pairSuggestion
+                         };
 
             return result;
         }
@@ -327,8 +368,10 @@ namespace PairMatching.DomainModel.Services
 
             foreach (var p in pairs)
             {
-                p.FromIsrael = israelParts.FirstOrDefault(i => i.Id == p.FromIsraelId);
-                p.FromWorld = worldParts.FirstOrDefault(i => i.Id == p.FromWorldId);
+                p.FromIsrael = israelParts.FirstOrDefault(i => i.Id == p.FromIsraelId)
+                    .CopyPropertiesToNew<Participant, ParticipantInPair>();
+                p.FromWorld = worldParts.FirstOrDefault(i => i.Id == p.FromWorldId)
+                    .CopyPropertiesToNew<Participant, ParticipantInPair>();
             }
         }
 

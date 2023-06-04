@@ -50,40 +50,6 @@ namespace DomainTesting
             return result;
         }
 
-        [Test]
-        public async Task FixOpenQastion()
-        {
-            var part = await _unitOfWork
-                .WorldParticipantsRepositry
-                .GetByIdAsync("645b7477ec0afde443ea7858");
-
-            if (part == null)
-            {
-                return;
-            }
-            // b7ed0236-6646-44cc-85a4-b85daaee3155
-            // b7ed0236-6646-44cc-85a4-b85daaee3155
-            var all = await _wix.GetNewParticipants(100);
-            
-            var participantWixDto = all.FirstOrDefault(p => p._id == part.WixId) as IsraelParticipantWixDto;
-
-            part.OpenQuestions = new OpenQuestionsForWorld
-            {
-                AdditionalInfo = participantWixDto.additionalInfo,
-                WhoIntroduced = participantWixDto.whoIntroduced,
-                GeneralInfo =
-                $"פרטים ביוגרפיים:\n {participantWixDto.biographHeb}\n\n" +
-                $"תכונות אישיות:\n {participantWixDto.personalTraits}\n\n" +
-                $"למה הצטרפת לשלהבת: \n {participantWixDto.whyJoinShalhevet}\n"
-            };
-            part.OtherLanguages = participantWixDto.otherLan;
-            if (participantWixDto.otherLan.Any() && !string.IsNullOrEmpty(participantWixDto.otherLang))
-            {
-                part.OtherLanguages.Add(participantWixDto.otherLang);
-            }
-
-            await _unitOfWork.WorldParticipantsRepositry.Update(part);
-        }
 
         [Test]
         public async Task AddPropertyToMongo()

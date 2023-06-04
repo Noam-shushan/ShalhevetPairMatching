@@ -53,4 +53,15 @@ namespace PairMatching.Tools
             Data = data;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class BsonIgnoreOnClassAttribute : Attribute
+    {
+        public Type IgnoredClass { get; }
+
+        public BsonIgnoreOnClassAttribute(Type ignoredClass)
+        {
+            IgnoredClass = ignoredClass;
+        }
+    }
 }

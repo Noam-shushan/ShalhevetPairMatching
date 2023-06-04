@@ -34,10 +34,10 @@ namespace PairMatching.Models
         public PairStatus Status { get; set; }
 
         [BsonIgnore]
-        public Participant FromIsrael { get; set; } = new();
+        public ParticipantInPair FromIsrael { get; set; } = new();
 
         [BsonIgnore]
-        public Participant FromWorld { get; set; } = new();
+        public ParticipantInPair FromWorld { get; set; } = new();
     }
 
     public record TrackHistory

@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.IO;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using PairMatching.Tools;
 using System;
 using System.Collections.Generic;
@@ -72,11 +75,13 @@ namespace PairMatching.Models
         public bool IsFromIsrael => Country == "Israel";
 
         [BsonIgnore]
-        public bool IsOpenToMatch => !IsDeleted 
-            && !IsInArchive 
+        public bool IsOpenToMatch => !IsDeleted
+            && !IsInArchive
             && MatchTo.Count < PairPreferences?.NumberOfMatchs;
 
         [BsonIgnore]
         public bool IsMatch => MatchTo.Count > 0;
     }
 }
+
+

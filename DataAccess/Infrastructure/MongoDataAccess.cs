@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
+using MongoDB.Bson.Serialization;
+using PairMatching.Models;
+using MongoDB.Bson.IO;
+using MongoDB.Bson;
 
 namespace PairMatching.DataAccess.Infrastructure
 {
@@ -19,9 +23,11 @@ namespace PairMatching.DataAccess.Infrastructure
             _connctionsStrings = connctionsStrings;
             _databaseName = databaseName;
         }
-
+        
         public MongoDataAccess(string connctionsStrings) : this(connctionsStrings, "Shalhevet")
         {
+            //BsonSerializer.RegisterSerializer(new BsonIgnoreInParentSerializer<Participant>(BsonSerializer.LookupSerializer<Participant>()));
+
         }
 
         private IMongoCollection<T> ConnectToMongo<T>(string collectionName)
