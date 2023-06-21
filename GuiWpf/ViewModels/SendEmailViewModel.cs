@@ -1,10 +1,6 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PairMatching.DomainModel.Email;
 using Prism.Commands;
 using PairMatching.Models;
 using PairMatching.DomainModel.Services;
@@ -12,10 +8,7 @@ using GuiWpf.Events;
 using Prism.Events;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
-using Amazon.Runtime.Internal.Util;
-using System.ComponentModel;
-using Microsoft.VisualBasic;
+
 
 namespace GuiWpf.ViewModels
 {

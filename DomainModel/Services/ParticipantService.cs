@@ -61,14 +61,16 @@ namespace PairMatching.DomainModel.Services
         {
             return await _unitOfWork
                 .IsraelParticipantsRepositry
-                .GetAllAsync(ip => !ip.IsDeleted && !ip.IsInArchive);
+                .GetAllAsync(ip => !ip.IsDeleted && !ip.IsInArchive)
+                .ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<WorldParticipant>> GetAllFromWorld()
         {
             return await _unitOfWork
                 .WorldParticipantsRepositry
-                .GetAllAsync(wp => !wp.IsDeleted && !wp.IsInArchive);
+                .GetAllAsync(wp => !wp.IsDeleted && !wp.IsInArchive)
+                .ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Participant>> GetArchive()

@@ -1,8 +1,6 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using PairMatching.DomainModel.Services;
 using Prism.Commands;
@@ -11,10 +9,7 @@ using PairMatching.Models;
 using Prism.Events;
 using GuiWpf.Events;
 using GuiWpf.UIModels;
-using System.Diagnostics;
 using PairMatching.Tools;
-using System.Windows.Controls.Primitives;
-using MailKit;
 
 namespace GuiWpf.ViewModels
 {

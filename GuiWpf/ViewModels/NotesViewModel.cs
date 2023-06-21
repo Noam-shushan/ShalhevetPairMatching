@@ -1,18 +1,11 @@
-﻿using GuiWpf.Events;
-using MailKit;
-using PairMatching.DomainModel.Services;
+﻿using PairMatching.DomainModel.Services;
 using PairMatching.Models;
 using Prism.Commands;
-using Prism.Events;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Linq;
+
 
 namespace GuiWpf.ViewModels
 {   

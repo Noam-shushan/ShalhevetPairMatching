@@ -4,16 +4,11 @@
     <RootNamespace>PairMatching.DomainModel</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Email\HtmlTemplates\PairBrokeEnglish.html" />
-    <None Remove="Email\HtmlTemplates\PairBrokeHebrew.html" />
-    <None Remove="Email\HtmlTemplates\StatusQuizEnglish.html" />
-    <None Remove="Email\HtmlTemplates\StatusQuizHebrew.html" />
-    <None Remove="Email\HtmlTemplates\SuccessfullyRegisteredEnglish.html" />
-    <None Remove="Email\HtmlTemplates\SuccessfullyRegisteredHebrew.html" />
-    <None Remove="Email\HtmlTemplates\ToSecretaryNewPair.html" />
-    <None Remove="Email\HtmlTemplates\ToSecretaryPairBroke.html" />
-    <None Remove="Email\HtmlTemplates\YouGotPairEnglish.html" />
-    <None Remove="Email\HtmlTemplates\YouGotPairHebrew.html" />
+    <Compile Remove="Email\**" />
+    <EmbeddedResource Remove="Email\**" />
+    <None Remove="Email\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Services\Countries.json" />
   </ItemGroup>
   <ItemGroup>
@@ -23,7 +18,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HungarianAlgorithm" Version="2.2.9" />
-    <PackageReference Include="MailKit" Version="3.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
@@ -33,38 +27,6 @@
     <ProjectReference Include="..\PairMatching.Logger\PairMatching.Logger.csproj" />
     <ProjectReference Include="..\Tools\UtilTools.csproj" />
     <ProjectReference Include="..\WixApi\WixApi.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-	  <Resource Include="Email\HtmlTemplates\PairBrokeEnglish.html">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
-	  <Resource Include="Email\HtmlTemplates\PairBrokeHebrew.html">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
-	  <Resource Include="Email\HtmlTemplates\StatusQuizEnglish.html">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
-    <Resource Include="Email\HtmlTemplates\StatusQuizHebrew.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Email\HtmlTemplates\SuccessfullyRegisteredEnglish.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-	  <Resource Include="Email\HtmlTemplates\SuccessfullyRegisteredHebrew.html">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
-	  <Resource Include="Email\HtmlTemplates\ToSecretaryNewPair.html">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
-    <Resource Include="Email\HtmlTemplates\ToSecretaryPairBroke.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-	  <Resource Include="Email\HtmlTemplates\YouGotPairEnglish.html">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
-    <Resource Include="Email\HtmlTemplates\YouGotPairHebrew.html">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Resource>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
