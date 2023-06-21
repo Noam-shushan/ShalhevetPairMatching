@@ -61,14 +61,34 @@ namespace PairMatching.DomainModel.Services
         {
             return await _unitOfWork
                 .IsraelParticipantsRepositry
-                .GetAllAsync(ip => !ip.IsDeleted);
+                .GetAllAsync(ip => !ip.IsDeleted && !ip.IsInArchive);
         }
 
         public async Task<IEnumerable<WorldParticipant>> GetAllFromWorld()
         {
             return await _unitOfWork
                 .WorldParticipantsRepositry
-                .GetAllAsync(ip => !ip.IsDeleted);
+                .GetAllAsync(wp => !wp.IsDeleted && !wp.IsInArchive);
+        }
+
+        public async Task<IEnumerable<Participant>> GetArchive()
+        {
+            var result = new List<Participant>();
+            
+            var ips = _unitOfWork
+                .IsraelParticipantsRepositry
+                .GetAllAsync(ip => ip.IsInArchive);
+            
+            var wps = _unitOfWork
+                .WorldParticipantsRepositry
+                .GetAllAsync(wp => wp.IsInArchive);
+             
+            await Task.WhenAll(ips, wps)
+                .ConfigureAwait(false);
+
+            result.AddRange(ips.Result);
+            result.AddRange(wps.Result);
+            return result;
         }
 
         public async Task SetNewParticipintsFromWix()

@@ -32,10 +32,6 @@ namespace PairMatching.DomainModel.MatchingCalculations
         
         public PairSuggestion Build()
         {
-            //if (_wp.Id == "62c6efb6b80dbc37793a1473" && _ip.Id == "62c6f4035436a349d5064708")
-            //{
-            //    var x = 8;
-            //}
             _result.IsGenderMatch = IsGenderMatch();
             _result.IsEnglishLevelMatch = IsEnglishLevelMatch();
             _result.IsSkillLevelMatch = IsLerningSkillMatch();

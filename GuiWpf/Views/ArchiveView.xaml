@@ -1,8 +1,7 @@
 ﻿<UserControl
-    x:Class="GuiWpf.Views.ParticipiantsView"
+    x:Class="GuiWpf.Views.ArchiveView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:controlers="clr-namespace:GuiWpf.Controlers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dropDown="clr-namespace:DropdownMenuControl;assembly=DropdownMenuControl"
@@ -15,7 +14,6 @@
     xmlns:modelPopup="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:uiModels="clr-namespace:GuiWpf.UIModels"
-    xmlns:vm="clr-namespace:GuiWpf.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -34,7 +32,10 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <materialDesign:Card Grid.Row="0" Margin="5">
+        <materialDesign:Card
+            Grid.Row="0"
+            Margin="5"
+            Background="LightYellow">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -50,7 +51,7 @@
                 <Grid
                     Grid.Row="0"
                     Margin="5"
-                    Background="{StaticResource MaterialDesignLightBackground}">
+                    Background="LightYellow">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
@@ -120,15 +121,6 @@
                                 Kind="Export" />
                         </Button>
 
-                        <Button
-                            Command="{Binding AddParticipantCommand}"
-                            Style="{StaticResource MaterialDesignIconButton}"
-                            ToolTip="הוסף משתתף">
-                            <materialDesign:PackIcon
-                                Width="28"
-                                Height="28"
-                                Kind="PlusCircle" />
-                        </Button>
                     </StackPanel>
                 </Grid>
 
@@ -138,6 +130,7 @@
                     Height="auto"
                     materialDesign:DataGridAssist.CornerRadius="10"
                     AutoGenerateColumns="False"
+                    Background="LightYellow"
                     CanUserAddRows="False"
                     CanUserSortColumns="True"
                     IsSynchronizedWithCurrentItem="True"
@@ -165,6 +158,7 @@
 
                         </Style>
 
+
                         <Style x:Key="TestColumnStyle" TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -175,7 +169,7 @@
 
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
-                                <CheckBox Cursor="Hand" IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}" />
+                                <CheckBox Cursor="Hand" IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}" />
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -190,7 +184,7 @@
                                     <Button
                                         Width="23"
                                         Height="23"
-                                        Command="{Binding DataContext.OpenFullParticipiantCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                        Command="{Binding DataContext.OpenFullParticipiantCommand, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}"
                                         Cursor="Hand"
                                         Style="{StaticResource MaterialDesignIconButton}"
                                         ToolTip="פרטים נוספים">
@@ -249,7 +243,7 @@
                                             <StackPanel Orientation="Horizontal">
                                                 <controlers:Field FieldName="טלפון" Value="{Binding PhoneNumber}" />
                                                 <Button
-                                                    Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                                    Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}"
                                                     CommandParameter="{Binding PhoneNumber}"
                                                     Style="{StaticResource MaterialDesignIconButton}"
                                                     ToolTip="העתק">
@@ -259,7 +253,7 @@
                                             <StackPanel Orientation="Horizontal">
                                                 <controlers:Field FieldName="אימייל" Value="{Binding Email}" />
                                                 <Button
-                                                    Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                                    Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}"
                                                     CommandParameter="{Binding Email}"
                                                     Style="{StaticResource MaterialDesignIconButton}"
                                                     ToolTip="העתק">
@@ -273,13 +267,28 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Width="auto" Header="חברותא">
+                        <DataGridTemplateColumn Width="auto" Header="הוצא מארכיון">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <controlers:Field
-                                        FieldName="יש"
-                                        FlowDirection="RightToLeft"
-                                        Value="{Binding IsMatch}" />
+                                    <Button
+                                        Command="{Binding DataContext.ExloadeFromArchivCommand, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="הוצא מארכיון">
+                                        <materialDesign:PackIcon Kind="ArchiveOff" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="auto" Header="מחק">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="מחק משתתף">
+                                        <materialDesign:PackIcon Kind="Delete" />
+                                    </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -288,7 +297,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button
-                                        Command="{Binding DataContext.OpenEditParticipiantCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                        Command="{Binding DataContext.OpenEditParticipiantCommand, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}"
                                         Style="{StaticResource MaterialDesignIconButton}"
                                         ToolTip="ערוך">
                                         <materialDesign:PackIcon Kind="Edit" />
@@ -296,7 +305,6 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
 
                         <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.Header>
@@ -322,7 +330,7 @@
                                             <local:NotesView
                                                 MinHeight="300"
                                                 MaxWidth="500"
-                                                DataContext="{Binding DataContext.MyNotesViewModel, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}" />
+                                                DataContext="{Binding DataContext.MyNotesViewModel, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}" />
                                         </ScrollViewer>
                                     </materialDesign:PopupBox>
 
@@ -333,7 +341,7 @@
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
                                 <Button
-                                    Command="{Binding DataContext.SendEmailToManyCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                    Command="{Binding DataContext.SendEmailToManyCommand, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}"
                                     Style="{StaticResource MaterialDesignIconButton}"
                                     ToolTip="שלח מייל לכל הנבחרים">
                                     <materialDesign:PackIcon Kind="Email" />
@@ -342,7 +350,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button
-                                        Command="{Binding DataContext.SendEmailToOneCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
+                                        Command="{Binding DataContext.SendEmailToOneCommand, RelativeSource={RelativeSource AncestorType=local:ArchiveView}}"
                                         Style="{StaticResource MaterialDesignIconButton}"
                                         ToolTip="שלח מייל למשתתף">
                                         <materialDesign:PackIcon Kind="Email" />
@@ -351,33 +359,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <dropDown:DropdownMenu Padding="15" Cursor="Hand">
-                                        <Border
-                                            Background="White"
-                                            BorderBrush="LightGray"
-                                            BorderThickness="1">
-                                            <StackPanel>
-                                                <Button
-                                                    Command="{Binding DataContext.SendToArchivCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
-                                                    Style="{StaticResource MaterialDesignIconButton}"
-                                                    ToolTip="שלח לארכיון">
-                                                    <materialDesign:PackIcon Kind="Archive" />
-                                                </Button>
-                                                <Button
-                                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}"
-                                                    Style="{StaticResource MaterialDesignIconButton}"
-                                                    ToolTip="מחק משתתף">
-                                                    <materialDesign:PackIcon Kind="Delete" />
-                                                </Button>
-                                            </StackPanel>
-                                        </Border>
-                                    </dropDown:DropdownMenu>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+
 
                     </DataGrid.Columns>
                 </DataGrid>
@@ -387,15 +369,7 @@
             </Grid>
         </materialDesign:Card>
 
-        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsAddFormOpen}">
-            <local:AddParticipantForm />
-        </modelPopup:Modal>
-
         <local:SendEmailView DataContext="{Binding SendEmailVm}" />
-
-        <modelPopup:Modal Panel.ZIndex="1" IsOpen="{Binding IsEditParticipaintOpen}">
-            <local:AddParticipantForm />
-        </modelPopup:Modal>
 
         <local:ExcelExportView DataContext="{Binding ExportToExcelVm}" />
 

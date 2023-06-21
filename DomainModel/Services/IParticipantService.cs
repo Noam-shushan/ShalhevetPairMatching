@@ -26,5 +26,6 @@ namespace PairMatching.DomainModel.Services
         Task ExloadeFromArcive(Participant selectedParticipant);
         Task<IsraelParticipant> GetIsraeliParticipantById(string fromIsraelId);
         Task<WorldParticipant> GetWolrdParticipantById(string id);
+        Task<IEnumerable<Participant>> GetArchive();
     }
 }

@@ -1,34 +1,27 @@
 ﻿using GuiWpf.Commands;
 using GuiWpf.Events;
 using GuiWpf.UIModels;
-using MahApps.Metro.Controls.Dialogs;
 using PairMatching.DomainModel.Services;
 using PairMatching.Models;
-using PairMatching.ExcelTool;
-using PairMatching.Tools;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using PairMatching.Tools;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
-using GuiWpf.Views;
 
 namespace GuiWpf.ViewModels
 {
-    public class ParticipiantsViewModel : ViewModelBase
+    public class ArchiveViewModel : ViewModelBase
     {
         readonly IParticipantService _participantService;
         readonly IEventAggregator _ea;
         readonly ExceptionHeandler _exceptionHeandler;
 
-        public ParticipiantsViewModel(IParticipantService participantService, IPairsService pairService, IEmailService emailService, ExcelExportingService excel, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
+        public ArchiveViewModel(IParticipantService participantService, IPairsService pairService, IEmailService emailService, ExcelExportingService excel, IEventAggregator ea, ExceptionHeandler exceptionHeandler)
         {
             _participantService = participantService;
             _ea = ea;
@@ -84,12 +77,6 @@ namespace GuiWpf.ViewModels
         #endregion
 
         #region Navigation Properties
-        private bool _isAddFormOpen = false;
-        public bool IsAddFormOpen
-        {
-            get { return _isAddFormOpen; }
-            set { SetProperty(ref _isAddFormOpen, value); }
-        }
 
         private bool _isEditParticipaintOpen;
         public bool IsEditParticipaintOpen
@@ -227,47 +214,6 @@ namespace GuiWpf.ViewModels
 
         });
 
-
-        DelegateCommand _SendToArchivCommand;
-        public DelegateCommand SendToArchivCommand => _SendToArchivCommand ??= new(
-        async () =>
-        {
-            if (SelectedParticipant != null)
-            {
-                if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשלוח את {SelectedParticipant.Name} לארכיון?"))
-                {
-                    if (SelectedParticipant.IsMatch)
-                    {
-                        if (!Messages.MessageBoxConfirmation($"{SelectedParticipant.Name} נמצא בחברותא. שליחה לארכיון תבטל את החברותא. האם אתה בטוח שברצונך להמשיך?"))
-                        {
-                            return;
-                        }
-                    }
-                
-                    try
-                    {
-                        IsLoaded = true;
-                        await _participantService.SendToArcive(SelectedParticipant);
-                        SelectedParticipant.IsInArchive = true;
-                        Participiants.ItemsSource.Remove(SelectedParticipant);
-                        Participiants.Refresh();
-
-                        _ea.GetEvent<SendToArciveEvent>().Publish(SelectedParticipant);
-                        _ea.GetEvent<RefreshMatchingEvent>().Publish();
-                    }
-                    catch (Exception ex)
-                    {
-                        _exceptionHeandler.HeandleException(ex);
-                    }
-                    finally
-                    {
-                        IsLoaded = false;
-                    }
-                }
-            }
-        }, () => !IsLoaded);
-
-
         DelegateCommand _ExloadeFromArchivCommand;
         public DelegateCommand ExloadeFromArchivCommand => _ExloadeFromArchivCommand ??= new(
         async () =>
@@ -279,7 +225,10 @@ namespace GuiWpf.ViewModels
                     IsLoaded = true;
                     await _participantService.ExloadeFromArcive(SelectedParticipant);
                     SelectedParticipant.IsInArchive = false;
+                    Participiants.ItemsSource.Remove(SelectedParticipant);
                     Participiants.Refresh();
+                    _ea.GetEvent<ExloadeFromArciveEvent>()
+                        .Publish(SelectedParticipant);
                     _ea.GetEvent<RefreshMatchingEvent>().Publish();
                 }
                 catch (Exception ex)
@@ -293,13 +242,13 @@ namespace GuiWpf.ViewModels
                 }
             }
         }, () => !IsLoaded);
-            
+
 
         DelegateCommand _DeleteCommand;
         public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
         async () =>
         {
-            if(SelectedParticipant == null)
+            if (SelectedParticipant == null)
             {
                 return;
             }
@@ -308,7 +257,7 @@ namespace GuiWpf.ViewModels
             : $"האם אתה בטוח שברצונך למחוק את {SelectedParticipant.Name} ?";
             if (!Messages.MessageBoxConfirmation(msg))
             {
-                return;         
+                return;
             }
             try
             {
@@ -328,14 +277,6 @@ namespace GuiWpf.ViewModels
             }
         }, () => !IsLoaded);
 
-        DelegateCommand _addParticipantCommand;
-        public DelegateCommand AddParticipantCommand => _addParticipantCommand ??= new(
-            () =>
-            {
-                _ea.GetEvent<NewParticipaintEvent>().Publish(true);
-                IsAddFormOpen = !IsAddFormOpen;
-            });
-
 
         DelegateCommand _OpenEditParticipiantCommand;
         public DelegateCommand OpenEditParticipiantCommand => _OpenEditParticipiantCommand ??= new(
@@ -353,7 +294,7 @@ namespace GuiWpf.ViewModels
             FromIsraelFilter = ParticipiantsFrom.All;
             PartsKindFilter = ParticipiantsKind.All;
             YearsFilter = allYears;
-            SearchParticipiantsWord = ""; 
+            SearchParticipiantsWord = "";
         });
 
 
@@ -384,23 +325,7 @@ namespace GuiWpf.ViewModels
             {
                 IsLoaded = true;
 
-                await _participantService.SetNewParticipintsFromWix();
-            }
-            catch (Exception ex)
-            {
-                _exceptionHeandler.HeandleException(ex);
-            }
-            finally
-            {
-                IsLoaded = false;
-            }
-            try
-            {
-                IsLoaded = true;
-
-                var parts = await _participantService.GetAll();
-
-                _ea.GetEvent<ResiveParticipantsEvent>().Publish(parts);
+                var parts = await _participantService.GetArchive();
 
                 Years.Clear();
                 Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
@@ -420,29 +345,17 @@ namespace GuiWpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => 
+            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
             {
-                IsAddFormOpen = isClose;
                 IsEditParticipaintOpen = isClose;
             });
 
-            _ea.GetEvent<ParticipaintWesUpdate>()
-                .Subscribe(updetetdParts =>
-                {
-                    SelectedParticipant = Participiants.Items.First();
-                    Participiants.Add(updetetdParts, "Id");
-                });
-
-            _ea.GetEvent<AddParticipantEvent>().Subscribe((part) =>
-            {
-                Participiants.Add(part);
-            });
             _ea.GetEvent<RefreshAll>()
                 .Subscribe(async () =>
                 {
                     await Refresh();
                 });
-            _ea.GetEvent<ExloadeFromArciveEvent>()
+            _ea.GetEvent<SendToArciveEvent>()
                 .Subscribe(part =>
                 {
                     Participiants.Add(part);
@@ -453,7 +366,7 @@ namespace GuiWpf.ViewModels
         {
             var partKind = false;
             var year = false;
-            
+
             var fromIsrael = (participant.IsFromIsrael && FromIsraelFilter == ParticipiantsFrom.FromIsrael)
                 || (!participant.IsFromIsrael && FromIsraelFilter == ParticipiantsFrom.FromWorld)
                 || ParticipiantsFrom.All == FromIsraelFilter;

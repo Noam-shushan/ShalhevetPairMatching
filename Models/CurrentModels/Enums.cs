@@ -66,7 +66,7 @@ namespace PairMatching.Models
         [EnumDescription("גמרא", "Talmud", "e9a52d6e-5510-4259-a157-c661e9ff95e9")]
         Talmud,
         
-        [EnumDescription("פרשה", "Weekly Parsha", "c44f84d4-a7b3-4125-9e1d-2000f9afb76e")]
+        [EnumDescription("פרשה", "Weekly Parsha", "3e55135c-846d-4f7e-a39c-c8512cc62714")]
         Parsha,
         
         [EnumDescription("תפילה", "Prayer", "c01b5f93-3797-473e-9eff-17bd7bddf736")]

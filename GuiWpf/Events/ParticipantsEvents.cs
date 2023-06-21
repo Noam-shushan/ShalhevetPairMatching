@@ -25,5 +25,9 @@ namespace GuiWpf.Events
     public class EditParticipaintEvent : PubSubEvent<Participant> { }
     
     public class ParticipaintWesUpdate : PubSubEvent<Participant> { }
-    
+
+    public class ExloadeFromArciveEvent : PubSubEvent<Participant> { }
+    public class SendToArciveEvent : PubSubEvent<Participant> { }
+
+
 }

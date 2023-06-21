@@ -181,24 +181,12 @@ namespace DomainTesting.WixApi
         [Test]
         public async Task FixWixId()
         {
-            var tasks = new List<Task>();
-            
-            var ips = await _db.IsraelParticipantsRepositry.GetAllAsync();
-            foreach (var ip in ips)
-            {
-                ip._WixId = ip.WixId;
-                tasks.Add(_db.IsraelParticipantsRepositry.Update(ip));
-            }
-            
-            var wps = await _db.WorldParticipantsRepositry.GetAllAsync();
-            
-            foreach (var wp in wps)
-            {
-                wp._WixId = wp.WixId;
-                tasks.Add(_db.WorldParticipantsRepositry.Update(wp));
-            }
-            
-            await Task.WhenAll(tasks);
+            var part =
+                await _db.WorldParticipantsRepositry.GetByIdAsync("6346b6609269558a546fc1ff");
+            var wixId = await GetWixId(part);
+            part.WixId = wixId.Id;
+            part._WixId = wixId._Id;
+            await _db.WorldParticipantsRepositry.Update(part);
         }
     }
 }

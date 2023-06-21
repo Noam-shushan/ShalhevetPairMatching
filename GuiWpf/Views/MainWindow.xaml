@@ -66,6 +66,9 @@
             <TabItem Header="מיילים">
                 <local:EmailsView />
             </TabItem>
+            <TabItem Header="ארכיון">
+                <local:ArchiveView />
+            </TabItem>
 
         </TabControl>
 
