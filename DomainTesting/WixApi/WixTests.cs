@@ -44,8 +44,13 @@ namespace DomainTesting.WixApi
         [Test]
         public async Task GetAll()
         {
-            var parts = await _wix.GetNewParticipants(0);
-            var count = parts.Where(part => part._id != part.contactId);
+            var partsDto = await _wix.GetNewParticipants(0);
+            var wps = from p in partsDto
+                      where p is WorldParticipantWixDto
+                      select (p as WorldParticipantWixDto).ToWorldParticipant();
+            var ips = from p in partsDto
+                      where p is IsraelParticipantWixDto
+                      select (p as IsraelParticipantWixDto).ToIsraelParticipant();
         }
 
         [Test]
@@ -183,9 +188,7 @@ namespace DomainTesting.WixApi
         {
             var part =
                 await _db.WorldParticipantsRepositry.GetByIdAsync("6346b6609269558a546fc1ff");
-            var wixId = await GetWixId(part);
-            part.WixId = wixId.Id;
-            part._WixId = wixId._Id;
+            part._WixId = "b129d489-8895-46c0-b24d-32e3a68212cf";
             await _db.WorldParticipantsRepositry.Update(part);
         }
     }

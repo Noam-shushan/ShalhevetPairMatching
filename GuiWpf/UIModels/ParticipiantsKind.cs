@@ -11,10 +11,7 @@ namespace GuiWpf.UIModels
         WithPair,
 
         [EnumDescription("בלי חברותא")]
-        WithoutPair,
-
-        [EnumDescription("ארכיון")]
-        Archive
+        WithoutPair
     }
 
     public enum ParticipiantsFrom

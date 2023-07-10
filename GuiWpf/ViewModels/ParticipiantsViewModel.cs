@@ -40,6 +40,7 @@ namespace GuiWpf.ViewModels
             SendEmailVm = new SendEmailViewModel(ea, emailService, exceptionHeandler);
             ExportToExcelVm = new(excel);
             FullParticipaintVm = new();
+            EditParticipaintVm = new EditParticipaintViewModel(participantService, ea, exceptionHeandler);
         }
 
         #region Properties:
@@ -101,6 +102,8 @@ namespace GuiWpf.ViewModels
         public ExcelExportViewModel<Participant> ExportToExcelVm { get; set; }
 
         public FullParticipaintViewModel FullParticipaintVm { get; set; }
+
+        public EditParticipaintViewModel EditParticipaintVm { get; set; }
 
         #endregion
 
@@ -213,6 +216,7 @@ namespace GuiWpf.ViewModels
         public DelegateCommand SendEmailToOneCommand => _sendEmailToOneCommand ??= new(
         () =>
         {
+            if (SelectedParticipant == null) return;
             var address = new EmailAddress[]
             {
                 new EmailAddress
@@ -232,66 +236,39 @@ namespace GuiWpf.ViewModels
         public DelegateCommand SendToArchivCommand => _SendToArchivCommand ??= new(
         async () =>
         {
-            if (SelectedParticipant != null)
+            if (SelectedParticipant == null) return;
+
+            if (!Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשלוח את {SelectedParticipant.Name} לארכיון?")) return;
+            
+            if (SelectedParticipant.IsMatch)
             {
-                if (Messages.MessageBoxConfirmation($"האם אתה בטוח שברצונך לשלוח את {SelectedParticipant.Name} לארכיון?"))
+                if (!Messages.MessageBoxConfirmation($"{SelectedParticipant.Name} נמצא בחברותא. שליחה לארכיון תבטל את החברותא. האם אתה בטוח שברצונך להמשיך?"))
                 {
-                    if (SelectedParticipant.IsMatch)
-                    {
-                        if (!Messages.MessageBoxConfirmation($"{SelectedParticipant.Name} נמצא בחברותא. שליחה לארכיון תבטל את החברותא. האם אתה בטוח שברצונך להמשיך?"))
-                        {
-                            return;
-                        }
-                    }
+                    return;
+                }
+            }
                 
-                    try
-                    {
-                        IsLoaded = true;
-                        await _participantService.SendToArcive(SelectedParticipant);
-                        SelectedParticipant.IsInArchive = true;
-                        Participiants.ItemsSource.Remove(SelectedParticipant);
-                        Participiants.Refresh();
-
-                        _ea.GetEvent<SendToArciveEvent>().Publish(SelectedParticipant);
-                        _ea.GetEvent<RefreshMatchingEvent>().Publish();
-                    }
-                    catch (Exception ex)
-                    {
-                        _exceptionHeandler.HeandleException(ex);
-                    }
-                    finally
-                    {
-                        IsLoaded = false;
-                    }
-                }
-            }
-        }, () => !IsLoaded);
-
-
-        DelegateCommand _ExloadeFromArchivCommand;
-        public DelegateCommand ExloadeFromArchivCommand => _ExloadeFromArchivCommand ??= new(
-        async () =>
-        {
-            if (SelectedParticipant != null)
+            try
             {
-                try
-                {
-                    IsLoaded = true;
-                    await _participantService.ExloadeFromArcive(SelectedParticipant);
-                    SelectedParticipant.IsInArchive = false;
-                    Participiants.Refresh();
-                    _ea.GetEvent<RefreshMatchingEvent>().Publish();
-                }
-                catch (Exception ex)
-                {
-                    _exceptionHeandler.HeandleException(ex);
-                    IsLoaded = false;
-                }
-                finally
-                {
-                    IsLoaded = false;
-                }
+                IsLoaded = true;
+                await _participantService.SendToArcive(SelectedParticipant);
+                SelectedParticipant.IsInArchive = true;
+                Participiants.ItemsSource.Remove(SelectedParticipant);
+                Participiants.Refresh();
+
+                _ea.GetEvent<SendToArciveEvent>()
+                    .Publish(GetSelected());
+                _ea.GetEvent<RefreshMatchingEvent>().Publish();
             }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
+                IsLoaded = false;
+            }
+
         }, () => !IsLoaded);
             
 
@@ -299,17 +276,13 @@ namespace GuiWpf.ViewModels
         public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
         async () =>
         {
-            if(SelectedParticipant == null)
-            {
-                return;
-            }
+            if(SelectedParticipant == null) return;
+
             var msg = SelectedParticipant.IsMatch ?
             $"ל {SelectedParticipant.Name} יש חברותא, האם בכל זאת למחוק?"
             : $"האם אתה בטוח שברצונך למחוק את {SelectedParticipant.Name} ?";
-            if (!Messages.MessageBoxConfirmation(msg))
-            {
-                return;         
-            }
+            if (!Messages.MessageBoxConfirmation(msg)) return;
+
             try
             {
                 IsLoaded = true;
@@ -341,8 +314,9 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenEditParticipiantCommand => _OpenEditParticipiantCommand ??= new(
         () =>
         {
-            _ea.GetEvent<EditParticipaintEvent>().Publish(SelectedParticipant);
-            IsEditParticipaintOpen = !IsEditParticipaintOpen;
+            if (SelectedParticipant == null) return;
+
+            EditParticipaintVm.Init(GetSelected(), true);
         });
 
 
@@ -361,7 +335,8 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenFullParticipiantCommand => _OpenFullParticipiantCommand ??= new(
         () =>
         {
-            FullParticipaintVm.Init(SelectedParticipant, true);
+            if (SelectedParticipant == null) return;
+            FullParticipaintVm.Init(GetSelected(), true);
         });
 
         public CopyCommand CopyCommand { get; set; } = new();
@@ -423,13 +398,11 @@ namespace GuiWpf.ViewModels
             _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => 
             {
                 IsAddFormOpen = isClose;
-                IsEditParticipaintOpen = isClose;
             });
 
             _ea.GetEvent<ParticipaintWesUpdate>()
                 .Subscribe(updetetdParts =>
                 {
-                    SelectedParticipant = Participiants.Items.First();
                     Participiants.Add(updetetdParts, "Id");
                 });
 
@@ -463,7 +436,6 @@ namespace GuiWpf.ViewModels
                 ParticipiantsKind.All => true,
                 ParticipiantsKind.WithPair => participant.MatchTo.Any(),
                 ParticipiantsKind.WithoutPair => !participant.MatchTo.Any(),
-                ParticipiantsKind.Archive => participant.IsInArchive,
                 _ => true
             };
 
@@ -473,6 +445,20 @@ namespace GuiWpf.ViewModels
                 && partKind
                 && year
                 && fromIsrael;
+        }
+
+        Participant GetSelected()
+        {
+            if (SelectedParticipant == null) return null;
+            if(SelectedParticipant is IsraelParticipant ip)
+            {
+                return ip.Clone();
+            }
+            if (SelectedParticipant is WorldParticipant wp)
+            {
+                return wp.Clone();
+            }
+            return null;
         }
 
         #endregion

@@ -33,6 +33,7 @@ namespace GuiWpf.ViewModels
             SendEmailVm = new SendEmailViewModel(ea, emailService, exceptionHeandler);
             ExportToExcelVm = new(excel);
             FullParticipaintVm = new();
+            EditParticipaintVm = new(participantService, ea, exceptionHeandler);
         }
 
         #region Properties:
@@ -89,6 +90,8 @@ namespace GuiWpf.ViewModels
 
         public FullParticipaintViewModel FullParticipaintVm { get; set; }
 
+        public EditParticipaintViewModel EditParticipaintVm { get; set; }
+
         #endregion
 
         #region Filtering
@@ -102,8 +105,6 @@ namespace GuiWpf.ViewModels
             {
                 if (SetProperty(ref _yearsFilter, value))
                 {
-                    //_ea.GetEvent<RefreshItemsEvnet>()
-                    //    .Publish(true);
                     Participiants.Refresh();
                 }
             }
@@ -211,7 +212,6 @@ namespace GuiWpf.ViewModels
                 }
             };
             SendEmailVm.Init(address, true);
-
         });
 
         DelegateCommand _ExloadeFromArchivCommand;
@@ -228,7 +228,7 @@ namespace GuiWpf.ViewModels
                     Participiants.ItemsSource.Remove(SelectedParticipant);
                     Participiants.Refresh();
                     _ea.GetEvent<ExloadeFromArciveEvent>()
-                        .Publish(SelectedParticipant);
+                        .Publish(GetSelected());
                     _ea.GetEvent<RefreshMatchingEvent>().Publish();
                 }
                 catch (Exception ex)
@@ -248,17 +248,13 @@ namespace GuiWpf.ViewModels
         public DelegateCommand DeleteCommand => _DeleteCommand ??= new(
         async () =>
         {
-            if (SelectedParticipant == null)
-            {
-                return;
-            }
+            if (SelectedParticipant == null) return;
+            
             var msg = SelectedParticipant.IsMatch ?
             $"ל {SelectedParticipant.Name} יש חברותא, האם בכל זאת למחוק?"
             : $"האם אתה בטוח שברצונך למחוק את {SelectedParticipant.Name} ?";
-            if (!Messages.MessageBoxConfirmation(msg))
-            {
-                return;
-            }
+            if (!Messages.MessageBoxConfirmation(msg)) return;
+
             try
             {
                 IsLoaded = true;
@@ -282,8 +278,9 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenEditParticipiantCommand => _OpenEditParticipiantCommand ??= new(
         () =>
         {
-            _ea.GetEvent<EditParticipaintEvent>().Publish(SelectedParticipant);
-            IsEditParticipaintOpen = !IsEditParticipaintOpen;
+            if (SelectedParticipant == null) return;
+
+            EditParticipaintVm.Init(GetSelected(), true);
         });
 
 
@@ -302,7 +299,7 @@ namespace GuiWpf.ViewModels
         public DelegateCommand OpenFullParticipiantCommand => _OpenFullParticipiantCommand ??= new(
         () =>
         {
-            FullParticipaintVm.Init(SelectedParticipant, true);
+            FullParticipaintVm.Init(GetSelected(), true);
         });
 
         public CopyCommand CopyCommand { get; set; } = new();
@@ -330,7 +327,7 @@ namespace GuiWpf.ViewModels
                 Years.Clear();
                 Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
                 Years.Insert(0, allYears);
-
+                
                 Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, ParticipiantsFilter);
             }
             catch (Exception ex)
@@ -345,11 +342,6 @@ namespace GuiWpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) =>
-            {
-                IsEditParticipaintOpen = isClose;
-            });
-
             _ea.GetEvent<RefreshAll>()
                 .Subscribe(async () =>
                 {
@@ -359,6 +351,11 @@ namespace GuiWpf.ViewModels
                 .Subscribe(part =>
                 {
                     Participiants.Add(part);
+                });
+            _ea.GetEvent<ParticipaintWesUpdate>()
+                .Subscribe(updetetdParts =>
+                {
+                    Participiants.Add(updetetdParts, "Id");
                 });
         }
 
@@ -376,7 +373,6 @@ namespace GuiWpf.ViewModels
                 ParticipiantsKind.All => true,
                 ParticipiantsKind.WithPair => participant.MatchTo.Any(),
                 ParticipiantsKind.WithoutPair => !participant.MatchTo.Any(),
-                ParticipiantsKind.Archive => participant.IsInArchive,
                 _ => true
             };
 
@@ -386,6 +382,20 @@ namespace GuiWpf.ViewModels
                 && partKind
                 && year
                 && fromIsrael;
+        }
+
+        Participant GetSelected()
+        {
+            if (SelectedParticipant == null) return null;
+            if (SelectedParticipant is IsraelParticipant ip)
+            {
+                return ip.Clone();
+            }
+            if (SelectedParticipant is WorldParticipant wp)
+            {
+                return wp.Clone();
+            }
+            return null;
         }
 
         #endregion

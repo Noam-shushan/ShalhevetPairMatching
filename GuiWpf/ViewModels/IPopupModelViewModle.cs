@@ -9,5 +9,7 @@ namespace GuiWpf.ViewModels
     public interface IPopupViewModle
     {
         void CloseDialog();
+
+        
     }
 }

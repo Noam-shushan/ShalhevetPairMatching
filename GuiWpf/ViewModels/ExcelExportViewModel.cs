@@ -15,7 +15,6 @@ namespace GuiWpf.ViewModels
 {
     public class ExcelExportViewModel<T> : ViewModelBase, IPopupViewModle
     {
-
         public ExitPopupModelViewModel ExitPopupVM { get; set; }
 
         readonly ExcelExportingService _excelService;

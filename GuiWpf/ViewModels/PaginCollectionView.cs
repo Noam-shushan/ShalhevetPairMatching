@@ -18,6 +18,14 @@ namespace GuiWpf.ViewModels
     {
         #region Ptoperties
 
+
+        private T _selectedItem;
+        public T SelectedItem
+        {
+            get => _selectedItem;
+            set => SetProperty(ref _selectedItem, value);
+        }
+
         #region Collections
 
         ObservableCollection<T> _itemsSource = new();
@@ -242,9 +250,9 @@ namespace GuiWpf.ViewModels
 
         public void Add(T item, string idOnDelete = "")
         {
-            if(idOnDelete != "")
+            if (idOnDelete != "")
             {
-                var foundedItem = ItemsSource.FirstOrDefault(x => 
+                var foundedItem = ItemsSource.FirstOrDefault(x =>
                     x.GetType()?
                     .GetProperty(idOnDelete)?
                     .GetValue(x)?
@@ -253,11 +261,16 @@ namespace GuiWpf.ViewModels
                         .GetValue(item)?
                         .ToString());
 
-                ItemsSource.Remove(foundedItem);
+                if (foundedItem != null)
+                {
+                    foundedItem = item;
+                }
             }
-            
-            ItemsSource.Insert(0, item);
-            Refresh(true);
+            else
+            {
+                ItemsSource.Add(item);
+                Refresh(true);
+            }
         }
 
         bool PagingFilter(T item)

@@ -364,7 +364,7 @@ namespace GuiWpf.ViewModels
                 NumberOfMatchs = NumberOfMatchs,
                 Tracks = Tracks
                         .Where(tv => tv.Value)
-                        .Select(t => t.Key),
+                        .Select(t => t.Key).Distinct(),
                 LearningTime = from lt in from ot in OpenTimes
                                           where ot.Value
                                           select new LearningTime
@@ -376,7 +376,7 @@ namespace GuiWpf.ViewModels
                                select new LearningTime
                                {
                                    Day = day.Key,
-                                   TimeInDay = day.SelectMany(t => t.TimeInDay).ToList()
+                                   TimeInDay = day.SelectMany(t => t.TimeInDay).Distinct()
                                }
 
             };

@@ -112,6 +112,26 @@ namespace PairMatching.Tools
             return string.Empty;
         }
 
+        public static T GetValueFromId<T>(string id)
+        {
+            var type = typeof(T);
+            if (!type.IsEnum)
+                throw new ArgumentException();
+            FieldInfo[] fields = type.GetFields();
+            var field = fields
+                            .SelectMany(f => f.GetCustomAttributes(
+                                typeof(EnumDescriptionAttribute), false), (
+                                    f, a) => new { Field = f, Att = a })
+                            .Where(a =>
+                            {
+                                var ea = (EnumDescriptionAttribute)a.Att;
+                                return ea.DescriptionId == id;
+                            })
+                            .SingleOrDefault();
+            return field == null ? default(T) : (T)field.Field.GetRawConstantValue();
+        }
+
+
         public static T GetValueFromDescription<T>(string description)
         {
             var type = typeof(T);

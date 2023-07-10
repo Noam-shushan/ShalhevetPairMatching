@@ -135,7 +135,7 @@ namespace PairMatching.Models.Dtos
                    .ToList();
         }
         
-        public static Participant ToParticipant(this ParticipantWixDto wixDto)
+        private static Participant ToParticipant(this ParticipantWixDto wixDto)
         {
             var result = new Participant
             {
@@ -155,13 +155,14 @@ namespace PairMatching.Models.Dtos
                     LearningStyle = GetValueFromDescription<LearningStyles>(wixDto.learningStyle),
                     NumberOfMatchs = int.Parse(wixDto.moreThanOneChevruta),
                     LearningTime = from day in Enum.GetValues(typeof(Days))
-                                   .Cast<Days>()
-                                   .Zip(new[] { wixDto.sunday, wixDto.monday, wixDto.tuseday, wixDto.wednesday, wixDto.thurseday, })
+                                    .Cast<Days>()
+                                    .Zip(new[] { wixDto.sunday, wixDto.monday, wixDto.tuseday, wixDto.wednesday, wixDto.thurseday })
                                    where day.Second.Any()
                                    select new LearningTime
                                    {
                                        Day = day.First,
                                        TimeInDay = day.Second.Select(t => GetValueFromDescription<TimesInDay>(t))
+                                       .Distinct()
                                    }
                 }
             };
@@ -189,7 +190,7 @@ namespace PairMatching.Models.Dtos
             
             part.Country = "Israel";
             part.EnglishLevel = GetValueFromDescription<EnglishLevels>(wixDto.levOfEn);
-            part.PairPreferences.Tracks = wixDto.preferredTrack.Select(t => GetValueFromDescription<PrefferdTracks>(t));
+            part.PairPreferences.Tracks = wixDto.preferredTrack.Select(t => GetValueFromId<PrefferdTracks>(t));
             part.DesiredSkillLevel = GetValueFromDescription<SkillLevels>(wixDto.chevrotaSkills);
             
             return part;
@@ -236,7 +237,7 @@ namespace PairMatching.Models.Dtos
             part.Country = wixDto.country;
             part.UtcOffset = TimeSpan.FromHours(wixDto.timeOffset);
             part.JewishAffiliation = wixDto.jewishAffiliation;
-            part.PairPreferences.Tracks = wixDto.prefTra.Select(t => GetValueFromDescription<PrefferdTracks>(t));
+            part.PairPreferences.Tracks = wixDto.prefTra.Select(t => GetValueFromId<PrefferdTracks>(t));
 
             return part;
         }

@@ -78,13 +78,6 @@
                     </ComboBox>
 
                     <ComboBox
-                        Grid.Column="2"
-                        materialDesign:HintAssist.Hint="סנן"
-                        ItemsSource="{Binding Mode=OneTime, Source={ex:EnumBindingSourceExtension {x:Type uiModels:ParticipiantsKind}}}"
-                        SelectedValue="{Binding PartsKindFilter, Converter={StaticResource EnumToStringConverter}}"
-                        Style="{StaticResource FilterComboBox}" />
-
-                    <ComboBox
                         Grid.Column="3"
                         Margin="15,0,10,0"
                         materialDesign:HintAssist.Hint="מוצא"
@@ -374,6 +367,8 @@
         <local:ExcelExportView DataContext="{Binding ExportToExcelVm}" />
 
         <local:FullParticipaintView Margin="10" DataContext="{Binding FullParticipaintVm}" />
+
+        <local:EditParticipaintView DataContext="{Binding EditParticipaintVm}" />
 
         <mah:ProgressRing
             Grid.Row="1"

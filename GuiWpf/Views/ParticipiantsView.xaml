@@ -141,10 +141,10 @@
                     CanUserAddRows="False"
                     CanUserSortColumns="True"
                     IsSynchronizedWithCurrentItem="True"
-                    ItemsSource="{Binding Path=Participiants.Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    ItemsSource="{Binding Path=Participiants.Items}"
                     RowDetailsVisibilityMode="Collapsed"
                     ScrollViewer.CanContentScroll="False"
-                    SelectedItem="{Binding SelectedParticipant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    SelectedItem="{Binding SelectedParticipant, NotifyOnSourceUpdated=True}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Sorting">
@@ -398,6 +398,8 @@
         </modelPopup:Modal>
 
         <local:ExcelExportView DataContext="{Binding ExportToExcelVm}" />
+
+        <local:EditParticipaintView DataContext="{Binding EditParticipaintVm}" />
 
         <local:FullParticipaintView Margin="10" DataContext="{Binding FullParticipaintVm}" />
 

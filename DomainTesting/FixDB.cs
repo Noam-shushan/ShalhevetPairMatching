@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PairMatching.Loggin;
 using PairMatching.Models.Dtos;
+using System.Diagnostics;
 
 namespace DomainTesting
 {
@@ -98,6 +99,32 @@ namespace DomainTesting
         }
 
         [Test]
+        public async Task FixTracksTest()
+        {
+            var participaints = new List<Participant>();
+
+            var ips = await _unitOfWork.IsraelParticipantsRepositry.GetAllAsync();
+            var wps = await _unitOfWork.WorldParticipantsRepositry.GetAllAsync();
+
+            participaints.AddRange(wps);
+            participaints.AddRange(ips);
+
+            var tasks = new List<Task>();
+            foreach (var p in participaints)
+            {
+                if(p.PairPreferences.Tracks.Count() != p.PairPreferences.Tracks.Distinct().Count())
+                {
+                    p.PairPreferences.Tracks = p.PairPreferences.Tracks.Distinct();
+                    tasks.Add(p is WorldParticipant ?
+                        _unitOfWork.WorldParticipantsRepositry.Update(p as WorldParticipant) :
+                        _unitOfWork.IsraelParticipantsRepositry.Update(p as IsraelParticipant));
+                }
+            }
+            Console.WriteLine(tasks.Count);
+            await Task.WhenAll(tasks);
+        }
+
+        [Test]
         public async Task GetLogs()
         {
             var logs = await _logger.GetInfoLogs();
@@ -147,6 +174,7 @@ namespace DomainTesting
                     }
                 }
             }
+            Debug.WriteLine(tasks.Count);
             return tasks;
         }
 
