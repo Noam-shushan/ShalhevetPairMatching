@@ -44,13 +44,22 @@ namespace DomainTesting.WixApi
         [Test]
         public async Task GetAll()
         {
-            var partsDto = await _wix.GetNewParticipants(0);
-            var wps = from p in partsDto
-                      where p is WorldParticipantWixDto
-                      select (p as WorldParticipantWixDto).ToWorldParticipant();
-            var ips = from p in partsDto
-                      where p is IsraelParticipantWixDto
-                      select (p as IsraelParticipantWixDto).ToIsraelParticipant();
+            //var partsDto = await _wix.GetNewParticipants(0);
+            //var wps = from p in partsDto
+            //          where p is WorldParticipantWixDto
+            //          select (p as WorldParticipantWixDto).ToWorldParticipant();
+            //var ips = from p in partsDto
+            //          where p is IsraelParticipantWixDto
+            //          select (p as IsraelParticipantWixDto).ToIsraelParticipant();
+
+            var noamDto = await _wix.GetOneParticipant(185);
+            var noam = (noamDto as IsraelParticipantWixDto).ToIsraelParticipant();
+            var noamInDb = 
+                await _db.IsraelParticipantsRepositry.GetByIdAsync("64a26e894c735c0dc0dfc181");
+            noamInDb.WixId = noam.WixId;
+            noamInDb._WixId = noam._WixId;
+            await _db.IsraelParticipantsRepositry
+                .Update(noamInDb);
         }
 
         [Test]

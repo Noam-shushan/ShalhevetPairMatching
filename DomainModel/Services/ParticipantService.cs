@@ -12,6 +12,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using PairMatching.Loggin;
 using static PairMatching.Tools.HelperFunction;
+using static PairMatching.Models.CurrentModels.Validations.VerifyDuplicates;
+
 
 namespace PairMatching.DomainModel.Services
 {
@@ -189,6 +191,8 @@ namespace PairMatching.DomainModel.Services
                     }
                     _logger.LogInformation($"participant {participant.Name}, {participant.Email} is cahnge country");
                 }
+                participant.RemoveDuplicateLearningTime();
+                participant.RemoveDuplicateTracks();
                 if (participant is IsraelParticipant ip)
                 {
                     await _unitOfWork

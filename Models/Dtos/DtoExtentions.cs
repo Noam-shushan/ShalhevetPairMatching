@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static PairMatching.Tools.Extensions;
+using static PairMatching.Models.CurrentModels.Validations.VerifyDuplicates;
 
 namespace PairMatching.Models.Dtos
 {
@@ -192,7 +193,10 @@ namespace PairMatching.Models.Dtos
             part.EnglishLevel = GetValueFromDescription<EnglishLevels>(wixDto.levOfEn);
             part.PairPreferences.Tracks = wixDto.preferredTrack.Select(t => GetValueFromId<PrefferdTracks>(t));
             part.DesiredSkillLevel = GetValueFromDescription<SkillLevels>(wixDto.chevrotaSkills);
-            
+
+            part.RemoveDuplicateTracks();
+            part.RemoveDuplicateLearningTime();
+
             return part;
         }
 
@@ -239,6 +243,8 @@ namespace PairMatching.Models.Dtos
             part.JewishAffiliation = wixDto.jewishAffiliation;
             part.PairPreferences.Tracks = wixDto.prefTra.Select(t => GetValueFromId<PrefferdTracks>(t));
 
+            part.RemoveDuplicateTracks();
+            part.RemoveDuplicateLearningTime();
             return part;
         }
     }

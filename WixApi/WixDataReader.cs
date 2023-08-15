@@ -88,7 +88,11 @@ namespace PairMatching.WixApi
 
             var content = await _http.GetAsync(query);
 
-            var data = JsonConvert.DeserializeObject<ParticipantWixDto>(content);
+            var parsedObject = JObject.Parse(content);
+
+            var jsonPartDto = parsedObject["item"].ToString();
+
+            var data = JsonConvert.DeserializeObject<ParticipantWixDto>(jsonPartDto);
 
             return data;
         }

@@ -207,7 +207,7 @@ namespace GuiWpf.ViewModels
             IsMatch = part.IsMatch;
 
             PrefferdTrack = part.PairPreferences.Tracks.FirstOrDefault();
-            Tracks = part.PairPreferences.Tracks
+            Tracks = part.PairPreferences.Tracks.Distinct()
                 .ToDictionary(t => t, _ => true);
 
             PrefferdGender = part.PairPreferences.Gender;
@@ -216,7 +216,7 @@ namespace GuiWpf.ViewModels
             LearningStyle = part.PairPreferences.LearningStyle;
 
             OpenTimes = (from lt in part.PairPreferences.LearningTime
-                         from time in lt.TimeInDay
+                         from time in lt.TimeInDay.Distinct()
                          select new Tuple<Days, TimesInDay>(lt.Day, time))
                         .ToDictionary(key => key, val => true);
 

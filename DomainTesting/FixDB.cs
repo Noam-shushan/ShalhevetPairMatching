@@ -55,8 +55,8 @@ namespace DomainTesting
         public async Task FixOpenQastion()
         {
             var part = await _unitOfWork
-                .WorldParticipantsRepositry
-                .GetByIdAsync("645b7477ec0afde443ea7858");
+                .IsraelParticipantsRepositry
+                .GetByIdAsync("649297e33630fbf9641f56a2");
 
             if (part == null)
             {
@@ -66,24 +66,18 @@ namespace DomainTesting
             // b7ed0236-6646-44cc-85a4-b85daaee3155
             var all = await _wix.GetNewParticipants(100);
             
-            var participantWixDto = all.FirstOrDefault(p => p._id == part.WixId) as IsraelParticipantWixDto;
+            var participantWixDto = all.FirstOrDefault(p => p._id == part._WixId) as IsraelParticipantWixDto;
 
-            part.OpenQuestions = new OpenQuestionsForWorld
+            part.OpenQuestions = new OpenQuestionsForIsrael
             {
                 AdditionalInfo = participantWixDto.additionalInfo,
+                BiographHeb = participantWixDto.biographHeb,
+                PersonalTraits = participantWixDto.personalTraits,
                 WhoIntroduced = participantWixDto.whoIntroduced,
-                GeneralInfo =
-                $"פרטים ביוגרפיים:\n {participantWixDto.biographHeb}\n\n" +
-                $"תכונות אישיות:\n {participantWixDto.personalTraits}\n\n" +
-                $"למה הצטרפת לשלהבת: \n {participantWixDto.whyJoinShalhevet}\n"
+                WhyJoinShalhevet = participantWixDto.whyJoinShalhevet
             };
-            part.OtherLanguages = participantWixDto.otherLan;
-            if (participantWixDto.otherLan.Any() && !string.IsNullOrEmpty(participantWixDto.otherLang))
-            {
-                part.OtherLanguages.Add(participantWixDto.otherLang);
-            }
 
-            await _unitOfWork.WorldParticipantsRepositry.Update(part);
+            await _unitOfWork.IsraelParticipantsRepositry.Update(part);
         }
 
         [Test]
