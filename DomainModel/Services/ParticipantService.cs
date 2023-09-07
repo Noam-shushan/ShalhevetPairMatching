@@ -191,8 +191,10 @@ namespace PairMatching.DomainModel.Services
                     }
                     _logger.LogInformation($"participant {participant.Name}, {participant.Email} is cahnge country");
                 }
+                
                 participant.RemoveDuplicateLearningTime();
                 participant.RemoveDuplicateTracks();
+                
                 if (participant is IsraelParticipant ip)
                 {
                     await _unitOfWork

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static PairMatching.Tools.Extensions;
 using static PairMatching.Models.CurrentModels.Validations.VerifyDuplicates;
+using System.Collections;
 
 namespace PairMatching.Models.Dtos
 {
@@ -128,6 +129,8 @@ namespace PairMatching.Models.Dtos
             };
         }
 
+        //at System.Text.RegularExpressions.ThrowHelper.ThrowArgumentNullException(ExceptionArgument arg)   at System.Text.RegularExpressions.Regex.Replace(String input, String replacement)   at System.Text.RegularExpressions.Regex.Replace(String input, String pattern, String replacement)   at PairMatching.Tools.HelperFunction.RemoveAllCharsExeptLettersAndSpace(String str) in C:\Users\Asuspcc\source\ShalhevetPairMatching\Tools\HelperFunction.cs:line 66   at PairMatching.Tools.HelperFunction.CompereOnlyLetters(String frist, String second) in C:\Users\Asuspcc\source\ShalhevetPairMatching\Tools\HelperFunction.cs:line 59   at PairMatching.DomainModel.Services.ParticipantService.<>c__DisplayClass9_0.<SetNewParticipintsFromWix>b__5(CountryUtc uc) in C:\Users\Asuspcc\source\ShalhevetPairMatching\DomainModel\Services\ParticipantService.cs:line 131   at System.Linq.Enumerable.TryGetFirst[TSource](IEnumerable`1 source, Func`2 predicate, Boolean& found)   at PairMatching.DomainModel.Services.ParticipantService.SetNewParticipintsFromWix() in C:\Users\Asuspcc\source\ShalhevetPairMatching\DomainModel\Services\ParticipantService.cs:line 131   at GuiWpf.ViewModels.ParticipiantsViewModel.Refresh()
+
         public static List<string> GetLearningTimeAsStringList(this IEnumerable<LearningTime> learningTimes, string engOrHeb = "heb")
         {
             return (from l in learningTimes
@@ -238,7 +241,7 @@ namespace PairMatching.Models.Dtos
             part.JewishAndComAff = wixDto.jewishAndComAff == "Other" ? wixDto.otherJewishAndComAff : wixDto.jewishAndComAff;
             part.DesiredEnglishLevel = GetValueFromDescription<EnglishLevels>(wixDto.levOfEn);
             part.SkillLevel = GetValueFromDescription<SkillLevels>(wixDto.learningSkill);
-            part.Country = wixDto.country;
+            part.Country = wixDto.country ?? "Argentina";
             part.UtcOffset = TimeSpan.FromHours(wixDto.timeOffset);
             part.JewishAffiliation = wixDto.jewishAffiliation;
             part.PairPreferences.Tracks = wixDto.prefTra.Select(t => GetValueFromId<PrefferdTracks>(t));

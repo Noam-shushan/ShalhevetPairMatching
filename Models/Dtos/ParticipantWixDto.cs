@@ -27,6 +27,8 @@ namespace PairMatching.Models.Dtos
         public string _owner { get; set; }
         public DateTime _createdDate { get; set; }
 
+        public string formLanguage { get; set; }
+
         public string country { get; set; }
 
         /// <summary>
