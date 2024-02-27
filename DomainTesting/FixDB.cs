@@ -121,9 +121,12 @@ namespace DomainTesting
         [Test]
         public async Task GetLogs()
         {
-            var logs = await _logger.GetInfoLogs();
+            var logs = await _logger.GetErrorLogs();
 
-            foreach (var log in logs.OrderByDescending(l => l.Date))
+            var mylogs = logs
+                .OrderByDescending(l => l.Date);
+
+            foreach(var log in mylogs)
             {
                 Console.WriteLine(log);
             }

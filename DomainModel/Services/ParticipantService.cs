@@ -221,7 +221,7 @@ namespace PairMatching.DomainModel.Services
         
         public async Task<Participant> InsertParticipant(Participant part)
         {
-            WixIdDto wixId = null; 
+            WixIdDto wixId;
             try
             {
                 wixId = await GetWixId(part)

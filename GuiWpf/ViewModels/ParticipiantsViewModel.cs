@@ -251,13 +251,13 @@ namespace GuiWpf.ViewModels
             try
             {
                 IsLoaded = true;
-                await _participantService.SendToArcive(SelectedParticipant);
+                await _participantService.SendToArcive(SelectedParticipant.Clone());
                 SelectedParticipant.IsInArchive = true;
-                Participiants.ItemsSource.Remove(SelectedParticipant);
-                Participiants.Refresh();
-
                 _ea.GetEvent<SendToArciveEvent>()
                     .Publish(GetSelected());
+                Participiants.ItemsSource.Remove(SelectedParticipant.Clone());
+                Participiants.Refresh();
+
                 _ea.GetEvent<RefreshMatchingEvent>().Publish();
             }
             catch (Exception ex)
@@ -316,7 +316,7 @@ namespace GuiWpf.ViewModels
         {
             if (SelectedParticipant == null) return;
 
-            EditParticipaintVm.Init(GetSelected(), true);
+            EditParticipaintVm.Init(GetSelected()!, true);
         });
 
 
@@ -336,7 +336,7 @@ namespace GuiWpf.ViewModels
         () =>
         {
             if (SelectedParticipant == null) return;
-            FullParticipaintVm.Init(GetSelected(), true);
+            FullParticipaintVm.Init(GetSelected()!, true);
         });
 
         public CopyCommand CopyCommand { get; set; } = new();
@@ -447,7 +447,7 @@ namespace GuiWpf.ViewModels
                 && fromIsrael;
         }
 
-        Participant GetSelected()
+        Participant? GetSelected()
         {
             if (SelectedParticipant == null) return null;
             if(SelectedParticipant is IsraelParticipant ip)

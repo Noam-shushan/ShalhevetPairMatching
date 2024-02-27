@@ -95,12 +95,12 @@ namespace PairMatching.DomainModel.Services
                 await Task.WhenAll(
                     _unitOfWork
                     .IsraelParticipantsRepositry
-                    // Update the israeli participaint
+                    // Update the israeli participaint with the new match
                     .Update(pair.FromIsrael as IsraelParticipant),
 
                     _unitOfWork
                     .WorldParticipantsRepositry
-                    // Update the world participaint
+                    // Update the world participaint with the new match
                     .Update(pair.FromWorld as WorldParticipant))
                     .ConfigureAwait(false);
 
@@ -223,7 +223,7 @@ namespace PairMatching.DomainModel.Services
             await _unitOfWork.PairsRepositry.Delete(pair.Id)
                 .ConfigureAwait(false);
 
-            _logger.LogInformation($"Censel pair {pair.Id}");
+            _logger.LogInformation($"Cancel pair {pair.Id}");
         }
 
         async Task UpdateParticipantsOnDelete(Pair pair)

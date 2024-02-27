@@ -25,7 +25,7 @@ namespace GuiWpf
             if (exception is TimeoutException)
             {
                 MessageBox.Show("Slow internet connection");
-                _logger.LogError("Timeout", exception);
+                //_logger.LogError("Timeout", exception);
                 return;
             }
 
