@@ -236,6 +236,7 @@
                     materialDesign:HintAssist.HintOpacity="1"
                     IsTextSearchCaseSensitive="False"
                     IsTextSearchEnabled="True"
+                    MaxWidth="380"
                     ItemsSource="{Binding CountryUtcs}"
                     SelectedValue="{Binding Country}">
                     <ComboBox.ItemTemplate>
