@@ -96,10 +96,6 @@ namespace GuiWpf.ViewModels
                 try
                 {
                     await _participantService.UpdateParticipaint(israelPart, isChangeCountry);
-                    //what happend before is that when updating a participant from world to isreal it made a new israel 
-                    //and deleted the old israel participant
-                    //so i made it so it will delete the old participant form the world participants
-
                     //_onSave(israelPart);
                     _ea.GetEvent<ParticipaintWesUpdate>().Publish(israelPart);
                     isOpenToMathc = israelPart.IsOpenToMatch;
