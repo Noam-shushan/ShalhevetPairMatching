@@ -179,9 +179,26 @@ namespace PairMatching.DomainModel.Services
                 {
                     try
                     {
-                        await _unitOfWork
-                        .IsraelParticipantsRepositry
-                        .Delete(participant.Id);
+                        // i made a change here so it will delete the old participant from the original country
+                        // before it was deleting the participant only from the israel participants when isChaengCountery was true
+                        //here is the code from before 
+                        //try
+                        //{
+                        //    await _unitOfWork
+                        //    .IsraelParticipantsRepositry
+                        //    .Delete(participant.Id);
+                        //}
+                        if (participant is IsraelParticipant) { 
+                            await _unitOfWork
+                            .WorldParticipantsRepositry
+                            .Delete(participant.Id);
+                        }
+                        else if (participant is WorldParticipant)
+                        {
+                            await _unitOfWork
+                            .IsraelParticipantsRepositry
+                            .Delete(participant.Id);
+                        }
                     }
                     catch (KeyNotFoundException)
                     {
