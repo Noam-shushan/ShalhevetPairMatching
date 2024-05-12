@@ -56,7 +56,6 @@ namespace PairMatching.DataAccess.UnitOfWorks
             MatchingHistorisRepositry = new ModelRepositroy<MatchingHistory>(dataAccess, matchingHistoryCollection, _taskManeger);
         }
 
-        //all the repositorys/collections in mpngo db
         public IModelRepository<IsraelParticipant> IsraelParticipantsRepositry { get; init; }
         
         public IModelRepository<WorldParticipant> WorldParticipantsRepositry { get; init; }
