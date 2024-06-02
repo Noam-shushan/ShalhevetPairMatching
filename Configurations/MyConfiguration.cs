@@ -21,5 +21,10 @@ namespace PairMatching.Configurations
         public string ConfigIdInMongo { get; set; }
 
         public string LogIdForError { get; set; }
+
+        public Dictionary<string, string> DataBaseNameDict { private get; init; }
+
+        public string DataBaseName { get => DataBaseNameDict[IsTest ? "Test" : "Production"]; }
+
     }
 }

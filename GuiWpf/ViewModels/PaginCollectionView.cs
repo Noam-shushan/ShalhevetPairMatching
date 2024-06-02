@@ -1,16 +1,11 @@
-﻿using Prism.Commands;
-using Prism.Events;
+﻿using PairMatching.Models;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using GuiWpf.Events;
-using PairMatching.Tools;
 
 namespace GuiWpf.ViewModels
 {
@@ -248,29 +243,50 @@ namespace GuiWpf.ViewModels
             PageCount = GetPageCount();
         }
 
-        public void Add(T item, string idOnDelete = "")
+        public void Update(T item) 
         {
-            if (idOnDelete != "")
+            if (item is null)
             {
-                var foundedItem = ItemsSource.FirstOrDefault(x =>
-                    x.GetType()?
-                    .GetProperty(idOnDelete)?
-                    .GetValue(x)?
-                    .ToString() == item.GetType()?
-                        .GetProperty(idOnDelete)?
-                        .GetValue(item)?
-                        .ToString());
+                return;
+            }
+            var itemModel = ItemsSource.FirstOrDefault(x => (x as BaseModel)!.Id == (item as BaseModel)!.Id);
+            if(itemModel == null)
+            {
+                return;
+            }
+            ItemsSource.Remove(itemModel);
+            ItemsSource.Insert(0,item);
+            Refresh();
+        }
 
-                if (foundedItem != null)
-                {
-                    foundedItem = item;
-                }
-            }
-            else
+        public void Add(T item)
+        {
+            if(item is null)
             {
-                ItemsSource.Add(item);
-                Refresh(true);
+                return;
             }
+            var itemModel = ItemsSource.FirstOrDefault(x => (x as BaseModel)!.Id == (item as BaseModel)!.Id);
+            if (itemModel != null)
+            {
+                return;
+            }
+            ItemsSource.Insert(0, item);
+            Refresh(true);
+        }
+
+        public void Remove(T item)
+        {
+            if (item is null)
+            {
+                return;
+            }
+            var itemModel = ItemsSource.FirstOrDefault(x => (x as BaseModel)!.Id == (item as BaseModel)!.Id);
+            if (itemModel == null)
+            {
+                return;
+            }
+            ItemsSource.Remove(itemModel);
+            Refresh();
         }
 
         bool PagingFilter(T item)

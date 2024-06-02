@@ -251,12 +251,17 @@ namespace GuiWpf.ViewModels
             try
             {
                 IsLoaded = true;
-                await _participantService.SendToArcive(SelectedParticipant.Clone());
-                SelectedParticipant.IsInArchive = true;
-                _ea.GetEvent<SendToArciveEvent>()
-                    .Publish(GetSelected());
-                Participiants.ItemsSource.Remove(SelectedParticipant.Clone());
-                Participiants.Refresh();
+                var archivePart = new Participant();
+                if(SelectedParticipant is IsraelParticipant ip)
+                {
+                    archivePart = ip.CopyPropertiesToNew<Participant, IsraelParticipant>();
+                }
+                if (SelectedParticipant is WorldParticipant wp)
+                {
+                    archivePart = wp.CopyPropertiesToNew<Participant, WorldParticipant>();
+                }
+                await _participantService.SendToArcive(archivePart);
+                Participiants.Remove(archivePart);             
                 _ea.GetEvent<SendToArciveEvent>().Publish(archivePart);
 
                 _ea.GetEvent<RefreshMatchingEvent>().Publish();
@@ -287,9 +292,8 @@ namespace GuiWpf.ViewModels
             try
             {
                 IsLoaded = true;
-                await _participantService.DeleteParticipaint(SelectedParticipant);
-                Participiants.ItemsSource.Remove(SelectedParticipant);
-                Participiants.Refresh();
+                await _participantService.DeleteParticipaint(SelectedParticipant.Clone());
+                Participiants.Remove(SelectedParticipant.Clone());
                 _ea.GetEvent<RefreshMatchingEvent>().Publish();
             }
             catch (Exception ex)
@@ -316,9 +320,8 @@ namespace GuiWpf.ViewModels
         () =>
         {
             if (SelectedParticipant == null) return;
-
             EditParticipaintVm.Init(GetSelected()!, true);
-        });
+       });
 
 
         DelegateCommand _ClearFilterCommand;
@@ -394,6 +397,32 @@ namespace GuiWpf.ViewModels
             }
         }
 
+        async Task RefreshData()
+        {
+            try
+            {
+                IsLoaded = true;
+
+                var parts = await _participantService.GetAll();
+
+                _ea.GetEvent<ResiveParticipantsEvent>().Publish(parts);
+
+                Years.Clear();
+                Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
+                Years.Insert(0, allYears);
+
+                Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, ParticipiantsFilter);
+            }
+            catch (Exception ex)
+            {
+                _exceptionHeandler.HeandleException(ex);
+            }
+            finally
+            {
+                IsLoaded = false;
+            }
+        }
+
         private void SubscribeToEvents()
         {
             _ea.GetEvent<CloseDialogEvent>().Subscribe((isClose) => 
@@ -402,9 +431,9 @@ namespace GuiWpf.ViewModels
             });
 
             _ea.GetEvent<ParticipaintWesUpdate>()
-                .Subscribe(updetetdParts =>
+                .Subscribe(async updetetdParts =>
                 {
-                    Participiants.Add(updetetdParts, "Id");
+                    Participiants.Update(updetetdParts);
                 });
 
             _ea.GetEvent<AddParticipantEvent>().Subscribe((part) =>
@@ -462,6 +491,8 @@ namespace GuiWpf.ViewModels
             return null;
         }
 
+
+     
         #endregion
     }
 }
