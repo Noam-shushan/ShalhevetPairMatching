@@ -257,6 +257,7 @@ namespace GuiWpf.ViewModels
                     .Publish(GetSelected());
                 Participiants.ItemsSource.Remove(SelectedParticipant.Clone());
                 Participiants.Refresh();
+                _ea.GetEvent<SendToArciveEvent>().Publish(archivePart);
 
                 _ea.GetEvent<RefreshMatchingEvent>().Publish();
             }
