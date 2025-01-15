@@ -223,12 +223,18 @@ namespace GuiWpf.ViewModels
                 try
                 {
                     IsLoaded = true;
-                    await _participantService.ExloadeFromArcive(SelectedParticipant);
-                    SelectedParticipant.IsInArchive = false;
-                    Participiants.ItemsSource.Remove(SelectedParticipant);
-                    Participiants.Refresh();
-                    _ea.GetEvent<ExloadeFromArciveEvent>()
-                        .Publish(GetSelected());
+                    var archivePart = new Participant();
+                    if (SelectedParticipant is IsraelParticipant ip)
+                    {
+                        archivePart = ip.CopyPropertiesToNew<Participant, IsraelParticipant>();
+                    }
+                    if (SelectedParticipant is WorldParticipant wp)
+                    {
+                        archivePart = wp.CopyPropertiesToNew<Participant, WorldParticipant>();
+                    }
+                    await _participantService.ExloadeFromArcive(archivePart);
+                    Participiants.Remove(archivePart);
+                    _ea.GetEvent<ExloadeFromArciveEvent>().Publish(archivePart);
                     _ea.GetEvent<RefreshMatchingEvent>().Publish();
                 }
                 catch (Exception ex)
@@ -259,8 +265,7 @@ namespace GuiWpf.ViewModels
             {
                 IsLoaded = true;
                 await _participantService.DeleteParticipaint(SelectedParticipant);
-                Participiants.ItemsSource.Remove(SelectedParticipant);
-                Participiants.Refresh();
+                Participiants.Remove(SelectedParticipant);
                 _ea.GetEvent<RefreshMatchingEvent>().Publish();
             }
             catch (Exception ex)
@@ -349,13 +354,13 @@ namespace GuiWpf.ViewModels
                 });
             _ea.GetEvent<SendToArciveEvent>()
                 .Subscribe(part =>
-                {
+                {   
                     Participiants.Add(part);
                 });
             _ea.GetEvent<ParticipaintWesUpdate>()
                 .Subscribe(updetetdParts =>
                 {
-                    Participiants.Add(updetetdParts, "Id");
+                    Participiants.Update(updetetdParts);
                 });
         }
 

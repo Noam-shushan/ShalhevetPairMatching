@@ -236,11 +236,12 @@
                     materialDesign:HintAssist.HintOpacity="1"
                     IsTextSearchCaseSensitive="False"
                     IsTextSearchEnabled="True"
+                    MaxWidth="370"
                     ItemsSource="{Binding CountryUtcs}"
                     SelectedValue="{Binding Country}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Country}" />
+                            <TextBlock Text="{Binding Country}" TextWrapping="Wrap"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                     <ComboBox.Style>

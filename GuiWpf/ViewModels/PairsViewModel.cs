@@ -303,10 +303,10 @@ namespace GuiWpf.ViewModels
                         var fromWorldId = SelectedPair.FromWorldId;
                         
                         await _pairsService.DeletePair(SelectedPair);
-                       
-                        Pairs.ItemsSource.Remove(SelectedPair);
-                        Pairs.Refresh();
-                        
+
+                        Pairs.Remove(SelectedPair);
+
+
                         _ea.GetEvent<RefreshMatchingEvent>().Publish();
 
                         var ip = await _participantService.GetIsraeliParticipantById(fromIsraelId);

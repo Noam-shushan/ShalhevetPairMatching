@@ -178,10 +178,18 @@ namespace PairMatching.DomainModel.Services
                 if (isChaengCountery)
                 {
                     try
-                    {
-                        await _unitOfWork
-                        .IsraelParticipantsRepositry
-                        .Delete(participant.Id);
+                    { 
+                        if (participant is IsraelParticipant) { 
+                            await _unitOfWork
+                            .WorldParticipantsRepositry
+                            .Delete(participant.Id);
+                        }
+                        else if (participant is WorldParticipant)
+                        {
+                            await _unitOfWork
+                            .IsraelParticipantsRepositry
+                            .Delete(participant.Id);
+                        }
                     }
                     catch (KeyNotFoundException)
                     {

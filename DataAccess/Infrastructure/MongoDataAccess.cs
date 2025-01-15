@@ -14,7 +14,7 @@ namespace PairMatching.DataAccess.Infrastructure
 
         readonly string _databaseName;
 
-        public MongoDataAccess(string connctionsStrings, string databaseName)
+        public MongoDataAccess(string connctionsStrings, string databaseName) 
         {
             _connctionsStrings = connctionsStrings;
             _databaseName = databaseName;
