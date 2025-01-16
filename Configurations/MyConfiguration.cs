@@ -22,9 +22,5 @@ namespace PairMatching.Configurations
 
         public string LogIdForError { get; set; }
 
-        public Dictionary<string, string> DataBaseNameDict { private get; init; }
-
-        public string DataBaseName { get => DataBaseNameDict[IsTest ? "Test" : "Production"]; }
-
     }
 }

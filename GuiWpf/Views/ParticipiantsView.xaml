@@ -110,6 +110,16 @@
                         Orientation="Horizontal">
 
                         <Button
+                            Command="{Binding DeleteManyCommand}"
+                            Style="{StaticResource MaterialDesignIconButton}"
+                            ToolTip="מחק משתתפים">
+                            <materialDesign:PackIcon
+                                Width="28"
+                                Height="28"
+                                Kind="TrashCan" />
+                        </Button>
+
+                        <Button
                             Margin="10,0"
                             Command="{Binding ExportExcelCommand}"
                             Style="{StaticResource MaterialDesignIconButton}"
@@ -179,7 +189,16 @@
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <CheckBox Cursor="Hand" IsChecked="{Binding IsSelected}" />
+                                    <CheckBox Cursor="Hand" IsChecked="{Binding IsSelected}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Checked">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.ParticipatintSelectedCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName="Unchecked">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.ParticipatintUnselectedCommand, RelativeSource={RelativeSource AncestorType=local:ParticipiantsView}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </CheckBox>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

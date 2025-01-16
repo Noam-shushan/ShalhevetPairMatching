@@ -411,5 +411,16 @@ namespace PairMatching.DomainModel.Services
         {
             return _unitOfWork.WorldParticipantsRepositry.GetByIdAsync(id);
         }
+
+        public async Task DeleteMany(IEnumerable<Participant> participants)
+        {
+            var tasks = new List<Task>();
+            foreach (var wp in participants)
+            {
+                tasks.Add(DeleteParticipaint(wp));
+            }
+            await Task.WhenAll(tasks)
+                .ConfigureAwait(false);
+        }
     }
 }

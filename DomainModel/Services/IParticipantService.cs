@@ -11,7 +11,9 @@ namespace PairMatching.DomainModel.Services
     {
         Task DeleteParticipaint(Participant participant);
         Task<IEnumerable<Participant>> GetAll();
-        
+
+        Task DeleteMany(IEnumerable<Participant> participants);
+
         Task<IEnumerable<IsraelParticipant>> GetAllFromIsrael();
         
         Task<IEnumerable<WorldParticipant>> GetAllFromWorld();

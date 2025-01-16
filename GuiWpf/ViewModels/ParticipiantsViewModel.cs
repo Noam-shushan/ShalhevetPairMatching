@@ -232,6 +232,46 @@ namespace GuiWpf.ViewModels
         });
 
 
+        DelegateCommand<Participant> _ParticipatintSelectedCommand;
+        public DelegateCommand<Participant> ParticipatintSelectedCommand => _ParticipatintSelectedCommand ??= new(
+        (Participant part) =>
+        {
+            part.IsSelected = true;
+            Participiants.Update(part, inPlace: true);
+        });
+
+        DelegateCommand<Participant> _ParticipatintUnselectedCommand;
+        public DelegateCommand<Participant> ParticipatintUnselectedCommand => _ParticipatintUnselectedCommand ??= new(
+        (Participant part) =>
+        {
+            part.IsSelected = false;
+            Participiants.Update(part, inPlace: true);
+        });
+
+
+        DelegateCommand _DeleteManyCommand;
+        public DelegateCommand DeleteManyCommand => _DeleteManyCommand ??= new(
+        async () =>
+        {
+            if (!Messages.MessageBoxConfirmation("האם אתה בטוח שברצונך למחוק את המשתתפים המסומנים?")) return;
+            
+            var participants = from p in Participiants.ItemsSource
+                          where p.IsSelected
+                          select p;
+            
+            if(participants.Count() == 0)
+            {
+                Messages.MessageBoxSimple("לא נבחרו אף משתתפים");
+                return;
+            }
+            IsLoaded = true;
+            await _participantService.DeleteMany(participants);
+
+            await RefreshData();
+            IsLoaded = false;
+        }, () => !IsLoaded);
+
+
         DelegateCommand _SendToArchivCommand;
         public DelegateCommand SendToArchivCommand => _SendToArchivCommand ??= new(
         async () =>
@@ -411,7 +451,7 @@ namespace GuiWpf.ViewModels
                 Years.AddRange(parts.Select(p => p.DateOfRegistered.Year.ToString()).Distinct());
                 Years.Insert(0, allYears);
 
-                Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, ParticipiantsFilter);
+                Participiants.Init(parts.OrderByDescending(p => p.DateOfRegistered), 10, new Predicate<Participant>(_ => true));
             }
             catch (Exception ex)
             {

@@ -13,7 +13,6 @@ namespace GuiWpf.ViewModels
     {
         #region Ptoperties
 
-
         private T _selectedItem;
         public T SelectedItem
         {
@@ -148,7 +147,7 @@ namespace GuiWpf.ViewModels
             }         
         }
 
-        Predicate<T> _filter;
+        Predicate<T> _filter = new(_ => true);
         public Predicate<T> Filter { get => _filter; set => SetProperty(ref _filter, value); }
         #endregion
 
@@ -214,7 +213,7 @@ namespace GuiWpf.ViewModels
 
             ItemsPerPage = itemsPerPage;
             
-            Filter = filter ?? new Predicate<T>(_ => true);
+            Filter = filter ?? Filter;
             
             Refresh();
         }
@@ -223,8 +222,7 @@ namespace GuiWpf.ViewModels
         {
             var temp = FilterdItems.ToList();
             FilterdItems.Clear();
-            var filter = Filter is null ? _ => true : Filter;
-            var filterItems = ItemsSource.Where(item => filter.Invoke(item));
+            var filterItems = ItemsSource.Where(item => Filter.Invoke(item));
             FilterdItems.AddRange(filterItems);
             
             if (!add && !temp.SequenceEqual(FilterdItems))
@@ -243,7 +241,7 @@ namespace GuiWpf.ViewModels
             PageCount = GetPageCount();
         }
 
-        public void Update(T item) 
+        public void Update(T item, bool inPlace = false) 
         {
             if (item is null)
             {
@@ -254,8 +252,9 @@ namespace GuiWpf.ViewModels
             {
                 return;
             }
+            var index = ItemsSource.IndexOf(itemModel);
             ItemsSource.Remove(itemModel);
-            ItemsSource.Insert(0,item);
+            ItemsSource.Insert(inPlace ? index : 0, item);
             Refresh();
         }
 

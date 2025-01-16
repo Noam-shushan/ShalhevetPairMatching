@@ -15,7 +15,7 @@ namespace PairMatching.DataAccess.Infrastructure
         public IDataAccess GetContext()
         {
             //return new MongoDataAccess(_configurations.ConnctionsStrings);
-            return new MongoDataAccess(_configurations.ConnctionsStrings,_configurations.DataBaseName);
+            return new MongoDataAccess(_configurations.ConnctionsStrings);
         }
     }
 }
