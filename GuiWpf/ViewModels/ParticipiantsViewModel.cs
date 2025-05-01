@@ -332,7 +332,7 @@ namespace GuiWpf.ViewModels
             try
             {
                 IsLoaded = true;
-                await _participantService.DeleteParticipaint(SelectedParticipant.Clone());
+                await _participantService.DeleteParticipaint(SelectedParticipant);
                 Participiants.Remove(SelectedParticipant.Clone());
                 _ea.GetEvent<RefreshMatchingEvent>().Publish();
             }
