@@ -471,7 +471,7 @@ namespace GuiWpf.ViewModels
             });
 
             _ea.GetEvent<ParticipaintWesUpdate>()
-                .Subscribe(async updetetdParts =>
+                .Subscribe( updetetdParts =>
                 {
                     Participiants.Update(updetetdParts);
                 });
